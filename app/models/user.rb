@@ -49,7 +49,11 @@ class User < ActiveRecord::Base
     total = self.attendances.where("MONTH(datetoday) =? AND first_entry =? ", month, true).average(:in)
     if total.present?
       avg_in_time = total.to_s.chop[0..3].insert(2,':')
-      Time.at(Time.parse(avg_in_time)).strftime("%I:%M %p")
+      if avg_in_time.split(':').last.to_i > 59
+        Time.at(Time.parse(avg_in_time.gsub(avg_in_time.split(':').last, '59'))).strftime("%I:%M %p")
+      else
+        Time.at(Time.parse(avg_in_time)).strftime("%I:%M %p")
+      end
     end
   end
 
