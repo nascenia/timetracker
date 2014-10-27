@@ -1,0 +1,54 @@
+%h1
+  Daily Attendance Tracker
+  %br
+  %input#datepicker{:placeholder => "Search By Date", :type => "text", :value => @date }/
+.bs-example
+  %table.table.table-hover.table-bordered
+    %thead
+      %tr
+        %th Name
+        %th Email
+        %th Entry
+        %th Leave
+        %th Status
+    %tbody
+      - @todays_tracker.each do |entry|
+        %tr
+          %td= entry.user.name
+          %td= entry.user.email
+          %td= Time.at(entry.in).utc.strftime("%I:%M%p")
+          %td= Time.at(entry.out).utc.strftime("%I:%M%p") if entry.out.present?
+          %td
+            - if entry.first_entry?
+              - if Time.at(entry.in).strftime("%H:%M") <= Time.at(Time.parse(Attendance::USUAL_OFFICE_TIME)).strftime("%H:%M")
+                .status#inTime
+                  InTime
+              - else
+                .status#late
+                  Late
+            - else
+              .status#secondEntry
+                F/ Entry
+:javascript
+  $(document).ready(function(){
+    var nowTemp = new Date();
+        var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+        $('#datepicker').datepicker({
+            format: 'yyyy/mm/dd',
+            onRender: function(date) {
+                return date.valueOf() > now.valueOf() ? 'disabled' : '';
+            }
+        }).on('changeDate', function (ev) {
+            $(this).datepicker('hide');
+            var date = $(this).val();
+            $.ajax({
+                url: "/attendances/search_daily_attendance",
+                type: "GET",
+                dataType: 'script',
+                data: {date: date},
+                success: function(result){
+
+                }
+            });
+        });
+  })

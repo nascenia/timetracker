@@ -1,0 +1,27 @@
+= form_for(@attendance) do |f|
+  - if @attendance.errors.any?
+    #error_explanation
+      %h2
+        = pluralize(@attendance.errors.count, "error")
+        prohibited this attendance from being saved:
+      %ul
+        - @attendance.errors.full_messages.each do |msg|
+          %li= msg
+  .field
+    = f.label :user_id
+    %br/
+    = f.number_field :user_id
+  .field
+    = f.label :datetoday
+    %br/
+    = f.date_select :datetoday
+  .field
+    = f.label :intime
+    %br/
+    = f.time_select :intime
+  .field
+    = f.label :outtime
+    %br/
+    = f.time_select :outtime
+  .actions
+    = f.submit

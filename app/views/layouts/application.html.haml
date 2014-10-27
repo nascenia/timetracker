@@ -1,0 +1,35 @@
+!!!
+%html
+  %head
+    %title Internal
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
+    = javascript_include_tag 'application', 'data-turbolinks-track' => true
+    = csrf_meta_tags
+  %body
+    .container
+      %nav.navbar.navbar-default{:role => "navigation"}
+        .navbar-header
+          %a.navbar-brand{:href => "http://www.nascenia.com"} Nascenia Attendance Tracker
+        #navbarCollapse.collapse.navbar-collapse
+          - if user_signed_in?
+            %ul.nav.navbar-nav
+              %li.pull-right
+                %p.user-status
+                  Signed in as
+                  %span
+                    = current_user.name
+                  email:
+                  %span
+                    = current_user.email
+            %ul.nav.navbar-nav.navbar-right
+              %li
+                \#{link_to "Logout", destroy_user_session_path, method: :delete}
+
+      %hr/
+      - if notice
+        .notice= notice
+      - elsif alert
+        .alert= alert
+      = yield
+  %footer
+    = render partial: 'attendances/office_rules'

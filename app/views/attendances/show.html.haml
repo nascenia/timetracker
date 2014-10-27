@@ -1,0 +1,16 @@
+%p#notice= notice
+%p
+  %strong User:
+  = @attendance.user_id
+%p
+  %strong Datetoday:
+  = @attendance.datetoday
+%p
+  %strong Intime:
+  = @attendance.intime
+%p
+  %strong Outtime:
+  = @attendance.outtime
+= link_to 'Edit', edit_attendance_path(@attendance)
+|
+\#{link_to 'Back', attendances_path}

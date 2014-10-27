@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 1
+  datetoday: 2014-10-08
+  intime: 2014-10-08 17:00:28
+  outtime: 2014-10-08 17:00:28
+
+two:
+  user_id: 1
+  datetoday: 2014-10-08
+  intime: 2014-10-08 17:00:28
+  outtime: 2014-10-08 17:00:28

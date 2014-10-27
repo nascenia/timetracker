@@ -1,0 +1,20 @@
+.panel-footer.text-center
+  %p
+    = link_to 'Nascenia IT', 'http://www.nascenia.com', :target => '_blank'
+    |
+    = link_to "Terms & Conditions", "#rules", "data-toggle" => "modal"
+.modal.fade#rules
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} ×
+        %h4.modal-title Attendance Rules
+      .modal-body
+        %ol
+          %li Office starts at 9 AM. Any entry after 10 AM will be treated as late entry.
+          %li Multiple In-Out can be tracked in the same day.
+          %li If anyone logs 'In', but forgets to log 'Out', two hours will be added as total hours in office on that day.
+          %li If anyone leaves office within office time, s/he has to log 'Out'. After coming back from outside s/he may log 'In' again.
+          %li After one successful 'In' and 'Out' in a day, if someone logs 'In' and forgets to log 'Out', no extra hours will be added.
+      .modal-footer
+        %button.btn.btn-danger{"data-dismiss" => "modal", :type => "button"} Close

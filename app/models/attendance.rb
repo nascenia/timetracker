@@ -1,0 +1,27 @@
+class Attendance < ActiveRecord::Base
+  belongs_to :user
+
+  USUAL_OFFICE_TIME = "10:00"
+
+  def update_out_time
+    self.update_attribute(:out, Time.now.to_s(:time))
+    total_hours = ((self.out.to_time - self.in.to_time) / 1.hour).round(2)
+    self.update_attribute(:total_hours, total_hours)
+  end
+
+  def self.todays_attendance_summary(date)
+    self.where("datetoday =? ", date).order(:in)
+  end
+
+  def summary_of_current_month(month = Time.now.month)
+    self.where("MONTH(datetoday) =?", month)
+  end
+
+  def self.add_two_hours_for_missing_out_time(yesterday = Date.yesterday)
+    missing_out_time = self.where(out: nil, datetoday: yesterday, first_entry: true)
+
+    missing_out_time.each do |entry|
+      entry.update_attribute(:total_hours, 2)
+    end
+  end
+end
