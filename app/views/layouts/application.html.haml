@@ -1,7 +1,7 @@
 !!!
 %html
   %head
-    %title Internal
+    %title Attendance Tracker - Nascenia
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
     = favicon_link_tag 'nascenia-logo-motif-only.png'
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
@@ -26,7 +26,6 @@
               %li
                 \#{link_to "Logout", destroy_user_session_path, method: :delete}
 
-      %hr/
       - if notice
         .notice= notice
       - elsif alert
