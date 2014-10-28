@@ -15,5 +15,11 @@ $(document).ready(function() {
         }
 
     });
+    var entry = $('#todays_entry').val();
+    if (entry){
+        $("#in").attr("disabled", "disabled");
+    } else {
+        $("#out").attr("disabled", "disabled");
+    }
 
 } );

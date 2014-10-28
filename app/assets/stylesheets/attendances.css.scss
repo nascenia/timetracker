@@ -37,17 +37,11 @@ hr {
   float: right;
 }
 .in-out-button{
-  line-height: 3;
-  width: 100px;
+  line-height: 2;
+  width: 80px;
+  margin-left: 20px;
 }
-#disabled{
-  background: gray;
-  border: none;
-  cursor: not-allowed;
-}
-#enabled{
-  cursor:  pointer;
-}
+
 span{
   font-weight: bold;
   color: maroon;
