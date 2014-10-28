@@ -11,7 +11,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       end
     else
       flash[:notice] = "Email domain must be either 'nascenia.com' or 'bdipo.com'."
-      redirect_to :back
+      redirect_to root_path
     end
 
   end

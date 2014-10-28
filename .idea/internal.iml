@@ -129,7 +129,6 @@
     <orderEntry type="library" scope="PROVIDED" name="activerecord-deprecated_finders (v1.0.3, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="activesupport (v4.0.1, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="arel (v4.0.2, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="bcrypt (v3.1.7, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="builder (v3.1.4, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="bundler (v1.3.5, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="coffee-rails (v4.0.1, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
@@ -137,7 +136,6 @@
     <orderEntry type="library" scope="PROVIDED" name="coffee-script-source (v1.8.0, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="devise (v3.4.0, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="erubis (v2.7.0, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="execjs (v2.2.1, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="faraday (v0.9.0, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="haml (v4.1.0.beta.1, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="hashie (v3.3.1, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
@@ -156,6 +154,7 @@
     <orderEntry type="library" scope="PROVIDED" name="multi_xml (v0.5.5, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="multipart-post (v2.0.0, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="mysql2 (v0.3.16, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="net-sftp (v2.1.2, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="oauth2 (v1.0.0, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="omniauth (v1.2.2, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="omniauth-google-oauth2 (v0.2.5, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
@@ -181,7 +180,6 @@
     <orderEntry type="library" scope="PROVIDED" name="tilt (v1.4.1, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="treetop (v1.4.15, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="turbolinks (v2.4.0, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="tzinfo (v0.3.41, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="uglifier (v2.5.3, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="warden (v1.2.3, RVM: ruby-1.9.3-p392 [orto-dev]) [gem]" level="application" />
   </component>
