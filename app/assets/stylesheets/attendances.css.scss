@@ -1,6 +1,9 @@
 table thead th, table tbody td:not(:first-child){
   text-align: center;
 }
+#individual-attendance-table{
+  margin: 0 auto;
+}
 .notice{
   color: green;
 }
