@@ -51,5 +51,8 @@ span{
   font-size: 15px;
   font-family: "andale mono", "lucida console", monospace;
 }
-
+.btn[disabled]{
+  background-color: gray;
+  border: none;
+}
 

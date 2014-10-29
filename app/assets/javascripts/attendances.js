@@ -23,64 +23,71 @@ $(document).ready(function() {
     } else {
         $("#out").attr("disabled", "disabled");
     }
-
+    notify();
 } );
-$(document).one("click", "#in", function(){
-
-});
 
 function notify() {
-    setTimeout(function() {
-        ZohrPrayerNotification();
-        AsorPrayerNotification();
-    }, 5000);
+    var currentTime = new Date(), zohr = new Date(), asor = new Date(), magrib = new Date();
+
+    zohr.setHours(13);
+    zohr.setMinutes(25);
+    zohr.setSeconds(0);
+
+    asor.setHours(16);
+    asor.setMinutes(15);
+    asor.setSeconds(0);
+
+    magrib.setHours(17);
+    magrib.setMinutes(25);
+    magrib.setSeconds(0);
+
+    if (currentTime < zohr){
+        timeout = zohr - currentTime;
+        setTimeout(function() {
+            ZohrPrayerNotification();
+        }, timeout);
+    } else if (currentTime > zohr && currentTime < asor) {
+        timeout = asor - currentTime;
+        setTimeout(function() {
+            AsorPrayerNotification();
+        }, timeout);
+    } else if (currentTime > asor && currentTime < magrib) {
+        timeout = magrib - currentTime;
+        setTimeout(function() {
+            MagribPrayerNotification();
+        }, timeout);
+    }
 }
 //============ Desktop Notifications for Zohr Prayer
 function ZohrPrayerNotification() {
-    // Let's check if the browser supports notifications
-    if (!("Notification" in window)) {
-        alert("This browser does not support desktop notification");
-    }
-
-    // Let's check if the user is okay to get some notification
-    else if (Notification.permission === "granted") {
-        // If it's okay let's create a notification
-        var options = {
-            body: "যোহরের  নামাজে যোগ দিন। ৫ মিনিট পর জামাত শুরু ",
-            icon: "images/icon.png"
-        };
-        var notification = new Notification("আসসালামু আলাইকুম!", options);
-    }
-
-    // Otherwise, we need to ask the user for permission
-    // Note, Chrome does not implement the permission static property
-    // So we have to check for NOT 'denied' instead of 'default'
-    else if (Notification.permission !== 'denied') {
-        Notification.requestPermission(function (permission) {
-            // Whatever the user answers, we make sure we store the information
-            if (!('permission' in Notification)) {
-                Notification.permission = permission;
-            }
-
-            // If the user is okay, let's create a notification
-            if (permission === "granted") {
-                var notification = new Notification("Hi there! 5 minutes to Zohr Prayer");
-            }
-        });
-    }
-
-    // At last, if the user already denied any notification, and you
-    // want to be respectful there is no need to bother them any more.
-}
-//============ Desktop Notifications for Asor Prayer
-function AsorPrayerNotification() {
-    // Let's check if the user is okay to get some notification
     if (Notification.permission === "granted") {
         // If it's okay let's create a notification
         var options = {
-            body: "আসরের নামাজে যোগ দিন। ৫ মিনিট পর জামাত শুরু ",
-            icon: "images/icon.png"
+            body: "যোহরের  নামাজে যোগ দিন। ১:৩০ এ জামাত শুরু হবে।"
         };
         var notification = new Notification("আসসালামু আলাইকুম!", options);
+        notify();
+    }
+}
+//============ Desktop Notifications for Asor Prayer
+function AsorPrayerNotification() {
+    if (Notification.permission === "granted") {
+        // If it's okay let's create a notification
+        var options = {
+            body: "আসরের নামাজে যোগ দিন। ৪:১৫ তে জামাত শুরু হবে।"
+        };
+        var notification = new Notification("আসসালামু আলাইকুম!", options);
+        notify();
+    }
+}
+//============ Desktop Notifications for Magrib Prayer
+function MagribPrayerNotification() {
+    if (Notification.permission === "granted") {
+        // If it's okay let's create a notification
+        var options = {
+            body: "মাগরিবের নামাজে যোগ দিন। ৫:৩০ এ জামাত শুরু হবে।"
+        };
+        var notification = new Notification("আসসালামু আলাইকুম!", options);
+        notify();
     }
 }

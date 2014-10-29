@@ -3,4 +3,3 @@
 %br
   = link_to  'In', "/attendances", :method => :post, :class => 'btn btn-large btn-success in-out-button', :id => "in"
   = link_to 'Out', "/attendances/#{@todays_entry.id if @todays_entry.present?}", :method => :put, :class => 'btn btn-large btn-danger in-out-button', :id => "out"
-  -#= link_to 'Notify Me!', '#', :onClick => 'notify()'
