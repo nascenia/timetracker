@@ -34,8 +34,8 @@ function notify() {
     zohr.setSeconds(0);
 
     asor.setHours(16);
-    asor.setMinutes(15);
-    asor.setSeconds(0);
+    asor.setMinutes(10);
+    asor.setSeconds(30);
 
     magrib.setHours(17);
     magrib.setMinutes(25);
@@ -66,7 +66,9 @@ function ZohrPrayerNotification() {
             body: "যোহরের  নামাজে যোগ দিন। ১:৩০ এ জামাত শুরু হবে।"
         };
         var notification = new Notification("আসসালামু আলাইকুম!", options);
-        notify();
+        setTimeout(function() {
+            location.reload();
+        }, 15000);
     }
 }
 //============ Desktop Notifications for Asor Prayer
@@ -77,7 +79,9 @@ function AsorPrayerNotification() {
             body: "আসরের নামাজে যোগ দিন। ৪:১৫ তে জামাত শুরু হবে।"
         };
         var notification = new Notification("আসসালামু আলাইকুম!", options);
-        notify();
+        setTimeout(function() {
+            location.reload();
+        }, 15000);
     }
 }
 //============ Desktop Notifications for Magrib Prayer
@@ -88,6 +92,5 @@ function MagribPrayerNotification() {
             body: "মাগরিবের নামাজে যোগ দিন। ৫:৩০ এ জামাত শুরু হবে।"
         };
         var notification = new Notification("আসসালামু আলাইকুম!", options);
-        notify();
     }
 }
