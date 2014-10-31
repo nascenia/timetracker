@@ -5,3 +5,6 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+Salaat.create(waqt: 'Zohr', time: '1:30')
+Salaat.create(waqt: 'Asor', time: '4:15')
+Salaat.create(waqt: 'Magrib', time: '5:30')
