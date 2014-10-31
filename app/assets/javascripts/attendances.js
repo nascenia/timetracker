@@ -30,67 +30,36 @@ function notify() {
     var currentTime = new Date(), zohr = new Date(), asor = new Date(), magrib = new Date();
 
     zohr.setHours(13);
-    zohr.setMinutes(25);
+    zohr.setMinutes(20);
     zohr.setSeconds(0);
 
     asor.setHours(16);
-    asor.setMinutes(10);
-    asor.setSeconds(30);
+    asor.setMinutes(05);
+    asor.setSeconds(00);
 
     magrib.setHours(17);
-    magrib.setMinutes(25);
+    magrib.setMinutes(20);
     magrib.setSeconds(0);
 
     if (currentTime < zohr){
         timeout = zohr - currentTime;
-        setTimeout(function() {
-            ZohrPrayerNotification();
-        }, timeout);
-    } else if (currentTime > zohr && currentTime < asor) {
-        timeout = asor - currentTime;
-        setTimeout(function() {
-            AsorPrayerNotification();
-        }, timeout);
-    } else if (currentTime > asor && currentTime < magrib) {
-        timeout = magrib - currentTime;
-        setTimeout(function() {
-            MagribPrayerNotification();
-        }, timeout);
-    }
-}
-//============ Desktop Notifications for Zohr Prayer
-function ZohrPrayerNotification() {
-    if (Notification.permission === "granted") {
-        // If it's okay let's create a notification
         var options = {
             body: "যোহরের  নামাজে যোগ দিন। ১:৩০ এ জামাত শুরু হবে।"
         };
-        var notification = new Notification("আসসালামু আলাইকুম!", options);
-        setTimeout(function() {
-            location.reload();
-        }, 15000);
-    }
-}
-//============ Desktop Notifications for Asor Prayer
-function AsorPrayerNotification() {
-    if (Notification.permission === "granted") {
-        // If it's okay let's create a notification
+    } else if (currentTime > zohr && currentTime < asor) {
+        timeout = asor - currentTime;
         var options = {
             body: "আসরের নামাজে যোগ দিন। ৪:১৫ তে জামাত শুরু হবে।"
         };
-        var notification = new Notification("আসসালামু আলাইকুম!", options);
-        setTimeout(function() {
-            location.reload();
-        }, 15000);
-    }
-}
-//============ Desktop Notifications for Magrib Prayer
-function MagribPrayerNotification() {
-    if (Notification.permission === "granted") {
-        // If it's okay let's create a notification
+    } else if (currentTime > asor && currentTime < magrib) {
+        timeout = magrib - currentTime;
         var options = {
             body: "মাগরিবের নামাজে যোগ দিন। ৫:৩০ এ জামাত শুরু হবে।"
         };
-        var notification = new Notification("আসসালামু আলাইকুম!", options);
     }
+
+    setTimeout(function() {
+        var notification = new Notification("আসসালামু আলাইকুম!", options);
+    }, timeout);
 }
+
