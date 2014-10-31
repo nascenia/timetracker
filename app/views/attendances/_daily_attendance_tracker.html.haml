@@ -22,7 +22,7 @@
             - if entry.first_entry?
               - if Time.at(entry.in).strftime("%H:%M") <= Time.at(Time.parse(Attendance::USUAL_OFFICE_TIME)).strftime("%H:%M")
                 .status#inTime
-                  InTime
+                  On time
               - else
                 .status#late
                   Late
