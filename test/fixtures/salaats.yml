@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  waqt: MyString
+  time: 2014-10-31 16:04:51
+
+two:
+  waqt: MyString
+  time: 2014-10-31 16:04:51
