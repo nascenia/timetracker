@@ -19,11 +19,11 @@
         %tr
           %td
             %a{"data-toggle" => "modal", :href => "#userModal_#{user.id}"}= user.name
-          %td= user.monthly_total_hour(Time.now.month).round(2)
-          %td= user.monthly_average_hour(Time.now.month).present? ? user.monthly_average_hour(Time.now.month).round(2) : 0
+          %td= user.monthly_total_hour(Time.now.month).round
+          %td= user.monthly_average_hour(Time.now.month).present? ? user.monthly_average_hour(Time.now.month).round : 0
           %td= user.monthly_average_in_time(Time.now.month).present? ? user.monthly_average_in_time(Time.now.month) : 0
-          %td= user.monthly_total_hour(1.month.ago.month).round(2)
-          %td= user.monthly_average_hour(1.month.ago.month).present? ? user.monthly_average_hour(1.month.ago.month).round(2) : 0
+          %td= user.monthly_total_hour(1.month.ago.month).round
+          %td= user.monthly_average_hour(1.month.ago.month).present? ? user.monthly_average_hour(1.month.ago.month).round : 0
           %td= user.monthly_average_in_time(1.month.ago.month).present? ? user.monthly_average_in_time(1.month.ago.month) : 0
 
 - User.all.each do |user|
