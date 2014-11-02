@@ -2,10 +2,10 @@ $(document).ready(function() {
     $('#monthly-attendance-table').dataTable({
         "language": {
             "lengthMenu": 'Display <select class ="form-control">'+
-                '<option value="50">50</option>'+
+                '<option value="50" >50</option>'+
                 '<option value="75">75</option>'+
                 '<option value="100">100</option>'+
-                '<option value="-1">All</option>'+
+                '<option value="-1" selected="selected" >All</option>'+
                 '</select> records'
         },
         dom: 'T<"clear">lfrtip',
