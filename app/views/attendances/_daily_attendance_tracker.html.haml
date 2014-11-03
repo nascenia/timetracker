@@ -3,8 +3,8 @@
   %br
   %input#datepicker{:placeholder => "Search By Date", :type => "text", :value => @date }/
   .pull-right#total-employee
-    Total Present in Office Today:
-    = @todays_tracker.count
+    Total Present in Office:
+    = @todays_tracker.group(:user_id).count.to_a[0][1]
 .bs-example
   %table.table.table-hover.table-bordered
     %thead
