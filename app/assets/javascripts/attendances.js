@@ -1,5 +1,6 @@
 $(document).ready(function() {
     $('#monthly-attendance-table').dataTable({
+        "iDisplayLength": 50,
         dom: 'T<"clear">lfrtip',
         tableTools: {
             "sSwfPath": "http://cdn.datatables.net/tabletools/2.2.2/swf/copy_csv_xls_pdf.swf",
