@@ -15,7 +15,6 @@ $(document).ready(function() {
         }
 
     });
-    $("#display-records").val('-1');
     //============ Disabling button
     var entry = $('#todays_entry').val();
     if (entry){
