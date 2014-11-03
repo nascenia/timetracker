@@ -8,13 +8,15 @@ $(document).ready(function() {
         }
 
     });
-    //============ Disabling button
+    //============ Disabling IN/Out button =======
     var entry = $('#todays_entry').val();
     if (entry){
         $("#in").attr("disabled", "disabled");
     } else {
         $("#out").attr("disabled", "disabled");
     }
+
+    //=========== Setting Desktop Notification ====
     notify();
 } );
 
@@ -34,17 +36,17 @@ function notify() {
     magrib.setSeconds(0);
 
     if (currentTime < zohr){
-        timeout = zohr - currentTime;
+         var timeout = zohr - currentTime;
         var options = {
             body: "যোহরের  নামাজে যোগ দিন। ১:৩০ এ জামাত শুরু হবে।"
         };
     } else if (currentTime > zohr && currentTime < asor) {
-        timeout = asor - currentTime;
+        var timeout = asor - currentTime;
         var options = {
             body: "আসরের নামাজে যোগ দিন। ৪:১৫ তে জামাত শুরু হবে।"
         };
     } else if (currentTime > asor && currentTime < magrib) {
-        timeout = magrib - currentTime;
+        var timeout = magrib - currentTime;
         var options = {
             body: "মাগরিবের নামাজে যোগ দিন। ৫:৩০ এ জামাত শুরু হবে।"
         };
@@ -53,5 +55,9 @@ function notify() {
     setTimeout(function() {
         var notification = new Notification("আসসালামু আলাইকুম!", options);
     }, timeout);
+
+    setTimeout(function() {
+        location.reload();
+    }, 60000);
 }
 
