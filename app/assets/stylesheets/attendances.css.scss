@@ -4,6 +4,10 @@ table thead th, table tbody td:not(:first-child){
 #individual-attendance-table{
   margin: 0 auto;
 }
+h3{
+//  font-size: 15px;
+  font-family: "andale mono", "lucida console", monospace;
+}
 .notice{
   color: green;
 }
@@ -46,7 +50,7 @@ span{
   font-weight: bold;
   color: maroon;
 }
-.user-status{
+.user-status, #total-employee{
   margin: 15px;
   font-size: 15px;
   font-family: "andale mono", "lucida console", monospace;

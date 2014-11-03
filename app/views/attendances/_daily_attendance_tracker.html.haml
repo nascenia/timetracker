@@ -2,6 +2,9 @@
   Daily Time Tracker
   %br
   %input#datepicker{:placeholder => "Search By Date", :type => "text", :value => @date }/
+  .pull-right#total-employee
+    Total:
+    = @todays_tracker.count
 .bs-example
   %table.table.table-hover.table-bordered
     %thead
