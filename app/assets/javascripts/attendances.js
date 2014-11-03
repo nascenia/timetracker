@@ -3,7 +3,6 @@ $(document).ready(function() {
         "language": {
             "lengthMenu": 'Display <select class ="form-control" id="display-records">'+
                 '<option value="50" >50</option>'+
-                '<option value="75">75</option>'+
                 '<option value="100">100</option>'+
                 '<option value="-1" selected>All</option>'+
                 '</select> records'
