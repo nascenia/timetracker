@@ -3,6 +3,8 @@ class Attendance < ActiveRecord::Base
 
   USUAL_OFFICE_TIME = "10:00"
 
+  scope :by_month, ->(month) {where("MONTH(datetoday) =?", month)}
+
   def update_out_time
     self.update_attribute(:out, Time.now.to_s(:time))
     total_hours = ((self.out.to_time - self.in.to_time) / 1.hour).round(2)

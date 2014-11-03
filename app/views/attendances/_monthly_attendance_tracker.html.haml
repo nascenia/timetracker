@@ -44,7 +44,7 @@
                   %th Total Hours
                   %th Status
               %tbody
-                - user.attendances.each do |entry|
+                - user.attendances.by_month(Time.now.month).each do |entry|
                   %tr
                     %td= entry.datetoday
                     %td= Time.at(entry.in).utc.strftime("%I:%M%p")
