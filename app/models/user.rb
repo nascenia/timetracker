@@ -39,7 +39,7 @@ class User < ActiveRecord::Base
   end
 
   def monthly_average_hour(month)
-    total_days_spent_in_office = self.attendances.where("MONTH(datetoday) =?", month).count("datetoday", :distinct => true)
+    total_days_spent_in_office = self.attendances.where("MONTH(datetoday) =? AND attendances.total_hours IS NOT NULL", month).count("datetoday", :distinct => true)
     if total_days_spent_in_office > 0
       monthly_total_hour(month) / total_days_spent_in_office
     end
