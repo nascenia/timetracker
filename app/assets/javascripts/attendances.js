@@ -51,10 +51,11 @@ function notify() {
             body: "মাগরিবের নামাজে যোগ দিন। ৫:৩০ এ জামাত শুরু হবে।"
         };
     }
-
-    setTimeout(function() {
-        var notification = new Notification("আসসালামু আলাইকুম!", options);
-    }, timeout);
+    if (currentTime < magrib ){
+        setTimeout(function() {
+            var notification = new Notification("আসসালামু আলাইকুম!", options);
+        }, timeout);
+    }
 
     setTimeout(function() {
         location.reload();
