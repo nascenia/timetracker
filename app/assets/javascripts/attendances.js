@@ -1,6 +1,7 @@
 $(document).ready(function() {
     $('#monthly-attendance-table').dataTable({
-        "iDisplayLength": 50,
+        "order": [[ 1, "desc" ]],
+        "iDisplayLength": 100,
         dom: 'T<"clear">lfrtip',
         tableTools: {
             "sSwfPath": "http://cdn.datatables.net/tabletools/2.2.2/swf/copy_csv_xls_pdf.swf",
@@ -56,9 +57,5 @@ function notify() {
             var notification = new Notification("আসসালামু আলাইকুম!", options);
         }, timeout);
     }
-
-    setTimeout(function() {
-        location.reload();
-    }, 60000);
 }
 
