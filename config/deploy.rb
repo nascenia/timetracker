@@ -69,6 +69,10 @@ namespace :deploy do
     #run "echo 'BUNDLE_PATH: vendor/bundle' >> #{shared_path}/config/.bundle/config"
     #run "echo \"BUNDLE_DISABLE_SHARED_GEMS: '1'\" >> #{shared_path}/config/.bundle/config"
   end
+  desc "reload the database with seed data"
+  task :seed do
+    run "cd #{current_path}; rake db:seed RAILS_ENV=#{rails_env}"
+  end
 
   namespace :web do
     desc <<-DESC
