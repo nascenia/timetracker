@@ -23,7 +23,7 @@ set :rake, 'bundle exec rake'
 set :bundle_cmd, "bundle"
 set :rake, 'bundle exec rake'
 
-after('deploy:update_code', 'deploy:symlink_shared')
+after('deploy:update_code', 'deploy:symlink_shared', 'deploy:migrate')
 
 task :prod do
   web_server = "106.186.115.31"
