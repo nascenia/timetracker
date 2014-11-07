@@ -27,7 +27,7 @@ class AttendancesController < ApplicationController
 
   def create
     @user = current_user
-    @user.create_attendance
+    @user.create_attendance unless @user.find_todays_entry
     @user.update_first_entry
 
     respond_to do |format|
