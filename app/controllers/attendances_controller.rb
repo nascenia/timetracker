@@ -6,7 +6,7 @@ class AttendancesController < ApplicationController
     @todays_entry = current_user.find_todays_entry
     @date = Date.today
     @todays_tracker = Attendance.todays_attendance_summary(@date)
-    @salaat = Salaat.all
+
 
     respond_to do |format|
       format.html
