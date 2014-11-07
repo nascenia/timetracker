@@ -32,9 +32,9 @@
                 %th Waqt
                 %th Time
             %tbody
-              -#- @salaat.each do |salaat|
-              -#  %tr
-              -#    %td= salaat.waqt
-              -#    %td= salaat.time.strftime("%I:%M")
+              - @salaat.each do |salaat|
+                %tr
+                  %td= salaat.waqt
+                  %td= salaat.time.strftime("%I:%M")
       .modal-footer
         %button.btn.btn-danger{"data-dismiss" => "modal", :type => "button"} Close
