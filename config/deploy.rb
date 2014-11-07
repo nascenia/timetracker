@@ -23,7 +23,7 @@ set :rake, 'bundle exec rake'
 set :bundle_cmd, "bundle"
 set :rake, 'bundle exec rake'
 
-after('deploy:update_code', 'deploy:symlink_shared', 'deploy:migrate', 'deploy:seed')
+after('deploy:update_code', 'deploy:symlink_shared', 'deploy:migrate')
 
 task :prod do
   web_server = "106.186.115.31"
@@ -68,10 +68,6 @@ namespace :deploy do
     #run "echo '---' >> #{shared_path}/config/.bundle/config"
     #run "echo 'BUNDLE_PATH: vendor/bundle' >> #{shared_path}/config/.bundle/config"
     #run "echo \"BUNDLE_DISABLE_SHARED_GEMS: '1'\" >> #{shared_path}/config/.bundle/config"
-  end
-  desc "reload the database with seed data"
-  task :seed do
-    run "cd #{current_path}; bundle exec rake db:seed RAILS_ENV=#{rails_env}"
   end
 
   namespace :web do
