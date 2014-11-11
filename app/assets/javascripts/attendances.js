@@ -16,25 +16,35 @@ $(document).ready(function() {
     } else {
         $("#out").attr("disabled", "disabled");
     }
-
     //=========== Setting Desktop Notification ====
     notify();
 } );
 
 function notify() {
+    var data = $('#salat').val();
+
+    var zohrWaqt = new Date(JSON.parse(data)[0].time);
+    var zohrWaqtHour = zohrWaqt.getHours() + 6;
+    var zohrWaqtMinute = zohrWaqt.getMinutes();
+
+    var asorWaqt = new Date(JSON.parse(data)[1].time);
+    var asorWaqtHour = asorWaqt.getHours() + 6;
+    var asorWaqtMinute = asorWaqt.getMinutes();
+
+    var magribWaqt = new Date(JSON.parse(data)[2].time);
+    var magribWaqtHour = magribWaqt.getHours() + 6;
+    var magribWaqtMinute = magribWaqt.getMinutes();
+
     var currentTime = new Date(), zohr = new Date(), asor = new Date(), magrib = new Date();
 
-    zohr.setHours(13);
-    zohr.setMinutes(20);
-    zohr.setSeconds(0);
+    zohr.setHours(zohrWaqtHour);
+    zohr.setMinutes(zohrWaqtMinute);
 
-    asor.setHours(16);
-    asor.setMinutes(05);
-    asor.setSeconds(00);
+    asor.setHours(asorWaqtHour);
+    asor.setMinutes(asorWaqtMinute);
 
-    magrib.setHours(17);
-    magrib.setMinutes(20);
-    magrib.setSeconds(0);
+    magrib.setHours(magribWaqtHour);
+    magrib.setMinutes(magribWaqtMinute);
 
     if (currentTime < zohr){
          var timeout = zohr - currentTime;
@@ -54,7 +64,12 @@ function notify() {
     }
     if (currentTime < magrib ){
         setTimeout(function() {
-            var notification = new Notification("আসসালামু আলাইকুম!", options);
+           if (Notification.permission === "granted") {
+                var notification = new Notification("আসসালামু আলাইকুম!", options);
+            }
+            setTimeout(function(){
+                location.reload();
+            }, 60000);
         }, timeout);
     }
 }
