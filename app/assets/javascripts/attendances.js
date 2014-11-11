@@ -25,15 +25,15 @@ function notify() {
 
     var zohrWaqt = new Date(JSON.parse(data)[0].time);
     var zohrWaqtHour = zohrWaqt.getHours() + 6;
-    var zohrWaqtMinute = zohrWaqt.getMinutes();
+    var zohrWaqtMinute = zohrWaqt.getMinutes() - 10;
 
     var asorWaqt = new Date(JSON.parse(data)[1].time);
     var asorWaqtHour = asorWaqt.getHours() + 6;
-    var asorWaqtMinute = asorWaqt.getMinutes();
+    var asorWaqtMinute = asorWaqt.getMinutes() - 10;
 
     var magribWaqt = new Date(JSON.parse(data)[2].time);
     var magribWaqtHour = magribWaqt.getHours() + 6;
-    var magribWaqtMinute = magribWaqt.getMinutes();
+    var magribWaqtMinute = magribWaqt.getMinutes() - 10;
 
     var currentTime = new Date(), zohr = new Date(), asor = new Date(), magrib = new Date();
 
