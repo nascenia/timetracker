@@ -21,6 +21,7 @@ class Attendance < ActiveRecord::Base
     missing_out_time = self.where(out: nil, datetoday: yesterday, first_entry: true)
 
     missing_out_time.each do |entry|
+      logger.info "User Id: #{entry.user.id} Name: #{entry.user.name} Email: #{entry.user.email}"
       entry.update_attribute(:total_hours, 2)
     end
   end
