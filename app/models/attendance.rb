@@ -19,6 +19,7 @@ class Attendance < ActiveRecord::Base
 
   def self.add_two_hours_for_missing_out_time(yesterday = Date.yesterday)
     missing_out_time = self.where(out: nil, datetoday: yesterday, first_entry: true)
+    logger.info "--------2 hours adding method-----------"
 
     missing_out_time.each do |entry|
       logger.info "User Id: #{entry.user.id} Name: #{entry.user.name} Email: #{entry.user.email}"
