@@ -20,9 +20,11 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def restrict_access
-    unless( WHITELIST.include? request.remote_ip )
-      flash[:notice] = "Access denied!"
-      redirect_to root_path and return
+    if request.remote_ip.present?
+      unless( WHITELIST.include? request.remote_ip )
+        flash[:notice] = "Access denied!"
+        redirect_to root_path and return
+      end
     end
   end
 end
