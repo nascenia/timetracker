@@ -1,6 +1,7 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   before_action :restrict_access
 
+  WHITELIST = ['203.202.242.130', '127.0.0.1']
   def google_oauth2
     if request.env["omniauth.auth"][:info][:email].split('@').last == "nascenia.com" || request.env["omniauth.auth"][:info][:email].split('@').last == "bdipo.com"
       @user = User.find_for_google_oauth2(request.env["omniauth.auth"])
@@ -9,6 +10,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         sign_in_and_redirect @user, :event => :authentication
       else
         session["devise.google_data"] = request.env["omniauth.auth"]
+        flash[:notice] = "Access denied!"
         redirect_to new_user_registration_url and return
       end
     else
@@ -18,11 +20,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def restrict_access
-    @user = User.find_for_google_oauth2(request.env["omniauth.auth"])
-    logger.info "IP: #{request.ip}"
-    if @user.email == 'khalid@nascenia.com' && request.local_ip != '192.168.1.10'
+    unless( WHITELIST.include? request.remote_ip )
       flash[:notice] = "Access denied!"
-      redirect_to root_path
+      redirect_to root_path and return
     end
   end
 end
