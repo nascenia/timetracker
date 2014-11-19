@@ -19,6 +19,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def restrict_access
     @user = User.find_for_google_oauth2(request.env["omniauth.auth"])
+    logger.info "IP: #{request.remote_ip}"
     if @user.email == 'khalid@nascenia.com' && request.remote_ip != '192.168.1.10'
       flash[:notice] = "Access denied!"
       redirect_to root_path
