@@ -16,14 +16,4 @@ class Attendance < ActiveRecord::Base
   def summary_of_current_month(month = Time.now.month)
     self.where("MONTH(datetoday) =?", month)
   end
-
-  def self.add_two_hours_for_missing_out_time(yesterday = Date.yesterday)
-    missing_out_time = self.where(out: nil, datetoday: yesterday, first_entry: true)
-    logger.info "--------2 hours adding method-----------"
-
-    missing_out_time.each do |entry|
-      logger.info "User Id: #{entry.user.id} Name: #{entry.user.name} Email: #{entry.user.email}"
-      entry.update_attribute(:total_hours, 2)
-    end
-  end
 end

@@ -27,7 +27,10 @@ class AttendancesController < ApplicationController
 
   def create
     @user = current_user
-    @user.create_attendance unless @user.find_todays_entry
+    unless @user.find_todays_entry
+      @user.create_attendance
+      @user.add_hours_for_missing_out
+    end
     @user.update_first_entry
 
     respond_to do |format|
@@ -56,6 +59,14 @@ class AttendancesController < ApplicationController
 
     respond_to do |format|
       format.js
+    end
+  end
+
+  def update_salaat_time
+    data = params[:salaat]
+    data.each do |salaat|
+      s = Salaat.find salaat.to_a[1][:id]
+      s.update_attribute(:time, salaat.to_a[1][:time])
     end
   end
 

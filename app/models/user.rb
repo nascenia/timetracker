@@ -8,6 +8,8 @@ class User < ActiveRecord::Base
 
   devise :omniauthable, :omniauth_providers => [:google_oauth2]
 
+  ADMIN_USER = ['khalid@nascenia.com', 'shaer@nascenia.com', 'faruk@nascenia.com']
+
   def self.find_for_google_oauth2(access_token, signed_in_resource=nil)
     data = access_token.info
     user = User.where(:email => data["email"]).first
@@ -58,5 +60,17 @@ class User < ActiveRecord::Base
       todays_first_entry = self.attendances.find_by_datetoday(today)
       todays_first_entry.update_attribute(:first_entry, true)
     end
+  end
+
+  def add_hours_for_missing_out(today = Date.today)
+    last_office_day = self.attendances.where("datetoday !=? AND first_entry =? AND attendances.total_hours IS NULL ", today, true).last
+    if last_office_day.present?
+      logger.info "---Extra 2 hours Added for user #{self.email} attendance id: #{last_office_day.id}---"
+      last_office_day.update_attribute(:total_hours, 2)
+    end
+  end
+
+  def is_admin?
+    ADMIN_USER.include? self.email
   end
 end

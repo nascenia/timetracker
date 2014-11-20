@@ -74,3 +74,27 @@ function notify() {
     }
 }
 
+$(document).on('click', '#save', function(){
+
+    var id, time;
+    var jsonObj = [];
+    $('[contenteditable=true]').each(function(){
+        var item = {};
+
+        item["id"] = $(this).attr('id');
+        item["time"] = $(this).html();
+
+        jsonObj.push(item);
+    });
+
+    $.ajax({
+        url: "/attendances/update_salaat_time",
+        type: "GET",
+        dataType: 'json',
+        data: {salaat: jsonObj},
+        success: function(result){
+
+        }
+    });
+})
+

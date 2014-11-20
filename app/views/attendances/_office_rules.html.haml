@@ -27,7 +27,7 @@
         %h4.modal-title Please Keep The Time Tracker Tab Open To Get Desktop Reminder For Namaz During Office.
       .modal-body
         .bs-example
-          %table.table.table-hover.table-bordered#individual-attendance-table
+          %table.table.table-hover.table-bordered#salaat-table
             %thead
               %tr
                 %th Waqt
@@ -36,6 +36,10 @@
               - @salaat.each do |salaat|
                 %tr
                   %td= salaat.waqt
-                  %td= salaat.time.strftime("%I:%M")
+                  %td{:class => "edit-salaat-time", :id => "#{salaat.id}", :contenteditable => "#{current_user.present? && current_user.is_admin? ? true : false}"}= salaat.time.strftime("%I:%M")
+
+              -#= button_to 'Save Changes', '#', :id => 'save', :class => 'btn-large btn-primary pull-right'
       .modal-footer
+        - if current_user.present? && current_user.is_admin?
+          %button.btn.btn-primary{:id => 'save', "data-dismiss" => "modal"} Save Changes
         %button.btn.btn-danger{"data-dismiss" => "modal", :type => "button"} Close
