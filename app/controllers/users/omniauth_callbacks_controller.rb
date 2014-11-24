@@ -1,7 +1,7 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   before_action :restrict_access
 
-  WHITELIST = ['203.202.242.130', '127.0.0.1']
+  WHITELIST = ['203.202.242.130', '127.0.0.0']
   def google_oauth2
     if request.env["omniauth.auth"][:info][:email].split('@').last == "nascenia.com" || request.env["omniauth.auth"][:info][:email].split('@').last == "bdipo.com"
       @user = User.find_for_google_oauth2(request.env["omniauth.auth"])
@@ -10,7 +10,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         sign_in_and_redirect @user, :event => :authentication
       else
         session["devise.google_data"] = request.env["omniauth.auth"]
-        flash[:notice] = "Access denied!"
         redirect_to new_user_registration_url and return
       end
     else
@@ -22,7 +21,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def restrict_access
     if request.remote_ip.present?
       unless( WHITELIST.include? request.remote_ip )
-        flash[:notice] = "Access denied!"
         redirect_to root_path and return
       end
     end
