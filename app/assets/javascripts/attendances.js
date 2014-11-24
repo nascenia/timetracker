@@ -48,18 +48,21 @@ function notify() {
 
     if (currentTime < zohr){
          var timeout = zohr - currentTime;
+        zohrMinute = zohr.getMinutes() + 10;
         var options = {
-            body: "যোহরের  নামাজে যোগ দিন। ১:৩০ এ জামাত শুরু হবে।"
+            body: "যোহরের  নামাজে যোগ দিন।" + zohr.getHours() % 12 + ":" + zohrMinute  + " এ জামাত শুরু হবে।"
         };
     } else if (currentTime > zohr && currentTime < asor) {
         var timeout = asor - currentTime;
+        asorMinute = asor.getMinutes() + 10;
         var options = {
-            body: "আসরের নামাজে যোগ দিন। ৪:১৫ তে জামাত শুরু হবে।"
+            body: "আসরের নামাজে যোগ দিন।" + asor.getHours() % 12 + ":" + asorMinute + " এ জামাত শুরু হবে।"
         };
     } else if (currentTime > asor && currentTime < magrib) {
         var timeout = magrib - currentTime;
+        magribMinute = magrib.getMinutes() + 10;
         var options = {
-            body: "মাগরিবের নামাজে যোগ দিন। ৫:৩০ এ জামাত শুরু হবে।"
+            body: "মাগরিবের নামাজে যোগ দিন।" + magrib.getHours() % 12 + ":"  + magribMinute + " এ জামাত শুরু হবে।"
         };
     }
     if (currentTime < magrib ){
