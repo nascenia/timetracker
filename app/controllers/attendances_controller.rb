@@ -40,10 +40,12 @@ class AttendancesController < ApplicationController
   end
 
   def update
-    @attendance.update_out_time
+    if @attendance.user_id == current_user.id
+      @attendance.update_out_time
+      flash[:notice] = "Successfully Checked Out."
+    end
 
     respond_to do |format|
-      flash[:notice] = "Successfully Checked Out."
       format.html {redirect_to :back}
     end
   end
