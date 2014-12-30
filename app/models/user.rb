@@ -73,4 +73,8 @@ class User < ActiveRecord::Base
   def is_admin?
     ADMIN_USER.include? self.email
   end
+
+  def remember_me
+    true
+  end
 end
