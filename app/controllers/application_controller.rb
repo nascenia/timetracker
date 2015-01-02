@@ -15,7 +15,8 @@ class ApplicationController < ActionController::Base
   def restrict_access
     if request.remote_ip.present?
       unless( WHITELIST.include? request.remote_ip )
-        redirect_to root_path and return false
+        render 'devise/sessions/new'
+        return false
       end
     end
   end
