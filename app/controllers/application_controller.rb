@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
   def restrict_access
     if request.remote_ip.present?
       unless( WHITELIST.include? request.remote_ip )
-        redirect_to root_path and return
+        redirect_to root_path and return false
       end
     end
   end
