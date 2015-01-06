@@ -63,11 +63,12 @@
                 %th  In
                 %th  Out
             %tbody
-              - @raw_data.each do |data|
-                %tr
-                  %td= data.user.email
-                  %td= data.datetoday
-                  %td= data.in
-                  %td= data.out
+              - if @raw_data.present?
+                - @raw_data.each do |data|
+                  %tr
+                    %td= data.user.email
+                    %td= data.datetoday
+                    %td= data.in
+                    %td= data.out
       .modal-footer
         %button.btn.btn-danger{"data-dismiss" => "modal", :type => "button"} Close
