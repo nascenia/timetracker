@@ -68,7 +68,7 @@
                   %tr
                     %td= data.user.email if data.user.present?
                     %td= data.datetoday
-                    %td= data.in
-                    %td= data.out
+                    %td= Time.at(data.in).utc.strftime("%I:%M%p")
+                    %td= Time.at(data.out).utc.strftime("%I:%M%p") if data.out.present?
       .modal-footer
         %button.btn.btn-danger{"data-dismiss" => "modal", :type => "button"} Close
