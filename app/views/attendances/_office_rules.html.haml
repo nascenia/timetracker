@@ -4,7 +4,7 @@
     = link_to "Salaat Time", '#salaat', "data-toggle" => "modal"
     |
     = link_to "Terms & Conditions", "#rules", "data-toggle" => "modal"
-    - if current_user.is_admin?
+    - if current_user.present? && current_user.is_admin?
       |
       = link_to "Raw Attendance Data", "#raw-data", "data-toggle" => "modal"
 .modal.fade#rules
