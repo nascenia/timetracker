@@ -13,6 +13,7 @@ class AttendancesController < ApplicationController
 
     respond_to do |format|
       format.html
+      format.xls {send_data @raw_data.to_csv(col_sep: "\t") }
     end
   end
 

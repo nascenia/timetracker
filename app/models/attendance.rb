@@ -17,4 +17,13 @@ class Attendance < ActiveRecord::Base
   def summary_of_current_month(month = Time.now.month)
     self.where("MONTH(datetoday) =?", month)
   end
+
+  def self.to_csv(options = {})
+    CSV.generate(options) do |csv|
+      csv << ["Date", "User", :in, :out]
+      all.each do |attd|
+        csv << ["#{attd.datetoday}", "#{attd.user.present? ? attd.user.email : nil}", "#{attd.in.present? ? Time.at(attd.in).utc.strftime("%I:%M%p") : nil} ", "#{attd.out.present? ? Time.at(attd.out).utc.strftime("%I:%M%p"): nil}"]
+      end
+    end
+  end
 end
