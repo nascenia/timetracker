@@ -4,20 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :authenticate_user!, :assign_salat_time
 
-  before_action :restrict_access
-
-  WHITELIST = ['203.202.242.130', '127.0.0.1']
-
   def assign_salat_time
     @salaat = Salaat.all
-  end
-
-  def restrict_access
-    if request.remote_ip.present?
-      unless( WHITELIST.include? request.remote_ip )
-        render 'devise/sessions/new'
-        return false
-      end
-    end
   end
 end

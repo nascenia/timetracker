@@ -1,11 +1,11 @@
 $(document).ready(function() {
-    $('#monthly-attendance-table').dataTable({
+    $('#monthly-attendance-table, #raw-data-table').dataTable({
         "order": [[ 1, "desc" ]],
         "iDisplayLength": 100,
         dom: 'T<"clear">lfrtip',
         tableTools: {
             "sSwfPath": "http://cdn.datatables.net/tabletools/2.2.2/swf/copy_csv_xls_pdf.swf",
-            "aButtons": ["pdf", "print" ]
+            "aButtons": ["pdf", "print", "xls" ]
         }
 
     });

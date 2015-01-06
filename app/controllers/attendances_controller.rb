@@ -1,12 +1,15 @@
 class AttendancesController < ApplicationController
   before_action :set_attendance, only: [:index, :show, :edit, :update, :destroy]
+  before_action :restrict_access, only: [:create, :update]
+
+  WHITELIST = ['203.202.242.130']
 
   def index
     @attendances = Attendance.all
     @todays_entry = current_user.find_todays_entry
     @date = Date.today
     @todays_tracker = Attendance.todays_attendance_summary(@date)
-
+    @raw_data = Attendance.raw_data_of_last_six_month
 
     respond_to do |format|
       format.html
@@ -69,6 +72,16 @@ class AttendancesController < ApplicationController
     data.each do |salaat|
       s = Salaat.find salaat.to_a[1][:id]
       s.update_attribute(:time, salaat.to_a[1][:time])
+    end
+  end
+
+  def restrict_access
+    if request.remote_ip.present?
+      unless( WHITELIST.include? request.remote_ip )
+        flash[:notice] = "Entry/Out is Restricted From Outside Office!"
+        render 'attendances/index'
+        return false
+      end
     end
   end
 

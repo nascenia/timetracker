@@ -1,37 +1,38 @@
-%h3
-  Daily Time Tracker
-  %br
-  %input#datepicker{:placeholder => "Search By Date", :type => "text", :value => @date }/
-  .pull-right#total-employee
-    Total Present in Office:
-    = @todays_tracker.select("DISTINCT(user_id)").count
-.bs-example
-  %table.table.table-hover.table-bordered
-    %thead
-      %tr
-        %th Name
-        %th Email
-        %th Entry
-        %th Leave
-        %th Status
-    %tbody
-      - @todays_tracker.each do |entry|
+- if @todays_tracker.present?
+  %h3
+    Daily Time Tracker
+    %br
+    %input#datepicker{:placeholder => "Search By Date", :type => "text", :value => @date }/
+    .pull-right#total-employee
+      Total Present in Office:
+      = @todays_tracker.select("DISTINCT(user_id)").count
+  .bs-example
+    %table.table.table-hover.table-bordered
+      %thead
         %tr
-          %td= entry.user.name
-          %td= entry.user.email
-          %td= Time.at(entry.in).utc.strftime("%I:%M%p")
-          %td= Time.at(entry.out).utc.strftime("%I:%M%p") if entry.out.present?
-          %td
-            - if entry.first_entry?
-              - if Time.at(entry.in).strftime("%H:%M") <= Time.at(Time.parse(Attendance::USUAL_OFFICE_TIME)).strftime("%H:%M")
-                .status#inTime
-                  On time
+          %th Name
+          %th Email
+          %th Entry
+          %th Leave
+          %th Status
+      %tbody
+        - @todays_tracker.each do |entry|
+          %tr
+            %td= entry.user.name
+            %td= entry.user.email
+            %td= Time.at(entry.in).utc.strftime("%I:%M%p")
+            %td= Time.at(entry.out).utc.strftime("%I:%M%p") if entry.out.present?
+            %td
+              - if entry.first_entry?
+                - if Time.at(entry.in).strftime("%H:%M") <= Time.at(Time.parse(Attendance::USUAL_OFFICE_TIME)).strftime("%H:%M")
+                  .status#inTime
+                    On time
+                - else
+                  .status#late
+                    Late
               - else
-                .status#late
-                  Late
-            - else
-              .status#secondEntry
-                Multi/ Entry
+                .status#secondEntry
+                  Multi/ Entry
 :javascript
   $(document).ready(function(){
     var nowTemp = new Date();
