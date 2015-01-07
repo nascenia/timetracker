@@ -81,7 +81,7 @@ class User < ActiveRecord::Base
   def self.to_csv(options = {})
     CSV.generate(options) do |csv|
       csv << ["", "#{1.month.ago.strftime("%B")}", nil, nil, "#{2.month.ago.strftime("%B")}", nil,nil, "#{3.month.ago.strftime("%B")}", nil, nil, "#{4.month.ago.strftime("%B")}",nil, nil, "#{5.month.ago.strftime("%B")}",nil, nil, "#{6.month.ago.strftime("%B")}", nil, nil]
-      csv << ["User", "TotalHours", "Avg.Time", "Avg.InTime", "TotalHours", "Avg.Time", "Avg.InTime", "TotalHours", "Avg.Time", "Avg.InTime"]
+      csv << ["User", "TotalHours", "Avg.Time", "Avg.InTime", "TotalHours", "Avg.Time", "Avg.InTime", "TotalHours", "Avg.Time", "Avg.InTime", "TotalHours", "Avg.Time", "Avg.InTime", "TotalHours", "Avg.Time", "Avg.InTime", "TotalHours", "Avg.Time", "Avg.InTime"]
       all.each do |user|
         csv << ["#{user.email}", "#{user.monthly_total_hour(1.month.ago.month).present? ? user.monthly_total_hour(1.month.ago.month).round : nil }", "#{user.monthly_average_hour(1.month.ago.month).present? ? user.monthly_average_hour(1.month.ago.month).round : nil }", "#{user.monthly_average_in_time(1.month.ago.month).present? ? user.monthly_average_in_time(1.month.ago.month) : nil }",
                 "#{user.monthly_total_hour(2.months.ago.month).present? ? user.monthly_total_hour(2.months.ago.month).round : nil }", "#{user.monthly_average_hour(2.months.ago.month).present? ? user.monthly_average_hour(2.months.ago.month).round : nil }", "#{user.monthly_average_in_time(2.months.ago.month).present? ? user.monthly_average_in_time(2.months.ago.month) : nil }",
