@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
 
   devise :omniauthable, :omniauth_providers => [:google_oauth2]
 
-  ADMIN_USER = ['khalid@nascenia.com', 'shaer@nascenia.com', 'faruk@nascenia.com']
+  ADMIN_USER = ['khalid@nascenia.com', 'shaer@nascenia.com', 'faruk@nascenia.com', 'fuad@nascenia.com']
 
   def self.find_for_google_oauth2(access_token, signed_in_resource=nil)
     data = access_token.info
