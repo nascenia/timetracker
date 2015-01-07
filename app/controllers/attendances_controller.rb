@@ -87,7 +87,7 @@ class AttendancesController < ApplicationController
   end
 
   def six_months_data
-    @users = User.all
+    @users = User.all.order(:email)
 
     respond_to do |format|
       format.xls {send_data @users.to_csv(col_sep: "\t")}
