@@ -82,7 +82,7 @@ class User < ActiveRecord::Base
     CSV.generate(options) do |csv|
       csv << ["User", "#{1.month.ago.strftime("%B")}", "#{2.month.ago.strftime("%B")}", "#{3.month.ago.strftime("%B")}", "#{4.month.ago.strftime("%B")}", "#{5.month.ago.strftime("%B")}", "#{6.month.ago.strftime("%B")}"]
       all.each do |user|
-        csv << ["#{user.email}", "#{user.monthly_total_hour(1.month.ago).round}", "#{user.monthly_total_hour(2.month.ago).round}", "#{user.monthly_total_hour(3.month.ago).round}", "#{user.monthly_total_hour(4.month.ago).round}", "#{user.monthly_total_hour(5.month.ago).round}", "#{user.monthly_total_hour(6.month.ago).round}"]
+        csv << ["#{user.email}", "#{user.monthly_total_hour(1.month.ago.month).round}", "#{user.monthly_total_hour(2.months.ago.month).round}", "#{user.monthly_total_hour(3.months.ago.month).round}", "#{user.monthly_total_hour(4.months.ago.month).round}", "#{user.monthly_total_hour(5.months.ago.month).round}", "#{user.monthly_total_hour(6.months.ago.month).round}"]
       end
     end
   end
