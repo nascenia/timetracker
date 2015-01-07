@@ -80,9 +80,15 @@ class User < ActiveRecord::Base
 
   def self.to_csv(options = {})
     CSV.generate(options) do |csv|
-      csv << ["User", "#{1.month.ago.strftime("%B")}", "#{2.month.ago.strftime("%B")}", "#{3.month.ago.strftime("%B")}", "#{4.month.ago.strftime("%B")}", "#{5.month.ago.strftime("%B")}", "#{6.month.ago.strftime("%B")}"]
+      csv << ["", "#{1.month.ago.strftime("%B")}", nil, nil, "#{2.month.ago.strftime("%B")}", nil,nil, "#{3.month.ago.strftime("%B")}", nil, nil, "#{4.month.ago.strftime("%B")}",nil, nil, "#{5.month.ago.strftime("%B")}",nil, nil, "#{6.month.ago.strftime("%B")}", nil, nil]
+      csv << ["User", "TotalHours", "Avg.Time", "Avg.InTime", "TotalHours", "Avg.Time", "Avg.InTime", "TotalHours", "Avg.Time", "Avg.InTime"]
       all.each do |user|
-        csv << ["#{user.email}", "#{user.monthly_total_hour(1.month.ago.month).round}", "#{user.monthly_total_hour(2.months.ago.month).round}", "#{user.monthly_total_hour(3.months.ago.month).round}", "#{user.monthly_total_hour(4.months.ago.month).round}", "#{user.monthly_total_hour(5.months.ago.month).round}", "#{user.monthly_total_hour(6.months.ago.month).round}"]
+        csv << ["#{user.email}", "#{user.monthly_total_hour(1.month.ago.month).present? ? user.monthly_total_hour(1.month.ago.month).round : nil }", "#{user.monthly_average_hour(1.month.ago.month).present? ? user.monthly_average_hour(1.month.ago.month).round : nil }", "#{user.monthly_average_in_time(1.month.ago.month).present? ? user.monthly_average_in_time(1.month.ago.month) : nil }",
+                "#{user.monthly_total_hour(2.months.ago.month).present? ? user.monthly_total_hour(2.months.ago.month).round : nil }", "#{user.monthly_average_hour(2.months.ago.month).present? ? user.monthly_average_hour(2.months.ago.month).round : nil }", "#{user.monthly_average_in_time(2.months.ago.month).present? ? user.monthly_average_in_time(2.months.ago.month) : nil }",
+                "#{user.monthly_total_hour(3.months.ago.month).present? ? user.monthly_total_hour(3.months.ago.month).round : nil }", "#{user.monthly_average_hour(3.months.ago.month).present? ? user.monthly_average_hour(3.months.ago.month).round : nil }", "#{user.monthly_average_in_time(3.months.ago.month).present? ? user.monthly_average_in_time(3.months.ago.month) : nil }",
+                "#{user.monthly_total_hour(4.months.ago.month).present? ? user.monthly_total_hour(4.months.ago.month).round : nil }", "#{user.monthly_average_hour(4.months.ago.month).present? ? user.monthly_average_hour(4.months.ago.month).round : nil }", "#{user.monthly_average_in_time(4.months.ago.month).present? ? user.monthly_average_in_time(4.months.ago.month) : nil }",
+                "#{user.monthly_total_hour(5.months.ago.month).present? ? user.monthly_total_hour(5.months.ago.month).round : nil }", "#{user.monthly_average_hour(5.months.ago.month).present? ? user.monthly_average_hour(5.months.ago.month).round : nil }", "#{user.monthly_average_in_time(5.months.ago.month).present? ? user.monthly_average_in_time(5.months.ago.month) : nil }",
+                "#{user.monthly_total_hour(6.months.ago.month).present? ? user.monthly_total_hour(6.months.ago.month).round : nil }", "#{user.monthly_average_hour(6.months.ago.month).present? ? user.monthly_average_hour(6.months.ago.month).round : nil }", "#{user.monthly_average_in_time(6.months.ago.month).present? ? user.monthly_average_in_time(6.months.ago.month) : nil }"]
       end
     end
   end
