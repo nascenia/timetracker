@@ -86,6 +86,14 @@ class AttendancesController < ApplicationController
     end
   end
 
+  def six_months_data
+    @users = User.all
+
+    respond_to do |format|
+      format.xls {send_data @users.to_csv(col_sep: "\t")}
+    end
+  end
+
   private
     def set_attendance
       @attendance = params[:id].present? ? Attendance.find(params[:id]) : Attendance.new

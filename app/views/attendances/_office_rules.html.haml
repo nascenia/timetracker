@@ -7,6 +7,8 @@
     - if current_user.present? && current_user.is_admin?
       |
       = link_to "Raw Attendance Data", attendances_path(:format => :xls)
+      |
+      = link_to "Six Month's Data", six_months_data_attendances_path(:format => :xls)
 .modal.fade#rules
   .modal-dialog
     .modal-content
