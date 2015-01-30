@@ -2,7 +2,7 @@ class AttendancesController < ApplicationController
   before_action :set_attendance, only: [:index, :show, :edit, :update, :destroy]
   before_action :restrict_access, only: [:create, :update]
 
-  WHITELIST = ['203.202.242.130']
+  WHITELIST = ['203.202.242.130', '127.0.0.1']
 
   def index
     @attendances = Attendance.all

@@ -38,14 +38,16 @@
             %table.table.table-hover.table-bordered#individual-attendance-table
               %thead
                 %tr
+                  %th Count
                   %th Date
                   %th InTime
                   %th OutTime
                   %th Total Hours
                   %th Status
               %tbody
-                - user.attendances.by_month(Time.now.month).each do |entry|
+                - user.attendances.by_month(Time.now.month).each_with_index do |entry, index|
                   %tr
+                    %td= index + 1
                     %td= entry.datetoday
                     %td= Time.at(entry.in).utc.strftime("%I:%M%p")
                     %td= Time.at(entry.out).utc.strftime("%I:%M%p") if entry.out.present?
