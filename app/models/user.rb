@@ -40,16 +40,16 @@ class User < ActiveRecord::Base
     self.attendances.where("MONTH(datetoday) =?", month).sum(:total_hours)
   end
 
-  def monthly_average_hour(month, sunday = 6)
-    total_days_spent_in_office = self.attendances.where("MONTH(datetoday) =? AND WEEKDAY(datetoday) !=? AND attendances.total_hours IS NOT NULL", month, sunday).count("datetoday", :distinct => true)
-    monthly_total_hour = self.attendances.where("MONTH(datetoday) =? AND WEEKDAY(datetoday) !=? ", month, sunday).sum(:total_hours)
+  def monthly_average_hour(month, saturday = 5, sunday = 6)
+    total_days_spent_in_office = self.attendances.where("MONTH(datetoday) =? AND WEEKDAY(datetoday) NOT IN (#{saturday}, #{sunday}) AND attendances.total_hours IS NOT NULL", month).count("datetoday", :distinct => true)
+    monthly_total_hour = self.attendances.where("MONTH(datetoday) =? AND WEEKDAY(datetoday) NOT IN (#{saturday}, #{sunday})", month).sum(:total_hours)
     if total_days_spent_in_office > 0
       monthly_total_hour / total_days_spent_in_office
     end
   end
 
-  def monthly_average_in_time(month, sunday = 6)
-    total = self.attendances.where("MONTH(datetoday) =? AND WEEKDAY(datetoday) !=? AND first_entry =? ", month, sunday, true).average("TIME_TO_SEC(attendances.in)")
+  def monthly_average_in_time(month, saturday = 5, sunday = 6)
+    total = self.attendances.where("MONTH(datetoday) =? AND WEEKDAY(datetoday) NOT IN (#{saturday}, #{sunday}) AND first_entry =? ", month, true).average("TIME_TO_SEC(attendances.in)")
     if total.present?
       Time.at(total).utc.strftime("%I:%M %p")
     end
