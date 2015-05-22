@@ -14,5 +14,5 @@
  *= require datepicker
  *= require jquery.dataTables
  *= require dataTables.tableTools
- *= require_tree .
+ *= require attendances
  */
