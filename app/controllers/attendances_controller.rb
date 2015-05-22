@@ -5,7 +5,6 @@ class AttendancesController < ApplicationController
   WHITELIST = ['203.202.242.130', '127.0.0.1']
 
   def index
-    @attendances = Attendance.all
     @todays_entry = current_user.find_todays_entry
     @date = Date.today
     @todays_tracker = Attendance.todays_attendance_summary(@date)
