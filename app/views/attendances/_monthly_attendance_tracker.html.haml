@@ -21,7 +21,7 @@
             %a{"data-toggle" => "modal", :href => "#userModal_#{user.id}"}= user.name
             - if current_user.is_admin?
               .pull-right
-                = link_to image_tag('hidden.png', :size => '25x20'), attendance_hide_name_path(:attendance_id => user.id), :remote => true
+                = link_to image_tag('hide.png'), attendance_hide_name_path(:attendance_id => user.id), :remote => true
           %td= user.monthly_total_hour(Time.now.month).round
           %td= user.monthly_average_hour(Time.now.month).present? ? user.monthly_average_hour(Time.now.month).round(1) : 0
           %td= user.monthly_average_in_time(Time.now.month).present? ? user.monthly_average_in_time(Time.now.month) : 0

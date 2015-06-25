@@ -13,4 +13,4 @@
         %tr
           %td= user.name
           %td= user.email
-          %td= link_to image_tag('visible.png', :size => '25x20'), attendance_show_name_path(:attendance_id => user.id), :remote => true
+          %td= link_to image_tag('unhide.png'), attendance_show_name_path(:attendance_id => user.id), :remote => true
