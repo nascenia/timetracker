@@ -9,6 +9,16 @@ $(document).ready(function() {
         }
 
     });
+
+    $("#hidden-names").dataTable({
+        "order": [[ 0, "desc" ]],
+        "iDisplayLength": 100,
+        dom: 'T<"clear">lfrtip',
+        tableTools: {
+            "sSwfPath": "http://cdn.datatables.net/tabletools/2.2.2/swf/copy_csv_xls_pdf.swf",
+            "aButtons": ["pdf", "print", "xls" ]
+        }
+    });
     //============ Disabling IN/Out button =======
     var entry = $('#todays_entry').val();
     if (entry){

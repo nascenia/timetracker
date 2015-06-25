@@ -94,12 +94,34 @@ class AttendancesController < ApplicationController
     end
   end
 
+  def hide_name
+    @user = User.find params[:attendance_id]
+    @user.update_attribute(:is_active, false)
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def show_name
+    @user = User.find params[:attendance_id]
+    @user.update_attribute(:is_active, true)
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def show_hidden_names
+    @users = User.inactive
+  end
+
   private
     def set_attendance
       @attendance = params[:id].present? ? Attendance.find(params[:id]) : Attendance.new
     end
 
     def attendance_params
-      params.permit(:user_id, :datetoday, :in, :out, :total_hours, :first_entry)
+      params.permit(:user_id, :datetoday, :in, :out, :total_hours, :first_entry, :is_active)
     end
 end
