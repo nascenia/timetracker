@@ -53,4 +53,5 @@ gem 'capistrano', '2.14.2', group: :development
 gem 'rvm-capistrano', '1.2.7'
 
 # Use debugger
+gem 'activeadmin', github: 'activeadmin'
 
