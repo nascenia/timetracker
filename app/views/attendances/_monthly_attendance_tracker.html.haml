@@ -15,17 +15,21 @@
         %th Avg. Hours
         %th Avg. InTime
     %tbody
-      - User.all.each do |user|
+      - User.all.active.each do |user|
         %tr
           %td
             %a{"data-toggle" => "modal", :href => "#userModal_#{user.id}"}= user.name
+            - if current_user.is_admin?
+              .pull-right
+                = link_to image_tag('hide.png'), attendance_hide_name_path(:attendance_id => user.id), :remote => true, :title => 'Hide Name'
           %td= user.monthly_total_hour(Time.now.month).round
           %td= user.monthly_average_hour(Time.now.month).present? ? user.monthly_average_hour(Time.now.month).round(1) : 0
           %td= user.monthly_average_in_time(Time.now.month).present? ? user.monthly_average_in_time(Time.now.month) : 0
           %td= user.monthly_total_hour(1.month.ago.month).round
           %td= user.monthly_average_hour(1.month.ago.month).present? ? user.monthly_average_hour(1.month.ago.month).round(1) : 0
           %td= user.monthly_average_in_time(1.month.ago.month).present? ? user.monthly_average_in_time(1.month.ago.month) : 0
-
+  - if current_user.is_admin?
+    = link_to 'Show Hidden Names', show_hidden_names_attendances_path
 - User.all.each do |user|
   .modal.fade{:id => "userModal_#{user.id}"}
     .modal-dialog

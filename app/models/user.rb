@@ -10,6 +10,9 @@ class User < ActiveRecord::Base
 
   ADMIN_USER = ['khalid@nascenia.com', 'shaer@nascenia.com', 'faruk@nascenia.com', 'fuad@nascenia.com']
 
+  scope :inactive, -> {where("is_active =?", false)}
+  scope :active, -> {where("is_active =?", true)}
+
   def self.find_for_google_oauth2(access_token, signed_in_resource=nil)
     data = access_token.info
     user = User.where(:email => data["email"]).first

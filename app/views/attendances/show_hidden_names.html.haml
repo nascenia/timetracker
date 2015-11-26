@@ -1,0 +1,16 @@
+= link_to 'Back', root_path, class: 'btn btn-primary'
+%br
+%br
+.bs-example
+  %table.table.table-hover.table-bordered#hidden-names
+    %thead
+      %tr
+        %th Name
+        %th Email
+        %th Show
+    %tbody
+      - @users.each do |user|
+        %tr
+          %td= user.name
+          %td= user.email
+          %td= link_to image_tag('unhide.png'), attendance_show_name_path(:attendance_id => user.id), :remote => true, :title => 'Show Name'
