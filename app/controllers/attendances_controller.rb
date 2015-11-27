@@ -93,6 +93,14 @@ class AttendancesController < ApplicationController
     end
   end
 
+  def raw_attendance_data
+    @raw_data = Attendance.raw_data_of_last_six_month
+
+    respond_to do |format|
+      format.xls {send_data @raw_data.to_csv(col_sep: "\t") }
+    end
+  end
+
   def monthly_report
     respond_to do |format|
       format.js

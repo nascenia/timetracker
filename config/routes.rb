@@ -6,6 +6,7 @@ Internal::Application.routes.draw do
     get 'update_salaat_time', :on => :collection
     get 'six_months_data', :on => :collection
     get 'monthly_report', :on => :collection
+    get 'raw_attendance_data', :on => :collection
     get 'hide_name'
     get 'show_name'
     get 'show_hidden_names', :on => :collection
