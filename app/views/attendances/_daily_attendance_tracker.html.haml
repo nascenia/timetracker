@@ -34,25 +34,25 @@
                 .status#secondEntry
                   Multi/ Entry
 :javascript
-  $(document).ready(function(){
+  $(document).on('click', '#datepicker', function(){
     var nowTemp = new Date();
-        var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
-        $('#datepicker').datepicker({
-            format: 'yyyy/mm/dd',
-            onRender: function(date) {
-                return date.valueOf() > now.valueOf() ? 'disabled' : '';
-            }
-        }).on('changeDate', function (ev) {
-            $(this).datepicker('hide');
-            var date = $(this).val();
-            $.ajax({
-                url: "/attendances/search_daily_attendance",
-                type: "GET",
-                dataType: 'script',
-                data: {date: date},
-                success: function(result){
+    var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+    $('#datepicker').datepicker({
+        format: 'yyyy/mm/dd',
+        onRender: function(date) {
+            return date.valueOf() > now.valueOf() ? 'disabled' : '';
+        }
+    }).on('changeDate', function (ev) {
+        $(this).datepicker('hide');
+        var date = $(this).val();
+        $.ajax({
+            url: "/attendances/search_daily_attendance",
+            type: "GET",
+            dataType: 'script',
+            data: {date: date},
+            success: function(result){
 
-                }
-            });
+            }
         });
+    });
   })

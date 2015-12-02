@@ -3,7 +3,7 @@ class Attendance < ActiveRecord::Base
 
   USUAL_OFFICE_TIME = "10:00"
 
-  scope :by_month, ->(month) {where("MONTH(datetoday) =?", month)}
+  scope :by_month, ->(month) {where("MONTH(datetoday) =? AND YEAR(datetoday) =? ", month, Time.now.year)}
   scope :todays_attendance_summary, ->(date) {where("datetoday =? ", date).order(:in)}
   scope :total_employee_present, ->(date) {where("datetoday =?", date).group(:user_id).count}
   scope :raw_data_of_last_six_month, -> {where("created_at >= ? ", 6.months.ago)}
