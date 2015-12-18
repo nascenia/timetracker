@@ -2,7 +2,7 @@
   %h3
     Daily Time Tracker
     %br
-    %input#datepicker{:placeholder => "Search By Date", :type => "text", :value => @date }/
+    %input#datepicker{:placeholder => "Search By Date", :type => "text", :value => @date, :readonly => true }/
     .pull-right#total-employee
       Total Present in Office:
       = @todays_tracker.select("DISTINCT(user_id)").count
@@ -33,26 +33,3 @@
               - else
                 .status#secondEntry
                   Multi/ Entry
-:javascript
-  $(document).on('click', '#datepicker', function(){
-    var nowTemp = new Date();
-    var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
-    $('#datepicker').datepicker({
-        format: 'yyyy/mm/dd',
-        onRender: function(date) {
-            return date.valueOf() > now.valueOf() ? 'disabled' : '';
-        }
-    }).on('changeDate', function (ev) {
-        $(this).datepicker('hide');
-        var date = $(this).val();
-        $.ajax({
-            url: "/attendances/search_daily_attendance",
-            type: "GET",
-            dataType: 'script',
-            data: {date: date},
-            success: function(result){
-
-            }
-        });
-    });
-  })

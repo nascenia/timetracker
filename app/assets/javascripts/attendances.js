@@ -10,6 +10,28 @@ $(document).ready(function() {
 //
 //    });
 
+    $.ajax({
+        url: "/attendances/monthly_report",
+        type: "GET",
+        dataType: 'script',
+        beforeSend: function() {
+            $("#loading-image").show();
+        },
+        success: function(msg) {
+            $("#loading-image").hide();
+            $('#monthly-attendance-table, #raw-data-table').dataTable({
+                "order": [[ 1, "desc" ]],
+                "iDisplayLength": 100,
+                dom: 'T<"clear">lfrtip',
+                tableTools: {
+                    "sSwfPath": "http://cdn.datatables.net/tabletools/2.2.2/swf/copy_csv_xls_pdf.swf",
+                    "aButtons": ["pdf", "print", "xls" ]
+                }
+
+            });
+        }
+    });
+
     $("#hidden-names").dataTable({
         "order": [[ 0, "desc" ]],
         "iDisplayLength": 100,
