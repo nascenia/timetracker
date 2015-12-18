@@ -1,7 +1,7 @@
 !!!
 %html
   %head
-    %title Time Tracker-Nascenia
+    %title Time Tracker | Nascenia
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
     = favicon_link_tag 'nascenia-logo-motif-only.png'
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
@@ -23,9 +23,13 @@
                   %span
                     = current_user.email
             %ul.nav.navbar-nav.navbar-right
+              - if current_user.is_admin?
+                %li
+                  = link_to 'Admin', admin_dashboard_path
+              %li
+                \#{link_to "My Leave", user_leave_path(current_user)}
               %li
                 \#{link_to "Logout", destroy_user_session_path, method: :delete}
-
       - if notice
         .notice= notice
       - elsif alert

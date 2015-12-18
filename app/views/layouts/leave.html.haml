@@ -1,0 +1,62 @@
+!!!
+%html
+  %head
+    %title Leave Tracker | Nascenia
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
+    = favicon_link_tag 'nascenia-logo-motif-only.png'
+    = javascript_include_tag 'application', 'data-turbolinks-track' => true
+    = csrf_meta_tags
+  %body
+    .container
+      %nav.navbar.navbar-default{:role => "navigation"}
+        .navbar-header
+          %a.navbar-brand{:href => "#{root_path}"} Nascenia Leave Tracker
+        #navbarCollapse.collapse.navbar-collapse
+          - if user_signed_in?
+            %ul.nav.navbar-nav
+              %li.pull-right
+                %p.user-status
+                  Signed in as
+                  %span
+                    = current_user.name
+                  email:
+                  %span
+                    = current_user.email
+            %ul.nav.navbar-nav.navbar-right
+              - if current_user.is_admin?
+                %li
+                  = link_to 'Admin', admin_dashboard_path
+              %li
+                \#{link_to "Time Tracker", root_path}
+              %li
+                \#{link_to "Logout", destroy_user_session_path, method: :delete}
+
+      .row
+        .col-sm-2
+          .sidebar-nav
+            .navbar.navbar-default{:role => "navigation"}
+              .navbar-header
+                %button.navbar-toggle{"data-target" => ".sidebar-navbar-collapse", "data-toggle" => "collapse", :type => "button"}
+                  %span.sr-only Toggle navigation
+                  %span.icon-bar
+                  %span.icon-bar
+                  %span.icon-bar
+                %span.visible-xs.navbar-brand Leave Tracker | Nascenia
+              .navbar-collapse.collapse.sidebar-navbar-collapse
+                %ul.nav.navbar-nav#leave-tracker-menu
+                  %li.active
+                    %a{:href => "#"} My Leave
+                  %li
+                    %a{:href => "#"} Apply for leave
+                  %li
+                    %a{:href => "#"} My employees
+                  %li
+                    %a{:href => "#"} Menu Item 4
+        .col-sm-10
+          - if notice
+            .notice= notice
+          - elsif alert
+            .alert= alert
+          = yield
+  %footer
+    = render partial: 'attendances/office_rules'

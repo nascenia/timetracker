@@ -1,6 +1,14 @@
 Internal::Application.routes.draw do
+  devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
+
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
+
+  resources :users do
+    get :leave
+  end
+  resources :leaves
+
   resources :attendances do
     get 'search_daily_attendance', :on => :collection
     get 'update_salaat_time', :on => :collection
@@ -11,8 +19,6 @@ Internal::Application.routes.draw do
     get 'show_name'
     get 'show_hidden_names', :on => :collection
   end
-
-  devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
 
   root :to => 'attendances#index'
 end

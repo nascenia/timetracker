@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   has_many :attendances
+  has_many :leave
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
@@ -12,6 +13,10 @@ class User < ActiveRecord::Base
 
   scope :inactive, -> {where("is_active =?", false)}
   scope :active, -> {where("is_active =?", true)}
+
+  def is_admin?
+    self.email && ADMIN_USER.to_s.include?(self.email)
+  end
 
   def self.find_for_google_oauth2(access_token, signed_in_resource=nil)
     data = access_token.info

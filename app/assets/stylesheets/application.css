@@ -14,5 +14,6 @@
  *= require datepicker
  *= require jquery.dataTables
  *= require dataTables.tableTools
+ *= require leaves
  *= require attendances
  */
