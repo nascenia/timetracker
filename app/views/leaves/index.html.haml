@@ -1,0 +1,23 @@
+%h1 Listing leaves
+%table
+  %thead
+    %tr
+      %th User
+      %th Reason
+      %th Leave type
+      %th Status
+      %th
+      %th
+      %th
+  %tbody
+    - @leaves.each do |leafe|
+      %tr
+        %td= leafe.user_id
+        %td= leafe.reason
+        %td= leafe.leave_type
+        %td= leafe.status
+        %td= link_to 'Show', leafe
+        %td= link_to 'Edit', edit_leafe_path(leafe)
+        %td= link_to 'Destroy', leafe, method: :delete, data: { confirm: 'Are you sure?' }
+%br/
+= link_to 'New Leave', new_leafe_path

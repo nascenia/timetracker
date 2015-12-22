@@ -2,6 +2,7 @@ class UsersController < ApplicationController
 
   def leave
     @user = User.find params[:user_id]
+    @leave = Leave.new
 
     respond_to do |format|
       format.html {render layout: 'leave'}

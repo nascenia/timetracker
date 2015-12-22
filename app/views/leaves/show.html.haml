@@ -1,0 +1,16 @@
+%p#notice= notice
+%p
+  %strong User:
+  = @leafe.user_id
+%p
+  %strong Reason:
+  = @leafe.reason
+%p
+  %strong Leave type:
+  = @leafe.leave_type
+%p
+  %strong Status:
+  = @leafe.status
+= link_to 'Edit', edit_leafe_path(@leafe)
+|
+\#{link_to 'Back', leaves_path}

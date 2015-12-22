@@ -16,6 +16,5 @@
 //= require bootstrap.min
 //= require jquery.dataTables
 //= require dataTables.tableTools
-//= require bootstrap-datepicker
 //= require attendances
 //= require_tree .

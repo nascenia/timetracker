@@ -11,9 +11,16 @@ class User < ActiveRecord::Base
 
   ADMIN_USER = ['khalid@nascenia.com', 'shaer@nascenia.com', 'faruk@nascenia.com', 'fuad@nascenia.com']
 
+  ROLES = [['Employee', 1], ['TTF', 2], ['STTF', 3]]
+  EMPLOYEE = 1
+  TTF = 2
+  STTF = 3
+
   scope :inactive, -> {where("is_active =?", false)}
   scope :active, -> {where("is_active =?", true)}
-
+  scope :ttfs, -> {where("role =?", TTF)}
+  scope :sttfs, -> {where("role =?", STTF)}
+  scope :employees, -> {where("role =?", EMPLOYEE)}
   def is_admin?
     self.email && ADMIN_USER.to_s.include?(self.email)
   end
@@ -77,10 +84,6 @@ class User < ActiveRecord::Base
       logger.info "---Extra 2 hours Added for user #{self.email} attendance id: #{last_office_day.id}---"
       last_office_day.update_attribute(:total_hours, 2)
     end
-  end
-
-  def is_admin?
-    ADMIN_USER.include? self.email
   end
 
   def remember_me

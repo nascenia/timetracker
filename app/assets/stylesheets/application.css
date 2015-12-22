@@ -11,7 +11,6 @@
  *= require_self
  *= require bootstrap.min
  *= require bootstrap-theme.min
- *= require datepicker
  *= require jquery.dataTables
  *= require dataTables.tableTools
  *= require leaves

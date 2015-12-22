@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151218053749) do
+ActiveRecord::Schema.define(version: 20151222093911) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -57,6 +57,21 @@ ActiveRecord::Schema.define(version: 20151218053749) do
     t.boolean  "first_entry", default: false
   end
 
+  create_table "leave_trackers", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "yearly_casual_leave"
+    t.integer  "yearly_medical_leave"
+    t.integer  "carried_forward_casual"
+    t.integer  "carried_forward_medical"
+    t.integer  "accrued_casual_leave"
+    t.integer  "accrued_medical_leave"
+    t.integer  "consumed_medical_leave"
+    t.integer  "consumed_casual_leave"
+    t.integer  "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "leaves", force: true do |t|
     t.integer  "user_id"
     t.text     "reason"
@@ -64,6 +79,9 @@ ActiveRecord::Schema.define(version: 20151218053749) do
     t.integer  "status"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.date     "start_date"
+    t.date     "end_date"
+    t.boolean  "half_day"
   end
 
   create_table "salaats", force: true do |t|
