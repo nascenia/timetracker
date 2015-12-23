@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   has_many :attendances
   has_many :leave
+  has_one :leave_tracker
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
@@ -21,6 +22,7 @@ class User < ActiveRecord::Base
   scope :ttfs, -> {where("role =?", TTF)}
   scope :sttfs, -> {where("role =?", STTF)}
   scope :employees, -> {where("role =?", EMPLOYEE)}
+
   def is_admin?
     self.email && ADMIN_USER.to_s.include?(self.email)
   end

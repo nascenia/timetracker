@@ -38,7 +38,7 @@
                 %th Waqt
                 %th Time
             %tbody
-              - @salaat.each do |salaat|
+              - Salaat.all.each do |salaat|
                 %tr
                   %td= salaat.waqt
                   %td{:class => "edit-salaat-time", :id => "#{salaat.id}", :contenteditable => "#{current_user.present? && current_user.is_admin? ? true : false}"}= salaat.time.strftime("%I:%M")

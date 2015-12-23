@@ -1,16 +1,24 @@
-%p#notice= notice
-%p
-  %strong User:
-  = @leafe.user_id
-%p
-  %strong Reason:
-  = @leafe.reason
-%p
-  %strong Leave type:
-  = @leafe.leave_type
-%p
-  %strong Status:
-  = @leafe.status
-= link_to 'Edit', edit_leafe_path(@leafe)
-|
-\#{link_to 'Back', leaves_path}
+%h1.page-title Leave Application Summary
+
+%table.table
+  %tr
+    %th.danger User:
+    %td.warning= @leave.user.name
+  %tr
+    %th.danger Email:
+    %td.warning= @leave.user.email
+  %tr
+    %th.danger Reason:
+    %td.warning= @leave.reason
+  %tr
+    %th.danger Leave type:
+    %td.warning= @leave.leave_type == Leave::CASUAL ? 'Casual' : 'Medical'
+  %tr
+    %th.danger Status:
+    %td.warning
+      - if @leave.status == Leave::ACCEPTED
+        = 'Accepted'
+      - elsif @leave.status == Leave::REJECTED
+        = 'Rejected'
+      - else
+        = 'Pending'

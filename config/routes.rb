@@ -7,7 +7,12 @@ Internal::Application.routes.draw do
   resources :users do
     get :leave
   end
-  resources :leaves
+
+  resources :leaves do
+    get :approve_or_reject_leave
+    get :approve
+    get :reject
+  end
 
   resources :attendances do
     get 'search_daily_attendance', :on => :collection

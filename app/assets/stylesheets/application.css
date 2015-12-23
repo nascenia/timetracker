@@ -15,4 +15,5 @@
  *= require dataTables.tableTools
  *= require leaves
  *= require attendances
+ *= require datepicker
  */

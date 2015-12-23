@@ -23,11 +23,4 @@ ActiveAdmin.register Attendance do
 
      actions
    end
-  # permit_params do
-  #   permitted = [:permitted, :attributes]
-  #   permitted << :other if resource.something?
-  #   permitted
-  # end
-
-
 end

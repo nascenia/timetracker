@@ -4,7 +4,7 @@
     %title Leave Tracker | Nascenia
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
     = favicon_link_tag 'nascenia-logo-motif-only.png'
-    = javascript_include_tag 'application', 'data-turbolinks-track' => true
+    = javascript_include_tag 'leaves', 'data-turbolinks-track' => true
     = csrf_meta_tags
   %body
     .container
@@ -45,18 +45,18 @@
               .navbar-collapse.collapse.sidebar-navbar-collapse
                 %ul.nav.navbar-nav#leave-tracker-menu
                   %li.active
-                    %a{:href => "#"} My Leave
+                    = link_to 'My Leave', user_leave_path(current_user)
                   %li
-                    %a{:href => "#"} Apply for leave
+                    = link_to 'Apply for Leave', new_leafe_path
                   %li
-                    %a{:href => "#"} My employees
+                    %a{:href => "#"} My Employees
                   %li
                     %a{:href => "#"} Menu Item 4
         .col-sm-10
           - if notice
-            .notice= notice
+            .notice.alert-success= notice
           - elsif alert
-            .alert= alert
+            .alert.alert-warning= alert
           = yield
   %footer
     = render partial: 'attendances/office_rules'

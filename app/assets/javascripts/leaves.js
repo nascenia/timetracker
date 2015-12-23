@@ -14,6 +14,4 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require bootstrap.min
-//= require jquery.dataTables
-//= require dataTables.tableTools
-//= require attendances
+//= require bootstrap-datepicker

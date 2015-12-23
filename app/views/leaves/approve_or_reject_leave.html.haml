@@ -1,0 +1,40 @@
+%h1.page-title Approve / Reject Leave
+%table.table
+  %thead
+    %tr.info
+      %th
+      %th Casual (Hours)
+      %th Medical (Hours)
+  %tbody
+    %tr
+      %th.danger Accrued Leave
+      %td.warning= @leave.user.leave_tracker.accrued_casual_leave
+      %td.success= @leave.user.leave_tracker.accrued_medical_leave
+    %tr
+      %th.danger Consumed Leave
+      %td.warning= @leave.user.leave_tracker.consumed_casual_leave
+      %td.success= @leave.user.leave_tracker.consumed_medical_leave
+
+.view-leave-application
+  %table.table
+    %tr
+      %th.danger User:
+      %td.warning= @leave.user.name
+    %tr
+      %th.danger Leave type:
+      %td.warning= @leave.leave_type == Leave::CASUAL ? 'Casual' : 'Medical'
+    %tr
+      %th.danger Reason:
+      %td.warning= @leave.reason
+    %tr
+      %th.danger Start Date:
+      %td.warning= @leave.start_date.strftime("%d-%m-%Y")
+    %tr
+      %th.danger End Date:
+      %td.warning= @leave.end_date.strftime("%d-%m-%Y") if @leave.end_date.present?
+    %tr
+      %th.danger Half day?
+      %td.warning= @leave.half_day
+  .response-btn
+    = link_to 'Approve', leafe_approve_path(@leave), :class => 'btn btn-primary'
+    = link_to 'Reject', leafe_reject_path(@leave), :class => 'btn btn-danger'
