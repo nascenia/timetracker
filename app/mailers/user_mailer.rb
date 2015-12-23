@@ -26,6 +26,6 @@ class UserMailer < ActionMailer::Base
       @greetings = '- Better Luck Next Time!'
     end
 
-    mail :to => user.email, :subject => subject
+    mail :to => @user.email, :subject => subject
   end
 end
