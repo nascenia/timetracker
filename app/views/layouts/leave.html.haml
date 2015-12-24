@@ -44,14 +44,14 @@
                 %span.visible-xs.navbar-brand Leave Tracker | Nascenia
               .navbar-collapse.collapse.sidebar-navbar-collapse
                 %ul.nav.navbar-nav#leave-tracker-menu
-                  %li.active
+                  %li{:class => current_page?(user_leave_path(current_user)) ? 'active' : ''}
                     = link_to 'My Leave', user_leave_path(current_user)
-                  %li
+                  %li{:class => current_page?(new_leafe_path) ? 'active' : ''}
                     = link_to 'Apply for Leave', new_leafe_path
                   %li
-                    %a{:href => "#"} My Employees
+                    = link_to 'Employee Relationship', '#'
                   %li
-                    %a{:href => "#"} Menu Item 4
+                    = link_to 'My Co-workers', '#'
         .col-sm-10
           - if notice
             .notice.alert-success= notice

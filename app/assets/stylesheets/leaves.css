@@ -24,6 +24,10 @@ table {
     border: 1px solid #e7e7e7;
 }
 
+table tbody tr th {
+    width: 36%;
+}
+
 .response-btn {
     padding-bottom: 10px;
 }
