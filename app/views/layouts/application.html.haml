@@ -31,9 +31,9 @@
               %li
                 \#{link_to "Logout", destroy_user_session_path, method: :delete}
       - if notice
-        .notice= notice
+        .notice.alert-success= notice
       - elsif alert
-        .alert= alert
+        .alert.alert-warning= alert
       = yield
   %footer
     = render partial: 'attendances/office_rules'

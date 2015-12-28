@@ -48,10 +48,10 @@
                     = link_to 'My Leave', user_leave_path(current_user)
                   %li{:class => current_page?(new_leafe_path) ? 'active' : ''}
                     = link_to 'Apply for Leave', new_leafe_path
-                  %li
-                    = link_to 'Employee Relationship', '#'
-                  %li
-                    = link_to 'My Co-workers', '#'
+                  %li{:class => current_page?(employee_list_leaves_path) ? 'active' : ''}
+                    = link_to 'Employee List', employee_list_leaves_path
+                  %li{:class => current_page?(user_my_employees_path(current_user)) ? 'active' : ''}
+                    = link_to 'My Co-workers', user_my_employees_path(current_user)
         .col-sm-10
           - if notice
             .notice.alert-success= notice

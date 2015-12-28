@@ -2,6 +2,7 @@ class LeavesController < ApplicationController
   layout 'leave'
 
   before_action :set_leave, only: [:index, :show, :edit, :update, :destroy]
+  before_action :check_permission, only: [:approve_or_reject_leave, :approve, :reject]
 
   def new
     @leave = Leave.new
@@ -36,6 +37,7 @@ class LeavesController < ApplicationController
   def approve
     @leave = Leave.find params[:leafe_id]
     @leave.update_attribute(:status, Leave::ACCEPTED)
+    @leave.update_leave_tracker
 
     UserMailer.send_approval_or_rejection_notification(@leave)
     redirect_to leafe_approve_or_reject_leave_path(@leave), :notice => 'Applicant shall be notified soon. Thanks!'
@@ -49,10 +51,21 @@ class LeavesController < ApplicationController
     redirect_to leafe_approve_or_reject_leave_path(@leave), :alert => 'Applicant shall be notified soon. Thanks!'
   end
 
+  def employee_list
+    @super_ttf = User.super_ttf
+  end
+
   private
 
     def set_leave
       @leave = params[:id].present? ? Leave.find(params[:id]) : Leave.new
+    end
+
+    def check_permission
+      @leave = Leave.find params[:leafe_id]
+      unless @leave.user.ttf_id == current_user.id || @leave.user.sttf_id == current_user.id
+        redirect_to user_leave_path(current_user), :notice => 'Access Denied'
+      end
     end
 
     def leave_params

@@ -1,4 +1,4 @@
-%h1.page-title My Leave
+%h1.page-title Leave Balance
 %table.table
   %thead
     %tr.info
@@ -22,3 +22,31 @@
       %th.danger Consumed Leave
       %td.warning= @user.leave_tracker.consumed_casual_leave
       %td.success= @user.leave_tracker.consumed_medical_leave
+
+%h1.page-title Leave log
+%table.table.leave-log
+  %thead
+    %tr.info
+      %th Date
+      %th Leave Type
+      %th Reason
+      %th Start Date
+      %th End Date
+      %th Half Day?
+      %th Status
+  %tbody
+    - @user.leave.each do |leave|
+      %tr
+        %th.danger= leave.created_at.strftime("%d-%m-%Y")
+        %td.warning= leave.leave_type == Leave::CASUAL ? 'Casual' : 'Medical'
+        %td.success= leave.reason
+        %td.warning= leave.start_date.strftime("%d-%m-%Y")
+        %td.success= leave.end_date.strftime("%d-%m-%Y") if leave.end_date.present?
+        %td.warning= leave.half_day
+        %td.success
+          - if leave.status == Leave::ACCEPTED
+            Approved
+          - elsif leave.status == Leave::REJECTED
+            Rejected
+          - else
+            Pending

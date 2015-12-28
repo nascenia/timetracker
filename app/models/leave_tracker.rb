@@ -1,5 +1,6 @@
 class LeaveTracker < ActiveRecord::Base
   belongs_to :user
+  belongs_to :leave
 
   YEARLY_CASUAL_LEAVE = 80
   YEARLY_MEDICAL_LEAVE = 48

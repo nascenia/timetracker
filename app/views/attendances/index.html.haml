@@ -1,12 +1,11 @@
 = hidden_field_tag :todays_entry, @todays_entry
 #in_out
   = render partial: 'in_out'
-%hr
+%br
 #monthly-tracker
   #loading-image
     = image_tag 'ajax-loader.gif'
 %br
-%hr
 #daily-tracker
   = render partial: 'daily_attendance_tracker'
 %br

@@ -25,7 +25,7 @@ ActiveAdmin.register User do
       (User.find obj.sttf_id).name if obj.sttf_id.present?
     end
 
-    column :is_active
+    column :is_active if
     actions
   end
 
@@ -34,8 +34,8 @@ ActiveAdmin.register User do
       f.input :email
       f.input :name
       f.input :role, as: :select, collection: User::ROLES
-      f.input :ttf_id, as: :select, collection: User.ttfs
-      f.input :sttf_id, as: :select, collection: User.sttfs
+      f.input :ttf_id, as: :select, collection: User.ttf
+      f.input :sttf_id, as: :select, collection: User.super_ttf
     end
     f.actions
   end

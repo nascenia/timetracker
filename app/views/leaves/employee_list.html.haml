@@ -1,0 +1,31 @@
+%h1.page-title Employee List
+#accordion1.panel-group
+  .panel.panel-default
+    - @super_ttf.each do |super_ttf|
+      .panel-heading
+        %h4.panel-title
+          %a{"data-parent" => "#accordion1", "data-toggle" => "collapse", :href => "#collapse_#{super_ttf.id}"}
+            = super_ttf.name
+            %span.pull-right Super TTF
+      .panel-collapse.collapse{:id => "collapse_#{super_ttf.id}"}
+        .panel-body
+          #accordion2.panel-group
+            .panel.panel-default
+              - User.list_of_ttfs(super_ttf.id).each do |ttf|
+                .panel-heading
+                  %h4.panel-title
+                    %a{"data-parent" => "#accordion2", "data-toggle" => "collapse", :href => "#collapseEmployee_#{ttf.id}"}
+                      = ttf.name
+                      %span.pull-right TTF
+                .panel-collapse.collapse.in
+                  .panel-body
+                    %table.table
+                      %thead
+                        %tr.info
+                          %th Name
+                          %th Email
+                      %tbody
+                        - User.list_of_employees(ttf.id).each do |employee|
+                          %tr
+                            %td.warning= employee.name
+                            %td.success= employee.email

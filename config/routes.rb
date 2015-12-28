@@ -6,12 +6,14 @@ Internal::Application.routes.draw do
 
   resources :users do
     get :leave
+    get :my_employees
   end
 
   resources :leaves do
     get :approve_or_reject_leave
     get :approve
     get :reject
+    get :employee_list, :on => :collection
   end
 
   resources :attendances do

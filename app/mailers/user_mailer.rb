@@ -6,8 +6,13 @@ class UserMailer < ActionMailer::Base
 
   def send_leave_application_notification(user, leave)
     @user = user
-    @ttf = User.find @user.ttf_id
     @leave = leave
+
+    if @user.ttf_id
+      @ttf = User.find @user.ttf_id
+    else
+      @ttf = User.find @user.sttf_id
+    end
 
     mail :to => @ttf.email, :subject => "#{@user.name} has applied for a leave"
   end

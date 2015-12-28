@@ -12,19 +12,29 @@ class User < ActiveRecord::Base
 
   ADMIN_USER = ['khalid@nascenia.com', 'shaer@nascenia.com', 'faruk@nascenia.com', 'fuad@nascenia.com']
 
-  ROLES = [['Employee', 1], ['TTF', 2], ['STTF', 3]]
+  ROLES = [['Employee', 1], ['TTF', 2], ['Super TTF', 3]]
   EMPLOYEE = 1
   TTF = 2
-  STTF = 3
+  SUPER_TTF = 3
 
   scope :inactive, -> {where("is_active =?", false)}
   scope :active, -> {where("is_active =?", true)}
-  scope :ttfs, -> {where("role =?", TTF)}
-  scope :sttfs, -> {where("role =?", STTF)}
+  scope :ttf, -> {where("role =?", TTF)}
+  scope :super_ttf, -> {where("role =?", SUPER_TTF)}
   scope :employees, -> {where("role =?", EMPLOYEE)}
+  scope :list_of_ttfs, -> (super_ttf) {where("role =? AND sttf_id =? ", TTF, super_ttf)}
+  scope :list_of_employees, -> (ttf) {where("role =? AND ttf_id =? ", EMPLOYEE, ttf)}
 
   def is_admin?
     self.email && ADMIN_USER.to_s.include?(self.email)
+  end
+
+  def is_ttf?
+    self.role == TTF
+  end
+
+  def is_super_ttf?
+    self.role == SUPER_TTF
   end
 
   def self.find_for_google_oauth2(access_token, signed_in_resource=nil)
