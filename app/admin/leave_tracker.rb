@@ -16,4 +16,16 @@ ActiveAdmin.register LeaveTracker do
     actions
   end
 
+  form do |f|
+    f.inputs "User Details" do
+      f.input :accrued_casual_leave
+      f.input :accrued_medical_leave
+      f.input :consumed_casual_leave
+      f.input :consumed_medical_leave
+      f.input :carried_forward_casual
+      f.input :carried_forward_medical
+    end
+    f.actions
+  end
+
 end
