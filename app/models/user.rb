@@ -67,7 +67,7 @@ class User < ActiveRecord::Base
     self.attendances.where("MONTH(datetoday) =? AND YEAR(datetoday) =?", month, year).sum(:total_hours)
   end
 
-  def monthly_average_hour(month, saturday = 5, sunday = 6, year = Time.now.year)
+  def monthly_average_hour(month,  year = Time.now.year, saturday = 5, sunday = 6)
     total_days_spent_in_office = self.attendances.where("MONTH(datetoday) =? AND YEAR(datetoday) =? AND WEEKDAY(datetoday) NOT IN (#{saturday}, #{sunday}) AND attendances.total_hours IS NOT NULL", month, year).count("datetoday", :distinct => true)
     monthly_total_hour = self.attendances.where("MONTH(datetoday) =? AND YEAR(datetoday) =? AND WEEKDAY(datetoday) NOT IN (#{saturday}, #{sunday})", month, year).sum(:total_hours)
     if total_days_spent_in_office > 0
@@ -75,7 +75,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  def monthly_average_in_time(month, saturday = 5, sunday = 6, year = Time.now.year)
+  def monthly_average_in_time(month,  year = Time.now.year, saturday = 5, sunday = 6)
     total = self.attendances.where("MONTH(datetoday) =? AND YEAR(datetoday) =? AND WEEKDAY(datetoday) NOT IN (#{saturday}, #{sunday}) AND first_entry =? ", month, year, true).average("TIME_TO_SEC(attendances.in)")
     if total.present?
       Time.at(total).utc.strftime("%I:%M %p")
@@ -107,12 +107,12 @@ class User < ActiveRecord::Base
       csv << [nil, nil, "#{1.month.ago.strftime("%B")}", nil, nil, "#{2.month.ago.strftime("%B")}", nil, nil, "#{3.month.ago.strftime("%B")}", nil, nil, "#{4.month.ago.strftime("%B")}",nil, nil, "#{5.month.ago.strftime("%B")}",nil, nil, "#{6.month.ago.strftime("%B")}", nil]
       csv << ["User", "TotalHours", "Avg.Time", "Avg.InTime", "TotalHours", "Avg.Time", "Avg.InTime", "TotalHours", "Avg.Time", "Avg.InTime", "TotalHours", "Avg.Time", "Avg.InTime", "TotalHours", "Avg.Time", "Avg.InTime", "TotalHours", "Avg.Time", "Avg.InTime"]
       all.each do |user|
-        csv << ["#{user.email}", "#{user.monthly_total_hour(1.month.ago.month).present? ? user.monthly_total_hour(1.month.ago.month).round : nil }", "#{user.monthly_average_hour(1.month.ago.month).present? ? user.monthly_average_hour(1.month.ago.month).round(1) : nil }", "#{user.monthly_average_in_time(1.month.ago.month).present? ? user.monthly_average_in_time(1.month.ago.month) : nil }",
-                "#{user.monthly_total_hour(2.months.ago.month).present? ? user.monthly_total_hour(2.months.ago.month).round : nil }", "#{user.monthly_average_hour(2.months.ago.month).present? ? user.monthly_average_hour(2.months.ago.month).round(1) : nil }", "#{user.monthly_average_in_time(2.months.ago.month).present? ? user.monthly_average_in_time(2.months.ago.month) : nil }",
-                "#{user.monthly_total_hour(3.months.ago.month).present? ? user.monthly_total_hour(3.months.ago.month).round : nil }", "#{user.monthly_average_hour(3.months.ago.month).present? ? user.monthly_average_hour(3.months.ago.month).round(1) : nil }", "#{user.monthly_average_in_time(3.months.ago.month).present? ? user.monthly_average_in_time(3.months.ago.month) : nil }",
-                "#{user.monthly_total_hour(4.months.ago.month).present? ? user.monthly_total_hour(4.months.ago.month).round : nil }", "#{user.monthly_average_hour(4.months.ago.month).present? ? user.monthly_average_hour(4.months.ago.month).round(1) : nil }", "#{user.monthly_average_in_time(4.months.ago.month).present? ? user.monthly_average_in_time(4.months.ago.month) : nil }",
-                "#{user.monthly_total_hour(5.months.ago.month).present? ? user.monthly_total_hour(5.months.ago.month).round : nil }", "#{user.monthly_average_hour(5.months.ago.month).present? ? user.monthly_average_hour(5.months.ago.month).round(1) : nil }", "#{user.monthly_average_in_time(5.months.ago.month).present? ? user.monthly_average_in_time(5.months.ago.month) : nil }",
-                "#{user.monthly_total_hour(6.months.ago.month).present? ? user.monthly_total_hour(6.months.ago.month).round : nil }", "#{user.monthly_average_hour(6.months.ago.month).present? ? user.monthly_average_hour(6.months.ago.month).round(1) : nil }", "#{user.monthly_average_in_time(6.months.ago.month).present? ? user.monthly_average_in_time(6.months.ago.month) : nil }"]
+        csv << ["#{user.email}", "#{user.monthly_total_hour(1.month.ago.month, 1.month.ago.year).present? ? user.monthly_total_hour(1.month.ago.month, 1.month.ago.year).round : nil }", "#{user.monthly_average_hour(1.month.ago.month, 1.month.ago.year).present? ? user.monthly_average_hour(1.month.ago.month, 1.month.ago.year).round(1) : nil }", "#{user.monthly_average_in_time(1.month.ago.month, 1.month.ago.year).present? ? user.monthly_average_in_time(1.month.ago.month, 1.month.ago.year) : nil }",
+                "#{user.monthly_total_hour(2.months.ago.month, 2.month.ago.year).present? ? user.monthly_total_hour(2.months.ago.month, 1.month.ago.year).round : nil }", "#{user.monthly_average_hour(2.months.ago.month, 2.month.ago.year).present? ? user.monthly_average_hour(2.months.ago.month, 2.month.ago.year).round(1) : nil }", "#{user.monthly_average_in_time(2.months.ago.month, 2.month.ago.year).present? ? user.monthly_average_in_time(2.months.ago.month, 2.month.ago.year) : nil }",
+                "#{user.monthly_total_hour(3.months.ago.month, 3.month.ago.year).present? ? user.monthly_total_hour(3.months.ago.month, 3.month.ago.year).round : nil }", "#{user.monthly_average_hour(3.months.ago.month, 3.month.ago.year).present? ? user.monthly_average_hour(3.months.ago.month, 3.month.ago.year).round(1) : nil }", "#{user.monthly_average_in_time(3.months.ago.month, 3.month.ago.year).present? ? user.monthly_average_in_time(3.months.ago.month, 3.month.ago.year) : nil }",
+                "#{user.monthly_total_hour(4.months.ago.month, 4.month.ago.year).present? ? user.monthly_total_hour(4.months.ago.month, 4.month.ago.year).round : nil }", "#{user.monthly_average_hour(4.months.ago.month, 4.month.ago.year).present? ? user.monthly_average_hour(4.months.ago.month, 4.month.ago.year).round(1) : nil }", "#{user.monthly_average_in_time(4.months.ago.month, 4.month.ago.year).present? ? user.monthly_average_in_time(4.months.ago.month, 4.month.ago.year) : nil }",
+                "#{user.monthly_total_hour(5.months.ago.month, 5.month.ago.year).present? ? user.monthly_total_hour(5.months.ago.month, 5.month.ago.year).round : nil }", "#{user.monthly_average_hour(5.months.ago.month, 5.month.ago.year).present? ? user.monthly_average_hour(5.months.ago.month, 5.month.ago.year).round(1) : nil }", "#{user.monthly_average_in_time(5.months.ago.month, 5.month.ago.year).present? ? user.monthly_average_in_time(5.months.ago.month, 5.month.ago.year) : nil }",
+                "#{user.monthly_total_hour(6.months.ago.month, 6.month.ago.year).present? ? user.monthly_total_hour(6.months.ago.month, 6.month.ago.year).round : nil }", "#{user.monthly_average_hour(6.months.ago.month, 6.month.ago.year).present? ? user.monthly_average_hour(6.months.ago.month, 6.month.ago.year).round(1) : nil }", "#{user.monthly_average_in_time(6.months.ago.month, 6.month.ago.year).present? ? user.monthly_average_in_time(6.months.ago.month, 6.month.ago.year) : nil }"]
       end
     end
   end

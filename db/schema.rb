@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151222093911) do
+ActiveRecord::Schema.define(version: 20151230103311) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -61,15 +61,18 @@ ActiveRecord::Schema.define(version: 20151222093911) do
     t.integer  "user_id"
     t.integer  "yearly_casual_leave"
     t.integer  "yearly_medical_leave"
-    t.integer  "carried_forward_casual"
+    t.integer  "carried_forward_vacation"
     t.integer  "carried_forward_medical"
-    t.integer  "accrued_casual_leave"
-    t.integer  "accrued_medical_leave"
-    t.integer  "consumed_medical_leave"
-    t.integer  "consumed_casual_leave"
-    t.integer  "status"
+    t.integer  "accrued_vacation_balance"
+    t.integer  "accrued_medical_balance"
+    t.integer  "consumed_medical"
+    t.integer  "consumed_vacation"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "accrued_vacation_this_year", default: 0
+    t.integer  "accrued_medical_this_year",  default: 0
+    t.integer  "accrued_vacation_total",     default: 0
+    t.integer  "accrued_medical_total",      default: 0
   end
 
   create_table "leaves", force: true do |t|
