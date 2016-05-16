@@ -16,7 +16,7 @@ ActiveAdmin.register Leave do
     end
     column :reason
     column :start_date do |obj|
-      obj.start_date.strftime("%d-%m-%Y")
+      obj.start_date.strftime("%d-%m-%Y") if obj.start_date.present?
     end
     column :end_date do |obj|
       obj.end_date.strftime("%d-%m-%Y") if obj.end_date.present?

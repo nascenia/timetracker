@@ -1,32 +1,36 @@
 %h1.page-title Leave Balance
 %table.table
   %thead
-    %tr.info
+    %tr
       %th
       %th Casual (Hours)
       %th Medical (Hours)
   %tbody
     %tr
-      %th.danger Yearly Leave
-      %td.warning= LeaveTracker::YEARLY_CASUAL_LEAVE
-      %td.success= LeaveTracker::YEARLY_MEDICAL_LEAVE
+      %th Yearly Leave
+      %td= LeaveTracker::YEARLY_CASUAL_LEAVE
+      %td= LeaveTracker::YEARLY_MEDICAL_LEAVE
     %tr
-      %th.danger Carried Forwarded Leave
-      %td.warning= @user.leave_tracker.carried_forward_casual
-      %td.success= @user.leave_tracker.carried_forward_medical
+      %th Accrued in this year
+      %td= @user.leave_tracker.accrued_vacation_this_year
+      %td= @user.leave_tracker.accrued_medical_this_year
     %tr
-      %th.danger Accrued Leave
-      %td.warning= @user.leave_tracker.accrued_casual_leave
-      %td.success= @user.leave_tracker.accrued_medical_leave
+      %th Carried Forwarded Leave
+      %td= @user.leave_tracker.carried_forward_vacation
+      %td= @user.leave_tracker.carried_forward_medical
     %tr
-      %th.danger Consumed Leave
-      %td.warning= @user.leave_tracker.consumed_casual_leave
-      %td.success= @user.leave_tracker.consumed_medical_leave
+      %th Accrued in total
+      %td= @user.leave_tracker.accrued_vacation_total
+      %td= @user.leave_tracker.accrued_medical_total
+    %tr
+      %th Accrual balance
+      %td= @user.leave_tracker.accrued_vacation_balance
+      %td= @user.leave_tracker.accrued_medical_balance
 
 %h1.page-title Leave log
 %table.table.leave-log
   %thead
-    %tr.info
+    %tr
       %th Date
       %th Leave Type
       %th Reason
@@ -37,13 +41,13 @@
   %tbody
     - @user.leave.each do |leave|
       %tr
-        %th.danger= leave.created_at.strftime("%d-%m-%Y")
-        %td.warning= leave.leave_type == Leave::CASUAL ? 'Casual' : 'Medical'
-        %td.success= leave.reason
-        %td.warning= leave.start_date.strftime("%d-%m-%Y")
-        %td.success= leave.end_date.strftime("%d-%m-%Y") if leave.end_date.present?
-        %td.warning= leave.half_day
-        %td.success
+        %th= leave.created_at.strftime("%d-%m-%Y")
+        %td= leave.leave_type == Leave::CASUAL ? 'Casual' : 'Medical'
+        %td= leave.reason
+        %td= leave.start_date.strftime("%d-%m-%Y")
+        %td= leave.end_date.strftime("%d-%m-%Y") if leave.end_date.present?
+        %td= leave.half_day
+        %td
           - if leave.status == Leave::ACCEPTED
             Approved
           - elsif leave.status == Leave::REJECTED

@@ -1,7 +1,7 @@
 ActiveAdmin.register LeaveTracker do
-  permit_params :user_id, :yearly_casual_leave, :yearly_medical_leave, :carried_forward_casual,
-                :carried_forward_medical, :accrued_casual_leave, :accrued_medical_leave, :status,
-                :consumed_casual_leave, :consumed_medical_leave
+  permit_params :user_id, :yearly_casual_leave, :yearly_medical_leave, :carried_forward_vacation,
+                :carried_forward_medical, :accrued_vacation_balance, :accrued_medical_balance, :consumed_vacation,
+                :consumed_medical, :commenced_date
 
   index do
     selectable_column
@@ -9,21 +9,20 @@ ActiveAdmin.register LeaveTracker do
     column 'User' do |obj|
       obj.user.name if obj.user.present?
     end
-    column :accrued_casual_leave
-    column :accrued_medical_leave
-    column :consumed_casual_leave
-    column :consumed_medical_leave
+    column :accrued_vacation_balance
+    column :accrued_medical_balance
+    column :consumed_vacation
+    column :consumed_medical
     actions
   end
 
   form do |f|
     f.inputs "User Details" do
-      f.input :accrued_casual_leave
-      f.input :accrued_medical_leave
-      f.input :consumed_casual_leave
-      f.input :consumed_medical_leave
-      f.input :carried_forward_casual
-      f.input :carried_forward_medical
+      f.input :accrued_vacation_balance
+      f.input :accrued_medical_balance
+      f.input :consumed_vacation
+      f.input :consumed_medical
+      f.input :commenced_date
     end
     f.actions
   end

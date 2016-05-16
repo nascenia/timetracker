@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151230103311) do
+ActiveRecord::Schema.define(version: 20160125070423) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(version: 20151230103311) do
     t.integer  "accrued_medical_this_year",  default: 0
     t.integer  "accrued_vacation_total",     default: 0
     t.integer  "accrued_medical_total",      default: 0
+    t.datetime "commenced_date"
   end
 
   create_table "leaves", force: true do |t|
