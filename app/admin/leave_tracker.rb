@@ -18,10 +18,16 @@ ActiveAdmin.register LeaveTracker do
 
   form do |f|
     f.inputs "User Details" do
-      f.input :accrued_vacation_balance
-      f.input :accrued_medical_balance
+      f.input :accrued_vacation_this_year
+      f.input :accrued_medical_this_year
+      f.input :carried_forward_vacation
+      f.input :carried_forward_medical
+      f.input :accrued_vacation_total
+      f.input :accrued_medical_total
       f.input :consumed_vacation
       f.input :consumed_medical
+      f.input :accrued_vacation_balance
+      f.input :accrued_medical_balance
       f.input :commenced_date
     end
     f.actions
