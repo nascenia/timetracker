@@ -50,7 +50,7 @@
         %td= leave.reason
         %td= leave.start_date.strftime("%d-%m-%Y")
         %td= leave.end_date.strftime("%d-%m-%Y") if leave.end_date.present?
-        %td= leave.half_day
+        %td= leave.half_day.to_s.capitalize
         %td
           - if leave.status == Leave::ACCEPTED
             Approved

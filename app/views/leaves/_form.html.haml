@@ -22,7 +22,11 @@
     = f.check_box :half_day, :class => 'checkbox-inline'
   .form-group
     = f.label :reason
-    = f.text_area :reason, :class => 'form-control', :rows => 7
+    = f.text_area :reason, :maxlength => '300', :class => 'form-control', :rows => 7
+  .textarea-feedback
+    %p
+      %span= 300
+      characters remaining.
   .form-group
     = f.submit 'Apply', :class => 'btn btn-primary'
 
@@ -32,5 +36,13 @@
         format: "dd/mm/yyyy"
     }).on('changeDate', function(e){
         $(this).datepicker('hide');
+    });
+
+    var text_max = 300;
+    $('#leave_reason').keyup(function() {
+        var text_length = $('#leave_reason').val().length;
+        var text_remaining = text_max - text_length;
+
+        $('.textarea-feedback p span').html(text_remaining);
     });
   });

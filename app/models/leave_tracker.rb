@@ -18,6 +18,21 @@ class LeaveTracker < ActiveRecord::Base
     end
   end
 
+  def create_leave_tracker(user)
+    self.create ({
+        :user_id => user.id,
+        :yearly_casual_leave => YEARLY_CASUAL_LEAVE,
+        :yearly_medical_leave =>  YEARLY_MEDICAL_LEAVE,
+        :consumed_vacation => 0,
+        :consumed_medical => 0,
+        :accrued_vacation_this_year => 0,
+        :accrued_medical_this_year => 0,
+        :carried_forward_vacation => 0,
+        :carried_forward_medical => 0,
+        :commenced_date => Time.now
+    })
+  end
+
   def self.populate_with_commenced_date
     User.active.each do |user|
       if user.leave_tracker.present?

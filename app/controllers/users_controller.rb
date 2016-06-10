@@ -3,8 +3,13 @@ class UsersController < ApplicationController
   def leave
     @user = User.find params[:user_id]
     @leave = Leave.new
-    @leave_tracker = @user.leave_tracker
-    @leave_tracker.update_leave_tracker_daily
+
+    if @user.leave_tracker.present?
+      @leave_tracker = @user.leave_tracker
+      @leave_tracker.update_leave_tracker_daily
+    else
+      create_leave_tracker(@user)
+    end
 
     respond_to do |format|
       format.html {render layout: 'leave'}
