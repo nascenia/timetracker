@@ -49,25 +49,23 @@ class LeaveTracker < ActiveRecord::Base
     end
   end
 
-  def self.update_leave_tracker_daily
-    User.active.each do |user|
-      if user.leave_tracker.present?
-        if user.leave_tracker.commenced_date.present?
-          accrued_vacation_this_year = (((Time.now.to_date - user.leave_tracker.commenced_date.to_date).to_i)*CASUAL_LEAVE_IN_DAYS/365)*8
-          accrued_medical_this_year = (((Time.now.to_date - user.leave_tracker.commenced_date.to_date).to_i)*MEDICAL_LEAVE_IN_DAYS/365)*8
-          accrued_total_vacation = user.leave_tracker.carried_forward_vacation ? user.leave_tracker.carried_forward_vacation : 0 + accrued_vacation_this_year
-          accrued_total_medical = user.leave_tracker.carried_forward_medical ? user.leave_tracker.carried_forward_medical : 0 + accrued_medical_this_year
-          accrual_vacation_balance = accrued_total_vacation - user.leave_tracker.consumed_vacation
-          accrual_medical_balance = accrued_total_medical - user.leave_tracker.consumed_medical
+  def update_leave_tracker_daily
+    if self.commenced_date.present?
+      accrued_vacation_this_year = (((Time.now.to_date - self.commenced_date.to_date).to_i)*CASUAL_LEAVE_IN_DAYS/365.0)*8
+      accrued_medical_this_year = (((Time.now.to_date - self.commenced_date.to_date).to_i)*MEDICAL_LEAVE_IN_DAYS/365.0)*8
+      accrued_total_vacation = self.carried_forward_vacation + accrued_vacation_this_year
+      accrued_total_medical = self.carried_forward_medical + accrued_medical_this_year
+      accrual_vacation_balance = accrued_total_vacation - self.consumed_vacation
+      accrual_medical_balance = accrued_total_medical - self.consumed_medical
 
-          user.leave_tracker.update_attributes(
-              :accrued_vacation_total => accrued_total_vacation,
-              :accrued_medical_total => accrued_total_medical,
-              :accrued_vacation_balance => accrual_vacation_balance,
-              :accrued_medical_balance => accrual_medical_balance
-          )
-        end
-      end
+      self.update_attributes(
+          :accrued_vacation_total => accrued_total_vacation,
+          :accrued_medical_total => accrued_total_medical,
+          :accrued_vacation_balance => accrual_vacation_balance,
+          :accrued_medical_balance => accrual_medical_balance,
+          :accrued_vacation_this_year => accrued_vacation_this_year,
+          :accrued_medical_this_year => accrued_medical_this_year
+      )
     end
   end
 end

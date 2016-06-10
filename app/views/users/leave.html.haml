@@ -23,6 +23,10 @@
       %td= @user.leave_tracker.accrued_vacation_total
       %td= @user.leave_tracker.accrued_medical_total
     %tr
+      %th Consumed leave
+      %td= @user.leave_tracker.consumed_vacation
+      %td= @user.leave_tracker.consumed_medical
+    %tr
       %th Accrual balance
       %td= @user.leave_tracker.accrued_vacation_balance
       %td= @user.leave_tracker.accrued_medical_balance
