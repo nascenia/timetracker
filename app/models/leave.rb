@@ -17,8 +17,8 @@ class Leave < ActiveRecord::Base
   LEAVE_STATUSES = [['Approved', ACCEPTED], ['Rejected', REJECTED], ['Pending', PENDING]]
 
   def update_leave_tracker
-    consumed_casual_leave = self.user.leave_tracker.consumed_casual_leave
-    consumed_medical_leave = self.user.leave_tracker.consumed_medical_leave
+    consumed_casual_leave = self.user.leave_tracker.consumed_vacation
+    consumed_medical_leave = self.user.leave_tracker.consumed_medical
 
     if self.end_date.present?
       total_hours = (1+(self.end_date - self.start_date).to_i) * HOURS_FOR_ONE_DAY

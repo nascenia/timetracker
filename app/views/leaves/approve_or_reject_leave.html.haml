@@ -8,12 +8,12 @@
   %tbody
     %tr
       %th.danger Accrued Leave
-      %td.warning= @leave.user.leave_tracker.accrued_casual_leave
-      %td.success= @leave.user.leave_tracker.accrued_medical_leave
+      %td.warning= @leave.user.leave_tracker.accrued_vacation_total
+      %td.success= @leave.user.leave_tracker.accrued_medical_total
     %tr
       %th.danger Consumed Leave
-      %td.warning= @leave.user.leave_tracker.consumed_casual_leave
-      %td.success= @leave.user.leave_tracker.consumed_medical_leave
+      %td.warning= @leave.user.leave_tracker.consumed_vacation
+      %td.success= @leave.user.leave_tracker.consumed_medical
 
 .view-leave-application
   %table.table
