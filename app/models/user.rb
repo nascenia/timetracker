@@ -116,4 +116,19 @@ class User < ActiveRecord::Base
       end
     end
   end
+
+  def self.create_unannounced_leave
+    User.all.each do |u|
+      unless u.find_todays_entry.present?
+        leave = u.leave.create ({
+            :user_id => u.id,
+            :leave_type => Leave::UNANNOUNCED,
+            :start_date => Time.now,
+            :status => Leave::ACCEPTED
+        })
+        leave.update_leave_tracker
+        UserMailer.send_unannounced_leave_notification(leave).deliver
+      end
+    end
+  end
 end

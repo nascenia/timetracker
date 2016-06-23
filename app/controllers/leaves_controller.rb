@@ -55,6 +55,11 @@ class LeavesController < ApplicationController
     @super_ttf = User.super_ttf
   end
 
+  def pending_for_approval
+    @my_employees = User.list_of_employees(current_user.id)
+    @leaves = Leave.where("status = ? AND user_id IN (?)", Leave::PENDING, @my_employees.map(&:id))
+  end
+
   private
 
     def set_leave

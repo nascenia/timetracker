@@ -30,31 +30,3 @@
       %th Accrual balance
       %td= @user.leave_tracker.accrued_vacation_balance
       %td= @user.leave_tracker.accrued_medical_balance
-
-%h1.page-title Leave log
-%table.table.leave-log
-  %thead
-    %tr
-      %th Date
-      %th Leave Type
-      %th Reason
-      %th Start Date
-      %th End Date
-      %th Half Day?
-      %th Status
-  %tbody
-    - @user.leave.each do |leave|
-      %tr
-        %th= leave.created_at.strftime("%d-%m-%Y")
-        %td= leave.leave_type == Leave::CASUAL ? 'Casual' : 'Medical'
-        %td= leave.reason
-        %td= leave.start_date.strftime("%d-%m-%Y")
-        %td= leave.end_date.strftime("%d-%m-%Y") if leave.end_date.present?
-        %td= leave.half_day.to_s.capitalize
-        %td
-          - if leave.status == Leave::ACCEPTED
-            Approved
-          - elsif leave.status == Leave::REJECTED
-            Rejected
-          - else
-            Pending

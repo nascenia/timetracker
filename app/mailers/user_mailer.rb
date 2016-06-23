@@ -33,4 +33,13 @@ class UserMailer < ActionMailer::Base
 
     mail :to => @user.email, :subject => subject
   end
+
+  def send_unannounced_leave_notification(leave)
+    @leave = leave
+    @user = @leave.user
+    subject = 'Unannounced leave'
+    @greetings = '- Have a nice day!'
+
+    mail :to => @user.email, :subject => subject
+  end
 end

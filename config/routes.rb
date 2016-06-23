@@ -14,6 +14,7 @@ Internal::Application.routes.draw do
     get :approve
     get :reject
     get :employee_list, :on => :collection
+    get :pending_for_approval, :on => :collection
   end
 
   resources :attendances do

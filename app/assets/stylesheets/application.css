@@ -11,7 +11,7 @@
  *= require_self
  *= require bootstrap.min
  *= require bootstrap-theme.min
- *= require jquery.dataTables
+ *= require jquery.dataTables.scss
  *= require dataTables.tableTools
  *= require leaves
  *= require attendances
