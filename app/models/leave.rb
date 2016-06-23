@@ -34,10 +34,10 @@ class Leave < ActiveRecord::Base
 
     if self.leave_type == CASUAL || self.leave_type == UNANNOUNCED
       consumed_casual_leave_balance = consumed_casual_leave.to_i + total_hours_to_be_sonsumed
-      self.user.leave_tracker.update_attributes(:consumed_casual_leave => consumed_casual_leave_balance)
+      self.user.leave_tracker.update_attributes(:consumed_vacation => consumed_casual_leave_balance)
     else
       consumed_medical_leave_balance = consumed_medical_leave + total_hours_to_be_sonsumed
-      self.user.leave_tracker.update_attributes(:consumed_medical_leave => consumed_medical_leave_balance)
+      self.user.leave_tracker.update_attributes(:consumed_medical => consumed_medical_leave_balance)
     end
   end
 end
