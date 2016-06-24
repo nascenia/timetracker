@@ -1,5 +1,5 @@
 %p
-  Check in and out only when you come and leave office (means physical office). Do not check in and out from outside the office. Abusing time tracker will be considered as lack of integrity and will be dealt SERIOUSLY.
+  
 %br
   = link_to  'In', "/attendances", :method => :post, :class => 'btn btn-large btn-success in-out-button', :id => "in"
   = link_to 'Out', "/attendances/#{@todays_entry.id if @todays_entry.present?}", :method => :put, :class => 'btn btn-large btn-danger in-out-button', :id => "out"
