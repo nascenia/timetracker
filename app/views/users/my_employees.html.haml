@@ -20,19 +20,20 @@
                 %th Casual (Hours)
                 %th Medical (Hours)
             %tbody
-              %tr
-                %th.danger Yearly Leave
-                %td.warning= LeaveTracker::YEARLY_CASUAL_LEAVE
-                %td.success= LeaveTracker::YEARLY_MEDICAL_LEAVE
-              %tr
-                %th.danger Carried Forwarded Leave
-                %td.warning= employee.leave_tracker.carried_forward_casual
-                %td.success= employee.leave_tracker.carried_forward_medical
-              %tr
-                %th.danger Accrued Leave
-                %td.warning= employee.leave_tracker.accrued_casual_leave
-                %td.success= employee.leave_tracker.accrued_medical_leave
-              %tr
-                %th.danger Consumed Leave
-                %td.warning= employee.leave_tracker.consumed_casual_leave
-                %td.success= employee.leave_tracker.consumed_medical_leave
+              - if employee.leave_tracker.present?
+                %tr
+                  %th.danger Yearly Leave
+                  %td.warning= LeaveTracker::YEARLY_CASUAL_LEAVE
+                  %td.success= LeaveTracker::YEARLY_MEDICAL_LEAVE
+                %tr
+                  %th.danger Carried Forwarded Leave
+                  %td.warning= employee.leave_tracker.carried_forward_casual
+                  %td.success= employee.leave_tracker.carried_forward_medical
+                %tr
+                  %th.danger Accrued Leave
+                  %td.warning= employee.leave_tracker.accrued_casual_leave
+                  %td.success= employee.leave_tracker.accrued_medical_leave
+                %tr
+                  %th.danger Consumed Leave
+                  %td.warning= employee.leave_tracker.consumed_casual_leave
+                  %td.success= employee.leave_tracker.consumed_medical_leave
