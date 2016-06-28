@@ -36,7 +36,7 @@ task :prod do
 end
 
 task :staging do
-  set :branch, "admin"
+  set :branch, "dev"
   web_server = "106.186.115.31"
   role :web, web_server # Your HTTP server, Apache/etc
   role :app, web_server # This may be the same as your `Web` server
