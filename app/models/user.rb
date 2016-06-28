@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
 
   devise :omniauthable, :omniauth_providers => [:google_oauth2]
 
-  ADMIN_USER = ['khalid@nascenia.com', 'shaer@nascenia.com', 'faruk@nascenia.com', 'fuad@nascenia.com']
+  ADMIN_USER = ['khalid@nascenia.com', 'shaer@nascenia.com', 'afroze@nascenia.com']
 
   ROLES = [['Employee', 1], ['TTF', 2], ['Super TTF', 3]]
   EMPLOYEE = 1
@@ -120,15 +120,27 @@ class User < ActiveRecord::Base
   def self.create_unannounced_leave
     User.all.each do |u|
       unless u.find_todays_entry.present?
-        leave = u.leave.create ({
-            :user_id => u.id,
-            :leave_type => Leave::UNANNOUNCED,
-            :start_date => Time.now,
-            :status => Leave::ACCEPTED
-        })
-        leave.update_leave_tracker
-        UserMailer.send_unannounced_leave_notification(leave).deliver
+        unless u.has_applied_for_leave
+          leave = u.leave.create ({
+              :user_id => u.id,
+              :leave_type => Leave::UNANNOUNCED,
+              :start_date => Time.now,
+              :status => Leave::ACCEPTED
+          })
+          leave.update_leave_tracker
+          UserMailer.send_unannounced_leave_notification(leave).deliver
+        end
       end
     end
+  end
+
+  def has_applied_for_leave
+    one_day_leave = self.leave.where('start_date = ? AND status = ?', Time.now.to_date, Leave::ACCEPTED).first
+    multiple_days_leave = self.leave.where('start_date <= ? AND end_date >= ? AND status =?', Time.now.to_date, Time.now.to_date, Leave::ACCEPTED).first
+
+    if one_day_leave || multiple_days_leave
+      return true
+    end
+    return false
   end
 end
