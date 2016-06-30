@@ -93,7 +93,6 @@ class User < ActiveRecord::Base
   def add_hours_for_missing_out(today = Date.today)
     last_office_day = self.attendances.where("datetoday !=? AND first_entry =? AND attendances.total_hours IS NULL ", today, true).last
     if last_office_day.present?
-      logger.info "---Extra 2 hours Added for user #{self.email} attendance id: #{last_office_day.id}---"
       last_office_day.update_attribute(:total_hours, 2)
     end
   end

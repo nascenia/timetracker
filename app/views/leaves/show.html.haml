@@ -2,20 +2,20 @@
 
 %table.table
   %tr
-    %th.danger User:
-    %td.warning= @leave.user.name
+    %th User:
+    %td= @leave.user.name
   %tr
-    %th.danger Email:
-    %td.warning= @leave.user.email
+    %th Email:
+    %td= @leave.user.email
   %tr
-    %th.danger Reason:
-    %td.warning= @leave.reason
+    %th Reason:
+    %td= @leave.reason
   %tr
-    %th.danger Leave type:
-    %td.warning= @leave.leave_type == Leave::CASUAL ? 'Casual' : 'Medical'
+    %th Leave type:
+    %td= @leave.leave_type == Leave::CASUAL ? 'Casual' : 'Medical'
   %tr
-    %th.danger Status:
-    %td.warning
+    %th Status:
+    %td
       - if @leave.status == Leave::ACCEPTED
         = 'Accepted'
       - elsif @leave.status == Leave::REJECTED

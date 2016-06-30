@@ -39,7 +39,7 @@ class LeavesController < ApplicationController
     @leave.update_attribute(:status, Leave::ACCEPTED)
     @leave.update_leave_tracker
 
-    UserMailer.send_approval_or_rejection_notification(@leave)
+    UserMailer.send_approval_or_rejection_notification(@leave).deliver
     redirect_to leafe_approve_or_reject_leave_path(@leave), :notice => 'Applicant shall be notified soon. Thanks!'
   end
 
@@ -47,7 +47,7 @@ class LeavesController < ApplicationController
     @leave = Leave.find params[:leafe_id]
     @leave.update_attribute(:status, Leave::REJECTED)
 
-    UserMailer.send_approval_or_rejection_notification(@leave)
+    UserMailer.send_approval_or_rejection_notification(@leave).deliver
     redirect_to leafe_approve_or_reject_leave_path(@leave), :alert => 'Applicant shall be notified soon. Thanks!'
   end
 
