@@ -27,7 +27,7 @@
                 %li
                   = link_to 'Admin', admin_dashboard_path, :target => '_blank'
               %li
-                \#{link_to "My Leave", user_leave_path(current_user)}
+                \#{link_to "My Leave", leave_user_path(current_user)}
               %li
                 \#{link_to "Logout", destroy_user_session_path, method: :delete}
       - if notice

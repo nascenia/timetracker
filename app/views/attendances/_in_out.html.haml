@@ -5,8 +5,8 @@
   = link_to 'Out', "/attendances/#{@todays_entry.id if @todays_entry.present?}", :method => :put, :class => 'btn btn-large btn-danger in-out-button', :id => "out"
 
   %span.pull-right
-    = link_to "Team planner", 'http://test.teamplanner.nascenia.com/', target: "_blank"
+    = link_to "#{Service::OTHERS[:tp][:name]}", "#{Service::OTHERS[:tp][:url]}", target: "_blank"
     |
-    = link_to "Knowledge base", 'http://kb.nascenia.com/', target: "_blank"
+    = link_to "#{Service::OTHERS[:kb][:name]}", "#{Service::OTHERS[:kb][:url]}", target: "_blank"
     |
-    = link_to "File server", 'http://192.168.1.72/', target: "_blank"
+    = link_to "#{Service::OTHERS[:fs][:name]}", "#{Service::OTHERS[:fs][:url]}", target: "_blank"

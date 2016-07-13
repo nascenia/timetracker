@@ -1,7 +1,7 @@
 = hidden_field_tag :salat, @salaat.to_json
 .panel-footer.text-center
   %p
-    = link_to "Salaat Time", '#salaat', "data-toggle" => "modal"
+    = link_to "Salaat Time", "#salaat", "data-toggle" => "modal"
     |
     = link_to "Terms & Conditions", "#rules", "data-toggle" => "modal"
     - if current_user.present? && current_user.is_admin?
@@ -70,7 +70,7 @@
                   %tr
                     %td= data.user.email if data.user.present?
                     %td= data.datetoday
-                    %td= Time.at(data.in).utc.strftime("%I:%M%p")
-                    %td= Time.at(data.out).utc.strftime("%I:%M%p") if data.out.present?
+                    %td= Time.at(data.in_time).utc.strftime("%I:%M%p")
+                    %td= Time.at(data.out_time).utc.strftime("%I:%M%p") if data.out.present?
       .modal-footer
         %button.btn.btn-danger{"data-dismiss" => "modal", :type => "button"} Close

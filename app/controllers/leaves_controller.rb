@@ -1,4 +1,5 @@
 class LeavesController < ApplicationController
+
   layout 'leave'
 
   before_action :set_leave, only: [:index, :show, :edit, :update, :destroy]
@@ -27,7 +28,7 @@ class LeavesController < ApplicationController
   end
 
   def approve_or_reject_leave
-    @leave = Leave.find params[:leafe_id]
+    @leave = Leave.find params[:id]
 
     respond_to do |format|
       format.html
@@ -35,20 +36,20 @@ class LeavesController < ApplicationController
   end
 
   def approve
-    @leave = Leave.find params[:leafe_id]
+    @leave = Leave.find params[:id]
     @leave.update_attribute(:status, Leave::ACCEPTED)
     @leave.update_leave_tracker
 
     UserMailer.send_approval_or_rejection_notification(@leave).deliver
-    redirect_to leafe_approve_or_reject_leave_path(@leave), :notice => 'Applicant shall be notified soon. Thanks!'
+    redirect_to approve_or_reject_leave_leafe_path(@leave), :notice => 'Applicant shall be notified soon. Thanks!'
   end
 
   def reject
-    @leave = Leave.find params[:leafe_id]
+    @leave = Leave.find params[:id]
     @leave.update_attribute(:status, Leave::REJECTED)
 
     UserMailer.send_approval_or_rejection_notification(@leave).deliver
-    redirect_to leafe_approve_or_reject_leave_path(@leave), :alert => 'Applicant shall be notified soon. Thanks!'
+    redirect_to approve_or_reject_leave_leafe_path(@leave), :alert => 'Applicant shall be notified soon. Thanks!'
   end
 
   def employee_list
@@ -57,7 +58,7 @@ class LeavesController < ApplicationController
 
   def pending_for_approval
     @my_employees = User.list_of_employees(current_user.id)
-    @leaves = Leave.where("status = ? AND user_id IN (?)", Leave::PENDING, @my_employees.map(&:id))
+    @leaves = Leave.where('status = ? AND user_id IN (?)', Leave::PENDING, @my_employees.map(&:id))
   end
 
   private
@@ -67,15 +68,14 @@ class LeavesController < ApplicationController
     end
 
     def check_permission
-      @leave = Leave.find params[:leafe_id]
+      @leave = Leave.find params[:id]
       unless @leave.user.ttf_id == current_user.id || @leave.user.sttf_id == current_user.id
-        redirect_to user_leave_path(current_user), :notice => 'Access Denied'
+        redirect_to leave_user_path(current_user), :notice => 'Access Denied'
       end
     end
 
     def leave_params
-      params.require(:leave).permit(:user_id, :reason, :leave_type, :status, :start_date,
-                                    :end_date, :half_day)
+      params.require(:leave).permit(:user_id, :reason, :leave_type, :status, :start_date, :end_date, :half_day)
     end
 end
 

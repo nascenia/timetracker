@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160125070423) do
+ActiveRecord::Schema.define(version: 20160712121647) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -49,13 +49,15 @@ ActiveRecord::Schema.define(version: 20160125070423) do
   create_table "attendances", force: true do |t|
     t.integer  "user_id"
     t.date     "datetoday"
-    t.time     "in"
-    t.time     "out"
+    t.time     "in_time"
+    t.time     "out_time"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.float    "total_hours"
     t.boolean  "first_entry", default: false
   end
+
+  add_index "attendances", ["user_id"], name: "index_attendances_on_user_id", using: :btree
 
   create_table "leave_trackers", force: true do |t|
     t.integer  "user_id"
@@ -76,6 +78,8 @@ ActiveRecord::Schema.define(version: 20160125070423) do
     t.datetime "commenced_date"
   end
 
+  add_index "leave_trackers", ["user_id"], name: "index_leave_trackers_on_user_id", using: :btree
+
   create_table "leaves", force: true do |t|
     t.integer  "user_id"
     t.text     "reason"
@@ -87,6 +91,8 @@ ActiveRecord::Schema.define(version: 20160125070423) do
     t.date     "end_date"
     t.boolean  "half_day"
   end
+
+  add_index "leaves", ["user_id"], name: "index_leaves_on_user_id", using: :btree
 
   create_table "salaats", force: true do |t|
     t.string   "waqt"

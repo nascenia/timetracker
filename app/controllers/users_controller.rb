@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
   def leave
-    @user = User.find params[:user_id]
+    @user = User.find params[:id]
     @leave = Leave.new
 
     if @user.leave_tracker.present?
@@ -16,16 +16,16 @@ class UsersController < ApplicationController
     end
   end
 
-  def my_employees
-    @user = User.find params[:user_id]
+  def team
+    @user = User.find params[:id]
 
     if @user.role == User::SUPER_TTF
-      @my_employees = User.list_of_ttfs(@user.id)
+      @team = User.list_of_ttfs(@user.id)
     elsif @user.role == User::TTF
-      @my_employees = User.list_of_employees(@user.id)
+      @team = User.list_of_employees(@user.id)
     else
       flash[:notice] = 'Sorry! This page is only for TTF / Super TTF!'
-      redirect_to user_leave_path(current_user) and return
+      redirect_to leave_user_path(current_user) and return
     end
 
     respond_to do |format|

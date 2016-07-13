@@ -44,16 +44,16 @@
                 %span.visible-xs.navbar-brand Leave Tracker | Nascenia
               .navbar-collapse.collapse.sidebar-navbar-collapse
                 %ul.nav.navbar-nav#leave-tracker-menu
-                  %li{:class => current_page?(user_leave_path(current_user)) ? 'active' : ''}
-                    = link_to 'My Leave', user_leave_path(current_user)
+                  %li{:class => current_page?(leave_user_path(current_user)) ? 'active' : ''}
+                    = link_to 'My Leave', leave_user_path(current_user)
                   %li{:class => current_page?(new_leafe_path) ? 'active' : ''}
                     = link_to 'Apply for Leave', new_leafe_path
                   %li{:class => current_page?(employee_list_leaves_path) ? 'active' : ''}
                     = link_to 'Employee List', employee_list_leaves_path
-                  %li{:class => current_page?(user_my_employees_path(current_user)) ? 'active' : ''}
-                    = link_to 'My Co-workers', user_my_employees_path(current_user)
+                  %li{:class => current_page?(team_user_path(current_user)) ? 'active' : ''}
+                    = link_to 'My Co-workers', team_user_path(current_user)
                   - if current_user.is_ttf? || current_user.is_super_ttf?
-                    %li{:class => current_page?(user_my_employees_path(current_user)) ? 'active' : ''}
+                    %li{:class => current_page?(team_user_path(current_user)) ? 'active' : ''}
                       = link_to 'Leaves pending for Approval', pending_for_approval_leaves_path
         .col-sm-10
           - if notice

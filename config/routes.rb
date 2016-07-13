@@ -5,27 +5,39 @@ Internal::Application.routes.draw do
   ActiveAdmin.routes(self)
 
   resources :users do
-    get :leave
-    get :my_employees
+    member do
+      get :leave
+      get :team
+    end
   end
 
   resources :leaves do
-    get :approve_or_reject_leave
-    get :approve
-    get :reject
-    get :employee_list, :on => :collection
-    get :pending_for_approval, :on => :collection
+    member do
+      get :approve_or_reject_leave
+      get :approve
+      get :reject
+    end
+
+    collection do
+      get :employee_list
+      get :pending_for_approval
+    end
   end
 
   resources :attendances do
-    get 'search_daily_attendance', :on => :collection
-    get 'update_salaat_time', :on => :collection
-    get 'six_months_data', :on => :collection
-    get 'monthly_report', :on => :collection
-    get 'raw_attendance_data', :on => :collection
-    get 'hide_name'
-    get 'show_name'
-    get 'show_hidden_names', :on => :collection
+    member do
+      get :hide_name
+      get :show_name
+    end
+
+    collection do
+      get :search_daily_attendance
+      get :update_salaat_time
+      get :six_months_data
+      get :monthly_report
+      get :raw_attendance_data
+      get :show_hidden_names
+    end
   end
 
   root :to => 'attendances#index'
