@@ -26,7 +26,7 @@ set :rake, 'bundle exec rake'
 after('deploy:update_code', 'deploy:symlink_shared', 'deploy:migrate')
 
 task :prod do
-  web_server = "106.186.115.31"
+  web_server = "45.118.134.63"
   role :web, web_server # Your HTTP server, Apache/etc
   role :app, web_server # This may be the same as your `Web` server
   role :db, web_server, :primary => true # This is where Rails migrations will run
@@ -37,7 +37,7 @@ end
 
 task :staging do
   set :branch, "dev"
-  web_server = "106.186.115.31"
+  web_server = "45.118.134.63"
   role :web, web_server # Your HTTP server, Apache/etc
   role :app, web_server # This may be the same as your `Web` server
   role :db, web_server, :primary => true # This is where Rails migrations will run
