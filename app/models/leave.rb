@@ -1,27 +1,35 @@
 class Leave < ActiveRecord::Base
+
   belongs_to :user
 
   CASUAL = 1
   MEDICAL = 2
   UNANNOUNCED = 3
 
-  LEAVE_TYPES = [['Casual Leave', CASUAL], ['Medical Leave', MEDICAL]]
+  LEAVE_TYPES = [
+      ['Casual Leave', CASUAL],
+      ['Medical Leave', MEDICAL]
+  ]
 
   ACCEPTED = 1
   REJECTED = 2
   PENDING = 3
 
   HOURS_FOR_ONE_DAY = 8
-  HOURS_FOR_HALF_DAY = 4
+  HOURS_FOR_HALF_DAY = HOURS_FOR_ONE_DAY / 2
 
-  LEAVE_STATUSES = [['Approved', ACCEPTED], ['Rejected', REJECTED], ['Pending', PENDING]]
+  LEAVE_STATUSES = [
+      ['Approved', ACCEPTED],
+      ['Rejected', REJECTED],
+      ['Pending', PENDING]
+  ]
 
   def update_leave_tracker
     consumed_casual_leave = self.user.leave_tracker.consumed_vacation
     consumed_medical_leave = self.user.leave_tracker.consumed_medical
 
     if self.end_date.present?
-      total_hours = (1+(self.end_date - self.start_date).to_i) * HOURS_FOR_ONE_DAY
+      total_hours = (1 + (self.end_date - self.start_date).to_i) * HOURS_FOR_ONE_DAY
     else
       total_hours = HOURS_FOR_ONE_DAY
     end

@@ -1,4 +1,5 @@
 class LeaveTracker < ActiveRecord::Base
+
   belongs_to :user
   belongs_to :leave
 
@@ -66,8 +67,8 @@ class LeaveTracker < ActiveRecord::Base
 
   def update_leave_tracker_daily
     if self.commenced_date.present?
-      accrued_vacation_this_year = (((Time.now.to_date - self.commenced_date.to_date).to_i)*CASUAL_LEAVE_IN_DAYS/365.0)*8
-      accrued_medical_this_year = (((Time.now.to_date - self.commenced_date.to_date).to_i)*MEDICAL_LEAVE_IN_DAYS/365.0)*8
+      accrued_vacation_this_year = (((Time.now.to_date - self.commenced_date.to_date).to_i) * CASUAL_LEAVE_IN_DAYS/365.0) * 8
+      accrued_medical_this_year = (((Time.now.to_date - self.commenced_date.to_date).to_i) * MEDICAL_LEAVE_IN_DAYS/365.0) * 8
       accrued_total_vacation = self.carried_forward_vacation + accrued_vacation_this_year
       accrued_total_medical = self.carried_forward_medical + accrued_medical_this_year
       accrual_vacation_balance = accrued_total_vacation - self.consumed_vacation

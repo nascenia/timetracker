@@ -1,7 +1,7 @@
-%h1.page-title My Employees
+%h1.page-title My Team
 #accordion1.panel-group
   .panel.panel-default
-    - @my_employees.each do |employee|
+    - @team.each do |employee|
       .panel-heading
         %h4.panel-title
           %a{"data-parent" => "#accordion1", "data-toggle" => "collapse", :href => "#collapse_#{employee.id}"}
@@ -27,13 +27,13 @@
                   %td.success= LeaveTracker::YEARLY_MEDICAL_LEAVE
                 %tr
                   %th.danger Carried Forwarded Leave
-                  %td.warning= employee.leave_tracker.carried_forward_casual
+                  %td.warning= employee.leave_tracker.carried_forward_vacation
                   %td.success= employee.leave_tracker.carried_forward_medical
                 %tr
                   %th.danger Accrued Leave
-                  %td.warning= employee.leave_tracker.accrued_casual_leave
-                  %td.success= employee.leave_tracker.accrued_medical_leave
+                  %td.warning= employee.leave_tracker.accrued_vacation_total
+                  %td.success= employee.leave_tracker.accrued_medical_total
                 %tr
                   %th.danger Consumed Leave
-                  %td.warning= employee.leave_tracker.consumed_casual_leave
-                  %td.success= employee.leave_tracker.consumed_medical_leave
+                  %td.warning= employee.leave_tracker.consumed_vacation
+                  %td.success= employee.leave_tracker.consumed_medical

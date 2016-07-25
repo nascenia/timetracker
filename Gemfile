@@ -34,7 +34,7 @@ end
 
 # Use Capistrano for deploymentgem 'net-ssh', '2.7.0'
 gem 'capistrano', '2.14.2', group: :development
-gem 'rvm-capistrano', '1.2.7',  require: false
+gem 'rvm-capistrano', '1.2.7', require: false
 
 # Use debugger
 gem 'activeadmin', github: 'activeadmin'

@@ -1,52 +1,63 @@
 class User < ActiveRecord::Base
+
+  has_many :attendances, dependent: :destroy
+  has_many :leave, dependent: :destroy
+  has_one :leave_tracker, dependent: :destroy
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  has_many :attendances
-  has_many :leave
-  has_one :leave_tracker
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
   devise :omniauthable, :omniauth_providers => [:google_oauth2]
 
-  ADMIN_USER = ['khalid@nascenia.com', 'shaer@nascenia.com', 'afroze@nascenia.com']
+  ADMIN_USER = [
+      'khalid@nascenia.com',
+      'shaer@nascenia.com',
+      'faruk@nascenia.com',
+      'fuad@nascenia.com'
+  ]
 
-  ROLES = [['Employee', 1], ['TTF', 2], ['Super TTF', 3]]
+  ROLES = [
+      ['Employee', 1],
+      ['TTF', 2],
+      ['Super TTF', 3]
+  ]
   EMPLOYEE = 1
   TTF = 2
   SUPER_TTF = 3
 
-  scope :inactive, -> {where("is_active =?", false)}
-  scope :active, -> {where("is_active =?", true)}
-  scope :ttf, -> {where("role =?", TTF)}
-  scope :super_ttf, -> {where("role =?", SUPER_TTF)}
-  scope :employees, -> {where("role =?", EMPLOYEE)}
-  scope :list_of_ttfs, -> (super_ttf) {where("role =? AND sttf_id =? ", TTF, super_ttf)}
-  scope :list_of_employees, -> (ttf) {where("role =? AND ttf_id =? ", EMPLOYEE, ttf)}
+  scope :inactive, -> {where('is_active = ?', false)}
+  scope :active, -> {where('is_active = ?', true)}
+  scope :ttf, -> {where('role = ?', User::TTF)}
+  scope :super_ttf, -> {where('role = ?', User::SUPER_TTF)}
+  scope :employees, -> {where('role = ?', User::EMPLOYEE)}
+  scope :list_of_ttfs, -> (super_ttf) {where('role = ? AND sttf_id = ? ', User::TTF, super_ttf)}
+  scope :list_of_employees, -> (ttf) {where('role =? AND ttf_id = ? ', User::EMPLOYEE, ttf)}
 
   def is_admin?
     self.email && ADMIN_USER.to_s.include?(self.email)
   end
 
   def is_ttf?
-    self.role == TTF
+    self.role === User::TTF
   end
 
   def is_super_ttf?
-    self.role == SUPER_TTF
+    self.role === User::SUPER_TTF
   end
 
   def self.find_for_google_oauth2(access_token, signed_in_resource=nil)
     data = access_token.info
-    user = User.where(:email => data["email"]).first
+    user = User.where(:email => data['email']).first
 
     unless user
-      user = User.create(name: data["name"],
-                         email: data["email"],
-                         password: Devise.friendly_token[0,20]
-      )
+      user = User.create(name: data['name'],
+                         email: data['email'],
+                         password: Devise.friendly_token[0, 20])
     end
+
     user
   end
 
@@ -54,36 +65,44 @@ class User < ActiveRecord::Base
     self.attendances.create(
         :user_id => self.id,
         :datetoday => Date.today,
-        :in => Time.now.to_s(:time)
+        :in_time => Time.now.to_s(:time)
     )
   end
 
   def find_todays_entry
-    todays_entry = Attendance.where(:user_id => self.id, :datetoday => Date.today, :out => nil).first
+    todays_entry = Attendance.where(:user_id => self.id, :datetoday => Date.today, :out_time => nil).first
     todays_entry
   end
 
   def monthly_total_hour(month, year = Time.now.year)
-    self.attendances.where("MONTH(datetoday) =? AND YEAR(datetoday) =?", month, year).sum(:total_hours)
+    self.attendances.where('MONTH(datetoday) = ? AND YEAR(datetoday) = ?', month, year).sum(:total_hours)
   end
 
   def monthly_average_hour(month,  year = Time.now.year, saturday = 5, sunday = 6)
-    total_days_spent_in_office = self.attendances.where("MONTH(datetoday) =? AND YEAR(datetoday) =? AND WEEKDAY(datetoday) NOT IN (#{saturday}, #{sunday}) AND attendances.total_hours IS NOT NULL", month, year).count("datetoday", :distinct => true)
-    monthly_total_hour = self.attendances.where("MONTH(datetoday) =? AND YEAR(datetoday) =? AND WEEKDAY(datetoday) NOT IN (#{saturday}, #{sunday})", month, year).sum(:total_hours)
+    total_days_spent_in_office = self.attendances.where("MONTH(datetoday) = ? AND YEAR(datetoday) = ? AND WEEKDAY(datetoday)
+                                      NOT IN (#{saturday}, #{sunday}) AND attendances.total_hours IS NOT NULL", month, year)
+                                     .count("datetoday", :distinct => true)
+    monthly_total_hour = self.attendances.where("MONTH(datetoday) = ? AND YEAR(datetoday) = ? AND WEEKDAY(datetoday)
+                                NOT IN (#{saturday}, #{sunday})", month, year)
+                                .sum(:total_hours)
+
     if total_days_spent_in_office > 0
       monthly_total_hour / total_days_spent_in_office
     end
   end
 
   def monthly_average_in_time(month,  year = Time.now.year, saturday = 5, sunday = 6)
-    total = self.attendances.where("MONTH(datetoday) =? AND YEAR(datetoday) =? AND WEEKDAY(datetoday) NOT IN (#{saturday}, #{sunday}) AND first_entry =? ", month, year, true).average("TIME_TO_SEC(attendances.in)")
+    total = self.attendances.where("MONTH(datetoday) = ? AND YEAR(datetoday) = ? AND WEEKDAY(datetoday) NOT IN (#{saturday},
+                #{sunday}) AND first_entry = ? ", month, year, true)
+                .average("TIME_TO_SEC(attendances.in_time)")
+
     if total.present?
       Time.at(total).utc.strftime("%I:%M %p")
     end
   end
 
   def update_first_entry(today = Date.today)
-    not_first_entry = self.attendances.where("datetoday =? AND first_entry =? ", today, true).count
+    not_first_entry = self.attendances.where("datetoday = ? AND first_entry = ? ", today, true).count
     if not_first_entry == 0
       todays_first_entry = self.attendances.find_by_datetoday(today)
       todays_first_entry.update_attribute(:first_entry, true)
@@ -91,7 +110,8 @@ class User < ActiveRecord::Base
   end
 
   def add_hours_for_missing_out(today = Date.today)
-    last_office_day = self.attendances.where("datetoday !=? AND first_entry =? AND attendances.total_hours IS NULL ", today, true).last
+    last_office_day = self.attendances.where("datetoday != ? AND first_entry = ? AND attendances.total_hours IS NULL ",
+                                             today, true).last
     if last_office_day.present?
       last_office_day.update_attribute(:total_hours, 2)
     end
@@ -105,6 +125,7 @@ class User < ActiveRecord::Base
     CSV.generate(options) do |csv|
       csv << [nil, nil, "#{1.month.ago.strftime("%B")}", nil, nil, "#{2.month.ago.strftime("%B")}", nil, nil, "#{3.month.ago.strftime("%B")}", nil, nil, "#{4.month.ago.strftime("%B")}",nil, nil, "#{5.month.ago.strftime("%B")}",nil, nil, "#{6.month.ago.strftime("%B")}", nil]
       csv << ["User", "TotalHours", "Avg.Time", "Avg.InTime", "TotalHours", "Avg.Time", "Avg.InTime", "TotalHours", "Avg.Time", "Avg.InTime", "TotalHours", "Avg.Time", "Avg.InTime", "TotalHours", "Avg.Time", "Avg.InTime", "TotalHours", "Avg.Time", "Avg.InTime"]
+
       all.each do |user|
         csv << ["#{user.email}", "#{user.monthly_total_hour(1.month.ago.month, 1.month.ago.year).present? ? user.monthly_total_hour(1.month.ago.month, 1.month.ago.year).round : nil }", "#{user.monthly_average_hour(1.month.ago.month, 1.month.ago.year).present? ? user.monthly_average_hour(1.month.ago.month, 1.month.ago.year).round(1) : nil }", "#{user.monthly_average_in_time(1.month.ago.month, 1.month.ago.year).present? ? user.monthly_average_in_time(1.month.ago.month, 1.month.ago.year) : nil }",
                 "#{user.monthly_total_hour(2.months.ago.month, 2.month.ago.year).present? ? user.monthly_total_hour(2.months.ago.month, 1.month.ago.year).round : nil }", "#{user.monthly_average_hour(2.months.ago.month, 2.month.ago.year).present? ? user.monthly_average_hour(2.months.ago.month, 2.month.ago.year).round(1) : nil }", "#{user.monthly_average_in_time(2.months.ago.month, 2.month.ago.year).present? ? user.monthly_average_in_time(2.months.ago.month, 2.month.ago.year) : nil }",
@@ -140,6 +161,7 @@ class User < ActiveRecord::Base
     if one_day_leave || multiple_days_leave
       return true
     end
+
     return false
   end
 end

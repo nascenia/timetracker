@@ -1,9 +1,8 @@
 class AttendancesController < ApplicationController
+
   before_action :set_attendance, only: [:index, :show, :edit, :update, :destroy]
   before_action :restrict_access, only: [:create, :update]
   before_action :authenticate_user!
-
-  WHITELIST = ['203.202.242.130', '127.0.0.1']
 
   def index
     @todays_entry = current_user.find_todays_entry
@@ -78,9 +77,10 @@ class AttendancesController < ApplicationController
 
   def restrict_access
     if request.remote_ip.present?
-      unless( WHITELIST.include? request.remote_ip )
-        flash[:notice] = "Entry/Out is Restricted From Outside Office!"
+      unless (Attendance::IP_WHITELIST.include? request.remote_ip)
+        flash[:notice] = 'Entry/Out is Restricted From Outside Office!'
         render 'attendances/index'
+
         return false
       end
     end
@@ -136,6 +136,6 @@ class AttendancesController < ApplicationController
     end
 
     def attendance_params
-      params.permit(:user_id, :datetoday, :in, :out, :total_hours, :first_entry, :is_active)
+      params.permit(:user_id, :datetoday, :in_time, :out_time, :total_hours, :first_entry, :is_active)
     end
 end
