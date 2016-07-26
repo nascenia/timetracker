@@ -109,7 +109,7 @@ class AttendancesController < ApplicationController
   end
 
   def hide_name
-    @user = User.find params[:attendance_id]
+    @user = User.find params[:id]
     @user.update_attribute(:is_active, false)
 
     respond_to do |format|
