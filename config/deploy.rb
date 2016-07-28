@@ -24,9 +24,6 @@ set :rake, 'bundle exec rake'
 set :bundle_cmd, "bundle"
 set :rake, 'bundle exec rake'
 
-set :whenever_environment, defer { stage }
-set :whenever_command, 'bundle exec whenever'
-
 after('deploy:update_code', 'deploy:symlink_shared', 'deploy:migrate')
 
 task :prod do
@@ -48,6 +45,7 @@ task :staging do
   set :deploy_to, "/www/apps/#{application}-staging/"
   set :rails_env, "staging"
   set :delayed_job_id, 2
+  set :whenever_command, 'bundle exec whenever'
 end
 
 namespace :deploy do
