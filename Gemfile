@@ -26,11 +26,7 @@ group :doc do
   gem 'sdoc', require: false
 end
 
-# Use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.1.2'
-
-# Use unicorn as the app server
-# gem 'unicorn'
+gem 'whenever', :require => false
 
 # Use Capistrano for deploymentgem 'net-ssh', '2.7.0'
 gem 'capistrano', '2.14.2', group: :development

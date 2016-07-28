@@ -40,6 +40,6 @@ class UserMailer < ActionMailer::Base
     subject = 'Unannounced leave'
     @greetings = '- Have a nice day!'
 
-    mail :to => @user.email, :subject => subject
+    mail :to => 'khalid@nascenia.com', :subject => subject
   end
 end

@@ -1,5 +1,6 @@
 require "rvm/capistrano"
 require "bundler/capistrano"
+require 'whenever/capistrano'
 
 default_run_options[:pty] = true
 #ssh_options[:forward_agent] = true
@@ -22,6 +23,9 @@ set :rake, 'bundle exec rake'
 
 set :bundle_cmd, "bundle"
 set :rake, 'bundle exec rake'
+
+set :whenever_environment, defer { stage }
+set :whenever_command, 'bundle exec whenever'
 
 after('deploy:update_code', 'deploy:symlink_shared', 'deploy:migrate')
 
