@@ -69,8 +69,8 @@ class LeaveTracker < ActiveRecord::Base
     if self.commenced_date.present?
       accrued_vacation_this_year = (((Time.now.to_date - self.commenced_date.to_date).to_i) * CASUAL_LEAVE_IN_DAYS/365.0) * 8
       accrued_medical_this_year = (((Time.now.to_date - self.commenced_date.to_date).to_i) * MEDICAL_LEAVE_IN_DAYS/365.0) * 8
-      accrued_total_vacation = self.carried_forward_vacation + accrued_vacation_this_year
-      accrued_total_medical = self.carried_forward_medical + accrued_medical_this_year
+      accrued_total_vacation = self.carried_forward_vacation.present? ? self.carried_forward_vacation : 0 + accrued_vacation_this_year
+      accrued_total_medical = self.carried_forward_medical.present? ? self.carried_forward_medical : 0 + accrued_medical_this_year
       accrual_vacation_balance = accrued_total_vacation - self.consumed_vacation
       accrual_medical_balance = accrued_total_medical - self.consumed_medical
 

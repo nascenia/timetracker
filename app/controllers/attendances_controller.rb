@@ -8,6 +8,7 @@ class AttendancesController < ApplicationController
     @todays_entry = current_user.find_todays_entry
     @date = Date.today
     @todays_tracker = Attendance.todays_attendance_summary(@date)
+    @out_link = @todays_entry.present? ? @todays_entry.id : 'invalid'
     # @raw_data = Attendance.raw_data_of_last_six_month
 
     respond_to do |format|
@@ -43,9 +44,20 @@ class AttendancesController < ApplicationController
   end
 
   def update
+    if params[:id] == 'invalid'
+      flash[:notice] = "You did not log in today! Please log in first!"
+      redirect_to :attendances and return
+    end
+    @todays_entry = current_user.find_todays_entry
+
     if @attendance.user_id == current_user.id
-      @attendance.update_out_time
-      flash[:notice] = "Successfully Checked Out."
+      if @todays_entry
+        @attendance.update_out_time
+        flash[:notice] = "Successfully Checked Out."
+      else
+        flash[:notice] = "You did not log in today."
+        render 'attendances/index'
+      end
     end
 
     respond_to do |format|
@@ -132,7 +144,9 @@ class AttendancesController < ApplicationController
 
   private
     def set_attendance
-      @attendance = params[:id].present? ? Attendance.find(params[:id]) : Attendance.new
+      unless params[:id] == 'invalid'
+        @attendance = params[:id].present? ? Attendance.find(params[:id]) : Attendance.new
+      end
     end
 
     def attendance_params

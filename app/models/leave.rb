@@ -25,8 +25,8 @@ class Leave < ActiveRecord::Base
   ]
 
   def update_leave_tracker
-    consumed_casual_leave = self.user.leave_tracker.consumed_vacation
-    consumed_medical_leave = self.user.leave_tracker.consumed_medical
+    consumed_casual_leave = self.user.leave_tracker.consumed_vacation.present? ? self.user.leave_tracker.consumed_vacation : 0
+    consumed_medical_leave = self.user.leave_tracker.consumed_medical.present? ? self.user.leave_tracker.consumed_medical : 0
 
     if self.end_date.present?
       total_hours = (1 + (self.end_date - self.start_date).to_i) * HOURS_FOR_ONE_DAY

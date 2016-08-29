@@ -14,7 +14,7 @@ ActiveAdmin.register Attendance do
      end
      column :datetoday
      column :in do |obj|
-       Time.at(obj.in).utc.strftime("%I:%M%p")
+       Time.at(obj.in).utc.strftime("%I:%M%p") if obj.in.present?
      end
      column :out do |obj|
        Time.at(obj.out).utc.strftime("%I:%M%p") if obj.out.present?
