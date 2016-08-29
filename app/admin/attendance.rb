@@ -14,10 +14,10 @@ ActiveAdmin.register Attendance do
      end
      column :datetoday
      column :in do |obj|
-       Time.at(obj.in).utc.strftime("%I:%M%p") if obj.in.present?
+       Time.at(obj.in_time).utc.strftime("%I:%M%p") if obj.in_time.present?
      end
      column :out do |obj|
-       Time.at(obj.out).utc.strftime("%I:%M%p") if obj.out.present?
+       Time.at(obj.out_time).utc.strftime("%I:%M%p") if obj.out_time.present?
      end
      column :total_hours
 
