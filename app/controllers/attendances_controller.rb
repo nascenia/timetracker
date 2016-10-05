@@ -130,7 +130,7 @@ class AttendancesController < ApplicationController
   end
 
   def show_name
-    @user = User.find params[:attendance_id]
+    @user = User.find params[:id]
     @user.update_attribute(:is_active, true)
 
     respond_to do |format|
