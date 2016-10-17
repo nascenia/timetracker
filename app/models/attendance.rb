@@ -5,7 +5,8 @@ class Attendance < ActiveRecord::Base
   USUAL_OFFICE_TIME = '10:00'
   IP_WHITELIST = [
       '203.202.242.130',
-      '127.0.0.1'
+      '127.0.0.1',
+      '120.50.7.126'
   ]
 
   scope :by_month, ->(month) {where('MONTH(datetoday) = ? AND YEAR(datetoday) = ? ', month, Time.now.year)}
