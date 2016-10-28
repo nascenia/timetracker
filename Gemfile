@@ -35,3 +35,8 @@ gem 'rvm-capistrano', '1.2.7', require: false
 # Use debugger
 gem 'activeadmin', github: 'activeadmin'
 
+group :test, :development do
+  gem 'rspec-rails', '~> 3.5.1'
+  gem 'factory_girl_rails', '~> 4.7.0'
+  gem 'simplecov'
+end
