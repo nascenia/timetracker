@@ -69,7 +69,7 @@
                 - @raw_data.each do |data|
                   %tr
                     %td= data.user.email if data.user.present?
-                    %td= data.datetoday
+                    %td= data.checkin_date
                     %td= Time.at(data.in_time).utc.strftime("%I:%M%p")
                     %td= Time.at(data.out_time).utc.strftime("%I:%M%p") if data.out.present?
       .modal-footer

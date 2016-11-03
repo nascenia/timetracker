@@ -23,7 +23,7 @@
             %td= Time.at(entry.in_time).utc.strftime("%I:%M%p")
             %td= Time.at(entry.out_time).utc.strftime("%I:%M%p") if entry.out_time.present?
             %td
-              - if entry.first_entry?
+              - if entry.is_first_entry?
                 - if Time.at(entry.in_time).strftime("%H:%M") <= Time.at(Time.parse(Attendance::USUAL_OFFICE_TIME)).strftime("%H:%M")
                   .status#inTime
                     On time

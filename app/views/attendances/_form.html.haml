@@ -12,16 +12,16 @@
     %br/
     = f.number_field :user_id
   .field
-    = f.label :datetoday
+    = f.label :checkin_date
     %br/
-    = f.date_select :datetoday
+    = f.date_select :checkin_date
   .field
-    = f.label :intime
+    = f.label :in_time
     %br/
-    = f.time_select :intime
+    = f.time_select :in_time
   .field
-    = f.label :outtime
+    = f.label :out_time
     %br/
-    = f.time_select :outtime
+    = f.time_select :out_time
   .actions
     = f.submit

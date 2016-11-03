@@ -1,10 +1,6 @@
 ActiveAdmin.register Attendance do
 
-
-  # See permitted parameters documentation:
-  # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-  #
-   permit_params :user_id, :datetoday, :in, :out, :total_hours, :first_entry
+   permit_params :user_id, :checkin_date, :in, :out, :total_hours, :is_first_entry
 
    index do
      selectable_column
@@ -12,7 +8,7 @@ ActiveAdmin.register Attendance do
      column 'User' do |obj|
        obj.user.name if obj.user.present?
      end
-     column :datetoday
+     column :checkin_date
      column :in do |obj|
        Time.at(obj.in_time).utc.strftime("%I:%M%p") if obj.in_time.present?
      end

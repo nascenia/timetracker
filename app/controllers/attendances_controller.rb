@@ -150,6 +150,6 @@ class AttendancesController < ApplicationController
     end
 
     def attendance_params
-      params.permit(:user_id, :datetoday, :in_time, :out_time, :total_hours, :first_entry, :is_active)
+      params.permit(:user_id, :checkin_date, :in_time, :out_time, :total_hours, :is_first_entry, :is_active)
     end
 end

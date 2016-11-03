@@ -52,12 +52,12 @@
                 - user.attendances.by_month(Time.now.month).each_with_index do |entry, index|
                   %tr
                     %td= index + 1
-                    %td= entry.datetoday
+                    %td= entry.checkin_date
                     %td= Time.at(entry.in_time).utc.strftime("%I:%M%p")
                     %td= Time.at(entry.out_time).utc.strftime("%I:%M%p") if entry.out_time.present?
                     %td= entry.total_hours
                     %td
-                      - if entry.first_entry?
+                      - if entry.is_first_entry?
                         - if Time.at(entry.in_time).strftime("%H:%M") <= Time.at(Time.parse(Attendance::USUAL_OFFICE_TIME)).strftime("%H:%M")
                           .status#inTime
                             On time

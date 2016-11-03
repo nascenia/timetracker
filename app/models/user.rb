@@ -64,25 +64,25 @@ class User < ActiveRecord::Base
   def create_attendance
     self.attendances.create(
         :user_id => self.id,
-        :datetoday => Date.today,
+        :checkin_date => Date.today,
         :in_time => Time.now.to_s(:time)
     )
   end
 
   def find_todays_entry
-    todays_entry = Attendance.where(:user_id => self.id, :datetoday => Date.today, :out_time => nil).first
+    todays_entry = Attendance.where(:user_id => self.id, :checkin_date => Date.today, :out_time => nil).first
     todays_entry
   end
 
   def monthly_total_hour(month, year = Time.now.year)
-    self.attendances.where('MONTH(datetoday) = ? AND YEAR(datetoday) = ?', month, year).sum(:total_hours)
+    self.attendances.where('MONTH(checkin_date) = ? AND YEAR(checkin_date) = ?', month, year).sum(:total_hours)
   end
 
   def monthly_average_hour(month,  year = Time.now.year, saturday = 5, sunday = 6)
-    total_days_spent_in_office = self.attendances.where("MONTH(datetoday) = ? AND YEAR(datetoday) = ? AND WEEKDAY(datetoday)
+    total_days_spent_in_office = self.attendances.where("MONTH(checkin_date) = ? AND YEAR(checkin_date) = ? AND WEEKDAY(checkin_date)
                                       NOT IN (#{saturday}, #{sunday}) AND attendances.total_hours IS NOT NULL", month, year)
-                                     .count("datetoday", :distinct => true)
-    monthly_total_hour = self.attendances.where("MONTH(datetoday) = ? AND YEAR(datetoday) = ? AND WEEKDAY(datetoday)
+                                     .count("checkin_date", :distinct => true)
+    monthly_total_hour = self.attendances.where("MONTH(checkin_date) = ? AND YEAR(checkin_date) = ? AND WEEKDAY(checkin_date)
                                 NOT IN (#{saturday}, #{sunday})", month, year)
                                 .sum(:total_hours)
 
@@ -92,8 +92,8 @@ class User < ActiveRecord::Base
   end
 
   def monthly_average_in_time(month,  year = Time.now.year, saturday = 5, sunday = 6)
-    total = self.attendances.where("MONTH(datetoday) = ? AND YEAR(datetoday) = ? AND WEEKDAY(datetoday) NOT IN (#{saturday},
-                #{sunday}) AND first_entry = ? ", month, year, true)
+    total = self.attendances.where("MONTH(checkin_date) = ? AND YEAR(checkin_date) = ? AND WEEKDAY(checkin_date) NOT IN (#{saturday},
+                #{sunday}) AND is_first_entry = ? ", month, year, true)
                 .average("TIME_TO_SEC(attendances.in_time)")
 
     if total.present?
@@ -102,15 +102,15 @@ class User < ActiveRecord::Base
   end
 
   def update_first_entry(today = Date.today)
-    not_first_entry = self.attendances.where("datetoday = ? AND first_entry = ? ", today, true).count
+    not_first_entry = self.attendances.where("checkin_date = ? AND is_first_entry = ? ", today, true).count
     if not_first_entry == 0
-      todays_first_entry = self.attendances.find_by_datetoday(today)
-      todays_first_entry.update_attribute(:first_entry, true)
+      todays_first_entry = self.attendances.find_by_checkin_date(today)
+      todays_first_entry.update_attribute(:is_first_entry, true)
     end
   end
 
   def add_hours_for_missing_out(today = Date.today)
-    last_office_day = self.attendances.where("datetoday != ? AND first_entry = ? AND attendances.total_hours IS NULL ",
+    last_office_day = self.attendances.where("checkin_date != ? AND is_first_entry = ? AND attendances.total_hours IS NULL ",
                                              today, true).last
     if last_office_day.present?
       last_office_day.update_attribute(:total_hours, 2)

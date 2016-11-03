@@ -30,10 +30,14 @@ RSpec.describe Attendance, type: :model do
     end
   end
 
+  # wrong description
+  # Check all type of scenario of in and out time (forgot checkout, multi entry)
   describe 'update_out_time' do
     let(:attendance) { create :attendance, in_time: Time.now.to_s(:time) }
     it 'should update out time' do
       attendance.update_out_time
+
+      # should be static check
       expect(attendance.total_hours).to eq(((Time.now.to_s(:time).to_time - Time.now.to_s(:time).to_time)  / 1.hour).round(2))
     end
   end

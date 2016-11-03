@@ -1,0 +1,5 @@
+default: &default
+  ip_whitelist: 203.202.242.130#120.50.7.126#127.0.0.1
+
+development:
+  <<: *default

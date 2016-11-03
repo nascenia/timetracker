@@ -3,13 +3,13 @@
   %strong User:
   = @attendance.user_id
 %p
-  %strong Datetoday:
-  = @attendance.datetoday
+  %strong Checkin date:
+  = @attendance.checkin_date
 %p
-  %strong Intime:
+  %strong In time:
   = @attendance.intime
 %p
-  %strong Outtime:
+  %strong Out time:
   = @attendance.outtime
 = link_to 'Edit', edit_attendance_path(@attendance)
 |

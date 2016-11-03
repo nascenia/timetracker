@@ -18,3 +18,16 @@
 /log/*.log
 /tmp
 .idea
+
+# Ignore ruby version and gemset
+.ruby-version
+.ruby-gemset
+
+# Ignore test coverage
+coverage/*
+
+# Ignore database.yml
+config/database.yml
+
+# Ignore mysql 5.7 adapter initializer
+config/initializers/abstract_mysql2_adapter.rb
