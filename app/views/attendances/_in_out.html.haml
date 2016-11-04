@@ -5,8 +5,8 @@
   = link_to 'Out', "/attendances/#{@out_link}", :method => :put, :class => 'btn btn-large btn-danger in-out-button', :id => "out"
 
   %span.pull-right
-    = link_to "#{Service::OTHERS[:tp][:name]}", "#{Service::OTHERS[:tp][:url]}", target: "_blank"
+    = link_to "#{Service::INTERNAL['team_planner']['name']}", "#{Service::INTERNAL['team_planner']['url']}", target: "_blank"
     |
-    = link_to "#{Service::OTHERS[:kb][:name]}", "#{Service::OTHERS[:kb][:url]}", target: "_blank"
+    = link_to "#{Service::INTERNAL['knowledge_base']['name']}", "#{Service::INTERNAL['knowledge_base']['url']}", target: "_blank"
     |
-    = link_to "#{Service::OTHERS[:fs][:name]}", "#{Service::OTHERS[:fs][:url]}", target: "_blank"
+    = link_to "#{Service::INTERNAL['file_server']['name']}", "#{Service::INTERNAL['file_server']['url']}", target: "_blank"

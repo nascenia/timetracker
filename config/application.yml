@@ -1,5 +1,15 @@
 default: &default
   ip_whitelist: 203.202.242.130#120.50.7.126#127.0.0.1
+  services:
+    team_planner:
+      name: Team planner
+      url: http://test.teamplanner.nascenia.com/
+    knowledge_base:
+      name: Knowledge base
+      url: http://kb.nascenia.com/
+    file_server:
+      name: File server
+      url: http://192.168.1.2/
 
 development:
   <<: *default
