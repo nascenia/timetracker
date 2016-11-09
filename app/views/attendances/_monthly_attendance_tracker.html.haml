@@ -18,7 +18,8 @@
       - User.all.active.each do |user|
         %tr
           %td
-            %a{"data-toggle" => "modal", :href => "#userModal_#{user.id}"}= user.name
+            = link_to user.name, show_attendance_summary_attendances_path(user_time: {user_id: user.id,
+            month: Time.now.month, year: Time.now.year}), remote: true
             - if current_user.is_admin?
               .pull-right
                 = link_to image_tag('hide.png'), hide_name_attendance_path(:id => user.id), :remote => true, :title => 'Hide Name'
@@ -30,42 +31,3 @@
           %td= user.monthly_average_in_time(1.month.ago.month, 1.month.ago.year).present? ? user.monthly_average_in_time(1.month.ago.month, 1.month.ago.year) : 0
   - if current_user.is_admin?
     = link_to 'Show Hidden Names', show_hidden_names_attendances_path
-- User.all.each do |user|
-  .modal.fade{:id => "userModal_#{user.id}"}
-    .modal-dialog
-      .modal-content
-        .modal-header
-          %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} ×
-          %h4.modal-title= "#{user.name}'s Attendance Summary of #{Time.now.strftime("%B")}"
-        .modal-body
-          .bs-example
-            %table.table.table-hover.table-bordered#individual-attendance-table
-              %thead
-                %tr
-                  %th Count
-                  %th Date
-                  %th InTime
-                  %th OutTime
-                  %th Total Hours
-                  %th Status
-              %tbody
-                - user.attendances.by_month(Time.now.month).each_with_index do |entry, index|
-                  %tr
-                    %td= index + 1
-                    %td= entry.checkin_date
-                    %td= Time.at(entry.in_time).utc.strftime("%I:%M%p")
-                    %td= Time.at(entry.out_time).utc.strftime("%I:%M%p") if entry.out_time.present?
-                    %td= entry.total_hours
-                    %td
-                      - if entry.is_first_entry?
-                        - if Time.at(entry.in_time).strftime("%H:%M") <= Time.at(Time.parse(Attendance::USUAL_OFFICE_TIME)).strftime("%H:%M")
-                          .status#inTime
-                            On time
-                        - else
-                          .status#late
-                            Late
-                      - else
-                        .status#secondEntry
-                          Multiple Entry
-        .modal-footer
-          %button.btn.btn-danger{"data-dismiss" => "modal", :type => "button"} Close

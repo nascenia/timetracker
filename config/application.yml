@@ -1,5 +1,8 @@
 default: &default
   ip_whitelist: 203.202.242.130#120.50.7.126#127.0.0.1
+  year_range:
+    start: 2010
+    end: 2020
   services:
     team_planner:
       name: Team planner

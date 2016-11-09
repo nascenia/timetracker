@@ -142,6 +142,22 @@ class AttendancesController < ApplicationController
     @users = User.inactive
   end
 
+  def show_attendance_summary
+    month = params[:user_time][:month]
+    year = params[:user_time][:year]
+
+    @user = User.find(params[:user_time][:user_id])
+    @attendances = @user.attendances.by_month_and_year(Time.now.month, Time.now.year)
+
+    if month.present? && year.present?
+      @attendances = @user.attendances.by_month_and_year(month, year)
+    end
+
+    respond_to do |format|
+      format.js {}
+    end
+  end
+
   private
     def set_attendance
       unless params[:id] == 'invalid'

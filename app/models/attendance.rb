@@ -4,7 +4,24 @@ class Attendance < ActiveRecord::Base
 
   USUAL_OFFICE_TIME = '10:00'
   IP_WHITELIST = CONFIG['ip_whitelist'].split('#')
+  MONTH_LIST = [
+      ['1', 'January'],
+      ['2', 'February'],
+      ['3', 'March'],
+      ['4', 'April'],
+      ['5', 'May'],
+      ['6', 'June'],
+      ['7', 'July'],
+      ['8', 'August'],
+      ['9', 'September'],
+      ['10', 'October'],
+      ['11', 'November'],
+      ['12', 'December']
+  ]
 
+  scope :by_month_and_year, -> (month, year) {
+    where('MONTH(checkin_date) = ? AND YEAR(checkin_date) = ? ', month, year)
+  }
   scope :by_month, ->(month) {where('MONTH(checkin_date) = ? AND YEAR(checkin_date) = ? ', month, Time.now.year)}
   scope :todays_attendance_summary, ->(date) {where('checkin_date = ? ', date).order(:in_time)}
   scope :total_employee_present, ->(date) {where('checkin_date = ? ', date).group(:user_id).count}

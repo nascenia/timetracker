@@ -37,6 +37,7 @@ Internal::Application.routes.draw do
       get :monthly_report
       get :raw_attendance_data
       get :show_hidden_names
+      get :show_attendance_summary
     end
   end
 
