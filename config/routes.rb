@@ -28,6 +28,7 @@ Internal::Application.routes.draw do
     member do
       get :hide_name
       get :show_name
+      get :multi_entry_list
     end
 
     collection do

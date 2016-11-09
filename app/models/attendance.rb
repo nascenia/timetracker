@@ -7,6 +7,8 @@ class Attendance < ActiveRecord::Base
 
   scope :by_month, ->(month) {where('MONTH(checkin_date) = ? AND YEAR(checkin_date) = ? ', month, Time.now.year)}
   scope :todays_attendance_summary, ->(date) {where('checkin_date = ? ', date).order(:in_time)}
+  scope :total_entry, ->(id){where('user_id = ?', id).count}
+  scope :multi_entry, ->(date, user_id){where('checkin_date = ? AND user_id = ?',date,user_id)}
   scope :total_employee_present, ->(date) {where('checkin_date = ? ', date).group(:user_id).count}
   scope :raw_data_of_last_six_month, -> {where('created_at >= ? ', 6.months.ago)}
 
@@ -30,5 +32,23 @@ class Attendance < ActiveRecord::Base
                 "#{attd.out_time.present? ? Time.at(attd.out_time).utc.strftime('%I:%M%p'): nil}"]
       end
     end
+  end
+
+  def self.distinct_attendence(attendance)
+    distinct_list = Array.new
+    attendance.each_with_index{ |entry, index |
+      last=entry
+      i=index
+      while( attendance[i]!=nil)
+        if(entry.user.email == attendance[i].user.email)
+          last =attendance[i]
+        end
+        i+=1
+      end
+      if(entry ==last )
+        distinct_list.push(last)
+      end
+    }
+    distinct_list
   end
 end

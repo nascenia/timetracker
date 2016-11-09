@@ -5,7 +5,7 @@
     %input#datepicker{:placeholder => "Search By Date", :type => "text", :value => @date, :readonly => true }/
     .pull-right#total-employee
       Total Present in Office:
-      = @todays_tracker.select("DISTINCT(user_id)").count
+      = @todays_tracker.size
   .bs-example
     %table.table.table-hover.table-bordered
       %thead
@@ -32,4 +32,7 @@
                     Late
               - else
                 .status#secondEntry
-                  Multi/ Entry
+                  = link_to "Multi/ Entry",  multi_entry_list_attendance_path(id: entry.user.id), remote: true,:style => "color:orange"
+
+
+    #multi_entry_modal
