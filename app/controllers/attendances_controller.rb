@@ -7,7 +7,8 @@ class AttendancesController < ApplicationController
   def index
     @todays_entry = current_user.find_todays_entry
     @date = Date.today
-    @todays_tracker = Attendance.todays_attendance_summary(@date)
+    attendance = Attendance.todays_attendance_summary(@date)
+    @todays_tracker = Attendance.distinct_attendence(attendance)
     @out_link = @todays_entry.present? ? @todays_entry.id : 'invalid'
     # @raw_data = Attendance.raw_data_of_last_six_month
 
@@ -16,7 +17,7 @@ class AttendancesController < ApplicationController
       # format.xls {send_data @raw_data.to_csv(col_sep: "\t") }
     end
   end
-
+  
   def show
     respond_with(@attendance)
   end
@@ -155,6 +156,14 @@ class AttendancesController < ApplicationController
 
     respond_to do |format|
       format.js {}
+    end
+  end
+
+  def multi_entry_list
+    @multi_entries = Attendance.multi_entry(Date.today, params[:id])
+
+    respond_to do |format|
+      format.js
     end
   end
 
