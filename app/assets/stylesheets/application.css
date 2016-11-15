@@ -9,8 +9,8 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
- *= require bootstrap.min
- *= require bootstrap-theme.min
+ *= require _bootstrap
+ *= require app-template.css.scss
  *= require jquery.dataTables.scss
  *= require dataTables.tableTools
  *= require leaves

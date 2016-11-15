@@ -1,0 +1,34 @@
+.row
+  .col-sm-12
+    %h1 Daily time tracker
+
+  .col-sm-12
+    .panel.panel-default
+      .panel-heading
+        %span
+          %b= Date.today.strftime('%B %d, %Y')
+        %span.pull-right
+          %b= "Total present in office: #{@attendances.size}"
+
+      %table.table.table-bordered.table-hover
+        %thead
+          %tr
+            %th #
+            %th Name
+            %th Email
+            %th Check in time
+            %th Check out time
+            %th Status
+        %tbody
+        - @attendances.each do |attendance|
+          %tr
+            %td= attendance.user.id
+            %td= attendance.user.name
+            %td= attendance.user.email
+            %td= attendance.in_time.strftime('%I:%M %p')
+            %td= attendance.out_time.present? ? attendance.out_time.strftime('%I:%M %p') : '-'
+            %td
+              - unless is_late_attendance? attendance.in_time
+                %span.label.label-success On time
+              - else
+                %span.label.label-danger Late

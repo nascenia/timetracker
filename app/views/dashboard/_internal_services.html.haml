@@ -1,0 +1,11 @@
+.panel.panel-default
+  .panel-heading
+    %b Nascenia internal services
+
+  %ul.list-group
+    %li.list-group-item
+      = link_to "#{Service::INTERNAL['team_planner']['name']}", "#{Service::INTERNAL['team_planner']['url']}", target: '_blank'
+    %li.list-group-item
+      = link_to "#{Service::INTERNAL['knowledge_base']['name']}", "#{Service::INTERNAL['knowledge_base']['url']}", target: '_blank'
+    %li.list-group-item
+      = link_to "#{Service::INTERNAL['file_server']['name']}", "#{Service::INTERNAL['file_server']['url']}", target: '_blank'

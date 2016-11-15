@@ -7,8 +7,8 @@
     %meta{:name => "description", :content => ""}
     %meta{:name => "author", :content => ""}
     %title Nascenia | Time tracker
-    = favicon_link_tag 'nascenia-logo-motif-only.png'
 
+    = favicon_link_tag 'nascenia-logo-motif-only.png'
     = stylesheet_link_tag 'application', :media => 'all'
     = javascript_include_tag 'application'
     = csrf_meta_tags
@@ -23,22 +23,26 @@
             %span.icon-bar
             %span.icon-bar
             %span.icon-bar
-          %a.navbar-brand
+          %a.navbar-brand{:href => '/'}
             = image_tag 'logo.png', style: 'margin-top: -25px;'
 
-    <!-- /.container -->      
+        %div#navbar.collapse.navbar-collapse
+          %ul.nav.navbar-nav
+            %li
+              = link_to 'Daily TT', daily_attendances_path
+            %li
+              = link_to 'Monthly TT', monthly_attendances_path
+            %li
+              = link_to 'My Leave', leave_user_path(current_user)
+            %li
+              %a{:href => '#'} About
+            %li
+              = link_to 'Logout', destroy_user_session_path, method: :delete
+
+    <!-- /.container -->
     .container
-      .starter-template
-        - if notice
-          .notice.alert-success
-            = notice
-        - elsif alert
-          .alert.alert-warning
-            = alert
+      = yield
 
-        = yield
-
-  %footer
-    %p.text-center
-      &copy; Copyright 2016
-    / = render partial: 'attendances/office_rules'
+    %footer
+      %p.text-center
+        &copy; Copyright 2016

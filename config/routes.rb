@@ -32,6 +32,8 @@ Internal::Application.routes.draw do
     end
 
     collection do
+      get :daily
+      get :monthly
       get :search_daily_attendance
       get :update_salaat_time
       get :six_months_data
@@ -42,5 +44,6 @@ Internal::Application.routes.draw do
     end
   end
 
-  root :to => 'attendances#index'
+  # root :to => 'attendances#index'
+  root :to => 'dashboard#index'
 end

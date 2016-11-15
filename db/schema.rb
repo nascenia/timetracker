@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161103113650) do
+ActiveRecord::Schema.define(version: 20161110095116) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(version: 20161103113650) do
     t.datetime "updated_at"
     t.float    "total_hours"
     t.boolean  "is_first_entry", default: false
+    t.integer  "parent_id"
   end
 
   add_index "attendances", ["user_id"], name: "index_attendances_on_user_id", using: :btree

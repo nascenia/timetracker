@@ -4,6 +4,8 @@ class AttendancesController < ApplicationController
   before_action :restrict_access, only: [:create, :update]
   before_action :authenticate_user!
 
+  layout 'time_tracker'
+
   def index
     @todays_entry = current_user.find_todays_entry
     @date = Date.today
@@ -32,10 +34,15 @@ class AttendancesController < ApplicationController
 
   def create
     @user = current_user
-    unless @user.find_todays_entry
-      @user.create_attendance
+    attendance = current_user.attendances.where(checkin_date: Time.now.strftime('%y-%m-%d')).first
+
+    unless attendance
+      @user.create_attendance nil
       @user.add_hours_for_missing_out
+    else
+      @user.create_attendance attendance
     end
+
     @user.update_first_entry
 
     respond_to do |format|
@@ -164,6 +171,22 @@ class AttendancesController < ApplicationController
 
     respond_to do |format|
       format.js
+    end
+  end
+
+  def daily
+    @attendances = Attendance.daily_attendance_summary(Date.today).includes(:children)
+
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def monthly
+    @attendances = Attendance.monthly_attendance_summary.group_by(&:user_id)
+
+    respond_to do |format|
+      format.html
     end
   end
 

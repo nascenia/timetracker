@@ -1,0 +1,20 @@
+.panel.panel-default
+  .panel-heading
+    %b Top 10 most average in current month!
+
+  %table.table.table-bordered.table-hover
+    %thead
+      %tr
+        %th #
+        %th Name
+        %th Average in time
+        %th Average hours
+        %th Total hours
+    %tbody
+      - @attendances.each do |user_attendance|
+        %tr
+          %td= user_attendance[1][0].user.id
+          %td= user_attendance[1][0].user.name
+          %td= monthly_average_check_in_time(user_attendance[1])
+          %td= monthly_average_hours(monthly_total_hours(user_attendance[1]), user_attendance[1].size)
+          %td= monthly_total_hours(user_attendance[1])

@@ -1,0 +1,32 @@
+.starter-template
+  - unless @attendance.present?
+    .alert.alert-warning{:role => 'alert'}
+      Please check in!
+  - else
+    .alert.alert-info{:role => 'alert'}
+      %b Today's check in time :
+      = "#{@attendance.in_time.strftime('%I:%M %p')} | "
+      %b Check out time :
+      = "#{@attendance.out_time.present? ? @attendance.out_time.strftime('%I:%M %p') : '-'} |"
+      %b Status :
+      - unless is_late_attendance? @attendance.in_time
+        %span.label.label-success On time
+      - else
+        %span.label.label-danger Late
+
+  .row
+    .col-sm-6
+      = link_to  'Check In', attendances_path, :method => :post, :class => "btn btn-block btn-success #{is_checked_in? @attendance}"
+
+    - unless @attendance.nil?
+      .col-sm-6
+        = link_to  'Check Out', attendance_path(@attendance), :method => :put, :class => "btn btn-block btn-info #{is_checked_out? @attendance}"
+
+.row
+  .col-md-8
+    = render 'most_average'
+
+  .col-md-4
+    = render 'attendance_summary'
+    = render 'internal_services'
+    = render 'rules_instructions'

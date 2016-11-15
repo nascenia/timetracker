@@ -1,6 +1,7 @@
 class Attendance < ActiveRecord::Base
 
   belongs_to :user
+  has_many :children, :class_name => 'Attendance', :foreign_key => 'parent_id', :dependent => :destroy
 
   USUAL_OFFICE_TIME = '10:00'
   IP_WHITELIST = CONFIG['ip_whitelist'].split('#')
@@ -23,11 +24,14 @@ class Attendance < ActiveRecord::Base
     where('MONTH(checkin_date) = ? AND YEAR(checkin_date) = ? ', month, year)
   }
   scope :by_month, ->(month) {where('MONTH(checkin_date) = ? AND YEAR(checkin_date) = ? ', month, Time.now.year)}
-  scope :todays_attendance_summary, ->(date) {where('checkin_date = ? ', date).order(:in_time)}
+  scope :daily_attendance_summary, ->(date) { where('checkin_date = ? AND parent_id IS NULL', date).order(:in_time) }
   scope :total_entry, ->(id){where('user_id = ?', id).count}
   scope :multi_entry, ->(date, user_id){where('checkin_date = ? AND user_id = ?',date,user_id)}
   scope :total_employee_present, ->(date) {where('checkin_date = ? ', date).group(:user_id).count}
   scope :raw_data_of_last_six_month, -> {where('created_at >= ? ', 6.months.ago)}
+  scope :monthly_attendance_summary, -> { where('checkin_date >= ? AND checkin_date <= ? AND parent_id IS NULL',
+                                                      Date.today.at_beginning_of_month.strftime('%Y-%m-%d'),
+                                                      Date.today.strftime('%Y-%m-%d')) }
 
   def update_out_time
     self.update_attribute(:out_time, Time.now.to_s(:time))

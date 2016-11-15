@@ -16,7 +16,8 @@ class User < ActiveRecord::Base
       'khalid@nascenia.com',
       'shaer@nascenia.com',
       'faruk@nascenia.com',
-      'fuad@nascenia.com'
+      'fuad@nascenia.com',
+      'masud@nascenia.com'
   ]
 
   ROLES = [
@@ -61,11 +62,12 @@ class User < ActiveRecord::Base
     user
   end
 
-  def create_attendance
+  def create_attendance parent
     self.attendances.create(
         :user_id => self.id,
         :checkin_date => Date.today,
-        :in_time => Time.now.to_s(:time)
+        :in_time => Time.now.to_s(:time),
+        :parent_id => parent
     )
   end
 
@@ -81,7 +83,8 @@ class User < ActiveRecord::Base
   def monthly_average_hour(month,  year = Time.now.year, saturday = 5, sunday = 6)
     total_days_spent_in_office = self.attendances.where("MONTH(checkin_date) = ? AND YEAR(checkin_date) = ? AND WEEKDAY(checkin_date)
                                       NOT IN (#{saturday}, #{sunday}) AND attendances.total_hours IS NOT NULL", month, year)
-                                     .count("checkin_date", :distinct => true)
+                                     .count("checkin_date", distinct: true)
+
     monthly_total_hour = self.attendances.where("MONTH(checkin_date) = ? AND YEAR(checkin_date) = ? AND WEEKDAY(checkin_date)
                                 NOT IN (#{saturday}, #{sunday})", month, year)
                                 .sum(:total_hours)
