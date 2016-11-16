@@ -1,32 +1,34 @@
 %h1.page-title Leave Balance
-%table.table
-  %thead
-    %tr
-      %th
-      %th Casual (Hours)
-      %th Medical (Hours)
-  %tbody
-    %tr
-      %th Yearly Leave
-      %td= LeaveTracker::YEARLY_CASUAL_LEAVE
-      %td= LeaveTracker::YEARLY_MEDICAL_LEAVE
-    %tr
-      %th Accrued in this year
-      %td= @user.leave_tracker.accrued_vacation_this_year
-      %td= @user.leave_tracker.accrued_medical_this_year
-    %tr
-      %th Carried Forwarded Leave
-      %td= @user.leave_tracker.carried_forward_vacation
-      %td= @user.leave_tracker.carried_forward_medical
-    %tr
-      %th Accrued in total
-      %td= @user.leave_tracker.accrued_vacation_total
-      %td= @user.leave_tracker.accrued_medical_total
-    %tr
-      %th Consumed leave
-      %td= @user.leave_tracker.consumed_vacation
-      %td= @user.leave_tracker.consumed_medical
-    %tr
-      %th Accrual balance
-      %td= @user.leave_tracker.accrued_vacation_balance
-      %td= @user.leave_tracker.accrued_medical_balance
+- if !@user.nil?
+  %table.table
+    %thead
+      %tr
+        %th
+        %th Casual (Hours)
+        %th Medical (Hours)
+    %tbody
+      %tr
+        %th Yearly Leave
+        %td= LeaveTracker::YEARLY_CASUAL_LEAVE
+        %td= LeaveTracker::YEARLY_MEDICAL_LEAVE
+      %tr
+        %th Accrued in this year
+        %td= @user.leave_tracker.accrued_vacation_this_year
+        %td= @user.leave_tracker.accrued_medical_this_year
+      %tr
+        %th Carried Forwarded Leave
+        %td= @user.leave_tracker.carried_forward_vacation
+        %td= @user.leave_tracker.carried_forward_medical
+      %tr
+        %th Accrued in total
+        %td= @user.leave_tracker.accrued_vacation_total
+        %td= @user.leave_tracker.accrued_medical_total
+      %tr
+        %th Consumed leave
+        %td= @user.leave_tracker.consumed_vacation
+        %td= @user.leave_tracker.consumed_medical
+      %tr
+        %th Accrual balance
+        %td= @user.leave_tracker.accrued_vacation_balance
+        %td= @user.leave_tracker.accrued_medical_balance
+
