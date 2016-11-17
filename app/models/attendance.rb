@@ -4,7 +4,7 @@ class Attendance < ActiveRecord::Base
 
   USUAL_OFFICE_TIME = '10:00'
   IP_WHITELIST = CONFIG['ip_whitelist'].split('#')
-  MONTH_LIST = [
+  MONTHS = [
       ['1', 'January'],
       ['2', 'February'],
       ['3', 'March'],

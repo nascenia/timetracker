@@ -3,24 +3,33 @@
     .modal-content
       .modal-header
         %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} ×
-        %h4.modal-title= "Attendance Summary of #{@user.name},  #{Time.now.strftime("%B")}, #{Time.now.strftime("%Y")}"
-        = select_tag :month, options_for_select(Attendance::MONTH_LIST.collect { |m| [m.last, m.first]}),
-          :class => 'btn btn-default btn-sm', :id => 'summary-month', :prompt => 'Select Month'
-        = select_tag :year, options_for_select(CONFIG['year_range']['start'] .. CONFIG['year_range']['end']),
-          :class => 'btn btn-default btn-sm', :id => 'summary-year', :prompt => 'Select Year'
-        %button.btn.btn-success.btn-sm.attendance-summary-form-submit{:data => {:user_id => "#{@user.id}"}} Show
-        = image_tag 'ajax-loader.gif', id: 'modal-loading-image'
+        %h4.modal-title= "Attendance Summary of #{@user.name}: #{get_month_name(@selected[:month])}, #{@selected[:year]}"
       .modal-body
-        .bs-example
+        .panel.panel-default
+          .panel-heading
+            %span Filter
+            = select_tag :month,
+                          options_for_select(get_formatted_months, @selected[:month]),
+                          :class => 'btn btn-default btn-sm',
+                          :id => 'summary-month',
+                          :prompt => '- Select -'
+            = select_tag :year,
+                          options_for_select(get_years, @selected[:year]),
+                          :class => 'btn btn-default btn-sm',
+                          :id => 'summary-year',
+                          :prompt => '- Select -'
+            %button.btn.btn-default.btn-sm.attendance-summary-form-submit{:data => {:user_id => "#{@user.id}"}} Submit
+            = image_tag 'ajax-loader.gif', id: 'modal-loading-image'
+
           %table.table.table-hover.table-bordered#individual-attendance-table
             %thead
               %tr
-                %th Count
-                %th Date
-                %th InTime
-                %th OutTime
-                %th Total Hours
-                %th Status
+                %th{:width => '10%'} #
+                %th{:width => '20%'} Date
+                %th{:width => '15%'} In time
+                %th{:width => '15%'} Out time
+                %th{:width => '20%'} Total hours
+                %th{:width => '20%'} Status
             %tbody
               - @attendances.each_with_index do |entry, index|
                 %tr
