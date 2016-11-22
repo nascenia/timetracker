@@ -18,12 +18,19 @@ class AttendancesController < ApplicationController
   end
 
   def show
-    respond_with(@attendance)
+    respond_to do |format |
+      format.html
+      format.json
+      format.js
+    end
   end
 
   def new
     @attendance = Attendance.new
-    respond_with(@attendance)
+
+    respond_to do |format |
+      format.html
+    end
   end
 
   def edit
