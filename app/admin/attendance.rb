@@ -4,7 +4,7 @@ ActiveAdmin.register Attendance do
   # See permitted parameters documentation:
   # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #
-   permit_params :user_id, :datetoday, :in, :out, :total_hours, :first_entry
+   permit_params :user_id, :datetoday, :in_time, :out_time, :total_hours, :first_entry
 
    index do
      selectable_column
