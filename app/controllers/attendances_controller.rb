@@ -97,7 +97,7 @@ class AttendancesController < ApplicationController
   def restrict_access
     if request.remote_ip.present?
       unless (Attendance::IP_WHITELIST.include? request.remote_ip)
-        flash[:notice] = 'Entry/Out is Restricted From Outside Office!'
+        flash[:alert] = 'In and Out is restricted from outside office!'
         render 'attendances/index'
 
         return false
