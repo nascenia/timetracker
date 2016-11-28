@@ -9,8 +9,8 @@
     %title Nascenia | Time tracker
 
     = favicon_link_tag 'nascenia-logo-motif-only.png'
-    = stylesheet_link_tag 'application', :media => 'all'
-    = javascript_include_tag 'application'
+    = stylesheet_link_tag 'application', :media => 'all', 'data-turbolinks-track' => true
+    = javascript_include_tag 'application', 'data-turbolinks-track' => true
     = csrf_meta_tags
 
   %body
@@ -36,12 +36,16 @@
               = link_to 'My Leave', leave_user_path(current_user)
             %li
               %a{:href => '#'} About
+            - if current_user.is_admin?
+              %li
+                = link_to 'Admin', admin_dashboard_path, :target => '_blank'
             %li
               = link_to 'Logout', destroy_user_session_path, method: :delete
 
     <!-- /.container -->
     .container
-      = yield
+      .starter-template
+        = yield
 
     %footer
       %p.text-center

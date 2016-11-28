@@ -13,7 +13,6 @@
  *= require app-template.css.scss
  *= require jquery.dataTables.scss
  *= require dataTables.tableTools
- *= require leaves
  *= require attendances
  *= require datepicker
  */

@@ -4,6 +4,20 @@ body {
   .starter-template {
     padding: 20px 0px;
     text-align: left;
+
+    .log-status {
+      padding-bottom: 20px;
+    }
+    .page-header {
+      margin-top: 0px;
+      margin-bottom: 20px;
+    }
+  }
+
+  .nav{
+    li.active {
+      background-color: #dddddd;
+    }
   }
 
   hr {

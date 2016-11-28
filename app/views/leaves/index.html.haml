@@ -1,23 +1,38 @@
-%h1 Listing leaves
-%table
-  %thead
-    %tr
-      %th User
-      %th Reason
-      %th Leave type
-      %th Status
-      %th
-      %th
-      %th
-  %tbody
-    - @leaves.each do |leafe|
-      %tr
-        %td= leafe.user_id
-        %td= leafe.reason
-        %td= leafe.leave_type
-        %td= leafe.status
-        %td= link_to 'Show', leafe
-        %td= link_to 'Edit', edit_leafe_path(leafe)
-        %td= link_to 'Destroy', leafe, method: :delete, data: { confirm: 'Are you sure?' }
-%br/
-= link_to 'New Leave', new_leafe_path
+.row
+  .col-sm-3
+    = render partial: 'shared/left_menu'
+
+  .col-sm-9
+    %h1.page-header
+      Leaves
+
+    - if @leaves.size > 0
+      %table.table.table-bordered
+        %thead
+          %tr
+            %th{:width => '20%'} Name
+            %th{:width => '15%'} Type
+            %th{:width => '30%'} Reason
+            %th{:width => '15'} Status
+            %th{:width => '20'}
+        %tbody
+          - @leaves.each do |leave|
+            %tr
+              %td= leave.user.name
+              %td= leave.leave_type == Leave::CASUAL ? 'Casual' : 'Medical'
+              %td= leave.reason
+              %td= get_status(leave.status)
+              %td
+                %button{:class => 'btn btn-success btn-xs', :data => {:leave_id => leave.id}, :title => 'Approve'}
+                  Approve
+                %button{:class => 'btn btn-danger btn-xs', :data => {:leave_id => leave.id}, :title => 'Reject'}
+                  Reject
+    - else
+      .alert.alert-info{:role => 'alert'}
+        %strong Empty!
+        No record found.
+
+:javascript
+  $(document).ready(function() {
+    console.log('hi');
+  });

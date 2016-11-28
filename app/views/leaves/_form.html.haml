@@ -1,34 +1,41 @@
-= form_for(@leave) do |f|
+= form_for(@leave, :html => {:class => 'form-horizontal'}) do |f|
   - if @leave.errors.any?
     #error_explanation
       %h2
         = pluralize(@leave.errors.count, "error")
-        prohibited this leafe from being saved:
+        prohibited this leave from being saved:
       %ul
         - @leave.errors.full_messages.each do |msg|
           %li= msg
   = hidden_field_tag :status, Leave::PENDING
   .form-group
-    = f.label :leave_type
-    = f.select :leave_type, Leave::LEAVE_TYPES, {}, {:class => 'form-control'}
+    = f.label :leave_type, {:class => 'col-sm-2 control-label'}
+    .col-sm-10
+      = f.select :leave_type, Leave::LEAVE_TYPES, {}, {:class => 'form-control'}
   .form-group
-    = f.label :start_date
-    = f.text_field :start_date, :class => 'form-control leave-datepicker', :placeholder => 'Select Start Date'
+    = f.label :start_date, {:class => 'col-sm-2 control-label'}
+    .col-sm-10
+      = f.text_field :start_date, :class => 'form-control leave-datepicker', :placeholder => 'Select Start Date'
   .form-group
-    = f.label :end_date
-    = f.text_field :end_date, :class => 'form-control leave-datepicker', :placeholder => 'Select End Date'
+    = f.label :end_date, {:class => 'col-sm-2 control-label'}
+    .col-sm-10
+      = f.text_field :end_date, :class => 'form-control leave-datepicker', :placeholder => 'Select End Date'
   .form-group
-    = f.label :half_day
-    = f.check_box :half_day, :class => 'checkbox-inline'
+    = f.label :reason, {:class => 'col-sm-2 control-label'}
+    .col-sm-10
+      = f.text_area :reason, :maxlength => '300', :class => 'form-control', :rows => 7
+      %p.help-block
+        %span= 300
+        characters remaining.
   .form-group
-    = f.label :reason
-    = f.text_area :reason, :maxlength => '300', :class => 'form-control', :rows => 7
-  .textarea-feedback
-    %p
-      %span= 300
-      characters remaining.
+    .col-sm-offset-2.col-sm-10
+      .checkbox
+        %label
+          = f.check_box :half_day
+          is half day
   .form-group
-    = f.submit 'Apply', :class => 'btn btn-primary'
+    .col-sm-offset-2.col-sm-10
+      = f.submit 'Apply', :class => 'btn btn-default'
 
 :javascript
   $(document).ready(function () {
@@ -38,11 +45,12 @@
         $(this).datepicker('hide');
     });
 
-    var text_max = 300;
-    $('#leave_reason').keyup(function() {
-        var text_length = $('#leave_reason').val().length;
-        var text_remaining = text_max - text_length;
+    var max_length = 400;
+    $('p.help-block span').html(max_length);
 
-        $('.textarea-feedback p span').html(text_remaining);
+    $(document).on('keyup', '#leave_reason', function() {
+        var current_length = $('#leave_reason').val().length;
+        var remaining_texts = max_length - current_length;
+        $('p.help-block span').html(remaining_texts);
     });
   });

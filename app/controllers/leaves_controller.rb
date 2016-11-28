@@ -1,9 +1,14 @@
 class LeavesController < ApplicationController
 
-  layout 'leave'
+  layout 'time_tracker'
 
   before_action :set_leave, only: [:index, :show, :edit, :update, :destroy]
   before_action :check_permission, only: [:approve_or_reject_leave, :approve, :reject]
+
+  def index
+    @my_employees = User.list_of_employees(current_user.id)
+    @leaves = Leave.where('status = ? AND user_id IN (?)', Leave::PENDING, @my_employees.map(&:id))
+  end
 
   def new
     @leave = Leave.new
@@ -50,15 +55,6 @@ class LeavesController < ApplicationController
 
     UserMailer.send_approval_or_rejection_notification(@leave).deliver
     redirect_to approve_or_reject_leave_leafe_path(@leave), :alert => 'Applicant shall be notified soon. Thanks!'
-  end
-
-  def employee_list
-    @super_ttf = User.super_ttf
-  end
-
-  def pending_for_approval
-    @my_employees = User.list_of_employees(current_user.id)
-    @leaves = Leave.where('status = ? AND user_id IN (?)', Leave::PENDING, @my_employees.map(&:id))
   end
 
   private

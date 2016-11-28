@@ -1,5 +1,15 @@
 class UsersController < ApplicationController
 
+  layout 'time_tracker'
+
+  def index
+    @super_ttf = User.super_ttf
+
+    respond_to do |format|
+      format.html
+    end
+  end
+
   def leave
     @user = User.find params[:id]
     @leave = Leave.new
@@ -12,24 +22,24 @@ class UsersController < ApplicationController
     end
 
     respond_to do |format|
-      format.html {render layout: 'leave'}
+      format.html
     end
   end
 
   def team
-    @user = User.find params[:id]
+    user = User.find params[:id]
 
-    if @user.role == User::SUPER_TTF
-      @team = User.list_of_ttfs(@user.id)
-    elsif @user.role == User::TTF
-      @team = User.list_of_employees(@user.id)
+    if user.role == User::SUPER_TTF
+      @team = User.list_of_ttfs(user.id)
+    elsif user.role == User::TTF
+      @team = User.list_of_employees(user.id)
     else
       flash[:notice] = 'Sorry! This page is only for TTF / Super TTF!'
       redirect_to leave_user_path(current_user) and return
     end
 
     respond_to do |format|
-      format.html {render layout: 'leave'}
+      format.html
     end
   end
 
