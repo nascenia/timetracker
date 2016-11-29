@@ -12,9 +12,9 @@
           %tr
             %th{:width => '20%'} Name
             %th{:width => '15%'} Type
-            %th{:width => '30%'} Reason
+            %th{:width => '40%'} Description
             %th{:width => '15'} Status
-            %th{:width => '20'}
+            %th{:width => '10'}
         %tbody
           - @leaves.each do |leave|
             %tr
@@ -22,17 +22,8 @@
               %td= leave.leave_type == Leave::CASUAL ? 'Casual' : 'Medical'
               %td= leave.reason
               %td= get_status(leave.status)
-              %td
-                %button{:class => 'btn btn-success btn-xs', :data => {:leave_id => leave.id}, :title => 'Approve'}
-                  Approve
-                %button{:class => 'btn btn-danger btn-xs', :data => {:leave_id => leave.id}, :title => 'Reject'}
-                  Reject
+              %td= link_to 'show', leave_path(leave)
     - else
       .alert.alert-info{:role => 'alert'}
         %strong Empty!
         No record found.
-
-:javascript
-  $(document).ready(function() {
-    console.log('hi');
-  });

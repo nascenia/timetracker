@@ -1,6 +1,6 @@
 class UserMailer < ActionMailer::Base
   default from: 'Leave Tracker | Nascenia <no-reply@nascenia.com>',
-          cc: 'khalid@nascenia.com'
+          cc: 'masud@nascenia.com'
 
   layout 'notification'
 
@@ -21,14 +21,14 @@ class UserMailer < ActionMailer::Base
     @leave = leave
     @user = @leave.user
 
-    if @leave.status == Leave::ACCEPTED
+    if @leave.is_accepted?
       subject = 'Leave Approved'
       @title = 'Your leave application has just been approved.'
-      @greetings = '- Enjoy Your Vacation!'
+      @greetings = '- Enjoy your vacation!'
     else
       subject = 'Leave Rejected'
       @title = 'Your leave application has just been rejected.'
-      @greetings = '- Better Luck Next Time!'
+      @greetings = '- Better luck next time!'
     end
 
     mail :to => @user.email, :subject => subject

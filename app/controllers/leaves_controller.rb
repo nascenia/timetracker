@@ -32,29 +32,15 @@ class LeavesController < ApplicationController
     end
   end
 
-  def approve_or_reject_leave
-    @leave = Leave.find params[:id]
-
-    respond_to do |format|
-      format.html
-    end
-  end
-
   def approve
-    @leave = Leave.find params[:id]
-    @leave.update_attribute(:status, Leave::ACCEPTED)
+    status = Leave::ACCEPTED if params[:status] == 'accept'
+    status = Leave::REJECTED if params[:status] == 'reject'
+    @leave = Leave.includes(:user).find params[:id]
+    @leave.update_attribute(:status, status)
     @leave.update_leave_tracker
 
     UserMailer.send_approval_or_rejection_notification(@leave).deliver
-    redirect_to approve_or_reject_leave_leafe_path(@leave), :notice => 'Applicant shall be notified soon. Thanks!'
-  end
-
-  def reject
-    @leave = Leave.find params[:id]
-    @leave.update_attribute(:status, Leave::REJECTED)
-
-    UserMailer.send_approval_or_rejection_notification(@leave).deliver
-    redirect_to approve_or_reject_leave_leafe_path(@leave), :alert => 'Applicant shall be notified soon. Thanks!'
+    redirect_to leave_path(@leave), :notice => 'Applicant shall be notified soon. Thanks!'
   end
 
   private

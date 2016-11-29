@@ -15,36 +15,35 @@
                 %a{"data-parent" => "#accordion1", "data-toggle" => "collapse", :href => "#collapse_#{employee.id}"}
                   = employee.name
                   %span.pull-right
-                    - if employee.role == User::EMPLOYEE
+                    - if employee.is_employee?
                       Employee
-                    - elsif employee.role == User::TTF
+                    - elsif employee.is_ttf?
                       TTF
             .panel-collapse.collapse{:id => "collapse_#{employee.id}"}
-              .panel-body
-                %table.table
-                  %thead
-                    %tr.info
-                      %th
-                      %th Casual (Hours)
-                      %th Medical (Hours)
-                  %tbody
-                    - if employee.leave_tracker.present?
-                      %tr
-                        %th.danger Yearly Leave
-                        %td.warning= LeaveTracker::YEARLY_CASUAL_LEAVE
-                        %td.success= LeaveTracker::YEARLY_MEDICAL_LEAVE
-                      %tr
-                        %th.danger Carried Forwarded Leave
-                        %td.warning= employee.leave_tracker.carried_forward_vacation
-                        %td.success= employee.leave_tracker.carried_forward_medical
-                      %tr
-                        %th.danger Accrued Leave
-                        %td.warning= employee.leave_tracker.accrued_vacation_total
-                        %td.success= employee.leave_tracker.accrued_medical_total
-                      %tr
-                        %th.danger Consumed Leave
-                        %td.warning= employee.leave_tracker.consumed_vacation
-                        %td.success= employee.leave_tracker.consumed_medical
+              %table.table.table-bordered
+                %thead
+                  %tr
+                    %th
+                    %th Casual (hours)
+                    %th Medical (hours)
+                %tbody
+                  - if employee.leave_tracker.present?
+                    %tr
+                      %th Yearly Leave
+                      %td= LeaveTracker::YEARLY_CASUAL_LEAVE
+                      %td= LeaveTracker::YEARLY_MEDICAL_LEAVE
+                    %tr
+                      %th Carried Forwarded Leave
+                      %td= employee.leave_tracker.carried_forward_vacation
+                      %td= employee.leave_tracker.carried_forward_medical
+                    %tr
+                      %th Accrued Leave
+                      %td= employee.leave_tracker.accrued_vacation_total
+                      %td= employee.leave_tracker.accrued_medical_total
+                    %tr
+                      %th Consumed Leave
+                      %td= employee.leave_tracker.consumed_vacation
+                      %td= employee.leave_tracker.consumed_medical
     - else
       .alert.alert-info{:role => 'alert'}
         %strong Empty!

@@ -15,11 +15,11 @@
   .form-group
     = f.label :start_date, {:class => 'col-sm-2 control-label'}
     .col-sm-10
-      = f.text_field :start_date, :class => 'form-control leave-datepicker', :placeholder => 'Select Start Date'
+      = f.text_field :start_date, :class => 'form-control date-picker', :placeholder => 'Enter start date (ex: dd/mm/yyyy)'
   .form-group
     = f.label :end_date, {:class => 'col-sm-2 control-label'}
     .col-sm-10
-      = f.text_field :end_date, :class => 'form-control leave-datepicker', :placeholder => 'Select End Date'
+      = f.text_field :end_date, :class => 'form-control date-picker', :placeholder => 'Enter end date (ex: dd/mm/yyyy)'
   .form-group
     = f.label :reason, {:class => 'col-sm-2 control-label'}
     .col-sm-10
@@ -38,19 +38,20 @@
       = f.submit 'Apply', :class => 'btn btn-default'
 
 :javascript
-  $(document).ready(function () {
-    $('.leave-datepicker').datepicker({
-        format: "dd/mm/yyyy"
+  $(document).on('turbolinks:load', function() {
+
+    $('.date-picker').datepicker({
+        format: 'dd/mm/yyyy'
     }).on('changeDate', function(e){
         $(this).datepicker('hide');
     });
 
-    var max_length = 400;
+    var max_length = 300;
     $('p.help-block span').html(max_length);
 
     $(document).on('keyup', '#leave_reason', function() {
-        var current_length = $('#leave_reason').val().length;
-        var remaining_texts = max_length - current_length;
-        $('p.help-block span').html(remaining_texts);
+      var current_length = $('#leave_reason').val().length;
+      var remaining_texts = max_length - current_length;
+      $('p.help-block span').html(remaining_texts);
     });
   });

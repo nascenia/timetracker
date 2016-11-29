@@ -1,12 +1,12 @@
 .panel.panel-default
   .panel-heading
-    %b Menu
+    %b Leave management
 
   %ul.nav.nav-sidebar
     %li{:class => current_page?(leave_user_path(current_user)) ? 'active' : ''}
       = link_to 'My leave', leave_user_path(current_user)
-    %li{:class => current_page?(new_leafe_path) ? 'active' : ''}
-      = link_to 'Apply leave', new_leafe_path
+    %li{:class => current_page?(new_leave_path) ? 'active' : ''}
+      = link_to 'Apply leave', new_leave_path
     %li{:class => current_page?(users_path) ? 'active' : ''}
       = link_to 'Employees', users_path
     %li{:class => current_page?(team_user_path(current_user)) ? 'active' : ''}

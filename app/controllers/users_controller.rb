@@ -18,7 +18,7 @@ class UsersController < ApplicationController
       @leave_tracker = @user.leave_tracker
       @leave_tracker.update_leave_tracker_daily
     else
-      create_leave_tracker(@user)
+      LeaveTracker::create_leave_tracker(@user)
     end
 
     respond_to do |format|

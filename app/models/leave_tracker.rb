@@ -19,7 +19,7 @@ class LeaveTracker < ActiveRecord::Base
     end
   end
 
-  def create_leave_tracker(user)
+  def self.create_leave_tracker(user)
     self.create ({
         :user_id => user.id,
         :yearly_casual_leave => YEARLY_CASUAL_LEAVE,

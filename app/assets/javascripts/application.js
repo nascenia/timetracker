@@ -16,4 +16,5 @@
 //= require bootstrap
 //= require jquery.dataTables
 //= require dataTables.tableTools
+//= require bootstrap-datepicker
 //= require attendances

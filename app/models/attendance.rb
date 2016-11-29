@@ -4,7 +4,7 @@ class Attendance < ActiveRecord::Base
   has_many :children, :class_name => 'Attendance', :foreign_key => 'parent_id', :dependent => :destroy
 
   USUAL_OFFICE_TIME = '10:00'
-  IP_WHITELIST = CONFIG['ip_whitelist'].split('#')
+  IP_WHITELIST = CONFIG['ip_whitelist']
   MONTH_LIST = [
       ['1', 'January'],
       ['2', 'February'],

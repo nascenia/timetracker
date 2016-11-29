@@ -48,4 +48,16 @@ class Leave < ActiveRecord::Base
       self.user.leave_tracker.update_attributes(:consumed_medical => consumed_medical_leave_balance)
     end
   end
+
+  def is_pending?
+    self.status == PENDING
+  end
+
+  def is_accepted?
+    self.status == ACCEPTED
+  end
+
+  def is_rejected?
+    self.status == REJECTED
+  end
 end

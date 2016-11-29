@@ -7,11 +7,11 @@ ActiveAdmin.register User do
     id_column
     column :name
     column :role do |id|
-      if id.role == 1
+      if id.role == User::EMPLOYEE
         'Employee'
-      elsif id.role == 2
+      elsif id.role == User::TTF
         'TTF'
-      elsif id.role == 3
+      elsif id.role == User::SUPER_TTF
         'Super TTF'
       else
         'Not assigned'

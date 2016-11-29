@@ -12,22 +12,18 @@ class User < ActiveRecord::Base
 
   devise :omniauthable, :omniauth_providers => [:google_oauth2]
 
-  ADMIN_USER = [
-      'khalid@nascenia.com',
-      'shaer@nascenia.com',
-      'faruk@nascenia.com',
-      'fuad@nascenia.com',
-      'masud@nascenia.com'
-  ]
+  ADMIN_USER = CONFIG['admins']
 
-  ROLES = [
-      ['Employee', 1],
-      ['TTF', 2],
-      ['Super TTF', 3]
-  ]
   EMPLOYEE = 1
   TTF = 2
   SUPER_TTF = 3
+
+  ROLES = [
+      ['Employee', EMPLOYEE],
+      ['TTF', TTF],
+      ['Super TTF', SUPER_TTF]
+  ]
+
 
   scope :inactive, -> {where('is_active = ?', false)}
   scope :active, -> {where('is_active = ?', true)}
@@ -39,6 +35,10 @@ class User < ActiveRecord::Base
 
   def is_admin?
     self.email && ADMIN_USER.to_s.include?(self.email)
+  end
+
+  def is_employee?
+    self.role === User::EMPLOYEE
   end
 
   def is_ttf?

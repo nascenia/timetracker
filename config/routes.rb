@@ -11,13 +11,15 @@ Internal::Application.routes.draw do
     end
   end
 
-  resources :leaves do
-    member do
-      get :approve_or_reject_leave
-      get :approve
-      get :reject
-    end
-  end
+  # leaves controller resources generate wrong typo in url helper
+  get '/leaves', to: 'leaves#index', as: 'leaves'
+  get '/leaves/new', to: 'leaves#new', as: 'new_leave'
+  post '/leaves', to: 'leaves#create'
+  get '/leaves/:id', to: 'leaves#show', as: 'leave'
+  get '/leaves/:id/edit', to: 'leaves#edit', as: 'edit_leave'
+  put '/leaves/:id', to: 'leaves#update'
+  delete '/leaves/:id', to: 'leaves#destroy'
+  get 'leaves/:id/approve', to: 'leaves#approve', as: 'approve_leave'
 
   resources :attendances do
     member do
