@@ -67,7 +67,7 @@ class User < ActiveRecord::Base
         :user_id => self.id,
         :checkin_date => Date.today,
         :in_time => Time.now.to_s(:time),
-        :parent_id => parent
+        :parent_id => parent.nil? ? nil : parent.id
     )
   end
 

@@ -3,7 +3,7 @@ class LeavesController < ApplicationController
   layout 'time_tracker'
 
   before_action :set_leave, only: [:index, :show, :edit, :update, :destroy]
-  before_action :check_permission, only: [:approve_or_reject_leave, :approve, :reject]
+  before_action :check_permission, only: [:show, :approve]
 
   def index
     @my_employees = User.list_of_employees(current_user.id)
