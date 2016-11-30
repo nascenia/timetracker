@@ -53,4 +53,16 @@ module AttendancesHelper
     average_time = '%s:%s' % average_minutes.divmod(60).map(&:to_i)
     Time.parse(average_time).strftime('%I:%M %p')
   end
+
+  def get_daily_total_hours attendance
+
+    total_hours ||= attendance.total_hours.nil? ? 0 : attendance.total_hours
+
+    attendance.children.each do |attend|
+      total_hours = total_hours + (attend.total_hours.nil? ? 0 : attend.total_hours)
+    end if attendance.has_multiple_checkin?
+
+    total_hours.round(3)
+  end
+
 end

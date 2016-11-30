@@ -1,8 +1,8 @@
-.modal{:id => "userModal"}
+.modal{:id => 'userModal'}
   .modal-dialog
     .modal-content
       .modal-header
-        %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} ×
+        %button.close{'aria-hidden' => true, 'data-dismiss' => 'modal', :type => 'button'} ×
         %h4.modal-title= "Attendance Summary of #{@user.name}: #{get_month_name(@selected[:month])}, #{@selected[:year]}"
       .modal-body
         .panel.panel-default
@@ -18,7 +18,8 @@
                           :class => 'btn btn-default btn-sm',
                           :id => 'summary-year',
                           :prompt => '- Select -'
-            %button.btn.btn-default.btn-sm.attendance-summary-form-submit{:data => {:user_id => "#{@user.id}"}} Submit
+            %button.btn.btn-default.btn-sm#monthly-summary{:data => {:user => {:id => "#{@user.id}"}}}
+              Submit
             = image_tag 'ajax-loader.gif', id: 'modal-loading-image'
 
           %table.table.table-hover.table-bordered
@@ -31,42 +32,38 @@
                 %th{:width => '20%'} Total hours
                 %th{:width => '20%'} Status
             %tbody
-              - @attendances.each_with_index do |entry, index|
+              - @attendances.each_with_index do |attendance, index|
                 %tr
                   %td= index + 1
-                  %td= entry.checkin_date
-                  %td= Time.at(entry.in_time).utc.strftime("%I:%M%p")
-                  %td= Time.at(entry.out_time).utc.strftime("%I:%M%p") if entry.out_time.present?
-                  %td= entry.total_hours
+                  %td= get_formatted_date(attendance.checkin_date)
+                  %td= get_formatted_time(attendance.in_time)
+                  %td= get_formatted_time(attendance.out_time)
+                  %td= get_daily_total_hours(attendance)
                   %td
-                    - if entry.is_first_entry?
-                      - if Time.at(entry.in_time).strftime("%H:%M") <= Time.at(Time.parse(Attendance::USUAL_OFFICE_TIME)).strftime("%H:%M")
-                        .status#inTime
-                          On time
-                      - else
-                        .status#late
-                          Late
-                    - else
-                      .status#secondEntry
+                    - if attendance.has_multiple_checkin?
+                      %span.label.label-warning
                         Multiple Entry
+                    - else
+                      - unless is_late_attendance? attendance.in_time
+                        %span.label.label-success On time
+                      - else
+                        %span.label.label-danger Late
       .modal-footer
-        %button.btn.btn-danger{"data-dismiss" => "modal", :type => "button"} Close
+        %button.btn.btn-default{'data-dismiss' => 'modal', :type => 'button'}
+          Close
 
 :javascript
-  $(document).on('click', '.attendance-summary-form-submit', function(){
-    var user_id = $(this).data().userId;
-    var data = {
-      'user_time': {
-        'user_id': user_id,
-        'month': $('#summary-month').val(),
-        'year': $('#summary-year').val()
-       }
+  $(document).on('click', '#monthly-summary', function() {
+    var user = {
+      id: $(this).data().userId,
+      month: $('#summary-month').val(),
+      year: $('#summary-year').val()
     };
-    console.log(data);
+
     $.ajax({
-      url: "/attendances/show_attendance_summary",
+      url: "/attendances/monthly_summary",
       type: "GET",
-      data:  data,
+      data:  { user: user },
       beforeSend: function() {
         $("#modal-loading-image").show();
       },
@@ -74,4 +71,4 @@
         $("#modal-loading-image").hide();
       }
     });
-  })
+  });

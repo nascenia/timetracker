@@ -15,4 +15,12 @@ module ApplicationHelper
       attendance.out_time.present? ? 'disabled' : ''
     end
   end
+
+  def get_formatted_date date
+    date.present? ? date.strftime('%m-%d-%Y') : '-'
+  end
+
+  def get_formatted_time time
+     time.present? ? Time.at(time).utc.strftime('%I:%M%p') : '-'
+  end
 end

@@ -5,7 +5,7 @@ class Attendance < ActiveRecord::Base
 
   USUAL_OFFICE_TIME = '10:00'
   IP_WHITELIST = CONFIG['ip_whitelist']
-  MONTH_LIST = [
+  MONTHS = [
       ['1', 'January'],
       ['2', 'February'],
       ['3', 'March'],
@@ -21,7 +21,7 @@ class Attendance < ActiveRecord::Base
   ]
 
   scope :by_month_and_year, -> (month, year) {
-    where('MONTH(checkin_date) = ? AND YEAR(checkin_date) = ? ', month, year)
+    where('MONTH(checkin_date) = ? AND YEAR(checkin_date) = ? AND parent_id IS NULL', month, year)
   }
   scope :by_month, ->(month) {where('MONTH(checkin_date) = ? AND YEAR(checkin_date) = ? ', month, Time.now.year)}
   scope :daily_attendance_summary, ->(date) { where('checkin_date = ? AND parent_id IS NULL', date).order(:in_time) }
@@ -41,6 +41,10 @@ class Attendance < ActiveRecord::Base
 
   def summary_of_current_month(month = Time.now.month)
     self.where('MONTH(checkin_date) = ? ', month)
+  end
+
+  def has_multiple_checkin?
+    self.children.size > 0
   end
 
   def self.to_csv(options = {})

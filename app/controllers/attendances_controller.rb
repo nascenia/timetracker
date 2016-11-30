@@ -150,13 +150,10 @@ class AttendancesController < ApplicationController
     @users = User.inactive
   end
 
-  def show_attendance_summary
-    @selected = {
-        month: params[:user_time][:month],
-        year: params[:user_time][:year]
-    }
-    @user = User.find(params[:user_time][:user_id])
-    @attendances = @user.attendances.by_month_and_year(@selected[:month], @selected[:year])
+  def monthly_summary
+    @selected = { month: params[:user][:month], year: params[:user][:year] }
+    @user = User.find params[:user][:id]
+    @attendances = @user.attendances.by_month_and_year(@selected[:month], @selected[:year]).includes(:children)
 
     respond_to do |format|
       format.js {}

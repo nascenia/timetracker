@@ -28,7 +28,33 @@
         - @attendances.each do |user_attendance|
           %tr
             %td= user_attendance[1][0].user.id
-            %td= user_attendance[1][0].user.name
+            %td
+              %a.monthly-summary{:data => {:user => {id: user_attendance[1][0].user.id, month: Time.now.month, year: Time.now.year}}}
+                = user_attendance[1][0].user.name
             %td= monthly_average_check_in_time(user_attendance[1])
             %td= monthly_average_hours(monthly_total_hours(user_attendance[1]), user_attendance[1].size)
             %td= monthly_total_hours(user_attendance[1])
+
+.row
+  #attendance-summary &nbsp;
+
+:javascript
+  $(document).on('click', '.monthly-summary', function() {
+    var user = {
+      id: $(this).data().userId,
+      month: $(this).data().userMonth,
+      year: $(this).data().userYear
+    };
+
+    $.ajax({
+      url: "/attendances/monthly_summary",
+      type: "GET",
+      data:  { user: user },
+      beforeSend: function() {
+        $("#loading-image").show();
+      },
+      success: function(msg) {
+        $("#loading-image").hide();
+      }
+    });
+  });
