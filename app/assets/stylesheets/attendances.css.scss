@@ -2,7 +2,6 @@ table thead th, table tbody td:not(:first-child){
   text-align: center;
 }
 #individual-attendance-table{
-  margin: 0 auto;
 }
 h3{
 //  font-size: 15px;
@@ -67,5 +66,10 @@ span{
 #monthly-tracker {
   border-top: 1px solid #e7e7e7;
   border-bottom: 1px solid #e7e7e7;
+}
+
+#modal-loading-image {
+  width: 20px;
+  display: none;
 }
 

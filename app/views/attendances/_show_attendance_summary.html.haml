@@ -3,26 +3,33 @@
     .modal-content
       .modal-header
         %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} ×
-        %h4.modal-title= "Attendance Summary of #{@user.name},  #{Time.now.strftime("%B")}, #{Time.now.strftime("%Y")}"
-        = form_for :user_time, url: show_attendance_summary_attendances_path, :html => { :method => 'GET' }, remote: true do |f|
-          = f.hidden_field :user_id, value: @user.id
-          = f.select :month, Attendance::MONTH_LIST.collect { |m| [m.last, m.first]}, {:prompt => 'Select Month'}, { :class => 'btn btn-default btn-sm' }
-          = f.select :year,
-                     CONFIG['year_range']['start'] .. CONFIG['year_range']['end'],
-                     { :prompt => 'Select Year' },
-                     { :class => 'btn btn-default btn-sm' }
-          = f.submit 'Show', { :class => 'btn btn-success btn-sm' }
+        %h4.modal-title= "Attendance Summary of #{@user.name}: #{get_month_name(@selected[:month])}, #{@selected[:year]}"
       .modal-body
-        .bs-example
-          %table.table.table-hover.table-bordered#individual-attendance-table
+        .panel.panel-default
+          .panel-heading
+            %span Filter
+            = select_tag :month,
+                          options_for_select(get_formatted_months, @selected[:month]),
+                          :class => 'btn btn-default btn-sm',
+                          :id => 'summary-month',
+                          :prompt => '- Select -'
+            = select_tag :year,
+                          options_for_select(get_years, @selected[:year]),
+                          :class => 'btn btn-default btn-sm',
+                          :id => 'summary-year',
+                          :prompt => '- Select -'
+            %button.btn.btn-default.btn-sm.attendance-summary-form-submit{:data => {:user_id => "#{@user.id}"}} Submit
+            = image_tag 'ajax-loader.gif', id: 'modal-loading-image'
+
+          %table.table.table-hover.table-bordered
             %thead
               %tr
-                %th Count
-                %th Date
-                %th InTime
-                %th OutTime
-                %th Total Hours
-                %th Status
+                %th{:width => '10%'} #
+                %th{:width => '20%'} Date
+                %th{:width => '15%'} In time
+                %th{:width => '15%'} Out time
+                %th{:width => '20%'} Total hours
+                %th{:width => '20%'} Status
             %tbody
               - @attendances.each_with_index do |entry, index|
                 %tr
@@ -44,3 +51,27 @@
                         Multiple Entry
       .modal-footer
         %button.btn.btn-danger{"data-dismiss" => "modal", :type => "button"} Close
+
+:javascript
+  $(document).on('click', '.attendance-summary-form-submit', function(){
+    var user_id = $(this).data().userId;
+    var data = {
+      'user_time': {
+        'user_id': user_id,
+        'month': $('#summary-month').val(),
+        'year': $('#summary-year').val()
+       }
+    };
+    console.log(data);
+    $.ajax({
+      url: "/attendances/show_attendance_summary",
+      type: "GET",
+      data:  data,
+      beforeSend: function() {
+        $("#modal-loading-image").show();
+      },
+      success: function(msg) {
+        $("#modal-loading-image").hide();
+      }
+    });
+  })

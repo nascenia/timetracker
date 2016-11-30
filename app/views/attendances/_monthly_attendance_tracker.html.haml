@@ -18,8 +18,9 @@
       - User.all.active.each do |user|
         %tr
           %td
-            = link_to user.name, show_attendance_summary_attendances_path(user_time: {user_id: user.id,
-            month: Time.now.month, year: Time.now.year}), remote: true
+            %a.attendance-summary{:data => {:user_id => "#{user.id}",
+              :month => "#{Time.now.month}", :year => "#{Time.now.year}"}}
+              =user.name
             - if current_user.is_admin?
               .pull-right
                 = link_to image_tag('hide.png'), hide_name_attendance_path(:id => user.id), :remote => true, :title => 'Hide Name'
@@ -31,3 +32,26 @@
           %td= user.monthly_average_in_time(1.month.ago.month, 1.month.ago.year).present? ? user.monthly_average_in_time(1.month.ago.month, 1.month.ago.year) : 0
   - if current_user.is_admin?
     = link_to 'Show Hidden Names', show_hidden_names_attendances_path
+
+:javascript
+  $(document).on('click', '.attendance-summary', function(){
+    var user_time = $(this).data();
+    var data = {
+      'user_time': {
+        'user_id': user_time.userId,
+        'month': user_time.month,
+        'year': user_time.year
+       }
+    };
+    $.ajax({
+      url: "/attendances/show_attendance_summary",
+      type: "GET",
+      data:  data,
+      beforeSend: function() {
+        $("#loading-image").show();
+      },
+      success: function(msg) {
+        $("#loading-image").hide();
+      }
+    });
+  })
