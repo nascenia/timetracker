@@ -1,16 +1,37 @@
-%p#notice= notice
-%p
-  %strong User:
-  = @attendance.user_id
-%p
-  %strong Checkin date:
-  = @attendance.checkin_date
-%p
-  %strong In time:
-  = @attendance.intime
-%p
-  %strong Out time:
-  = @attendance.outtime
-= link_to 'Edit', edit_attendance_path(@attendance)
-|
-\#{link_to 'Back', attendances_path}
+.row
+  .col-sm-12
+    %h1.page-header
+      = "Daily time tracker of #{@attendance.user.name}"
+
+  .col-sm-12
+    .panel.panel-default
+      .panel-heading
+        %span
+          %b= get_humanize_date(Date.today)
+        %span.pull-right
+          %b= "Total entries: #{1 + @attendance.children.size}"
+
+      %table.table.table-bordered.table-hover
+        %thead
+          %tr
+            %th Check in time
+            %th Check out time
+            %th Hours
+        %tbody
+          %tr
+            %td= get_formatted_time(@attendance.in_time)
+            %td= get_formatted_time(@attendance.out_time)
+            %td= get_attendance_total_hour(@attendance)
+          - @attendance.children.each do |attendance|
+            %tr
+              %td= get_formatted_time(attendance.in_time)
+              %td= get_formatted_time(attendance.out_time)
+              %td= get_attendance_total_hour(attendance)
+          %tr
+            %td &nbsp;
+            %td
+              %b Total
+            %td
+              %b= get_daily_total_hours(@attendance)
+
+= link_to 'Back', attendances_path

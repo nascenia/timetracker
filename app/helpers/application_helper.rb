@@ -16,11 +16,15 @@ module ApplicationHelper
     end
   end
 
+  def get_humanize_date date
+    date.present? ? date.strftime('%B %d, %Y') : '-'
+  end
+
   def get_formatted_date date
     date.present? ? date.strftime('%m-%d-%Y') : '-'
   end
 
   def get_formatted_time time
-     time.present? ? Time.at(time).utc.strftime('%I:%M%p') : '-'
+     time.present? ? Time.at(time).utc.strftime('%I:%M %p') : '-'
   end
 end

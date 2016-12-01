@@ -65,4 +65,7 @@ module AttendancesHelper
     total_hours.round(3)
   end
 
+  def get_attendance_total_hour attendance
+    attendance.total_hours.present? ? attendance.total_hours : '-'
+  end
 end

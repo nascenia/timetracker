@@ -1,6 +1,6 @@
 class AttendancesController < ApplicationController
 
-  before_action :set_attendance, only: [:index, :show, :edit, :update, :destroy]
+  before_action :set_attendance, only: [:index, :edit, :update, :destroy]
   before_action :restrict_access, only: [:create, :update]
   before_action :authenticate_user!
 
@@ -21,12 +21,19 @@ class AttendancesController < ApplicationController
   end
   
   def show
-    respond_with(@attendance)
+    @attendance = Attendance.includes(:children).includes(:user).find params[:id]
+
+    respond_to do |format|
+      format.html
+    end
   end
 
   def new
     @attendance = Attendance.new
-    respond_with(@attendance)
+
+    respond_to do |format|
+      format.html
+    end
   end
 
   def edit
@@ -44,10 +51,12 @@ class AttendancesController < ApplicationController
     end
 
     @user.update_first_entry
+    flash[:notice] = "Successfully Checked In."
 
     respond_to do |format|
-      flash[:notice] = "Successfully Checked In."
-      format.html {redirect_to :back}
+      format.html {
+        redirect_to :back
+      }
     end
   end
 

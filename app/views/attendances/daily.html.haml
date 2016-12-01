@@ -7,7 +7,7 @@
     .panel.panel-default
       .panel-heading
         %span
-          %b= Date.today.strftime('%B %d, %Y')
+          %b= get_humanize_date(Date.today)
         %span.pull-right
           %b= "Total present in office: #{@attendances.size}"
 
@@ -20,16 +20,21 @@
             %th Check in time
             %th Check out time
             %th Status
+            %th &nbsp;
         %tbody
-        - @attendances.each do |attendance|
-          %tr
-            %td= attendance.user.id
-            %td= attendance.user.name
-            %td= attendance.user.email
-            %td= attendance.in_time.strftime('%I:%M %p')
-            %td= attendance.out_time.present? ? attendance.out_time.strftime('%I:%M %p') : '-'
-            %td
-              - unless is_late_attendance? attendance.in_time
-                %span.label.label-success On time
-              - else
-                %span.label.label-danger Late
+          - @attendances.each do |attendance|
+            %tr
+              %td= attendance.user.id
+              %td= attendance.user.name
+              %td= attendance.user.email
+              %td= get_formatted_time(attendance.in_time)
+              %td= get_formatted_time(attendance.out_time)
+              %td
+                - unless is_late_attendance? attendance.in_time
+                  %span.label.label-success On time
+                - else
+                  %span.label.label-danger Late
+              %td= link_to 'view', attendance_path(attendance)
+
+.row
+  #daily-summary &nbsp;
