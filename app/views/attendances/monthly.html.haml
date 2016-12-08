@@ -51,10 +51,10 @@
       type: "GET",
       data:  { user: user },
       beforeSend: function() {
-        $("#loading-image").show();
+        $("#modal-loading-image").show();
       },
       success: function(msg) {
-        $("#loading-image").hide();
+        $("#modal-loading-image").hide();
       }
     });
   });
