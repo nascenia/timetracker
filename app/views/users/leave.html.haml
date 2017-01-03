@@ -1,40 +1,35 @@
-.row
-  .col-sm-3
-    = render partial: 'shared/left_menu'
+.panel.panel-default
+  .panel-heading
+    %b Leave balance
 
-  .col-sm-9
-    .panel.panel-default
-      .panel-heading
-        %b Leave balance
-
-      %table.table.table-bordered.table-hover
-        %thead
-          %tr
-            %th Leave type
-            %th Casual (hours)
-            %th Medical (hours)
-        %tbody
-          %tr
-            %th Yearly leave
-            %td= LeaveTracker::YEARLY_CASUAL_LEAVE
-            %td= LeaveTracker::YEARLY_MEDICAL_LEAVE
-          %tr
-            %th Accrued in this year
-            %td= @user.leave_tracker.accrued_vacation_this_year
-            %td= @user.leave_tracker.accrued_medical_this_year
-          %tr
-            %th Carried forwarded leave
-            %td= @user.leave_tracker.carried_forward_vacation
-            %td= @user.leave_tracker.carried_forward_medical
-          %tr
-            %th Accrued in total
-            %td= @user.leave_tracker.accrued_vacation_total
-            %td= @user.leave_tracker.accrued_medical_total
-          %tr
-            %th Consumed leave
-            %td= @user.leave_tracker.consumed_vacation
-            %td= @user.leave_tracker.consumed_medical
-          %tr
-            %th Accrual balance
-            %td= @user.leave_tracker.accrued_vacation_balance
-            %td= @user.leave_tracker.accrued_medical_balance
+  %table.table.table-bordered.table-hover
+    %thead
+      %tr
+        %th Leave type
+        %th Casual (hours)
+        %th Medical (hours)
+    %tbody
+      %tr
+        %th Yearly leave
+        %td= LeaveTracker::YEARLY_CASUAL_LEAVE
+        %td= LeaveTracker::YEARLY_MEDICAL_LEAVE
+      %tr
+        %th Accrued in this year
+        %td= @user.leave_tracker.accrued_vacation_this_year
+        %td= @user.leave_tracker.accrued_medical_this_year
+      %tr
+        %th Carried forwarded leave
+        %td= @user.leave_tracker.carried_forward_vacation
+        %td= @user.leave_tracker.carried_forward_medical
+      %tr
+        %th Accrued in total
+        %td= @user.leave_tracker.accrued_vacation_total
+        %td= @user.leave_tracker.accrued_medical_total
+      %tr
+        %th Consumed leave
+        %td= @user.leave_tracker.consumed_vacation
+        %td= @user.leave_tracker.consumed_medical
+      %tr
+        %th Accrual balance
+        %td= @user.leave_tracker.accrued_vacation_balance
+        %td= @user.leave_tracker.accrued_medical_balance

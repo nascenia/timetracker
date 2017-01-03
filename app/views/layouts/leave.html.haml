@@ -1,65 +1,43 @@
 !!!
-%html
+%html{:lang => "en"}
   %head
-    %title Leave Tracker | Nascenia
-    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
-    = favicon_link_tag 'nascenia-logo-motif-only.png'
-    = javascript_include_tag 'leaves', 'data-turbolinks-track' => true
-    = csrf_meta_tags
-  %body
-    .container
-      %nav.navbar.navbar-default{:role => "navigation"}
-        .navbar-header
-          %a.navbar-brand{:href => "#{root_path}"} Nascenia Leave Tracker
-        #navbarCollapse.collapse.navbar-collapse
-          - if user_signed_in?
-            %ul.nav.navbar-nav
-              %li.pull-right
-                %p.user-status
-                  Signed in as
-                  %span
-                    = current_user.name
-                  email:
-                  %span
-                    = current_user.email
-            %ul.nav.navbar-nav.navbar-right
-              - if current_user.is_admin?
-                %li
-                  = link_to 'Admin', admin_dashboard_path, :target => '_blank'
-              %li
-                \#{link_to "Time Tracker", root_path}
-              %li
-                \#{link_to "Logout", destroy_user_session_path, method: :delete}
+    %meta{:charset => "utf-8"}
+    %meta{:http => {:equiv => "X-UA-Compatible"}, :content => "IE=edge"}
+    %meta{:name => "viewport", :content => "width=device-width, initial-scale=1"}
+    %meta{:name => "description", :content => ""}
+    %meta{:name => "author", :content => ""}
+    %title Nascenia | Time tracker
 
-      .row
-        .col-sm-2
-          .sidebar-nav
-            .navbar.navbar-default{:role => "navigation"}
-              .navbar-header
-                %button.navbar-toggle{"data-target" => ".sidebar-navbar-collapse", "data-toggle" => "collapse", :type => "button"}
-                  %span.sr-only Toggle navigation
-                  %span.icon-bar
-                  %span.icon-bar
-                  %span.icon-bar
-                %span.visible-xs.navbar-brand Leave Tracker | Nascenia
-              .navbar-collapse.collapse.sidebar-navbar-collapse
-                %ul.nav.navbar-nav#leave-tracker-menu
-                  %li{:class => current_page?(leave_user_path(current_user)) ? 'active' : ''}
-                    = link_to 'My Leave', leave_user_path(current_user)
-                  %li{:class => current_page?(new_leafe_path) ? 'active' : ''}
-                    = link_to 'Apply for Leave', new_leafe_path
-                  %li{:class => current_page?(employee_list_leaves_path) ? 'active' : ''}
-                    = link_to 'Employee List', employee_list_leaves_path
-                  %li{:class => current_page?(team_user_path(current_user)) ? 'active' : ''}
-                    = link_to 'My Co-workers', team_user_path(current_user)
-                  - if current_user.is_ttf? || current_user.is_super_ttf?
-                    %li{:class => current_page?(team_user_path(current_user)) ? 'active' : ''}
-                      = link_to 'Leaves pending for Approval', pending_for_approval_leaves_path
-        .col-sm-10
-          - if notice
-            .notice.alert-success= notice
-          - elsif alert
-            .alert.alert-warning= alert
-          = yield
-  %footer
-    = render partial: 'attendances/office_rules'
+    = favicon_link_tag 'nascenia-logo-motif-only.png'
+    = stylesheet_link_tag 'application', :media => 'all', 'data-turbolinks-track' => true
+    = javascript_include_tag 'application', 'data-turbolinks-track' => true
+    = csrf_meta_tags
+
+  %body
+    %nav.navbar.navbar-inverse.navbar-fixed-top
+      %div.container
+        %div.navbar-header
+          %button.navbar-toggle.collapsed{:type => "button", :data => {:toggle => "collapse", :target => "#navbar"}, :aria => {:expanded => "false", :controls => "navbar"}}
+            %span.sr-only
+              Toggle navigation
+            %span.icon-bar
+            %span.icon-bar
+            %span.icon-bar
+          %a.navbar-brand{:href => '/'}
+            = image_tag 'logo.png', style: 'margin-top: -25px;'
+
+        %div#navbar.collapse.navbar-collapse
+          = render 'shared/top_nav_menu'
+
+    <!-- /.container -->
+    .container
+      .starter-template
+        .row
+          .col-sm-3
+            = render partial: 'shared/left_menu'
+          .col-sm-9
+            = yield
+
+    %footer
+      %p.text-center
+        &copy; Copyright 2016

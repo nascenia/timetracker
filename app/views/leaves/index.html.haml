@@ -1,29 +1,24 @@
-.row
-  .col-sm-3
-    = render partial: 'shared/left_menu'
+%h1.page-header
+  Leaves
 
-  .col-sm-9
-    %h1.page-header
-      Leaves
-
-    - if @leaves.size > 0
-      %table.table.table-bordered
-        %thead
-          %tr
-            %th{:width => '20%'} Name
-            %th{:width => '15%'} Type
-            %th{:width => '40%'} Description
-            %th{:width => '15'} Status
-            %th{:width => '10'}
-        %tbody
-          - @leaves.each do |leave|
-            %tr
-              %td= leave.user.name
-              %td= leave.leave_type == Leave::CASUAL ? 'Casual' : 'Medical'
-              %td= leave.reason
-              %td= get_status(leave.status)
-              %td= link_to 'show', leave_path(leave)
-    - else
-      .alert.alert-info{:role => 'alert'}
-        %strong Empty!
-        No record found.
+- if @leaves.size > 0
+  %table.table.table-bordered
+    %thead
+      %tr
+        %th{:width => '20%'} Name
+        %th{:width => '15%'} Type
+        %th{:width => '40%'} Description
+        %th{:width => '15'} Status
+        %th{:width => '10'}
+    %tbody
+      - @leaves.each do |leave|
+        %tr
+          %td= leave.user.name
+          %td= leave.leave_type == Leave::CASUAL ? 'Casual' : 'Medical'
+          %td= leave.reason
+          %td= get_status(leave.status)
+          %td= link_to 'show', leave_path(leave)
+- else
+  .alert.alert-info{:role => 'alert'}
+    %strong Empty!
+    No record found.

@@ -15,16 +15,16 @@
         %span.label.label-danger Late
 
   .row
-    .col-sm-6
+    .col-sm-3
       = link_to  'Check In', attendances_path, :method => :post, :class => "btn btn-block btn-success #{is_checked_in? @attendance}"
 
     - unless @attendance.nil?
-      .col-sm-6
+      .col-sm-3
         = link_to  'Check Out', attendance_path(@attendance), :method => :put, :class => "btn btn-block btn-info #{is_checked_out? @attendance}"
 
 .row
   .col-md-8
-    = render 'most_average'
+    = render 'todays_attendance'
 
   .col-md-4
     = render 'attendance_summary'

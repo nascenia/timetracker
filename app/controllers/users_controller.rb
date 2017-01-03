@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 
-  layout 'time_tracker'
+  layout 'leave'
 
   def index
     @super_ttf = User.super_ttf

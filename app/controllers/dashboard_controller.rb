@@ -8,7 +8,7 @@ class DashboardController < ApplicationController
   def index
     user = current_user
     @attendance = user.attendances.where(checkin_date: Time.now.strftime('%y-%m-%d')).last
-    @attendances = Attendance.monthly_attendance_summary.group_by(&:user_id)
+    @attendances = Attendance.daily_attendance_summary(Date.today).includes(:children)
     @attendance_summary = user.attendances.monthly_attendance_summary.includes(:children)
 
     respond_to do |format|

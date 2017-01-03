@@ -1,6 +1,6 @@
 class LeavesController < ApplicationController
 
-  layout 'time_tracker'
+  layout 'leave'
 
   before_action :set_leave, only: [:index, :show, :edit, :update, :destroy]
   before_action :check_permission, only: [:show, :approve]

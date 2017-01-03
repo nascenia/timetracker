@@ -177,14 +177,6 @@ class AttendancesController < ApplicationController
     end
   end
 
-  def daily
-    @attendances = Attendance.daily_attendance_summary(Date.today).includes(:children)
-
-    respond_to do |format|
-      format.html
-    end
-  end
-
   def monthly
     @attendances = Attendance.monthly_attendance_summary.group_by(&:user_id)
 

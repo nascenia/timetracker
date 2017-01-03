@@ -27,20 +27,7 @@
             = image_tag 'logo.png', style: 'margin-top: -25px;'
 
         %div#navbar.collapse.navbar-collapse
-          %ul.nav.navbar-nav
-            %li
-              = link_to 'Daily TT', daily_attendances_path
-            %li
-              = link_to 'Monthly TT', monthly_attendances_path
-            %li
-              = link_to 'My Leave', leave_user_path(current_user)
-            %li
-              %a{:href => '#'} About
-            - if current_user.is_admin?
-              %li
-                = link_to 'Admin', admin_dashboard_path, :target => '_blank'
-            %li
-              = link_to 'Logout', destroy_user_session_path, method: :delete
+          = render 'shared/top_nav_menu'
 
     <!-- /.container -->
     .container
