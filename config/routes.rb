@@ -11,7 +11,7 @@ Internal::Application.routes.draw do
     end
   end
 
-  # leaves controller resources generate wrong typo in url helper
+  # leaves controller resources generates wrong typo in url helper
   get '/leaves', to: 'leaves#index', as: 'leaves'
   get '/leaves/new', to: 'leaves#new', as: 'new_leave'
   post '/leaves', to: 'leaves#create'
@@ -22,24 +22,14 @@ Internal::Application.routes.draw do
   get 'leaves/:id/approve', to: 'leaves#approve', as: 'approve_leave'
 
   resources :attendances do
-    member do
-      get :hide_name
-      get :show_name
-      get :multi_entry_list
-    end
-
     collection do
-      get :monthly
-      get :search_daily_attendance
       get :update_salaat_time
       get :six_months_data
       get :monthly_report
       get :raw_attendance_data
-      get :show_hidden_names
       get :monthly_summary
     end
   end
 
-  # root :to => 'attendances#index'
   root :to => 'dashboard#index'
 end

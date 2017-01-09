@@ -29,9 +29,8 @@ class Attendance < ActiveRecord::Base
   scope :multi_entry, ->(date, user_id){where('checkin_date = ? AND user_id = ?',date,user_id)}
   scope :total_employee_present, ->(date) {where('checkin_date = ? ', date).group(:user_id).count}
   scope :raw_data_of_last_six_month, -> {where('created_at >= ? ', 6.months.ago)}
-  scope :monthly_attendance_summary, -> { where('checkin_date >= ? AND checkin_date <= ? AND parent_id IS NULL',
-                                                      Date.today.at_beginning_of_month.strftime('%Y-%m-%d'),
-                                                      Date.today.strftime('%Y-%m-%d')) }
+  scope :monthly_attendance_summary, ->(start_date, end_date) {
+    where('checkin_date >= ? AND checkin_date <= ? AND parent_id IS NULL', start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d')) }
 
   def update_out_time
     self.update_attribute(:out_time, Time.now.to_s(:time))

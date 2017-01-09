@@ -1,12 +1,53 @@
-= hidden_field_tag :todays_entry, @todays_entry
-#in_out
-  = render partial: 'in_out'
-%br
-#loading-image
-  = image_tag 'ajax-loader.gif'
-#attendance-summary
-= render partial: 'monthly_attendance_tracker'
-%br
-#daily-tracker
-  = render partial: 'daily_attendance_tracker'
-%br
+%h3
+  Monthly Time Tracker
+.row
+  %table.table.table-hover.table-bordered#monthly-attendance-table
+    %thead
+      %tr
+        %th{:rowspan => "2"} Name
+        %th{:colspan => "3"}= Time.now.strftime('%B, %Y')
+        %th{:colspan => "3"}= 1.month.ago.strftime('%B, %Y')
+      %tr
+        %th Average in time
+        %th Total hours
+        %th Average hours
+        %th Average in time
+        %th Total hours
+        %th Average hours
+    %tbody
+      - @users.each do |user|
+      - current_month =  user.attendances.monthly_attendance_summary(Date.today.at_beginning_of_month, Date.today).includes(:children)
+      - previous_month =  user.attendances.monthly_attendance_summary(1.month.ago.at_beginning_of_month, 1.month.ago.end_of_month).includes(:children)
+        %tr
+          %td
+            %a.monthly-summary{:data => {:user => {id: user.id, month: Time.now.month, year: Time.now.year}}}
+              = user.name
+          %td= monthly_average_check_in_time(current_month)
+          %td= monthly_total_hours(current_month)
+          %td= monthly_average_hours(monthly_total_hours(current_month), current_month.size)
+          %td= monthly_average_check_in_time(previous_month)
+          %td= monthly_total_hours(previous_month)
+          %td= monthly_average_hours(monthly_total_hours(previous_month), current_month.size)
+.row
+  #attendance-summary &nbsp;
+
+:javascript
+  $(document).on('click', '.monthly-summary', function() {
+    var user = {
+      id: $(this).data().userId,
+      month: $(this).data().userMonth,
+      year: $(this).data().userYear
+    };
+
+    $.ajax({
+      url: "/attendances/monthly_summary",
+      type: "GET",
+      data:  { user: user },
+      beforeSend: function() {
+        $("#modal-loading-image").show();
+      },
+      success: function(msg) {
+        $("#modal-loading-image").hide();
+      }
+    });
+  });

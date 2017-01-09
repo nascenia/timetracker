@@ -30,3 +30,24 @@
     = render 'attendance_summary'
     = render 'internal_services'
     = render 'rules_instructions'
+
+:javascript
+  $(document).on('click', '.monthly-summary', function() {
+    var user = {
+      id: $(this).data().userId,
+      month: $(this).data().userMonth,
+      year: $(this).data().userYear
+    };
+
+    $.ajax({
+      url: "/attendances/monthly_summary",
+      type: "GET",
+      data:  { user: user },
+      beforeSend: function() {
+        $("#modal-loading-image").show();
+      },
+      success: function(msg) {
+        $("#modal-loading-image").hide();
+      }
+    });
+  });

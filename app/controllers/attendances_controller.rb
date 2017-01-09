@@ -7,16 +7,11 @@ class AttendancesController < ApplicationController
   layout 'time_tracker'
 
   def index
-    @todays_entry = current_user.find_todays_entry
-    @date = Date.today
-    attendance = Attendance.todays_attendance_summary(@date)
-    @todays_tracker = Attendance.distinct_attendence(attendance)
-    @out_link = @todays_entry.present? ? @todays_entry.id : 'invalid'
-    # @raw_data = Attendance.raw_data_of_last_six_month
+    # user = User.all.active.includes(:attendances).where('checkin_date >= ? AND checkin_date <= ? AND parent_id IS NULL', Date.today.at_beginning_of_month.strftime('%Y-%m-%d'), Date.today.strftime('%Y-%m-%d')).references(:attendances)
+    @users = User.all.active
 
     respond_to do |format|
       format.html
-      # format.xls {send_data @raw_data.to_csv(col_sep: "\t") }
     end
   end
   
@@ -87,15 +82,6 @@ class AttendancesController < ApplicationController
     respond_with(@attendance)
   end
 
-  def search_daily_attendance
-    @date = params[:date]
-    @todays_tracker = Attendance.todays_attendance_summary(@date)
-
-    respond_to do |format|
-      format.js
-    end
-  end
-
   def update_salaat_time
     data = params[:salaat]
     data.each do |salaat|
@@ -137,28 +123,6 @@ class AttendancesController < ApplicationController
     end
   end
 
-  def hide_name
-    @user = User.find params[:id]
-    @user.update_attribute(:is_active, false)
-
-    respond_to do |format|
-      format.js
-    end
-  end
-
-  def show_name
-    @user = User.find params[:id]
-    @user.update_attribute(:is_active, true)
-
-    respond_to do |format|
-      format.js
-    end
-  end
-
-  def show_hidden_names
-    @users = User.inactive
-  end
-
   def monthly_summary
     @selected = { month: params[:user][:month], year: params[:user][:year] }
     @user = User.find params[:user][:id]
@@ -166,22 +130,6 @@ class AttendancesController < ApplicationController
 
     respond_to do |format|
       format.js {}
-    end
-  end
-
-  def multi_entry_list
-    @multi_entries = Attendance.multi_entry(Date.today, params[:id])
-
-    respond_to do |format|
-      format.js
-    end
-  end
-
-  def monthly
-    @attendances = Attendance.monthly_attendance_summary.group_by(&:user_id)
-
-    respond_to do |format|
-      format.html
     end
   end
 
