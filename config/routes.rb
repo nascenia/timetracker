@@ -9,6 +9,10 @@ Internal::Application.routes.draw do
       get :leave
       get :team
     end
+
+    collection do
+      get :download
+    end
   end
 
   # leaves controller resources generates wrong typo in url helper
@@ -23,13 +27,12 @@ Internal::Application.routes.draw do
 
   resources :attendances do
     collection do
-      get :update_salaat_time
-      get :six_months_data
-      get :monthly_report
-      get :raw_attendance_data
       get :monthly_summary
+      get :download
     end
   end
+
+  resources :salaats
 
   root :to => 'dashboard#index'
 end

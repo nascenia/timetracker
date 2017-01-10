@@ -2,6 +2,8 @@ class UsersController < ApplicationController
 
   layout 'leave'
 
+  before_action :authenticate_user!
+
   def index
     @super_ttf = User.super_ttf
 
@@ -40,6 +42,14 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.html
+    end
+  end
+
+  def download
+    @users = User.all.order(:email)
+
+    respond_to do |format|
+      format.xls {send_data @users.to_csv(col_sep: "\t")}
     end
   end
 

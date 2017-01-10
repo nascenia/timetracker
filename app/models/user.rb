@@ -76,34 +76,6 @@ class User < ActiveRecord::Base
     todays_entry
   end
 
-  def monthly_total_hour(month, year = Time.now.year)
-    self.attendances.where('MONTH(checkin_date) = ? AND YEAR(checkin_date) = ?', month, year).sum(:total_hours)
-  end
-
-  def monthly_average_hour(month,  year = Time.now.year, saturday = 5, sunday = 6)
-    total_days_spent_in_office = self.attendances.where("MONTH(checkin_date) = ? AND YEAR(checkin_date) = ? AND WEEKDAY(checkin_date)
-                                      NOT IN (#{saturday}, #{sunday}) AND attendances.total_hours IS NOT NULL", month, year)
-                                     .count("checkin_date", distinct: true)
-
-    monthly_total_hour = self.attendances.where("MONTH(checkin_date) = ? AND YEAR(checkin_date) = ? AND WEEKDAY(checkin_date)
-                                NOT IN (#{saturday}, #{sunday})", month, year)
-                                .sum(:total_hours)
-
-    if total_days_spent_in_office > 0
-      monthly_total_hour / total_days_spent_in_office
-    end
-  end
-
-  def monthly_average_in_time(month,  year = Time.now.year, saturday = 5, sunday = 6)
-    total = self.attendances.where("MONTH(checkin_date) = ? AND YEAR(checkin_date) = ? AND WEEKDAY(checkin_date) NOT IN (#{saturday},
-                #{sunday}) AND is_first_entry = ? ", month, year, true)
-                .average("TIME_TO_SEC(attendances.in_time)")
-
-    if total.present?
-      Time.at(total).utc.strftime("%I:%M %p")
-    end
-  end
-
   def update_first_entry(today = Date.today)
     not_first_entry = self.attendances.where("checkin_date = ? AND is_first_entry = ? ", today, true).count
     if not_first_entry == 0

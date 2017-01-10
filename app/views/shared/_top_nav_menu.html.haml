@@ -1,7 +1,7 @@
 %ul.nav.navbar-nav
-  %li
+  %li{class: (params[:controller].eql?('attendances') ? 'active' : '')}
     = link_to 'Monthly TT', attendances_path
-  %li
+  %li{class: (params[:controller].eql?('users') || params[:controller].eql?('leaves') ? 'active' : '')}
     = link_to 'My Leave', leave_user_path(current_user)
   - if current_user.is_admin?
     %li

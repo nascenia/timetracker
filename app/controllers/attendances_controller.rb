@@ -7,7 +7,8 @@ class AttendancesController < ApplicationController
   layout 'time_tracker'
 
   def index
-    # user = User.all.active.includes(:attendances).where('checkin_date >= ? AND checkin_date <= ? AND parent_id IS NULL', Date.today.at_beginning_of_month.strftime('%Y-%m-%d'), Date.today.strftime('%Y-%m-%d')).references(:attendances)
+    # user = User.all.active.includes(:attendances).where('checkin_date >= ? AND checkin_date <= ? AND parent_id IS NULL',
+    # Date.today.at_beginning_of_month.strftime('%Y-%m-%d'), Date.today.strftime('%Y-%m-%d')).references(:attendances)
     @users = User.all.active
 
     respond_to do |format|
@@ -82,14 +83,6 @@ class AttendancesController < ApplicationController
     respond_with(@attendance)
   end
 
-  def update_salaat_time
-    data = params[:salaat]
-    data.each do |salaat|
-      s = Salaat.find salaat.to_a[1][:id]
-      s.update_attribute(:time, salaat.to_a[1][:time])
-    end
-  end
-
   def restrict_access
     if request.remote_ip.present?
       unless (Attendance::IP_WHITELIST.include? request.remote_ip)
@@ -101,28 +94,6 @@ class AttendancesController < ApplicationController
     end
   end
 
-  def six_months_data
-    @users = User.all.order(:email)
-
-    respond_to do |format|
-      format.xls {send_data @users.to_csv(col_sep: "\t")}
-    end
-  end
-
-  def raw_attendance_data
-    @raw_data = Attendance.raw_data_of_last_six_month
-
-    respond_to do |format|
-      format.xls {send_data @raw_data.to_csv(col_sep: "\t") }
-    end
-  end
-
-  def monthly_report
-    respond_to do |format|
-      format.js
-    end
-  end
-
   def monthly_summary
     @selected = { month: params[:user][:month], year: params[:user][:year] }
     @user = User.find params[:user][:id]
@@ -130,6 +101,14 @@ class AttendancesController < ApplicationController
 
     respond_to do |format|
       format.js {}
+    end
+  end
+
+  def download
+    @raw_data = Attendance.last_six_months
+
+    respond_to do |format|
+      format.xls {send_data @raw_data.to_csv(col_sep: "\t") }
     end
   end
 

@@ -1,5 +1,3 @@
-%h3
-  Monthly Time Tracker
 .row
   %table.table.table-hover.table-bordered#monthly-attendance-table
     %thead
@@ -32,6 +30,18 @@
   #attendance-summary &nbsp;
 
 :javascript
+  $(document).ready(function() {
+    $('#monthly-attendance-table, #raw-data-table').dataTable({
+      "order": [[ 1, "desc" ]],
+      "iDisplayLength": 100,
+      dom: 'T<"clear">lfrtip',
+      tableTools: {
+          "sSwfPath": "http://cdn.datatables.net/tabletools/2.2.2/swf/copy_csv_xls_pdf.swf",
+          "aButtons": ["pdf", "print", "xls" ]
+      }
+    });
+  });
+
   $(document).on('click', '.monthly-summary', function() {
     var user = {
       id: $(this).data().userId,

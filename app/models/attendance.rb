@@ -23,23 +23,23 @@ class Attendance < ActiveRecord::Base
   scope :by_month_and_year, -> (month, year) {
     where('MONTH(checkin_date) = ? AND YEAR(checkin_date) = ? AND parent_id IS NULL', month, year)
   }
-  scope :by_month, ->(month) {where('MONTH(checkin_date) = ? AND YEAR(checkin_date) = ? ', month, Time.now.year)}
-  scope :daily_attendance_summary, ->(date) { where('checkin_date = ? AND parent_id IS NULL', date).order(:in_time) }
-  scope :total_entry, ->(id){where('user_id = ?', id).count}
-  scope :multi_entry, ->(date, user_id){where('checkin_date = ? AND user_id = ?',date,user_id)}
-  scope :total_employee_present, ->(date) {where('checkin_date = ? ', date).group(:user_id).count}
-  scope :raw_data_of_last_six_month, -> {where('created_at >= ? ', 6.months.ago)}
+  scope :daily_attendance_summary, ->(date) {
+    where('checkin_date = ? AND parent_id IS NULL', date).order(:in_time)
+  }
+  scope :total_employee_present, ->(date) {
+    where('checkin_date = ? ', date).group(:user_id).count
+  }
+  scope :last_six_months, -> {
+    where('created_at >= ? ', 6.months.ago)
+  }
   scope :monthly_attendance_summary, ->(start_date, end_date) {
-    where('checkin_date >= ? AND checkin_date <= ? AND parent_id IS NULL', start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d')) }
+    where('checkin_date >= ? AND checkin_date <= ? AND parent_id IS NULL', start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
+  }
 
   def update_out_time
     self.update_attribute(:out_time, Time.now.to_s(:time))
     total_hours = ((self.out_time.to_time - self.in_time.to_time) / 1.hour).round(2)
     self.update_attribute(:total_hours, total_hours)
-  end
-
-  def summary_of_current_month(month = Time.now.month)
-    self.where('MONTH(checkin_date) = ? ', month)
   end
 
   def has_multiple_checkin?

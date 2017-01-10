@@ -4,6 +4,23 @@
 
   %ul.list-group
     %li.list-group-item
-      %a{:href=> '#salaat'} Salaat time
+      %a#salaat Salaat time
     %li.list-group-item
-      %a{:href => '#rules'} Terms & conditions
+      %a#rules Terms & conditions
+
+.modal{:id => 'rulesModal'}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{'aria-hidden' => 'true', 'data-dismiss' => 'modal', :type => 'button'} ×
+        %h4.modal-title Attendance rules
+      .modal-body
+        %ol
+          %li Office starts at 9 AM. Any entry after 10 AM will be treated as late entry.
+          %li Multiple In-Out can be tracked in the same day.
+          %li If anyone logs <b>In</b>, but forgets to log <b>Out</b>, two hours will be added as total hours in office on that day.
+          %li If anyone leaves office within office time, s/he has to log <b>Out</b>. After coming back from outside s/he may log <b>In</b> again.
+          %li After one successful <b>In</b> and <b>Out</b> in a day, if someone logs <b>In</b> and forgets to log <b>Out</b>, no extra hours will be added.
+      .modal-footer
+        %button.btn.btn-default{'data-dismiss' => 'modal', :type => 'button'}
+          Close

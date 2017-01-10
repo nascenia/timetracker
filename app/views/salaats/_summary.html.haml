@@ -1,0 +1,21 @@
+.modal{:id => 'salaatModal'}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{'aria-hidden' => 'true', 'data-dismiss' => 'modal', :type => 'button'} ×
+        %h4.modal-title Please keep time tracker tab open to get desktop reminder for <b>Namaz</b> during office time.
+      .modal-body
+        .panel.panel-default
+          %table.table.table-hover.table-bordered
+            %thead
+              %tr
+                %th{:width => '50%'} Waqt
+                %th{:width => '50%'} Time
+            %tbody
+              - @salaats.all.each do |salaat|
+                %tr
+                  %td= salaat.waqt
+                  %td{:class => "edit-salaat-time", :id => "#{salaat.id}", :contenteditable => "#{current_user.present? && current_user.is_admin? ? true : false}"}= salaat.time.strftime("%I:%M")
+      .modal-footer
+        %button.btn.btn-default{'data-dismiss' => 'modal', :type => 'button'}
+          Close
