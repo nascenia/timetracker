@@ -97,17 +97,28 @@ class User < ActiveRecord::Base
   end
 
   def self.to_csv(options = {})
+
     CSV.generate(options) do |csv|
-      csv << [nil, nil, "#{1.month.ago.strftime("%B")}", nil, nil, "#{2.month.ago.strftime("%B")}", nil, nil, "#{3.month.ago.strftime("%B")}", nil, nil, "#{4.month.ago.strftime("%B")}",nil, nil, "#{5.month.ago.strftime("%B")}",nil, nil, "#{6.month.ago.strftime("%B")}", nil]
-      csv << ["User", "TotalHours", "Avg.Time", "Avg.InTime", "TotalHours", "Avg.Time", "Avg.InTime", "TotalHours", "Avg.Time", "Avg.InTime", "TotalHours", "Avg.Time", "Avg.InTime", "TotalHours", "Avg.Time", "Avg.InTime", "TotalHours", "Avg.Time", "Avg.InTime"]
+      csv << [nil, nil, "#{1.month.ago.strftime('%B')}", nil, nil, "#{2.month.ago.strftime('%B')}", nil, nil, "#{3.month.ago.strftime('%B')}", nil, nil, "#{4.month.ago.strftime('%B')}", nil, nil, "#{5.month.ago.strftime('%B')}", nil, nil, "#{6.month.ago.strftime('%B')}", nil]
+      csv << ['User email', 'Total hours', 'Average hours', 'Average in time', 'Total hours', 'Average hours', 'Average in time', 'Total hours', 'Average hours', 'Average in time', 'Total hours', 'Average hours', 'Average in time', 'Total hours', 'Average hours', 'Average in time', 'Total hours', 'Average hours', 'Average in time']
 
       all.each do |user|
-        csv << ["#{user.email}", "#{user.monthly_total_hour(1.month.ago.month, 1.month.ago.year).present? ? user.monthly_total_hour(1.month.ago.month, 1.month.ago.year).round : nil }", "#{user.monthly_average_hour(1.month.ago.month, 1.month.ago.year).present? ? user.monthly_average_hour(1.month.ago.month, 1.month.ago.year).round(1) : nil }", "#{user.monthly_average_in_time(1.month.ago.month, 1.month.ago.year).present? ? user.monthly_average_in_time(1.month.ago.month, 1.month.ago.year) : nil }",
-                "#{user.monthly_total_hour(2.months.ago.month, 2.month.ago.year).present? ? user.monthly_total_hour(2.months.ago.month, 1.month.ago.year).round : nil }", "#{user.monthly_average_hour(2.months.ago.month, 2.month.ago.year).present? ? user.monthly_average_hour(2.months.ago.month, 2.month.ago.year).round(1) : nil }", "#{user.monthly_average_in_time(2.months.ago.month, 2.month.ago.year).present? ? user.monthly_average_in_time(2.months.ago.month, 2.month.ago.year) : nil }",
-                "#{user.monthly_total_hour(3.months.ago.month, 3.month.ago.year).present? ? user.monthly_total_hour(3.months.ago.month, 3.month.ago.year).round : nil }", "#{user.monthly_average_hour(3.months.ago.month, 3.month.ago.year).present? ? user.monthly_average_hour(3.months.ago.month, 3.month.ago.year).round(1) : nil }", "#{user.monthly_average_in_time(3.months.ago.month, 3.month.ago.year).present? ? user.monthly_average_in_time(3.months.ago.month, 3.month.ago.year) : nil }",
-                "#{user.monthly_total_hour(4.months.ago.month, 4.month.ago.year).present? ? user.monthly_total_hour(4.months.ago.month, 4.month.ago.year).round : nil }", "#{user.monthly_average_hour(4.months.ago.month, 4.month.ago.year).present? ? user.monthly_average_hour(4.months.ago.month, 4.month.ago.year).round(1) : nil }", "#{user.monthly_average_in_time(4.months.ago.month, 4.month.ago.year).present? ? user.monthly_average_in_time(4.months.ago.month, 4.month.ago.year) : nil }",
-                "#{user.monthly_total_hour(5.months.ago.month, 5.month.ago.year).present? ? user.monthly_total_hour(5.months.ago.month, 5.month.ago.year).round : nil }", "#{user.monthly_average_hour(5.months.ago.month, 5.month.ago.year).present? ? user.monthly_average_hour(5.months.ago.month, 5.month.ago.year).round(1) : nil }", "#{user.monthly_average_in_time(5.months.ago.month, 5.month.ago.year).present? ? user.monthly_average_in_time(5.months.ago.month, 5.month.ago.year) : nil }",
-                "#{user.monthly_total_hour(6.months.ago.month, 6.month.ago.year).present? ? user.monthly_total_hour(6.months.ago.month, 6.month.ago.year).round : nil }", "#{user.monthly_average_hour(6.months.ago.month, 6.month.ago.year).present? ? user.monthly_average_hour(6.months.ago.month, 6.month.ago.year).round(1) : nil }", "#{user.monthly_average_in_time(6.months.ago.month, 6.month.ago.year).present? ? user.monthly_average_in_time(6.months.ago.month, 6.month.ago.year) : nil }"]
+
+        first_month = user.attendances.monthly_attendance_summary(1.month.ago.at_beginning_of_month, 1.month.ago.end_of_month).includes(:children)
+        second_month = user.attendances.monthly_attendance_summary(2.month.ago.at_beginning_of_month, 2.month.ago.end_of_month).includes(:children)
+        third_month = user.attendances.monthly_attendance_summary(3.month.ago.at_beginning_of_month, 3.month.ago.end_of_month).includes(:children)
+        fourth_month = user.attendances.monthly_attendance_summary(4.month.ago.at_beginning_of_month, 4.month.ago.end_of_month).includes(:children)
+        fifth_month = user.attendances.monthly_attendance_summary(5.month.ago.at_beginning_of_month, 5.month.ago.end_of_month).includes(:children)
+        sixth_month = user.attendances.monthly_attendance_summary(6.month.ago.at_beginning_of_month, 6.month.ago.end_of_month).includes(:children)
+
+        csv << [
+            "#{user.email}",
+            "#{Attendance.monthly_total_hours(first_month)}", "#{Attendance.monthly_average_hours(Attendance.monthly_total_hours(first_month), first_month.size)}", "#{Attendance.monthly_average_check_in_time(first_month)}",
+            "#{Attendance.monthly_total_hours(second_month)}", "#{Attendance.monthly_average_hours(Attendance.monthly_total_hours(second_month), second_month.size)}", "#{Attendance.monthly_average_check_in_time(second_month)}",
+            "#{Attendance.monthly_total_hours(third_month)}", "#{Attendance.monthly_average_hours(Attendance.monthly_total_hours(third_month), third_month.size)}", "#{Attendance.monthly_average_check_in_time(third_month)}",
+            "#{Attendance.monthly_total_hours(fourth_month)}", "#{Attendance.monthly_average_hours(Attendance.monthly_total_hours(fourth_month), fourth_month.size)}", "#{Attendance.monthly_average_check_in_time(fourth_month)}",
+            "#{Attendance.monthly_total_hours(fifth_month)}", "#{Attendance.monthly_average_hours(Attendance.monthly_total_hours(fifth_month), fifth_month.size)}", "#{Attendance.monthly_average_check_in_time(fifth_month)}",
+            "#{Attendance.monthly_total_hours(fourth_month)}", "#{Attendance.monthly_average_hours(Attendance.monthly_total_hours(fifth_month), sixth_month.size)}", "#{Attendance.monthly_average_check_in_time(sixth_month)}"]
       end
     end
   end

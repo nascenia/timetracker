@@ -105,10 +105,10 @@ class AttendancesController < ApplicationController
   end
 
   def download
-    @raw_data = Attendance.last_six_months
+    @attendances = Attendance.last_six_months
 
     respond_to do |format|
-      format.xls {send_data @raw_data.to_csv(col_sep: "\t") }
+      format.xls {send_data @attendances.to_csv(col_sep: "\t") }
     end
   end
 

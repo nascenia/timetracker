@@ -6,10 +6,10 @@
     %tbody
       %tr
         %td Avg. in time
-        %td= monthly_average_check_in_time(@attendance_summary)
+        %td= Attendance.monthly_average_check_in_time(@attendance_summary)
       %tr
         %td Avg. hours
-        %td= monthly_average_hours(monthly_total_hours(@attendance_summary), @attendance_summary.size)
+        %td= Attendance.monthly_average_hours(Attendance.monthly_total_hours(@attendance_summary), @attendance_summary.size)
       %tr
         %td Total hours
-        %td= monthly_total_hours(@attendance_summary)
+        %td= Attendance.monthly_total_hours(@attendance_summary)

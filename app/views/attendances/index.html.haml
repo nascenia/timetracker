@@ -20,12 +20,12 @@
           %td
             %a.monthly-summary{:data => {:user => {id: user.id, month: Time.now.month, year: Time.now.year}}}
               = user.name
-          %td= monthly_average_check_in_time(current_month)
-          %td= monthly_total_hours(current_month)
-          %td= monthly_average_hours(monthly_total_hours(current_month), current_month.size)
-          %td= monthly_average_check_in_time(previous_month)
-          %td= monthly_total_hours(previous_month)
-          %td= monthly_average_hours(monthly_total_hours(previous_month), current_month.size)
+          %td= Attendance.monthly_average_check_in_time(current_month)
+          %td= Attendance.monthly_total_hours(current_month)
+          %td= Attendance.monthly_average_hours(Attendance.monthly_total_hours(current_month), current_month.size)
+          %td= Attendance.monthly_average_check_in_time(previous_month)
+          %td= Attendance.monthly_total_hours(previous_month)
+          %td= Attendance.monthly_average_hours(Attendance.monthly_total_hours(previous_month), current_month.size)
 .row
   #attendance-summary &nbsp;
 

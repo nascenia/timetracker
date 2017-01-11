@@ -6,4 +6,3 @@
 //= require dataTables.tableTools
 //= require bootstrap-datepicker
 //= require bootstrap/modal
-// require attendances
