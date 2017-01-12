@@ -8,14 +8,14 @@
   %table.table.table-bordered.table-hover
     %thead
       %tr
-        %th #
-        %th Name
-        %th Email
-        %th Check in time
-        %th Check out time
-        %th Status
-        %th &nbsp;
-    %tbody
+        %th{:width => '5%'} #
+        %th{:width => '15%'} Name
+        %th{:width => '20%'} Email
+        %th{:width => '20%'} Check in time
+        %th{:width => '20%'} Check out time
+        %th{:width => '10%'} Status
+        %th{:width => '10%'} &nbsp;
+    %tbody.word-break
       - count = 0
       - @attendances.each do |attendance|
       - count = count + 1
