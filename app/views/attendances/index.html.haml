@@ -18,7 +18,7 @@
       - previous_month =  user.attendances.monthly_attendance_summary(1.month.ago.at_beginning_of_month, 1.month.ago.end_of_month).includes(:children)
         %tr
           %td
-            %a.monthly-summary{:data => {:user => {id: user.id, month: Time.now.month, year: Time.now.year}}}
+            %a.monthly-summary{:href => 'javascript:void()', :data => {:user => {id: user.id, month: Time.now.month, year: Time.now.year}}}
               = user.name
           %td= Attendance.monthly_average_check_in_time(current_month)
           %td= Attendance.monthly_total_hours(current_month)
@@ -32,7 +32,7 @@
 :javascript
   $(document).ready(function() {
     $('#monthly-attendance-table, #raw-data-table').dataTable({
-      "order": [[ 1, "desc" ]],
+      "order": [[3, "desc" ]],
       "iDisplayLength": 100,
       dom: 'T<"clear">lfrtip',
       tableTools: {

@@ -21,7 +21,7 @@ module ApplicationHelper
   end
 
   def get_formatted_date date
-    date.present? ? date.strftime('%m-%d-%Y') : '-'
+    date.present? ? date.strftime('%d-%m-%Y') : '-'
   end
 
   def get_formatted_time time

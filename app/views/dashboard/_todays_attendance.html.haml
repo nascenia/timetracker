@@ -16,9 +16,11 @@
         %th Status
         %th &nbsp;
     %tbody
+      - count = 0
       - @attendances.each do |attendance|
+      - count = count + 1
         %tr
-          %td= attendance.user.id
+          %td= count
           %td= attendance.user.name
           %td= attendance.user.email
           %td= get_formatted_time(attendance.in_time)

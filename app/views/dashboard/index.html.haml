@@ -16,7 +16,7 @@
 
   .row
     .col-sm-3
-      = link_to  'Check In', attendances_path, :method => :post, :class => "btn btn-block btn-success #{is_checked_in? @attendance}"
+      = link_to  'Check In', attendances_path, :method => :post, :class => "btn btn-block btn-success btn-bottom-margin #{is_checked_in? @attendance}"
 
     - unless @attendance.nil?
       .col-sm-3
