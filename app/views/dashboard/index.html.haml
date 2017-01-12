@@ -20,7 +20,7 @@
 
     - unless @attendance.nil?
       .col-sm-3
-        = link_to  'Check Out', attendance_path(@attendance), :method => :put, :class => "btn btn-block btn-info #{is_checked_out? @attendance}"
+        = link_to  'Check Out', attendance_path(@attendance), :method => :put, :class => "btn btn-block btn-danger #{is_checked_out? @attendance}"
 
 .row
   .col-md-8
