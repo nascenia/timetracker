@@ -24,7 +24,6 @@ class User < ActiveRecord::Base
       ['Super TTF', SUPER_TTF]
   ]
 
-
   scope :inactive, -> {where('is_active = ?', false)}
   scope :active, -> {where('is_active = ?', true)}
   scope :ttf, -> {where('role = ?', User::TTF)}
@@ -62,36 +61,6 @@ class User < ActiveRecord::Base
     user
   end
 
-  def create_attendance parent
-    self.attendances.create(
-        :user_id => self.id,
-        :checkin_date => Date.today,
-        :in_time => Time.now.to_s(:time),
-        :parent_id => parent.nil? ? nil : parent.id
-    )
-  end
-
-  def find_todays_entry
-    todays_entry = Attendance.where(:user_id => self.id, :checkin_date => Date.today, :out_time => nil).first
-    todays_entry
-  end
-
-  def update_first_entry(today = Date.today)
-    not_first_entry = self.attendances.where("checkin_date = ? AND is_first_entry = ? ", today, true).count
-    if not_first_entry == 0
-      todays_first_entry = self.attendances.find_by_checkin_date(today)
-      todays_first_entry.update_attribute(:is_first_entry, true)
-    end
-  end
-
-  def add_hours_for_missing_out(today = Date.today)
-    last_office_day = self.attendances.where("checkin_date != ? AND is_first_entry = ? AND attendances.total_hours IS NULL ",
-                                             today, true).last
-    if last_office_day.present?
-      last_office_day.update_attribute(:total_hours, 2)
-    end
-  end
-
   def remember_me
     true
   end
@@ -113,19 +82,22 @@ class User < ActiveRecord::Base
 
         csv << [
             "#{user.email}",
-            "#{Attendance.monthly_total_hours(first_month)}", "#{Attendance.monthly_average_hours(Attendance.monthly_total_hours(first_month), first_month.size)}", "#{Attendance.monthly_average_check_in_time(first_month)}",
-            "#{Attendance.monthly_total_hours(second_month)}", "#{Attendance.monthly_average_hours(Attendance.monthly_total_hours(second_month), second_month.size)}", "#{Attendance.monthly_average_check_in_time(second_month)}",
-            "#{Attendance.monthly_total_hours(third_month)}", "#{Attendance.monthly_average_hours(Attendance.monthly_total_hours(third_month), third_month.size)}", "#{Attendance.monthly_average_check_in_time(third_month)}",
-            "#{Attendance.monthly_total_hours(fourth_month)}", "#{Attendance.monthly_average_hours(Attendance.monthly_total_hours(fourth_month), fourth_month.size)}", "#{Attendance.monthly_average_check_in_time(fourth_month)}",
-            "#{Attendance.monthly_total_hours(fifth_month)}", "#{Attendance.monthly_average_hours(Attendance.monthly_total_hours(fifth_month), fifth_month.size)}", "#{Attendance.monthly_average_check_in_time(fifth_month)}",
-            "#{Attendance.monthly_total_hours(fourth_month)}", "#{Attendance.monthly_average_hours(Attendance.monthly_total_hours(fifth_month), sixth_month.size)}", "#{Attendance.monthly_average_check_in_time(sixth_month)}"]
+            "#{Attendance.monthly_total_hours(first_month)}", "#{Attendance.monthly_average_hours(first_month)}", "#{Attendance.monthly_average_check_in_time(first_month)}",
+            "#{Attendance.monthly_total_hours(second_month)}", "#{Attendance.monthly_average_hours(second_month)}", "#{Attendance.monthly_average_check_in_time(second_month)}",
+            "#{Attendance.monthly_total_hours(third_month)}", "#{Attendance.monthly_average_hours(third_month)}", "#{Attendance.monthly_average_check_in_time(third_month)}",
+            "#{Attendance.monthly_total_hours(fourth_month)}", "#{Attendance.monthly_average_hours(fourth_month)}", "#{Attendance.monthly_average_check_in_time(fourth_month)}",
+            "#{Attendance.monthly_total_hours(fifth_month)}", "#{Attendance.monthly_average_hours(fifth_month)}", "#{Attendance.monthly_average_check_in_time(fifth_month)}",
+            "#{Attendance.monthly_total_hours(sixth_month)}", "#{Attendance.monthly_average_hours(sixth_month)}", "#{Attendance.monthly_average_check_in_time(sixth_month)}"]
       end
     end
   end
 
   def self.create_unannounced_leave
     User.all.each do |u|
-      unless u.find_todays_entry.present?
+
+      today_entry = Attendance.find_first_entry(u.id, Date.today)
+
+      unless today_entry.present?
         unless u.has_applied_for_leave
           leave = u.leave.create ({
               :user_id => u.id,

@@ -40,13 +40,12 @@ class AttendancesController < ApplicationController
     attendance = current_user.attendances.where(checkin_date: Time.now.strftime('%y-%m-%d')).first
 
     unless attendance
-      @user.create_attendance nil
-      @user.add_hours_for_missing_out
+      Attendance.create_attendance(@user.id, nil)
+      Attendance.add_missing_checkout_hours
     else
-      @user.create_attendance attendance
+      Attendance.create_attendance(@user.id, attendance)
     end
 
-    @user.update_first_entry
     flash[:notice] = "Successfully Checked In."
 
     respond_to do |format|
@@ -57,24 +56,29 @@ class AttendancesController < ApplicationController
   end
 
   def update
+
     if params[:id] == 'invalid'
       flash[:notice] = "You did not log in today! Please log in first!"
       redirect_to :attendances and return
     end
-    @todays_entry = current_user.find_todays_entry
+
+    @today_entry = Attendance.find_first_entry(current_user.id, Date.today)
 
     if @attendance.user_id == current_user.id
-      if @todays_entry
-        @attendance.update_out_time
-        flash[:notice] = "Successfully Checked Out."
+      if @today_entry
+        @attendance.out_time = Time.now.to_s(:time)
+        @attendance.save!
+        total_hours = ((@attendance.out_time.to_time - @attendance.in_time.to_time) / 1.hour).round(2)
+        @attendance.total_hours = total_hours
+        @attendance.save!
+        flash[:notice] = 'Successfully checked out.'
       else
-        flash[:notice] = "You did not log in today."
-        render 'attendances/index'
+        flash[:notice] = 'You did not log in today.'
       end
     end
 
     respond_to do |format|
-      format.html {redirect_to :back}
+      format.html { redirect_to :back }
     end
   end
 

@@ -96,14 +96,6 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe 'find_todays_entry' do
-    let(:user){create :user}
-    it 'should create new attendance' do
-      user.create_attendance
-      expect(user.find_todays_entry.datetoday).to eq(Date.today)
-    end
-  end
-
   describe 'has_applied_for_leave' do
 
     context 'when leave is accpeted' do

@@ -24,8 +24,12 @@
           %td= get_formatted_time(attendance.in_time)
           %td= get_formatted_time(attendance.out_time)
           %td
-            - unless is_late_attendance? attendance.in_time
-              %span.label.label-success On time
+            - if attendance.has_multiple_checkin?
+              %span.label.label-warning
+                Multi entry
             - else
-              %span.label.label-danger Late
+              - unless is_late_attendance? attendance.in_time
+                %span.label.label-success On time
+              - else
+                %span.label.label-danger Late
           %td= link_to 'view', attendance_path(attendance)

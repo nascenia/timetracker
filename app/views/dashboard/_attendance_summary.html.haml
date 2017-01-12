@@ -9,7 +9,7 @@
         %td= Attendance.monthly_average_check_in_time(@attendance_summary)
       %tr
         %td Avg. hours
-        %td= Attendance.monthly_average_hours(Attendance.monthly_total_hours(@attendance_summary), @attendance_summary.size)
+        %td= Attendance.monthly_average_hours(@attendance_summary)
       %tr
         %td Total hours
         %td= Attendance.monthly_total_hours(@attendance_summary)

@@ -35,15 +35,34 @@ class Attendance < ActiveRecord::Base
   scope :monthly_attendance_summary, ->(start_date, end_date) {
     where('checkin_date >= ? AND checkin_date <= ? AND parent_id IS NULL', start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
   }
-
-  def update_out_time
-    self.update_attribute(:out_time, Time.now.to_s(:time))
-    total_hours = ((self.out_time.to_time - self.in_time.to_time) / 1.hour).round(2)
-    self.update_attribute(:total_hours, total_hours)
-  end
+  scope :find_first_entry, -> (user_id, date) {
+    where(:user_id => user_id, :checkin_date => date, :parent_id => nil).first
+  }
+  scope :find_last_entry, -> (user_id, date) {
+    where(:user_id => user_id, :checkin_date => date).last
+  }
 
   def has_multiple_checkin?
     self.children.size > 0
+  end
+
+  def self.create_attendance user_id, parent
+    self.create(
+        :user_id => user_id,
+        :checkin_date => Date.today,
+        :in_time => Time.now.to_s(:time),
+        :parent_id => parent.nil? ? nil : parent.id
+    )
+  end
+
+  def self.add_missing_checkout_hours(today = Date.today)
+
+    last_office_day = self.where('checkin_date != ? AND parent_id IS NULL AND total_hours IS NULL', today).last
+
+    if last_office_day.present?
+      last_office_day.update_attribute(:total_hours, 2)
+    end
+
   end
 
   def self.to_csv(options = {})
@@ -96,15 +115,24 @@ class Attendance < ActiveRecord::Base
       end
     end
 
-    total_hours.round(3)
+    total_hours.round(2)
   end
 
   #
   # Calculate monthly average attendance of a user
   #
-  def self.monthly_average_hours total_hours, total_attendance
+  def self.monthly_average_hours monthly_attendances
+
+    total_hours = self.monthly_total_hours(monthly_attendances)
+    total_attendance = 1
+
+    if monthly_attendances.size > 1
+      today_attendance = monthly_attendances[monthly_attendances.size - 1]
+      total_attendance = today_attendance.out_time.nil? ? monthly_attendances.size - 1 : monthly_attendances.size
+    end
+
     average_hours = total_attendance > 0 ? total_hours / total_attendance : 0
-    average_hours.round(3)
+    average_hours.round(2)
   end
 
   #
