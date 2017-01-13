@@ -9,6 +9,13 @@ RSpec.describe Attendance, type: :model do
       expect(attendance.macro).to eq(:belongs_to)
       expect(attendance.name).to eq(:user)
     end
+
+    it 'should have many(multi-entry) attendance' do
+      attendance = Attendance.reflect_on_association(:user)
+
+      expect(attendance.macro).to eq(:has_many)
+      expect(attendance.name).to eq(:children)
+    end
   end
 
   ATTENDANCE = {
