@@ -9,12 +9,11 @@
     %thead
       %tr
         %th{:width => '5%'} #
-        %th{:width => '15%'} Name
-        %th{:width => '20%'} Email
+        %th{:width => '20%'} Name
+        %th{:width => '25%'} Email
         %th{:width => '20%'} Check in time
         %th{:width => '20%'} Check out time
         %th{:width => '10%'} Status
-        %th{:width => '10%'} &nbsp;
     %tbody.word-break
       - count = 0
       - @attendances.each do |attendance|
@@ -28,10 +27,9 @@
           %td
             - if attendance.has_multiple_checkin?
               %span.label.label-warning
-                Multi entry
+                = link_to 'Multi entry', attendance_path(attendance)
             - else
               - unless is_late_attendance? attendance.in_time
                 %span.label.label-success On time
               - else
                 %span.label.label-danger Late
-          %td= link_to 'view', attendance_path(attendance)
