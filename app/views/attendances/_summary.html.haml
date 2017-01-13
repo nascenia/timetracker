@@ -7,7 +7,7 @@
       .modal-body
         .panel.panel-default
           .panel-heading
-            %span Filter
+            %span Select
             = select_tag :month,
                           options_for_select(get_formatted_months, @selected[:month]),
                           :class => 'btn btn-default btn-sm',
@@ -48,6 +48,15 @@
                         %span.label.label-success On time
                       - else
                         %span.label.label-danger Late
+              %tr
+                %td &nbsp;
+                %td &nbsp;
+                %td &nbsp;
+                %td
+                  %b Total
+                %td
+                  %b= Attendance.monthly_total_hours(@attendances)
+                %td &nbsp;
       .modal-footer
         %button.btn.btn-default{'data-dismiss' => 'modal', :type => 'button'}
           Close

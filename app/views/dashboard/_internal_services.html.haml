@@ -1,6 +1,6 @@
 .panel.panel-default
   .panel-heading
-    %b Nascenia internal services
+    %b Other links
 
   %ul.list-group
     %li.list-group-item
@@ -9,3 +9,7 @@
       = link_to "#{Service::INTERNAL['knowledge_base']['name']}", "#{Service::INTERNAL['knowledge_base']['url']}", target: '_blank'
     %li.list-group-item
       = link_to "#{Service::INTERNAL['file_server']['name']}", "#{Service::INTERNAL['file_server']['url']}", target: '_blank'
+    %li.list-group-item
+      %a#salaat{:href => 'javascript:void()'} Salaat time
+    %li.list-group-item
+      %a#rules{:href => 'javascript:void()'} Terms & conditions

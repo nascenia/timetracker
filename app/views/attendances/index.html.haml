@@ -33,7 +33,9 @@
   $(document).ready(function() {
     $('#monthly-attendance-table, #raw-data-table').dataTable({
       "order": [[2, "desc" ]],
-      "iDisplayLength": 100,
+      "bFilter": true,
+      "bLengthChange": false,
+      "bInfo": false,
       dom: 'T<"clear">lfrtip',
       tableTools: {
           "sSwfPath": "http://cdn.datatables.net/tabletools/2.2.2/swf/copy_csv_xls_pdf.swf",

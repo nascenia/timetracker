@@ -3,23 +3,19 @@
     %span
       %b= get_humanize_date(Date.today)
     %span.pull-right
-      %b= "Total present in office today: #{@attendances.size}"
+      %b= "Total present today: #{@attendances.size}"
 
   %table.table.table-bordered.table-hover
     %thead
       %tr
-        %th{:width => '5%'} #
-        %th{:width => '20%'} Name
-        %th{:width => '25%'} Email
-        %th{:width => '20%'} Check in time
-        %th{:width => '20%'} Check out time
-        %th{:width => '10%'} Status
+        %th{:width => '25%'} Name
+        %th{:width => '30%'} Email
+        %th{:width => '15%'} In time
+        %th{:width => '15%'} Out time
+        %th{:width => '15%'} Status
     %tbody.word-break
-      - count = 0
       - @attendances.each do |attendance|
-      - count = count + 1
         %tr
-          %td= count
           %td= attendance.user.name
           %td= attendance.user.email
           %td= get_formatted_time(attendance.in_time)
@@ -27,7 +23,7 @@
           %td
             - if attendance.has_multiple_checkin?
               %span.label.label-warning
-                = link_to 'Multi entry', attendance_path(attendance)
+                = link_to 'Multi entry >>', attendance_path(attendance)
             - else
               - unless is_late_attendance? attendance.in_time
                 %span.label.label-success On time

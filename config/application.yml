@@ -1,6 +1,6 @@
 default: &default
   ip_whitelist: ['203.202.242.130', '120.50.7.126', '127.0.0.1']
-  admins: ['khalid@nascenia.com', 'shaer@nascenia.com', 'faruk@nascenia.com', 'fuad@nascenia.com', 'masud@nascenia.com']
+  admins: ['khalid@nascenia.com', 'shaer@nascenia.com', 'faruk@nascenia.com', 'fuad@nascenia.com', 'masud@nascenia.com', 'afroze@nascenia.com']
   year_range:
     start: 2010
     end: 2020

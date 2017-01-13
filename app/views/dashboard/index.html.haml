@@ -4,11 +4,8 @@
       Please check in!
   - else
     .alert.alert-info{:role => 'alert'}
-      %b Today's check in time :
-      = "#{@attendance.in_time.strftime('%I:%M %p')} | "
-      %b Check out time :
-      = "#{@attendance.out_time.present? ? @attendance.out_time.strftime('%I:%M %p') : '-'} |"
-      %b Status :
+      Today's in time
+      %b= "#{@attendance.in_time.strftime('%I:%M %p')} "
       - unless is_late_attendance? @attendance.in_time
         %span.label.label-success On time
       - else
@@ -16,7 +13,7 @@
 
   .row
     .col-sm-3
-      = link_to  'Check In', attendances_path, :method => :post, :class => "btn btn-block btn-success btn-bottom-margin #{is_checked_in? @attendance}"
+      = link_to  'Check In', attendances_path, :method => :post, :class => "btn btn-block btn-default btn-bottom-margin #{is_checked_in? @attendance}"
 
     - unless @attendance.nil?
       .col-sm-3
