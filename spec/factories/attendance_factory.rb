@@ -1,5 +1,5 @@
 FactoryGirl.define do
   factory :attendance do
-    datetoday Time.now.to_s
+    checkin_date Time.now.to_s
   end
 end

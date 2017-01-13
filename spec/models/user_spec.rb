@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  describe 'associations' do
 
+  describe 'associations' do
     it 'should has many attendances' do
       u = User.reflect_on_association(:attendances)
 
@@ -10,14 +10,14 @@ RSpec.describe User, type: :model do
       expect(u.name).to eq(:attendances)
     end
 
-    it 'should has may leave' do
+    it 'should has many leave' do
       u = User.reflect_on_association(:leave)
 
       expect(u.macro).to eq(:has_many)
       expect(u.name).to eq(:leave)
     end
 
-    it 'should have one leave_tracker' do
+    it 'should have one leave tracker' do
       u = User.reflect_on_association(:leave_tracker)
 
       expect(u.macro).to eq(:has_one)
@@ -26,7 +26,6 @@ RSpec.describe User, type: :model do
   end
 
   describe 'validations' do
-
     it 'should be invalid if email not present' do
       expect(build(:user, email: nil)).to_not be_valid
     end
