@@ -1,7 +1,6 @@
 class AttendancesController < ApplicationController
 
   before_action :set_attendance, only: [:index, :edit, :update, :destroy]
-  before_action :restrict_access, only: [:create, :update]
   before_action :authenticate_user!
 
   layout 'time_tracker'
@@ -36,17 +35,19 @@ class AttendancesController < ApplicationController
   end
 
   def create
-    @user = current_user
-    attendance = current_user.attendances.where(checkin_date: Time.now.strftime('%y-%m-%d')).first
+    unless !restrict_access?
+      @user = current_user
+      attendance = @user.attendances.where(checkin_date: Time.now.strftime('%y-%m-%d')).first
 
-    unless attendance
-      Attendance.create_attendance(@user.id, nil)
-      Attendance.add_missing_checkout_hours
-    else
-      Attendance.create_attendance(@user.id, attendance)
+      unless attendance
+        Attendance.create_attendance(@user.id, nil)
+        Attendance.add_missing_checkout_hours
+      else
+        Attendance.create_attendance(@user.id, attendance)
+      end
+
+      flash[:notice] = 'Successfully checked in.'
     end
-
-    flash[:notice] = "Successfully Checked In."
 
     respond_to do |format|
       format.html {
@@ -56,24 +57,25 @@ class AttendancesController < ApplicationController
   end
 
   def update
+    unless !restrict_access?
+      if params[:id] == 'invalid'
+        flash[:notice] = 'You did not log in today! Please log in first!'
+        redirect_to :attendances and return
+      end
 
-    if params[:id] == 'invalid'
-      flash[:notice] = "You did not log in today! Please log in first!"
-      redirect_to :attendances and return
-    end
+      @today_entry = Attendance.find_first_entry(current_user.id, Date.today)
 
-    @today_entry = Attendance.find_first_entry(current_user.id, Date.today)
-
-    if @attendance.user_id == current_user.id
-      if @today_entry
-        @attendance.out_time = Time.now.to_s(:time)
-        @attendance.save!
-        total_hours = ((@attendance.out_time.to_time - @attendance.in_time.to_time) / 1.hour).round(2)
-        @attendance.total_hours = total_hours
-        @attendance.save!
-        flash[:notice] = 'Successfully checked out.'
-      else
-        flash[:notice] = 'You did not log in today.'
+      if @attendance.user_id == current_user.id
+        if @today_entry
+          @attendance.out_time = Time.now.to_s(:time)
+          @attendance.save!
+          total_hours = ((@attendance.out_time.to_time - @attendance.in_time.to_time) / 1.hour).round(2)
+          @attendance.total_hours = total_hours
+          @attendance.save!
+          flash[:notice] = 'Successfully checked out.'
+        else
+          flash[:notice] = 'You did not log in today.'
+        end
       end
     end
 
@@ -84,17 +86,9 @@ class AttendancesController < ApplicationController
 
   def destroy
     @attendance.destroy
-    respond_with(@attendance)
-  end
 
-  def restrict_access
-    if request.remote_ip.present?
-      unless (Attendance::IP_WHITELIST.include? request.remote_ip)
-        flash[:notice] = 'Entry/Out is Restricted From Outside Office!'
-        render 'attendances/index'
-
-        return false
-      end
+    respond_to do |format|
+      format.html { redirect_to :back }
     end
   end
 
@@ -125,5 +119,17 @@ class AttendancesController < ApplicationController
 
     def attendance_params
       params.permit(:user_id, :checkin_date, :in_time, :out_time, :total_hours, :is_first_entry, :is_active)
+    end
+
+    def restrict_access?
+      if request.remote_ip.present?
+        unless (Attendance::IP_WHITELIST.include? request.remote_ip)
+          flash[:notice] = 'Check in or out is restricted from outside office.'
+
+          return false
+        else
+          return true
+        end
+      end
     end
 end
