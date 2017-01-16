@@ -13,11 +13,11 @@
 
   .row
     .col-sm-3
-      = link_to  'Check In', attendances_path, :method => :post, :class => "btn btn-block btn-default btn-bottom-margin #{is_checked_in? @attendance}"
+      = link_to  'Check In', attendances_path, :method => :post, :class => "btn btn-block btn-bottom-margin #{is_checked_in? @attendance}"
 
     - unless @attendance.nil?
       .col-sm-3
-        = link_to  'Check Out', attendance_path(@attendance), :method => :put, :class => "btn btn-block btn-danger #{is_checked_out? @attendance}"
+        = link_to  'Check Out', attendance_path(@attendance), :method => :put, :class => "btn btn-block #{is_checked_out? @attendance}"
 
 .row
   .col-md-8
