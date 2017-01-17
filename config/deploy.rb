@@ -37,7 +37,7 @@ task :prod do
 end
 
 task :staging do
-  set :branch, "dev"
+  set :branch, "master"
   web_server = "45.118.134.63"
   role :web, web_server # Your HTTP server, Apache/etc
   role :app, web_server # This may be the same as your `Web` server
@@ -58,6 +58,7 @@ namespace :deploy do
   desc "Symlink shared configs and folders on each release."
   task :symlink_shared do
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
+    run "ln -nfs #{shared_path}/config/application.yml #{release_path}/config/application.yml"
     run "ln -nfs #{shared_path}/system #{release_path}/public/system"
   end
 
