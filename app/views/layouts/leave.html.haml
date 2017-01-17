@@ -36,6 +36,13 @@
           .col-sm-3
             = render partial: 'shared/left_menu'
           .col-sm-9
+            - if notice
+              .notice.alert-info
+                = notice
+            - elsif alert
+              .alert.alert-danger
+                = alert
+
             = yield
 
     %footer

@@ -33,10 +33,10 @@
     .container
       .starter-template
         - if notice
-          .alert.alert-danger
+          .alert.alert-info
             = notice
         - elsif alert
-          .alert.alert-warning
+          .alert.alert-danger
             = alert
 
         = yield

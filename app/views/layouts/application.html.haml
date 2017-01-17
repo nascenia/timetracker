@@ -30,10 +30,10 @@
     .container
       .starter-template
         - if notice
-          .notice.alert-success
+          .notice.alert-info
             = notice
         - elsif alert
-          .alert.alert-warning
+          .alert.alert-danger
             = alert
 
         = yield
