@@ -5,9 +5,14 @@ module ApplicationHelper
   end
 
   def is_checked_in? attendance
+
+    check_in_button = 'btn-success'
+
     unless attendance.nil?
-      attendance.in_time.present? && attendance.out_time.nil? ? 'btn-default disabled' : 'btn-success'
+      check_in_button = attendance.in_time.present? && attendance.out_time.nil? ? 'btn-default disabled' : 'btn-success'
     end
+
+    return check_in_button
   end
 
   def is_checked_out? attendance
