@@ -17,8 +17,8 @@ RSpec.describe Leave, type: :model do
     UNANNOUNCED: 3,
 
     LEAVE_TYPES: [
-      ['Casual Leave', Leave::CASUAL],
-      ['Medical Leave', Leave::MEDICAL]
+      ['Casual Leave', 1],
+      ['Medical Leave', 2]
     ],
 
     ACCEPTED: 1,
@@ -26,12 +26,12 @@ RSpec.describe Leave, type: :model do
     PENDING: 3,
 
     HOURS_FOR_ONE_DAY: 8,
-    HOURS_FOR_HALF_DAY: Leave::HOURS_FOR_ONE_DAY / 2,
+    HOURS_FOR_HALF_DAY: 4,
 
     LEAVE_STATUSES: [
-      ['Approved', Leave::ACCEPTED],
-      ['Rejected', Leave::REJECTED],
-      ['Pending', Leave::PENDING]
+      ['Approved', 1],
+      ['Rejected', 2],
+      ['Pending', 3]
     ]
   }
 
@@ -94,6 +94,8 @@ RSpec.describe Leave, type: :model do
     end
   end
 
+  # TODO: leave tracker related features are not yet full functional,
+  # TODO: first this have to be implemented then test code should be updated
   describe 'update_leave_tracker' do
     let(:user) { create :user, email: 'khalid@nascenia.com' }
     let(:leave) { create :leave, user_id: user.id }
@@ -101,6 +103,45 @@ RSpec.describe Leave, type: :model do
     it 'should update leave tracker' do
       # leave.update_leave_tracker
       # expect('a').to eq('a')
+    end
+  end
+
+  describe 'is_pending?' do
+    let(:user) { create :user, email: 'khalid@nascenia.com' }
+    let(:leave1) { create :leave, user_id: user.id }
+    let(:leave2) { create :leave, user_id: user.id, status: LEAVE[:PENDING] }
+
+    it 'should return false if leave status is not pending' do
+      expect(leave1.is_pending?).to eq(false)
+    end
+    it 'should return true if leave status is pending' do
+      expect(leave2.is_pending?).to eq(true)
+    end
+  end
+
+  describe 'is_accepted?' do
+    let(:user) { create  :user, email: 'test1@nascenia.com' }
+    let(:leave1) { create :leave, user_id: user.id }
+    let(:leave2) { create :leave, user_id: user.id, status: LEAVE[:ACCEPTED] }
+
+    it 'should return false if leave status is not accepted' do
+      expect(leave1.is_accepted?).to eq(false)
+    end
+    it 'should return true if leave status is accepted' do
+      expect(leave2.is_accepted?).to eq(true)
+    end
+  end
+
+  describe 'is_rejected?' do
+    let(:user) { create :user, email: 'test2@nascenia.com' }
+    let(:leave1) { create :leave, user_id: user.id }
+    let(:leave2) { create :leave, user_id: user.id, status: LEAVE[:REJECTED] }
+
+    it 'should return false if leave status is not rejected' do
+      expect(leave1.is_rejected?).to eq(false)
+    end
+    it 'should return true if leave status is rejected' do
+      expect(leave2.is_rejected?).to eq(true)
     end
   end
 
