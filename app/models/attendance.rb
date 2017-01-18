@@ -26,9 +26,6 @@ class Attendance < ActiveRecord::Base
   scope :daily_attendance_summary, ->(date) {
     where('checkin_date = ? AND parent_id IS NULL', date).order(:in_time)
   }
-  scope :total_employee_present, ->(date) {
-    where('checkin_date = ? ', date).group(:user_id).count
-  }
   scope :last_six_months, -> {
     where('created_at >= ? ', 6.months.ago)
   }
