@@ -52,6 +52,23 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe 'is_employee?' do
+
+    context 'when user is employee' do
+      let(:user) { create :user, role: User::EMPLOYEE }
+      it 'should return true' do
+        expect(user.is_employee?).to eq(true)
+      end
+    end
+
+    context 'when user is not employee' do
+      let(:user) { create :user }
+      it 'should return false' do
+        expect(user.is_employee?).to eq(false)
+      end
+    end
+  end
+
   describe 'is_ttf?' do
 
     context 'when user is ttf' do
@@ -83,15 +100,6 @@ RSpec.describe User, type: :model do
       it 'should return false' do
         expect(user.is_super_ttf?).to eq(false)
       end
-    end
-  end
-
-  describe 'create_attendance' do
-    let(:user){create :user}
-    it 'should create new attendance' do
-      user.create_attendance
-      user.create_attendance
-      expect(user.attendances.count).to eq(Attendance.where(user_id: user.id).count)
     end
   end
 
