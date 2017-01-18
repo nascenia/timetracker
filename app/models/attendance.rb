@@ -55,9 +55,9 @@ class Attendance < ActiveRecord::Base
     )
   end
 
-  def self.add_missing_checkout_hours
+  def self.add_missing_checkout_hours(user)
 
-    last_office_day = self.where('checkin_date != ? AND parent_id IS NULL AND total_hours IS NULL', 1.day.ago).last
+    last_office_day = self.where('user_id = ? AND checkin_date != ? AND parent_id IS NULL AND total_hours IS NULL', user.id, Date.today).last
 
     if last_office_day.present?
       last_office_day.update_attribute(:total_hours, 2)

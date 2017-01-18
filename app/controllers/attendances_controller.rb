@@ -49,7 +49,7 @@ class AttendancesController < ApplicationController
         end
       else
         Attendance.create_attendance(@user.id, nil)
-        Attendance.add_missing_checkout_hours
+        Attendance.add_missing_checkout_hours(@user)
       end
     end
 
