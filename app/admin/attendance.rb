@@ -1,6 +1,6 @@
 ActiveAdmin.register Attendance do
 
-   permit_params :user_id, :checkin_date, :in, :out, :total_hours, :is_first_entry
+   permit_params :user_id, :checkin_date, :in_time, :out_time, :total_hours, :parent_id
 
    index do
      selectable_column
@@ -9,11 +9,11 @@ ActiveAdmin.register Attendance do
        obj.user.name if obj.user.present?
      end
      column :checkin_date
-     column :in do |obj|
-       Time.at(obj.in_time).utc.strftime("%I:%M%p") if obj.in_time.present?
+     column :in_time do |obj|
+       Time.at(obj.in_time).utc.strftime('%I:%M%p') if obj.in_time.present?
      end
-     column :out do |obj|
-       Time.at(obj.out_time).utc.strftime("%I:%M%p") if obj.out_time.present?
+     column :out_time do |obj|
+       Time.at(obj.out_time).utc.strftime('%I:%M%p') if obj.out_time.present?
      end
      column :total_hours
 
