@@ -46,18 +46,18 @@ class Attendance < ActiveRecord::Base
     self.children.size > 0
   end
 
-  def self.create_attendance user_id, parent
+  def self.create_attendance user_id, attendance
     self.create(
         :user_id => user_id,
         :checkin_date => Date.today,
         :in_time => Time.now.to_s(:time),
-        :parent_id => parent.nil? ? nil : parent.id
+        :parent_id => attendance.nil? ? nil : attendance.parent_id
     )
   end
 
-  def self.add_missing_checkout_hours(today = Date.today)
+  def self.add_missing_checkout_hours
 
-    last_office_day = self.where('checkin_date != ? AND parent_id IS NULL AND total_hours IS NULL', today).last
+    last_office_day = self.where('checkin_date != ? AND parent_id IS NULL AND total_hours IS NULL', 1.day.ago).last
 
     if last_office_day.present?
       last_office_day.update_attribute(:total_hours, 2)

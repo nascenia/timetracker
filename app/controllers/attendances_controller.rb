@@ -37,16 +37,20 @@ class AttendancesController < ApplicationController
   def create
     unless !restrict_access?
       @user = current_user
-      attendance = @user.attendances.where(checkin_date: Time.now.strftime('%y-%m-%d')).first
-
-      unless attendance
-        Attendance.create_attendance(@user.id, nil)
-        Attendance.add_missing_checkout_hours
-      else
-        Attendance.create_attendance(@user.id, attendance)
-      end
+      attendance = @user.attendances.where(checkin_date: Time.now.strftime('%y-%m-%d')).last
 
       flash[:notice] = 'Successfully checked in.'
+
+      if attendance.present?
+        if attendance.out_time.present?
+          Attendance.create_attendance(@user.id, attendance)
+        else
+          flash[:notice] = 'You are already checked in.'
+        end
+      else
+        Attendance.create_attendance(@user.id, nil)
+        Attendance.add_missing_checkout_hours
+      end
     end
 
     respond_to do |format|
