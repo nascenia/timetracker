@@ -71,8 +71,8 @@ Internal::Application.configure do
   config.action_mailer.smtp_settings = {
       :address  => ENV['SMTP_HOST'],
       :port  => ENV['SMTP_PORT'].to_i,
-      :domain  => "example.com",
-      :authentication => "plain",
+      :domain  => 'example.com',
+      :authentication => 'plain',
       :user_name  => ENV['SMTP_USERNAME'],
       :password  => ENV['SMTP_PASSWORD'],
       :enable_starttls_auto => true
