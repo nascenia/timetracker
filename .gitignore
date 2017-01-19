@@ -27,5 +27,8 @@ config/database.yml
 # Ignore application.yml
 config/application.yml
 
+# Ignore backup sql files
+*.sql
+
 # Ignore mysql 5.7 adapter initializer
 config/initializers/abstract_mysql2_adapter.rb
