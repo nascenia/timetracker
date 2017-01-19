@@ -6,14 +6,14 @@ default_run_options[:pty] = true
 #ssh_options[:forward_agent] = true
 
 set :application, "timetracker"
-set :repository, "git@git.assembla.com:officetimetracker.git"
+set :repository, "https://github.com/nascenia/timetracker.git"
 
 set :scm, :git
 set :deploy_via, :remote_cache
 set :branch, "master"
 set :keep_releases, 10
 
-set :user, "khalid"
+set :user, "user"
 
 set :use_sudo, false
 
@@ -27,7 +27,7 @@ set :rake, 'bundle exec rake'
 after('deploy:update_code', 'deploy:symlink_shared', 'deploy:migrate')
 
 task :prod do
-  web_server = "45.118.134.63"
+  web_server = "127.0.0.1"
   role :web, web_server # Your HTTP server, Apache/etc
   role :app, web_server # This may be the same as your `Web` server
   role :db, web_server, :primary => true # This is where Rails migrations will run
@@ -38,7 +38,7 @@ end
 
 task :staging do
   set :branch, "master"
-  web_server = "45.118.134.63"
+  web_server = "127.0.0.1"
   role :web, web_server # Your HTTP server, Apache/etc
   role :app, web_server # This may be the same as your `Web` server
   role :db, web_server, :primary => true # This is where Rails migrations will run
