@@ -26,12 +26,12 @@ Internal::Application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-      :address  => "smtp.gmail.com",
-      :port  => 587,
-      :domain  => "mail.google.com",
-      :authentication => "plain",
-      :user_name  => "khalid@nascenia.com",
-      :password  => "khalid1190",
+      :address  => ENV['SMTP_HOST'],
+      :port  => ENV['SMTP_PORT'].to_i,
+      :domain  => 'example.com',
+      :authentication => 'plain',
+      :user_name  => ENV['SMTP_USERNAME'],
+      :password  => ENV['SMTP_PASSWORD'],
       :enable_starttls_auto => true
   }
 
