@@ -1,0 +1,19 @@
+default: &default
+  ip_whitelist: ['192.168.1.1', '192.168.1.2', '127.0.0.1']
+  admins: ['admin@example.com', 'nascenia@example.com', 'masud@example.com']
+  year_range:
+    start: 2010
+    end: 2020
+  services:
+    team_planner:
+      name: Team planner
+      url: http://test.teamplanner.example.com/
+    knowledge_base:
+      name: Knowledge base
+      url: http://kb.example.com/
+    file_server:
+      name: File server
+      url: http://192.168.1.2/
+
+development:
+  <<: *default
