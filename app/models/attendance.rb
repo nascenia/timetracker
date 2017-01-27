@@ -44,11 +44,17 @@ class Attendance < ActiveRecord::Base
   end
 
   def self.create_attendance user_id, attendance
+
+    parent_id = nil
+    unless attendance.nil?
+      parent_id = attendance.parent_id.present? ? attendance.parent_id : attendance.id
+    end
+
     self.create(
         :user_id => user_id,
         :checkin_date => Date.today,
         :in_time => Time.now.to_s(:time),
-        :parent_id => attendance.nil? ? nil : attendance.parent_id
+        :parent_id => parent_id
     )
   end
 
