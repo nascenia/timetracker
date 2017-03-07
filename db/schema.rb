@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170112113515) do
+ActiveRecord::Schema.define(version: 20170307072550) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -45,6 +45,15 @@ ActiveRecord::Schema.define(version: 20170112113515) do
 
   add_index "admin_users", ["email"], name: "index_admin_users_on_email", unique: true, using: :btree
   add_index "admin_users", ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
+
+  create_table "approval_paths", force: true do |t|
+    t.integer  "user_id"
+    t.boolean  "active",     default: false, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "approval_paths", ["user_id"], name: "index_approval_paths_on_user_id", using: :btree
 
   create_table "attendances", force: true do |t|
     t.integer  "user_id"
@@ -93,6 +102,16 @@ ActiveRecord::Schema.define(version: 20170112113515) do
   end
 
   add_index "leaves", ["user_id"], name: "index_leaves_on_user_id", using: :btree
+
+  create_table "path_chains", force: true do |t|
+    t.integer  "approval_path_id"
+    t.integer  "user_id",                      null: false
+    t.integer  "priority",         default: 0, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "path_chains", ["approval_path_id"], name: "index_path_chains_on_approval_path_id", using: :btree
 
   create_table "salaats", force: true do |t|
     t.string   "waqt"

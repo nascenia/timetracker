@@ -7,7 +7,7 @@
       %ul
         - @leave.errors.full_messages.each do |msg|
           %li= msg
-  = hidden_field_tag :status, Leave::PENDING
+  = hidden_field_tag 'leave[status]', Leave::PENDING
   .form-group
     = f.label :leave_type, {:class => 'col-sm-2 control-label'}
     .col-sm-10

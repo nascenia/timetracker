@@ -20,7 +20,7 @@ class LeavesController < ApplicationController
 
     if @leave.save
       UserMailer.send_leave_application_notification(current_user, @leave).deliver
-      redirect_to @leave, :notice => 'Your TTF will be notified soon. Thanks!'
+      redirect_to leaves_path, :notice => 'Your TTF will be notified soon. Thanks!'
     else
       render :new
     end
