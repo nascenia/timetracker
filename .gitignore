@@ -17,6 +17,8 @@
 .ruby-version
 .ruby-gemset
 .rvmrc
+vendor/ruby
+vendor/bundle
 
 # Ignore test coverage
 coverage/*

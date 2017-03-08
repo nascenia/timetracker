@@ -4,7 +4,7 @@ Internal::Application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
-  resources :approval_chains, only: [:index]
+  resources :approval_chains
 
   resources :users do
     member do
