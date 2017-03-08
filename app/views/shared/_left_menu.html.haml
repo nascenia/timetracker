@@ -3,8 +3,8 @@
     %b Leave management
 
   %ul.nav.nav-sidebar
-    %li{:class => current_page?(leave_user_path(current_user)) ? 'active' : ''}
-      = link_to 'My leave', leave_user_path(current_user)
+    %li{:class => current_page?(leave_tracker_path(current_user)) ? 'active' : ''}
+      = link_to 'My leave', leave_tracker_path(current_user)
     %li{:class => current_page?(new_leave_path) ? 'active' : ''}
       = link_to 'Apply leave', new_leave_path
     %li{:class => current_page?(users_path) ? 'active' : ''}

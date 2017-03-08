@@ -12,22 +12,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def leave
-    @user = User.find params[:id]
-    @leave = Leave.new
-
-    if @user.leave_tracker.present?
-      @leave_tracker = @user.leave_tracker
-      @leave_tracker.update_leave_tracker_daily
-    else
-      LeaveTracker::create_leave_tracker(@user)
-    end
-
-    respond_to do |format|
-      format.html
-    end
-  end
-
   def team
     user = User.find params[:id]
 

@@ -1,0 +1,2 @@
+module LeaveTrackerHelper
+end

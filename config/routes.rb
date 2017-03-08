@@ -6,6 +6,8 @@ Internal::Application.routes.draw do
 
   resources :approval_chains, only: [:index]
 
+  resources :leave_tracker
+
   resources :users do
     member do
       get :leave
