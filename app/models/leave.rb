@@ -1,6 +1,7 @@
 class Leave < ActiveRecord::Base
 
   belongs_to :user
+  belongs_to :leave_tracker
 
   CASUAL = 1
   MEDICAL = 2
@@ -35,16 +36,16 @@ class Leave < ActiveRecord::Base
     end
 
     if self.half_day
-      total_hours_to_be_sonsumed = total_hours - HOURS_FOR_HALF_DAY
+      total_hours_to_be_consumed = total_hours - HOURS_FOR_HALF_DAY
     else
-      total_hours_to_be_sonsumed = total_hours
+      total_hours_to_be_consumed = total_hours
     end
 
     if self.leave_type == CASUAL || self.leave_type == UNANNOUNCED
-      consumed_casual_leave_balance = consumed_casual_leave.to_i + total_hours_to_be_sonsumed
+      consumed_casual_leave_balance = consumed_casual_leave.to_i + total_hours_to_be_consumed
       self.user.leave_tracker.update_attributes(:consumed_vacation => consumed_casual_leave_balance)
     else
-      consumed_medical_leave_balance = consumed_medical_leave + total_hours_to_be_sonsumed
+      consumed_medical_leave_balance = consumed_medical_leave + total_hours_to_be_consumed
       self.user.leave_tracker.update_attributes(:consumed_medical => consumed_medical_leave_balance)
     end
   end
