@@ -1,20 +1,15 @@
 class UserMailer < ActionMailer::Base
   default from: 'Leave Tracker | Nascenia <no-reply@nascenia.com>',
-          cc: 'masud@nascenia.com'
+          cc: 'leave@nascenia.com'
 
   layout 'notification'
 
-  def send_leave_application_notification(user, leave)
+  def send_leave_application_notification(user, leave, emails)
     @user = user
     @leave = leave
+    @emails = emails
 
-    if @user.ttf_id
-      @ttf = User.find @user.ttf_id
-    else
-      @ttf = User.find @user.sttf_id
-    end
-
-    mail :to => @ttf.email, :subject => "#{@user.name} has applied for a leave"
+    mail :to => @emails, :subject => "#{@user.name} has applied for a leave"
   end
 
   def send_approval_or_rejection_notification(leave)

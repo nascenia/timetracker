@@ -18,8 +18,12 @@ class LeavesController < ApplicationController
     @leave = Leave.new(leave_params)
     @leave.user_id = current_user.id
 
+    approval_path = current_user.approval_paths.includes(:path_chains).find_by(active: true)
+    approval_users = approval_path.path_chains.map(&:user_id)
+    emails = User.where(id: approval_users)
+
     if @leave.save
-      UserMailer.send_leave_application_notification(current_user, @leave).deliver
+      UserMailer.send_leave_application_notification(current_user, @leave, emails).deliver
       redirect_to leaves_path, :notice => 'Your TTF will be notified soon. Thanks!'
     else
       render :new
