@@ -1,5 +1,5 @@
 $(document).on('turbolinks:load', function() {
-    $('input[type="button"]').click(function(){
+    $('button').click(function(){
         $op_up_down = $('#selected_employee option:selected'),
         $op_add_remove = $('#select_employee option:selected'),
         $this = $(this);
