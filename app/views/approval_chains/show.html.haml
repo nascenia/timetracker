@@ -1,0 +1,18 @@
+= hidden_field_tag :user, params[:id]
+= select_tag :select_employee, options_from_collection_for_select(@users, :id, :name), multiple: true
+
+%input{:type => 'button', :value => 'Add'}
+%input{:type => 'button', :value => 'Remove'}
+
+= select_tag :selected_employee, nil, multiple: true
+
+%input{:type => 'button', :value => 'Up'}
+%input{:type => 'button', :value => 'Down'}
+%input{:type => 'button', :id => :create_path, :value => 'Create Path'}
+
+%h3 Current paths for #{@user.name}
+
+- @approval_paths.each do |path|
+  %br
+  - path.path_chains.order(priority: :desc).each do |chain|
+    = chain.user.name + '--> '

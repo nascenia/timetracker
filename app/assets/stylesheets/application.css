@@ -5,4 +5,5 @@
  *= require jquery.dataTables.css.scss
  *= require dataTables.tableTools
  *= require datepicker
+ *= require approval_chain
  */

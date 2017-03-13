@@ -4,7 +4,11 @@ Internal::Application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
-  resources :approval_chains
+  resources :approval_chains do
+    member do
+      post :create_chain
+    end
+  end
 
   resources :leave_tracker
 
