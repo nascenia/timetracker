@@ -1,5 +1,50 @@
 .panel.panel-default
   .panel-heading
+    %h4 Create New Path
+  .panel-body
+    .row
+      = text_field_tag :name
+    .row
+      .col-sm-8.col-sm-offset-2
+        %table.table-striped
+          %tbody
+            %tr
+              %td
+                = select_tag :select_employee, options_from_collection_for_select(@users, :id, :name), multiple: true
+              %td
+                %button{:value => 'Add'}
+                  %strong
+                    %span.glyphicon.glyphicon-arrow-right
+                %br
+                %button{:value => 'Remove'}
+                  %strong
+                    %span.glyphicon.glyphicon-arrow-left
+              %td
+                = select_tag :selected_employee, nil, multiple: true
+              %td
+                %button{:value => 'Up'}
+                  %strong
+                    %span.glyphicon.glyphicon-arrow-up
+                %br
+                %button{:value => 'Down'}
+                  %strong
+                    %span.glyphicon.glyphicon-arrow-down
+            %tr
+              %td{:style => 'align:center'}
+                .text-center
+                  %input{:type => 'button', :id => :create_path, :value => 'Create Path'}
+
+.panel.panel-default
+  .panel-heading
+    %h4 Current Paths
+  .panel-body
+    - @approval_paths.each do |path|
+      %br
+      - path.path_chains.order(priority: :desc).each do |chain|
+        = chain.user.name + '--> '
+
+.panel.panel-default
+  .panel-heading
     %b Employees
   %table.table.table-bordered.table-hover
     %thead

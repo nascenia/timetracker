@@ -1,9 +1,10 @@
 class User < ActiveRecord::Base
 
-  has_many :approval_paths
   has_many :attendances, dependent: :destroy
   has_many :leave, dependent: :destroy
   has_one :leave_tracker, dependent: :destroy
+
+  belongs_to :approval_path
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable

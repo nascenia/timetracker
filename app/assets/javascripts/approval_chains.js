@@ -35,12 +35,13 @@ $(document).on('turbolinks:load', function() {
 
     $('#create_path').click(function() {
         $user = $('#user').val();
+        $name = $('#name').val();
         $chain = $("#selected_employee option").map(function() {return $(this).val();}).get();
 
         $.ajax({
             type: 'POST',
             url: '/approval_chains/'+ $user + '/create_chain',
-            data: { chain: $chain},
+            data: { approval_path: { name: $name, chain: $chain } },
             success: function(data) {
                 return false;
             },
