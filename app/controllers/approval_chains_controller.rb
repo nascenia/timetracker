@@ -18,6 +18,11 @@ class ApprovalChainsController < ApplicationController
     end
   end
 
+  def new
+    @users = User.all.active
+    @approval_paths = ApprovalPath.all
+  end
+
   def create_chain
     path = ApprovalPath.create(name: approval_path_params[:name])
 
@@ -37,6 +42,10 @@ class ApprovalChainsController < ApplicationController
     else
       redirect_to approval_chains_path, notice: 'Error while creating path !!!'
     end
+
+  end
+
+  def destroy
 
   end
 
