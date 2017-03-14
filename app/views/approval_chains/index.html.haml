@@ -18,7 +18,7 @@
               - path.path_chains.order(priority: :desc).each do |chain|
                 = chain.user.name + '--> '
             %td
-              = link_to 'Show', approval_chain_path(path)
+              = link_to 'Assign', approval_chain_path(path)
               |
               = link_to 'Edit', edit_approval_chain_path(path)
               |

@@ -1,0 +1,18 @@
+.panel.panel-default
+  .panel-heading
+    %h4 Currently assigned users
+  .panel-body
+    - if @users
+      - @users.each do |user|
+        = user.name
+        %br
+    - else
+      %h5 No user assigned.
+
+.panel.panel-default
+  .panel-heading
+    %h4 Assign Users
+  .panel-body
+    = form_tag assign_approval_chain_path(params[:id]) do
+      = select_tag :employees, options_from_collection_for_select(@available_users, :id, :name), multiple: true
+      = submit_tag 'Assign Path'

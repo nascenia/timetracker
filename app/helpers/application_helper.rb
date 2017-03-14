@@ -1,4 +1,7 @@
 module ApplicationHelper
+  def copyright_year
+    Time.zone.now.year
+  end
 
   def is_late_attendance? check_in_time
     Time.at(check_in_time).strftime('%H:%M') > Time.at(Time.parse(Attendance::USUAL_OFFICE_TIME)).strftime('%H:%M')

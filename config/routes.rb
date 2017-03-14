@@ -5,9 +5,8 @@ Internal::Application.routes.draw do
   ActiveAdmin.routes(self)
 
   resources :approval_chains do
-    member do
-      post :create_chain
-    end
+    member { post :assign }
+    collection { post :create_chain }
   end
 
   resources :leave_tracker

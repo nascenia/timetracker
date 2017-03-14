@@ -1,47 +1,45 @@
 class ApprovalChainsController < ApplicationController
   before_action :authenticate_admin_user!
+  before_action :find_path, only: [:show, :assign]
+  before_action :find_users, only: [:index, :new]
 
   layout 'leave'
 
   def index
-    @users = User.all.active
-    @approval_paths = ApprovalPath.all
-
-    respond_to do |format|
-      format.html
-    end
+    @approval_paths = ApprovalPath.all.includes(:path_chains)
   end
 
   def show
-    respond_to do |format|
-      format.html
-    end
+    @users = @path.users
+    @available_users = User.active.where.not(id: @users)
   end
 
   def new
-    @users = User.all.active
+  end
+
+  def assign
+    employees = params[:employees]
+
+    employees.each do |employee|
+      user = User.find_by(id: employee)
+      user.update_attribute(:approval_path, @path)
+    end
+
+    redirect_to approval_chain_path(@path), notice: 'Path assigned for selected users'
   end
 
   def create_chain
     path = ApprovalPath.create(name: approval_path_params[:name])
-
     approval_chain = approval_path_params[:chain]
     max_priority = approval_chain.size
 
-    if path.save
-      approval_chain.each do |user_id|
-        path_chain = path.path_chains.build
-        path_chain.user_id = user_id
-        path_chain.priority = max_priority
-        max_priority = max_priority - 1
-        path_chain.save
-      end
+    approval_chain.each do |user_id|
+      path_chain = path.path_chains.build(user_id: user_id, priority: max_priority)
+      max_priority = max_priority - 1
+      path_chain.save
+    end if path.save
 
-      redirect_to approval_chains_path, error: 'Path created'
-    else
-      redirect_to approval_chains_path, notice: 'Error while creating path !!!'
-    end
-
+    redirect_to approval_chains_path, notice: 'Path created'
   end
 
   def edit
@@ -59,12 +57,19 @@ class ApprovalChainsController < ApplicationController
   end
 
   def destroy
-
   end
 
   private
 
   def approval_path_params
     params.require(:approval_path).permit(:name, chain: [])
+  end
+
+  def find_path
+    @path = ApprovalPath.find_by(id: params[:id])
+  end
+
+  def find_users
+    @users = User.all.active
   end
 end
