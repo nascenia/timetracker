@@ -33,7 +33,7 @@ $(document).on('turbolinks:load', function() {
         }
     });
 
-    $('#create_path').click(function() {
+    $("#create_path").click(function() {
         $user = $('#user').val();
         $name = $('#name').val();
         $chain = $("#selected_employee option").map(function() {return $(this).val();}).get();
@@ -42,6 +42,24 @@ $(document).on('turbolinks:load', function() {
             type: 'POST',
             url: '/approval_chains/'+ $user + '/create_chain',
             data: { approval_path: { name: $name, chain: $chain } },
+            success: function(data) {
+                return false;
+            },
+            error: function(data) {
+                return false;
+            }
+        })
+    });
+
+    $("#update_path").click(function(){
+        $path_id = $('#path_id').val();
+        $name = $('#name').val();
+        $chain = $("#selected_employee option").map( function() {return $(this).val();}).get();
+
+        $.ajax({
+            type: 'PUT',
+            url: '/approval_chains/'+ $path_id,
+            data: { approval_path: {name: $name, chain: $chain} },
             success: function(data) {
                 return false;
             },

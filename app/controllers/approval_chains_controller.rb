@@ -20,7 +20,6 @@ class ApprovalChainsController < ApplicationController
 
   def new
     @users = User.all.active
-    @approval_paths = ApprovalPath.all
   end
 
   def create_chain
@@ -42,6 +41,20 @@ class ApprovalChainsController < ApplicationController
     else
       redirect_to approval_chains_path, notice: 'Error while creating path !!!'
     end
+
+  end
+
+  def edit
+    @path = ApprovalPath.find(params[:id])
+    @chained_users = PathChain.find_path_chain_users(@path.id)
+    @users = User.where.not( :id => @chained_users.map(&:id) )
+  end
+
+  def update
+
+  end
+
+  def delete
 
   end
 

@@ -1,8 +1,0 @@
-.panel.panel-default
-  .panel-heading
-    %h4 Available Paths
-  .panel-body
-    - @approval_paths.each do |path|
-      %br
-      - path.path_chains.order(priority: :desc).each do |chain|
-        = chain.user.name + '--> '

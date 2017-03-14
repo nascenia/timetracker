@@ -23,25 +23,6 @@
               = link_to 'Edit', edit_approval_chain_path(path)
               |
               = link_to 'Delete'
-
-
-
   .panel-footer
-    = link_to 'Create New Path', new_approval_chain_path, :class => 'btn btn-primary'
-
-.panel.panel-default
-  .panel-heading
-    %b Employees
-  %table.table.table-bordered.table-hover
-    %thead
-      %tr
-        %th Name
-        %th Action
-    %tbody
-      - @users.each do |user|
-        %tr
-          %td= user.name
-          %td
-            = link_to 'Show', approval_chain_path(user)
-            |
-            = link_to 'Edit', edit_approval_chain_path(user)
+    .link-button
+      = link_to 'Create New Path', new_approval_chain_path, :class => 'btn btn-primary'
