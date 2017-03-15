@@ -22,7 +22,7 @@
               |
               = link_to 'Edit', edit_approval_chain_path(path)
               |
-              = link_to 'Delete'
+              = link_to 'Delete', approval_chain_path(path), method: :delete, data: {confirm: 'Are you sure?'}
   .panel-footer
     .link-button
       = link_to 'Create New Path', new_approval_chain_path, :class => 'btn btn-primary'

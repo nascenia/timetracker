@@ -2,7 +2,7 @@ class ApprovalChainsController < ApplicationController
   before_action :authenticate_admin_user!
   before_action :find_path, only: [:show, :assign]
   before_action :find_users, only: [:index, :new]
-
+  before_action :set_path, only: [:edit, :update, :destroy]
   layout 'leave'
 
   def index
@@ -32,31 +32,33 @@ class ApprovalChainsController < ApplicationController
     path = ApprovalPath.create(name: approval_path_params[:name])
     approval_chain = approval_path_params[:chain]
     max_priority = approval_chain.size
-
-    approval_chain.each do |user_id|
-      path_chain = path.path_chains.build(user_id: user_id, priority: max_priority)
-      max_priority = max_priority - 1
-      path_chain.save
-    end if path.save
-
-    redirect_to approval_chains_path, notice: 'Path created'
+    if path.save
+      approval_chain.each do |user_id|
+        path_chain = path.path_chains.build(user_id: user_id, priority: max_priority)
+        max_priority = max_priority - 1
+        path_chain.save
+      end
+      redirect_to approval_chains_path, notice: 'Path created'
+    end
   end
 
   def edit
-    @path = ApprovalPath.find(params[:id])
     @chained_users = PathChain.find_path_chain_users(@path.id)
     @users = User.where.not( :id => @chained_users.map(&:id) )
   end
 
   def update
-
-  end
-
-  def delete
-
+    approval_chain = approval_path_params[:chain]
+    if PathChain.update(@path, approval_chain, approval_path_params[:name])
+      redirect_to approval_chains_path, notice: "#{approval_path_params[:name]} updated"
+    else
+      redirect_to edit_approval_chain_path(path), notice: 'Update Unsuccessful'
+    end
   end
 
   def destroy
+    @path.destroy
+    redirect_to approval_chains_path
   end
 
   private
@@ -71,5 +73,9 @@ class ApprovalChainsController < ApplicationController
 
   def find_users
     @users = User.all.active
+  end
+
+  def set_path
+    @path = ApprovalPath.find(params[:id])
   end
 end
