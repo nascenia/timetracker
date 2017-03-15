@@ -35,11 +35,11 @@
                               options_from_collection_for_select(users, :id, :name),
                               multiple: true
               %td
-                %button{:value => 'Add'}
+                %button{:value => 'Add', :class => 'btn btn-primary'}
                   %strong
                     %span.glyphicon.glyphicon-arrow-right
                 %br
-                %button{:value => 'Remove'}
+                %button{:value => 'Remove', :class => 'btn btn-primary'}
                   %strong
                     %span.glyphicon.glyphicon-arrow-left
               %td
@@ -50,14 +50,17 @@
                                 options_from_collection_for_select(chained_users, :id, :name),
                                 multiple: true
               %td
-                %button{:value => 'Up'}
+                %button{:value => 'Up', :class => 'btn btn-primary'}
                   %strong
                     %span.glyphicon.glyphicon-arrow-up
                 %br
-                %button{:value => 'Down'}
+                %button{:value => 'Down', :class => 'btn btn-primary'}
                   %strong
                     %span.glyphicon.glyphicon-arrow-down
-            %tr
-              %td{:style => 'align:center'}
-                .text-center
-                  %input{ :type => 'button', :id => button_id, :value => button_value}
+  .panel-footer
+    .row
+      .col-sm-6
+        %input{ :type => 'button',
+                :id => button_id,
+                :value => button_value,
+                :class => 'btn btn-primary'}

@@ -1,13 +1,14 @@
-#select_employee, #selected_employee{
-  min-height: 450px;
+#select_employee, #selected_employee, #employees{
+  min-height: 350px;
   min-width: 240px;
 }
 
-#select_employee, #selected_employee {
+#select_employee, #selected_employee, #employees {
   color: black;
+
   option {
-    padding-right: 10px;
-    padding-left: 10px;
+    padding-right: 20px;
+    padding-left: 20px;
     padding-top:5px;
     padding-bottom: 5px;
   }
