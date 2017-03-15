@@ -1,9 +1,23 @@
 #select_employee, #selected_employee{
-  min-height: 150px;
-  min-width: 100px;
+  min-height: 450px;
+  min-width: 240px;
+}
+
+#select_employee, #selected_employee {
+  color: black;
+  option {
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-top:5px;
+    padding-bottom: 5px;
+  }
 }
 
 .link-button{
   color: white;
   text-decoration-color: white;
+}
+
+button, select{
+  margin: 5px;
 }

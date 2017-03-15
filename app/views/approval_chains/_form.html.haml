@@ -1,0 +1,63 @@
+-if option == 1
+  - heading = 'Create New Path'
+  - value = nil
+  - button_value = 'Create Path'
+  - button_id = 'create_path'
+-elsif option == 2
+  - heading = "Update #{path.name}"
+  - value = path.name
+  - button_value = 'Update Path'
+  - button_id = 'update_path'
+  = hidden_field_tag :path_id, path.id
+
+.panel.panel-default
+  .panel-heading
+    %h4
+      = heading
+  .panel-body
+    .row
+      .col-sm-8.col-sm-offset-2
+        %table.table_striped
+          %tbody
+            %tr
+              %td
+                = label_tag :name
+              %td
+                = text_field_tag :name, value, class: 'form-control', style: 'margin: 10px;'
+    %br
+    .row
+      .col-sm-8.col-sm-offset-2
+        %table.table-striped
+          %tbody
+            %tr
+              %td
+                = select_tag :select_employee,
+                              options_from_collection_for_select(users, :id, :name),
+                              multiple: true
+              %td
+                %button{:value => 'Add'}
+                  %strong
+                    %span.glyphicon.glyphicon-arrow-right
+                %br
+                %button{:value => 'Remove'}
+                  %strong
+                    %span.glyphicon.glyphicon-arrow-left
+              %td
+                - if option == 1
+                  = select_tag :selected_employee, nil, multiple: true
+                - elsif option == 2
+                  = select_tag :selected_employee,
+                                options_from_collection_for_select(chained_users, :id, :name),
+                                multiple: true
+              %td
+                %button{:value => 'Up'}
+                  %strong
+                    %span.glyphicon.glyphicon-arrow-up
+                %br
+                %button{:value => 'Down'}
+                  %strong
+                    %span.glyphicon.glyphicon-arrow-down
+            %tr
+              %td{:style => 'align:center'}
+                .text-center
+                  %input{ :type => 'button', :id => button_id, :value => button_value}

@@ -15,8 +15,12 @@
             %td
               = path.name
             %td
+              - count = path.path_chains.count
               - path.path_chains.order(priority: :desc).each do |chain|
-                = chain.user.name + '--> '
+                = chain.user.name
+                - if count > 1
+                  %span.fa.fa-chevron-circle-right
+                - count = count - 1
             %td
               = link_to 'Assign', approval_chain_path(path)
               |
