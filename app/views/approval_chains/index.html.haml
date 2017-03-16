@@ -1,3 +1,5 @@
+
+
 .panel.panel-default
   .panel-heading
     %h4 Current Paths
@@ -11,6 +13,11 @@
           %th Action
       %tbody
         - @approval_paths.each do |path|
+          - assigned_users = path.users
+          - warning_message = "Assigned Users :\n"
+          - assigned_users.each do |user|
+            - warning_message += "#{user.name}\n"
+          - warning_message += "Are you sure?"
           %tr
             %td
               = path.name
@@ -26,7 +33,9 @@
               |
               = link_to 'Edit', edit_approval_chain_path(path)
               |
-              = link_to 'Delete', approval_chain_path(path), method: :delete, data: {confirm: 'Are you sure?'}
+              = link_to 'Delete', approval_chain_path(path),
+                                  method: :delete,
+                                  data: { confirm: warning_message }
   .panel-footer
     .link-button
       = link_to 'Create New Path',
