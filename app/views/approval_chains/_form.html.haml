@@ -15,66 +15,60 @@
     %h4
       = heading
   .panel-body
-    .row
-      .col-sm-8.col-sm-offset-2
-        %table.table_striped
-          %tbody
-            %tr
-              %td
-                = label_tag :name
-              %td
-                = text_field_tag :name, value,
-                                        class: 'form-control',
-                                        style: 'margin: 10px;'
+    %table.table_striped
+      %tbody
+        %tr
+          %td
+            = label_tag :name
+          %td
+            = text_field_tag :name, value,
+                                    class: 'form-control',
+                                    style: 'margin: 10px;'
     %br
-    .row
-      .col-sm-8.col-sm-offset-2
-        %table.table-striped
-          %tbody
-            %tr
-              %td
-                = select_tag :select_employee,
-                              options_from_collection_for_select(users, :id, :name),
-                              multiple: true
-              %td
-                %button{:value => 'Add', :class => 'btn btn-primary',
-                                         :data => { :toggle => 'tooltip',
-                                                    :placement => 'top' },
-                                         :title => 'Add User'}
-                  %strong
-                    %span.glyphicon.glyphicon-arrow-right
-                %br
-                %button{:value => 'Remove', :class => 'btn btn-primary',
-                                            :data => { :toggle => 'tooltip',
-                                                       :placement => 'bottom' },
-                                            :title => 'Remove User'}
-                  %strong
-                    %span.glyphicon.glyphicon-arrow-left
-              %td
-                - if option == 1
-                  = select_tag :selected_employee, nil, multiple: true
-                - elsif option == 2
-                  = select_tag :selected_employee,
-                                options_from_collection_for_select(chained_users, :id, :name),
-                                multiple: true
-              %td
-                %button{:value => 'Up', :class => 'btn btn-primary',
+    %table.table-striped
+      %tbody
+        %tr
+          %td
+            = select_tag :select_employee,
+                          options_from_collection_for_select(users, :id, :name),
+                          multiple: true
+          %td
+            %button{:value => 'Add', :class => 'btn btn-primary',
+                                     :data => { :toggle => 'tooltip',
+                                                :placement => 'top' },
+                                     :title => 'Add User'}
+              %strong
+                %span.glyphicon.glyphicon-arrow-right
+            %br
+            %button{:value => 'Remove', :class => 'btn btn-primary',
                                         :data => { :toggle => 'tooltip',
-                                                   :placement => 'top' },
-                                        :title => 'Increase Priority'}
-                  %strong
-                    %span.glyphicon.glyphicon-arrow-up
-                %br
-                %button{:value => 'Down', :class => 'btn btn-primary',
-                                          :data => { :toggle => 'tooltip',
-                                                     :placement => 'bottom' },
-                                          :title => 'Decrease Priority'}
-                  %strong
-                    %span.glyphicon.glyphicon-arrow-down
+                                                   :placement => 'bottom' },
+                                        :title => 'Remove User'}
+              %strong
+                %span.glyphicon.glyphicon-arrow-left
+          %td
+            - if option == 1
+              = select_tag :selected_employee, nil, multiple: true
+            - elsif option == 2
+              = select_tag :selected_employee,
+                            options_from_collection_for_select(chained_users, :id, :name),
+                            multiple: true
+          %td
+            %button{:value => 'Up', :class => 'btn btn-primary',
+                                    :data => { :toggle => 'tooltip',
+                                               :placement => 'top' },
+                                    :title => 'Increase Priority'}
+              %strong
+                %span.glyphicon.glyphicon-arrow-up
+            %br
+            %button{:value => 'Down', :class => 'btn btn-primary',
+                                      :data => { :toggle => 'tooltip',
+                                                 :placement => 'bottom' },
+                                      :title => 'Decrease Priority'}
+              %strong
+                %span.glyphicon.glyphicon-arrow-down
   .panel-footer
-    .row
-      .col-sm-6
-        %input{ :type => 'button',
-                :id => button_id,
-                :value => button_value,
-                :class => 'btn btn-primary'}
+    %input{ :type => 'button',
+            :id => button_id,
+            :value => button_value,
+            :class => 'btn btn-primary'}

@@ -2,7 +2,7 @@
   .panel-heading
     %h4 Currently assigned users
   .panel-body
-    - if @users
+    - if @users.count > 0
       %table.table.table-bordered.table-hover
         %thead
           %tr
@@ -15,14 +15,14 @@
     - else
       %h5 No user assigned.
 
-.panel.panel-default
-  .panel-heading
-    %h4 Assign Users
-  .panel-body
-    = form_tag assign_approval_chain_path(params[:id]) do
+= form_tag assign_approval_chain_path(params[:id]) do
+  .panel.panel-default
+    .panel-heading
+      %h4 Assign Users
+    .panel-body
       = select_tag :employees,
-                    options_from_collection_for_select(@available_users, :id, :name),
-                    multiple: true
-  .panel-footer
-    = submit_tag 'Assign Path',
-                  class: 'btn btn-primary'
+                   options_from_collection_for_select(@available_users, :id, :name),
+                   multiple: true
+    .panel-footer
+      = submit_tag 'Assign Path',
+                    class: 'btn btn-primary'
