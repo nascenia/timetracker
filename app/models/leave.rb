@@ -1,7 +1,9 @@
 class Leave < ActiveRecord::Base
-
+  belongs_to :approval_path
   belongs_to :user
   belongs_to :leave_tracker
+
+  validates :pending_at, presence: true
 
   CASUAL = 1
   MEDICAL = 2
@@ -48,6 +50,17 @@ class Leave < ActiveRecord::Base
       consumed_medical_leave_balance = consumed_medical_leave + total_hours_to_be_consumed
       self.user.leave_tracker.update_attributes(:consumed_medical => consumed_medical_leave_balance)
     end
+  end
+
+  def self.get_pending_leaves(current_user)
+    path_priority_list = current_user.owned_paths.pluck(:approval_path_id, :priority)
+
+    leaves = Leave.none
+
+    path_priority_list.each do |path_priority|
+      leaves += Leave.where(approval_path_id: path_priority[0], pending_at: path_priority[1])
+    end
+    leaves
   end
 
   def is_pending?

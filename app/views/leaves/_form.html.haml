@@ -7,7 +7,11 @@
       %ul
         - @leave.errors.full_messages.each do |msg|
           %li= msg
+
   = hidden_field_tag 'leave[status]', Leave::PENDING
+  = hidden_field_tag 'leave[pending_at]', current_user.approval_path.try(:path_chains).try(:count)
+  = hidden_field_tag 'leave[approval_path_id]', current_user.approval_path_id
+
   .form-group
     = f.label :leave_type, {:class => 'col-sm-2 control-label'}
     .col-sm-10

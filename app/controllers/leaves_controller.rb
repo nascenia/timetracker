@@ -7,7 +7,7 @@ class LeavesController < ApplicationController
 
   def index
     @my_employees = User.list_of_employees(current_user.id)
-    @leaves = Leave.where('status = ? AND user_id IN (?)', Leave::PENDING, @my_employees.map(&:id))
+    @leaves = Leave.get_pending_leaves(current_user)
   end
 
   def new
@@ -18,12 +18,12 @@ class LeavesController < ApplicationController
     @leave = Leave.new(leave_params)
     @leave.user_id = current_user.id
 
-    approval_path = current_user.approval_paths.includes(:path_chains).find_by(active: true)
-    approval_users = approval_path.path_chains.map(&:user_id)
-    emails = User.where(id: approval_users)
+    approval_path = current_user.approval_path
+    approval_user = approval_path.path_chains.order(priority: :desc).map(&:user_id).first
+    email = User.where(id: approval_user).map(&:email)
 
     if @leave.save
-      UserMailer.send_leave_application_notification(current_user, @leave, emails).deliver
+      UserMailer.send_leave_application_notification(current_user, @leave, email).deliver
       redirect_to leaves_path, :notice => 'Your TTF will be notified soon. Thanks!'
     else
       render :new
@@ -49,19 +49,19 @@ class LeavesController < ApplicationController
 
   private
 
-    def set_leave
-      @leave = params[:id].present? ? Leave.find(params[:id]) : Leave.new
-    end
+  def set_leave
+    @leave = params[:id].present? ? Leave.find(params[:id]) : Leave.new
+  end
 
-    def check_permission
-      @leave = Leave.find params[:id]
-      unless @leave.user.ttf_id == current_user.id || @leave.user.sttf_id == current_user.id
-        redirect_to leave_user_path(current_user), :notice => 'Access Denied'
-      end
+  def check_permission
+    @leave = Leave.find params[:id]
+    unless @leave.user.ttf_id == current_user.id || @leave.user.sttf_id == current_user.id
+      redirect_to leave_user_path(current_user), :notice => 'Access Denied'
     end
+  end
 
-    def leave_params
-      params.require(:leave).permit(:user_id, :reason, :leave_type, :status, :start_date, :end_date, :half_day)
-    end
+  def leave_params
+    params.require(:leave).permit(:approval_path_id, :user_id, :reason, :leave_type, :pending_at, :status, :start_date,
+                                  :end_date, :half_day)
+  end
 end
-

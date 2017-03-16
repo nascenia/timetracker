@@ -38,12 +38,9 @@ class PathChain < ActiveRecord::Base
     end
   end
 
-
   def self.update(path, approval_chain, name)
     remove_not_passed_chain_users(path, approval_chain)
     add_newly_passed_chain_users(path, approval_chain)
     update_priority_and_name(path, approval_chain, name)
   end
-
-
 end

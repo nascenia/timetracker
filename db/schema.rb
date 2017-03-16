@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170313121159) do
+ActiveRecord::Schema.define(version: 20170316095916) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -96,8 +96,11 @@ ActiveRecord::Schema.define(version: 20170313121159) do
     t.date     "start_date"
     t.date     "end_date"
     t.boolean  "half_day"
+    t.integer  "pending_at",       null: false
+    t.integer  "approval_path_id"
   end
 
+  add_index "leaves", ["approval_path_id"], name: "index_leaves_on_approval_path_id", using: :btree
   add_index "leaves", ["user_id"], name: "index_leaves_on_user_id", using: :btree
 
   create_table "path_chains", force: true do |t|

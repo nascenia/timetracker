@@ -1,8 +1,8 @@
 class User < ActiveRecord::Base
-
+  has_one :leave_tracker, dependent: :destroy
   has_many :attendances, dependent: :destroy
   has_many :leave, dependent: :destroy
-  has_one :leave_tracker, dependent: :destroy
+  has_many :owned_paths, class_name: 'PathChain'
 
   belongs_to :approval_path
 

@@ -1,4 +1,5 @@
 class ApprovalPath < ActiveRecord::Base
+  has_many :leaves
   has_many :path_chains
   has_many :users
 
