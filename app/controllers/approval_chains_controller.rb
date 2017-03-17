@@ -10,8 +10,9 @@ class ApprovalChainsController < ApplicationController
   end
 
   def show
+    @path_owners = PathChain.find_path_chain_users(@path.id)
     @users = @path.users
-    @available_users = User.active.where.not(id: @users)
+    @available_users = User.active.where.not(id: @users | @path_owners )
   end
 
   def new

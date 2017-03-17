@@ -1,6 +1,12 @@
-#select_employee, #selected_employee, #employees{
+#select_employee, #selected_employee{
   min-height: 350px;
   min-width: 240px;
+  margin: 0px;
+}
+
+#employees{
+  min-height: 350px;
+  min-width: 231px;
   margin: 0px;
 }
 
