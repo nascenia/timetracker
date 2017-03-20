@@ -1,0 +1,14 @@
+.panel.panel-default
+  .panel-heading
+    %b On Leave
+
+  %table.table.table-bordered.table-hover
+    %tbody
+      - @all_approved_leaves.each do |leave|
+        %tr
+          %td
+            = leave.user.name
+            - if leave.leave_type == 1
+              %td Casual
+            - elsif leave.leave_type == 2
+              %td Medical
