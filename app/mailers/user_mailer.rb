@@ -4,9 +4,9 @@ class UserMailer < ActionMailer::Base
 
   layout 'notification'
 
-  def send_leave_application_notification(user, leave, email)
-    @user = user
+  def send_leave_application_notification(leave, email)
     @leave = leave
+    @user = @leave.user
     @email = email
 
     mail :to => @email, :subject => "#{@user.name} has applied for a leave"
@@ -20,7 +20,7 @@ class UserMailer < ActionMailer::Base
       subject = 'Leave Approved'
       @title = 'Your leave application has just been approved.'
       @greetings = '- Enjoy your vacation!'
-    else
+    elsif @leave.is_rejected?
       subject = 'Leave Rejected'
       @title = 'Your leave application has just been rejected.'
       @greetings = '- Better luck next time!'

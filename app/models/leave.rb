@@ -52,13 +52,19 @@ class Leave < ActiveRecord::Base
     end
   end
 
-  def self.get_pending_leaves(current_user)
+  def self.get_leaves(current_user, action)
     path_priority_list = current_user.owned_paths.pluck(:approval_path_id, :priority)
 
     leaves = Leave.none
 
     path_priority_list.each do |path_priority|
-      leaves += Leave.where(approval_path_id: path_priority[0], pending_at: path_priority[1])
+      leaves += if action == 'accept'
+                  Leave.where(approval_path_id: path_priority[0]).where('pending_at < ?', path_priority[1])
+                elsif action == 'reject'
+                  Leave.where(approval_path_id: path_priority[0], status:Leave::REJECTED, pending_at: path_priority[1])
+                else
+                  Leave.where(approval_path_id: path_priority[0], pending_at: path_priority[1])
+                end
     end
     leaves
   end

@@ -11,9 +11,13 @@
       = link_to 'Employees', users_path
     %li{:class => current_page?(team_user_path(current_user)) ? 'active' : ''}
       = link_to 'My co-workers', team_user_path(current_user)
-    - if current_user.is_ttf? || current_user.is_super_ttf?
+    - if has_owned_paths?
       %li{:class => current_page?(leaves_path(current_user)) ? 'active' : ''}
-        = link_to 'Pending leaves', leaves_path
+        = link_to 'Approved leaves', leaves_path(leave: 'accept')
+      %li{:class => current_page?(leaves_path(current_user)) ? 'active' : ''}
+        = link_to 'Rejected leaves', leaves_path(leave: 'reject')
+      %li{:class => current_page?(leaves_path(current_user)) ? 'active' : ''}
+        = link_to 'Pending leaves', leaves_path(leave: 'pending')
     - if current_user.is_admin?
       %li{:class => current_page?(approval_chains_path) ? 'active' : ''}
         = link_to 'Approval Paths', approval_chains_path

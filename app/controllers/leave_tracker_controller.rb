@@ -8,6 +8,7 @@ class LeaveTrackerController < ApplicationController
 
   def show
     @user = User.find params[:id]
+    @leaves = @user.leaves
 
     if @user.leave_tracker.present?
       @leave_tracker = @user.leave_tracker
@@ -15,34 +16,23 @@ class LeaveTrackerController < ApplicationController
     else
       LeaveTracker::create_leave_tracker(@user)
     end
-
-    respond_to do |format|
-      format.html
-    end
   end
 
   def new
-
   end
 
   def create
-
   end
 
   def edit
-
   end
 
   def update
-
   end
 
   def delete
-
   end
 
   def destroy
-
   end
-
 end

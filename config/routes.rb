@@ -30,7 +30,8 @@ Internal::Application.routes.draw do
   get '/leaves/:id/edit', to: 'leaves#edit', as: 'edit_leave'
   put '/leaves/:id', to: 'leaves#update'
   delete '/leaves/:id', to: 'leaves#destroy'
-  get 'leaves/:id/approve', to: 'leaves#approve', as: 'approve_leave'
+  post 'leaves/:id/approve', to: 'leaves#approve', as: 'approve_leave'
+  post 'leaves/:id/reject', to: 'leaves#reject', as: 'reject_leave'
 
   resources :attendances do
     collection do

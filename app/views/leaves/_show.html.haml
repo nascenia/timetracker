@@ -1,0 +1,44 @@
+%h1.page-header
+  Leave application summary
+
+.panel.panel-default
+  .panel-heading
+    %b= "Leave status of : #{@leave.user.name}"
+
+  %table.table.table-bordered
+    %thead
+      %tr
+        %th
+        %th Casual (hours)
+        %th Medical (hours)
+    %tbody
+      %tr
+        %th Accrued Leave
+        %td= @leave.user.leave_tracker.accrued_vacation_total if @leave.user.leave_tracker.present?
+        %td= @leave.user.leave_tracker.accrued_medical_total if @leave.user.leave_tracker.present?
+      %tr
+        %th Consumed Leave
+        %td= @leave.user.leave_tracker.consumed_vacation if @leave.user.leave_tracker.present?
+        %td= @leave.user.leave_tracker.consumed_medical if @leave.user.leave_tracker.present?
+
+.panel.panel-default
+  .panel-heading
+    %b Leave approval
+
+  %table.table.table-bordered
+    %tbody
+      %tr
+        %th Name
+        %td= @leave.user.name
+      %tr
+        %th Email
+        %td= @leave.user.email
+      %tr
+        %th Leave type
+        %td= get_type @leave
+      %tr
+        %th Description
+        %td= @leave.reason
+      %tr
+        %th Status
+        %td= get_status @leave.status
