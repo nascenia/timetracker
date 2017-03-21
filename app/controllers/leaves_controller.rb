@@ -8,7 +8,7 @@ class LeavesController < ApplicationController
 
   def index
     @my_employees = User.list_of_employees(current_user.id)
-    @leaves = Leave.get_leaves(current_user, params[:leave])
+    @leaves = Leave.get_leaves(current_user, params[:category].try(:downcase))
   end
 
   def new
@@ -31,6 +31,17 @@ class LeavesController < ApplicationController
   end
 
   def show
+    approver_ids = @leave.approval_path.path_chains.where('priority > ?', @leave.pending_at).pluck(:user_id)
+
+    if @leave.status == Leave::REJECTED
+      rejecter_id = @leave.approval_path.path_chains.find_by(priority: @leave.pending_at).user_id
+    end
+
+    @approvers = User.where(id: approver_ids).pluck(:name)
+    @rejector = User.find_by(id: rejecter_id) if rejecter_id
+
+    current_user_priority = @leave.approval_path.path_chains.find_by(user: current_user).try(:priority)
+    @show_actions = @leave.status == Leave::PENDING && @leave.pending_at == current_user_priority ? true : false
   end
 
   def approve

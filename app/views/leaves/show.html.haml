@@ -1,4 +1,4 @@
 = render partial: 'show'
 
-- if @leave.pending_at == @leave.approval_path.path_chains.find_by(user: current_user).try(:priority)
+- if @show_actions
   = render partial: 'actions'

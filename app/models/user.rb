@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
 
   belongs_to :approval_path
 
+  after_create :create_leave_tracker
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
 
@@ -123,5 +124,9 @@ class User < ActiveRecord::Base
     end
 
     return false
+  end
+
+  def create_leave_tracker
+    LeaveTracker::create_leave_tracker(self)
   end
 end

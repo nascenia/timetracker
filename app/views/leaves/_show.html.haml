@@ -42,3 +42,9 @@
       %tr
         %th Status
         %td= get_status @leave.status
+      %tr
+        %th Approved by
+        %td= @approvers.size > 0 ? @approvers.join(', ') : 'N/A'
+      %tr
+        %th Rejected by
+        %td= @rejector ? @rejector.name : 'N/A'

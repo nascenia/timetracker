@@ -58,12 +58,12 @@ class Leave < ActiveRecord::Base
     leaves = Leave.none
 
     path_priority_list.each do |path_priority|
-      leaves += if action == 'accept'
+      leaves += if action == 'accepted'
                   Leave.where(approval_path_id: path_priority[0]).where('pending_at < ?', path_priority[1])
-                elsif action == 'reject'
-                  Leave.where(approval_path_id: path_priority[0], status:Leave::REJECTED, pending_at: path_priority[1])
+                elsif action == 'rejected'
+                  Leave.where(approval_path_id: path_priority[0], status: Leave::REJECTED, pending_at: path_priority[1])
                 else
-                  Leave.where(approval_path_id: path_priority[0], pending_at: path_priority[1])
+                  Leave.where(approval_path_id: path_priority[0], pending_at: path_priority[1], status: Leave::PENDING)
                 end
     end
     leaves
