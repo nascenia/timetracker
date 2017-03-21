@@ -91,4 +91,9 @@ class Leave < ActiveRecord::Base
     leave_type == 1 ? 'Casual' : 'Medical'
   end
 
+
+  def self.get_half_day_leaves_count user_id
+    Leave.where('user_id = ? and half_day = 1', user_id).count
+  end
+
 end

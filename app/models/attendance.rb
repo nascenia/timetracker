@@ -132,8 +132,9 @@ class Attendance < ActiveRecord::Base
     if monthly_attendances.size > 1
       today_attendance = monthly_attendances[monthly_attendances.size - 1]
       total_attendance = today_attendance.out_time.nil? ? monthly_attendances.size - 1 : monthly_attendances.size
+      half_day_count = Leave.get_half_day_leaves_count(monthly_attendances.first.user_id)
+      total_attendance = total_attendance - ( half_day_count * 0.5 )
     end
-
     average_hours = total_attendance > 0 ? total_hours / total_attendance : 0
     average_hours.round(2)
   end
