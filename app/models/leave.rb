@@ -78,7 +78,11 @@ class Leave < ActiveRecord::Base
   def self.get_users_on_leave_today
     today = Date.today
     @all_approved_leaves = Leave.where( 'status = 1 and ? > start_date and ? < end_date',
-                                       today+1.day, today-1.day)
+                                        today+1.day, today-1.day )
+  end
+
+  def get_leave_type_in_string
+    leave_type == 1 ? 'Casual' : 'Medical'
   end
 
 end

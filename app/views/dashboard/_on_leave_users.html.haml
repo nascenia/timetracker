@@ -8,7 +8,5 @@
         %tr
           %td
             = leave.user.name
-            - if leave.leave_type == 1
-              %td Casual
-            - elsif leave.leave_type == 2
-              %td Medical
+          %td
+            = leave.get_leave_type_in_string
