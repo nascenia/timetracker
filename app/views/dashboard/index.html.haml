@@ -25,6 +25,7 @@
 
   .col-md-4
     = render 'attendance_summary'
+    = render 'on_leave_users'
     = render 'internal_services'
     = render 'rules_instructions'
     - if current_user.present? && current_user.is_admin?
