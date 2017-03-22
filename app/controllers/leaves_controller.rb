@@ -13,6 +13,20 @@ class LeavesController < ApplicationController
 
   def new
     @leave = Leave.new
+    user = User.find(current_user.id)
+    if user.leave_tracker.accrued_vacation_balance < 8 &&
+        user.leave_tracker.accrued_medical_balance < 8
+      flash[:warning] = 'You are running low on both Casual and Medical leave'
+    elsif user.leave_tracker.accrued_medical_balance < 8
+      flash[:warning] = 'You are running low on Medical leave'
+    elsif user.leave_tracker.accrued_vacation_balance < 8
+      flash[:notice] = 'You are running low on Casual leave'
+    end
+    unless current_user.approval_path.present?
+      flash[:notice] = 'You have to be assigned to a leave path. Please contact with HR'
+      @user = current_user
+      render 'leave_tracker/show' and return
+    end
   end
 
   def create

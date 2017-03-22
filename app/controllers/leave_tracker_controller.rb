@@ -7,8 +7,9 @@ class LeaveTrackerController < ApplicationController
   end
 
   def show
-    @user = User.find params[:id]
-    @leaves = @user.leaves
+    flash[:notice] = nil
+    flash[:warning] = nil
+    @user = User.includes(:leaves).find params[:id]
     @leave_tracker = @user.leave_tracker
     @leave_tracker.update_leave_tracker_daily
   end

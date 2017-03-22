@@ -136,7 +136,7 @@ class Attendance < ActiveRecord::Base
       total_attendance = total_attendance - ( half_day_count * 0.5 )
     end
     average_hours = total_attendance > 0 ? total_hours / total_attendance : 0
-    (average_hours.to_i).to_s + ' Hours ' + (((average_hours % 1)* 60).round(0)).to_s + ' Minutes '
+    (average_hours.to_i).to_s + ':' + (((average_hours % 1)* 60).round(0)).to_s
   end
 
   #
@@ -160,6 +160,6 @@ class Attendance < ActiveRecord::Base
 
   def self.get_humanize_total_hour monthly_attendances
     total_hours = self.monthly_total_hours(monthly_attendances)
-    (total_hours.to_i).to_s + ' Hours ' + (((total_hours % 1)* 60).round(0)).to_s + ' Minutes '
+    (total_hours.to_i).to_s + ':' + (((total_hours % 1)* 60).round(0)).to_s
   end
 end

@@ -14,37 +14,39 @@
     = csrf_meta_tags
 
   %body
-    %nav.navbar.navbar-inverse.navbar-fixed-top
-      %div.container
-        %div.navbar-header
-          %button.navbar-toggle.collapsed{:type => "button", :data => {:toggle => "collapse", :target => "#navbar"}, :aria => {:expanded => "false", :controls => "navbar"}}
-            %span.sr-only
-              Toggle navigation
-            %span.icon-bar
-            %span.icon-bar
-            %span.icon-bar
-          %a.navbar-brand{:href => '/'}
-            = image_tag 'logo.png', style: 'margin-top: -25px;'
+  %nav.navbar.navbar-inverse.navbar-fixed-top
+    %div.container
+      %div.navbar-header
+        %button.navbar-toggle.collapsed{:type => "button", :data => {:toggle => "collapse", :target => "#navbar"}, :aria => {:expanded => "false", :controls => "navbar"}}
+          %span.sr-only
+            Toggle navigation
+          %span.icon-bar
+          %span.icon-bar
+          %span.icon-bar
+        %a.navbar-brand{:href => '/'}
+          = image_tag 'logo.png', style: 'margin-top: -25px;'
 
-        %div#navbar.collapse.navbar-collapse
-          = render 'shared/top_nav_menu'
+      %div#navbar.collapse.navbar-collapse
+        = render 'shared/top_nav_menu'
 
-    <!-- /.container -->
-    .container
-      .starter-template
-        .row
-          .col-sm-3
-            = render partial: 'shared/left_menu'
-          .col-sm-9
-            - if notice
-              .notice.alert-info
-                = notice
-            - elsif alert
-              .alert.alert-danger
-                = alert
+  <!-- /.container -->
+  .container
+    .starter-template
+      .row
+        .col-sm-3
+          = render partial: 'shared/left_menu'
+        .col-sm-9
+          - if notice
+            .notice.alert-info
+              = notice
+          - elsif alert
+            .alert.alert-danger
+              = alert
+          - elsif flash[:warning].present?
+            .alert.alert-warning
+              = flash[:warning]
+          = yield
 
-            = yield
-
-    %footer
-      %p.text-center
-        &copy; Copyright #{copyright_year}
+  %footer
+    %p.text-center
+      &copy; Copyright #{copyright_year}
