@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170316095916) do
+ActiveRecord::Schema.define(version: 20170322092757) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -95,7 +95,7 @@ ActiveRecord::Schema.define(version: 20170316095916) do
     t.datetime "updated_at"
     t.date     "start_date"
     t.date     "end_date"
-    t.boolean  "half_day"
+    t.integer  "half_day"
     t.integer  "pending_at",       null: false
     t.integer  "approval_path_id"
   end

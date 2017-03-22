@@ -27,6 +27,16 @@ class Leave < ActiveRecord::Base
       ['Pending', PENDING]
   ]
 
+  FULL_DAY = 0
+  FIRST_HALF = 1
+  SECOND_HALF = 2
+
+  LEAVE_DURATIONS = [
+      ['Full Day', FULL_DAY],
+      ['First Half', FIRST_HALF],
+      ['Second Half', SECOND_HALF]
+  ]
+
   def update_leave_tracker
     consumed_casual_leave = self.user.leave_tracker.consumed_vacation.present? ? self.user.leave_tracker.consumed_vacation : 0
     consumed_medical_leave = self.user.leave_tracker.consumed_medical.present? ? self.user.leave_tracker.consumed_medical : 0
@@ -37,7 +47,7 @@ class Leave < ActiveRecord::Base
       total_hours = HOURS_FOR_ONE_DAY
     end
 
-    if self.half_day
+    if self.half_day != 0
       total_hours_to_be_consumed = total_hours - HOURS_FOR_HALF_DAY
     else
       total_hours_to_be_consumed = total_hours
@@ -93,7 +103,6 @@ class Leave < ActiveRecord::Base
 
 
   def self.get_half_day_leaves_count user_id
-    Leave.where('user_id = ? and half_day = 1', user_id).count
+    Leave.where('user_id = ? and half_day != 0', user_id).count
   end
-
 end

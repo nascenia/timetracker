@@ -1,4 +1,3 @@
-
 = form_for(@leave, :html => {:class => 'form-horizontal'}) do |f|
   - if @leave.errors.any?
     #error_explanation
@@ -18,6 +17,10 @@
     .col-sm-10
       = f.select :leave_type, Leave::LEAVE_TYPES, {}, {:class => 'form-control'}
   .form-group
+    = f.label 'Leave Duration', {:class => 'col-sm-2 control-label'}
+    .col-sm-10
+      = f.select :half_day, Leave::LEAVE_DURATIONS, {}, {:class => 'form-control'}
+  .form-group
     = f.label :start_date, {:class => 'col-sm-2 control-label'}
     .col-sm-10
       = f.text_field :start_date, :class => 'form-control date-picker', :placeholder => 'Enter start date (ex: dd/mm/yyyy)'
@@ -32,12 +35,6 @@
       %p.help-block
         %span= 300
         characters remaining.
-  .form-group
-    .col-sm-offset-2.col-sm-10
-      .checkbox
-        %label
-          = f.check_box :half_day
-          is half day
   .form-group
     .col-sm-offset-2.col-sm-10
       = f.submit 'Apply', :class => 'btn btn-primary'

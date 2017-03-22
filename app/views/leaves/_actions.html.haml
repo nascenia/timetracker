@@ -1,6 +1,7 @@
-.col-sm-6
+.col-sm-3
   = link_to  'Accept', approve_leave_path(@leave), :method => :post,
              :class => "btn btn-block btn-success #{@leave.is_accepted? ? 'disabled' : ''}"
-.col-sm-6
+
+.col-sm-3
   = link_to  'Reject', reject_leave_path(@leave), :method => :post,
              :class => "btn btn-block btn-danger #{@leave.is_rejected? ? 'disabled' : ''}"
