@@ -8,3 +8,4 @@
 //= require bootstrap/modal
 //= require approval_chains.js
 //= require bootstrap-sprockets
+//= require weekends.js

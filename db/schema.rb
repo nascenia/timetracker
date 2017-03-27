@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170322092757) do
+ActiveRecord::Schema.define(version: 20170327113815) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -139,9 +139,24 @@ ActiveRecord::Schema.define(version: 20170322092757) do
     t.integer  "ttf_id"
     t.integer  "sttf_id"
     t.integer  "approval_path_id"
+    t.integer  "weekend_id"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  add_index "users", ["weekend_id"], name: "index_users_on_weekend_id", using: :btree
+
+  create_table "weekends", force: true do |t|
+    t.string   "name"
+    t.boolean  "saturday",   default: false
+    t.boolean  "sunday",     default: false
+    t.boolean  "monday",     default: false
+    t.boolean  "tuesday",    default: false
+    t.boolean  "wednesday",  default: false
+    t.boolean  "thursday",   default: false
+    t.boolean  "friday",     default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end

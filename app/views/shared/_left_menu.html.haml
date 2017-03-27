@@ -17,3 +17,6 @@
     - if current_user.is_admin?
       %li{:class => current_page?(approval_chains_path) ? 'active' : ''}
         = link_to 'Approval Paths', approval_chains_path
+    - if current_user.is_admin?
+      %li{:class => current_page?(leaves_path(current_user)) ? 'active' : ''}
+        = link_to 'Weekend Scheme', weekends_path

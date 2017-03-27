@@ -42,5 +42,11 @@ Internal::Application.routes.draw do
 
   resources :salaats
 
+  resources :weekends do
+    member do
+      post :assign
+    end
+  end
+
   root :to => 'dashboard#index'
 end

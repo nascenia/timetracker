@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
   has_many :owned_paths, class_name: 'PathChain'
 
   belongs_to :approval_path
+  belongs_to :weekend
 
   after_create :create_leave_tracker
   # Include default devise modules. Others available are:
@@ -34,6 +35,8 @@ class User < ActiveRecord::Base
   scope :employees, -> {where('role = ?', User::EMPLOYEE)}
   scope :list_of_ttfs, -> (super_ttf) {where('role = ? AND sttf_id = ? ', User::TTF, super_ttf)}
   scope :list_of_employees, -> (ttf) {where('role =? AND ttf_id = ? ', User::EMPLOYEE, ttf)}
+  scope :has_no_weekend, -> { where( 'weekend_id IS ?', nil) }
+  scope :has_weekend, -> (weekend_id) { where( 'weekend_id IS not ? and weekend_id = ?', nil, weekend_id) }
 
   def is_admin?
     self.email && ADMIN_USER.to_s.include?(self.email)
