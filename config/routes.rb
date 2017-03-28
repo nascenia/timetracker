@@ -48,5 +48,13 @@ Internal::Application.routes.draw do
     end
   end
 
+  resources :holiday_schemes do
+    member do
+      get :assign_form
+      post :assign
+    end
+  end
+  resources :holidays
+
   root :to => 'dashboard#index'
 end

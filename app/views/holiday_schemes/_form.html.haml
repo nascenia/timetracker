@@ -1,0 +1,11 @@
+.panel.panel-default
+  .panel-heading
+    %h3
+      = heading
+  = form_for(@holiday_scheme) do |f|
+    .panel-body
+      .form-group
+        = f.label :name
+        = f.text_field :name, class: 'form-control'
+    .panel-footer
+      = f.submit btn_label, class: 'btn btn-primary'

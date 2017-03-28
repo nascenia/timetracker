@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170328092706) do
+ActiveRecord::Schema.define(version: 20170328132319) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -65,6 +65,26 @@ ActiveRecord::Schema.define(version: 20170328092706) do
 
   add_index "attendances", ["user_id"], name: "index_attendances_on_user_id", using: :btree
 
+  create_table "holiday_schemes", force: true do |t|
+    t.string   "name"
+    t.boolean  "active",        default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "leave_year_id"
+  end
+
+  add_index "holiday_schemes", ["leave_year_id"], name: "index_holiday_schemes_on_leave_year_id", using: :btree
+
+  create_table "holidays", force: true do |t|
+    t.string   "name"
+    t.date     "date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "holiday_scheme_id"
+  end
+
+  add_index "holidays", ["holiday_scheme_id"], name: "index_holidays_on_holiday_scheme_id", using: :btree
+
   create_table "leave_trackers", force: true do |t|
     t.integer  "user_id"
     t.integer  "yearly_casual_leave"
@@ -85,6 +105,13 @@ ActiveRecord::Schema.define(version: 20170328092706) do
   end
 
   add_index "leave_trackers", ["user_id"], name: "index_leave_trackers_on_user_id", using: :btree
+
+  create_table "leave_years", force: true do |t|
+    t.string   "year"
+    t.boolean  "present"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "leaves", force: true do |t|
     t.integer  "user_id"
@@ -140,9 +167,11 @@ ActiveRecord::Schema.define(version: 20170328092706) do
     t.integer  "sttf_id"
     t.integer  "approval_path_id"
     t.integer  "weekend_id"
+    t.integer  "holiday_scheme_id"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["holiday_scheme_id"], name: "index_users_on_holiday_scheme_id", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["weekend_id"], name: "index_users_on_weekend_id", using: :btree
 

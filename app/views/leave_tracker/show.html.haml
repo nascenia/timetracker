@@ -37,7 +37,7 @@
 .panel.panel-default
   .panel-heading
     %b Leave History
-  - if @user.leaves.length > 0
+  - if @user.leaves.count > 0
     %table.table.table-bordered
       %thead
         %tr

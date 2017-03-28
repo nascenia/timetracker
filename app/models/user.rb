@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
 
   belongs_to :approval_path
   belongs_to :weekend
+  belongs_to :holiday_scheme
 
   after_create :create_leave_tracker
   # Include default devise modules. Others available are:

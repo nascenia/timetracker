@@ -1,0 +1,47 @@
+.row
+  .col-sm-4
+    = form_tag assign_holiday_scheme_path(params[:id]) do
+      .panel.panel-default
+        .panel-heading
+          %h4 Assign Users
+        .panel-body
+          = select_tag :employees,
+                       options_from_collection_for_select(@available_users, :id, :name),
+                       multiple: true
+        .panel-footer
+          = submit_tag 'Assign Holiday Scheme',
+                        class: 'btn btn-primary'
+  .col-sm-4
+    .panel.panel-default
+      .panel-heading
+        %h4 Currently assigned users
+      .panel-body
+        - if @assigned_users.count > 0
+          %table.table.table-bordered.table-hover
+            %thead
+              %tr
+                %th Name
+            %tbody
+              - @assigned_users.each do |user|
+                %tr
+                  %td
+                    = user.name
+        - else
+          %h5 No user assigned.
+  .col-sm-4
+    .panel.panel-default
+      .panel-heading
+        %h4 Holiday list
+      .panel-body
+        - if @holidays.count > 0
+          %table.table.table-bordered.table-hover
+            %thead
+              %tr
+                %th Name
+            %tbody
+              - @holidays.each do |owner|
+                %tr
+                  %td
+                    = owner.name
+        - else
+          %h5 No contributing owners found!
