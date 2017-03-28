@@ -1,6 +1,7 @@
 class WeekendsController < ApplicationController
 
-  before_action :find_weekend, only: [:show, :assign, :destroy]
+  before_action :find_weekend, only: [:show, :assign, :destroy, :edit, :update]
+
   layout 'leave'
 
   def index
@@ -9,8 +10,8 @@ class WeekendsController < ApplicationController
 
   def show
     @available_users = User.has_no_weekend
-    @assigned_users = User.has_weekend(params[:id])
-    @weekend_days = Weekend.get_weekend_days(params[:id])
+    @assigned_users = @weekend.users
+    @weekend_days = @weekend.off_days.map(&:capitalize)
   end
 
   def assign
@@ -23,50 +24,32 @@ class WeekendsController < ApplicationController
   end
 
   def new
-    @weekend = Weekend.new()
+    @weekend = Weekend.new
   end
 
   def create
-    day = Weekend.get_params params
-    weekend = Weekend.new(name: params['weekend']['name'].to_s, saturday: day[0], sunday: day[1],
-                          monday: day[2], tuesday: day[3], wednesday: day[4],
-                          thursday: day[5], friday: day[6])
-
-    if weekend.save
-      redirect_to weekends_path
-    end
+    @weekend = Weekend.create(weekend_params)
+    redirect_to weekends_path if @weekend.save
   end
 
   def edit
-    @weekend = Weekend.find(params[:id])
   end
 
   def update
-    weekend = Weekend.find(params[:id])
-    if Weekend.update_weekend(weekend, params)
-      redirect_to weekends_path
-    end
+    @weekend.update(weekend_params) ? redirect_to(weekends_path) : render(:edit)
   end
 
   def destroy
-    assigned_users = @weekend.users
-    if @weekend.destroy
-      assigned_users.each do |user|
-        user.update_attribute(:weekend_id, nil)
-      end
-    end
-    redirect_to weekends_path
+    redirect_to weekends_path if @weekend.destroy
   end
 
   private
 
   def weekend_params
-    params.require(:weekend).permit(:name, :saturday, :sunday, :monday, :tuesday,
-                                    :wednesday, :thursday, :friday)
+    params.require(:weekend).permit(:name, off_days: [])
   end
 
   def find_weekend
     @weekend = Weekend.find_by(id: params[:id])
   end
-
 end

@@ -3,6 +3,7 @@ class ApprovalChainsController < ApplicationController
   before_action :find_path, only: [:show, :assign]
   before_action :find_users, only: [:index, :new]
   before_action :set_path, only: [:edit, :update, :destroy]
+
   layout 'leave'
 
   def index
@@ -33,6 +34,7 @@ class ApprovalChainsController < ApplicationController
     path = ApprovalPath.create(name: approval_path_params[:name])
     approval_chain = approval_path_params[:chain]
     max_priority = approval_chain.size
+
     if path.save
       approval_chain.each do |user_id|
         path_chain = path.path_chains.build(user_id: user_id, priority: max_priority)

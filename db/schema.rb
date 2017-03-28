@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170327113815) do
+ActiveRecord::Schema.define(version: 20170328092706) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -148,15 +148,9 @@ ActiveRecord::Schema.define(version: 20170327113815) do
 
   create_table "weekends", force: true do |t|
     t.string   "name"
-    t.boolean  "saturday",   default: false
-    t.boolean  "sunday",     default: false
-    t.boolean  "monday",     default: false
-    t.boolean  "tuesday",    default: false
-    t.boolean  "wednesday",  default: false
-    t.boolean  "thursday",   default: false
-    t.boolean  "friday",     default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "off_days"
   end
 
 end

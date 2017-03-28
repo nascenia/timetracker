@@ -9,26 +9,8 @@
         = f.text_field :name, class: 'form-control'
       = label_tag 'Select Day(s)'
       .checkbox
-        .field
-          = f.check_box :saturday
-          = f.label :saturday
-        .field
-          = f.check_box :sunday
-          = f.label :sunday
-        .field
-          = f.check_box :monday
-          = f.label :monday
-        .field
-          = f.check_box :tuesday
-          = f.label :tuesday
-        .field
-          = f.check_box :wednesday
-          = f.label :wednesday
-        .field
-          = f.check_box :thursday
-          = f.label :thursday
-        .field
-          = f.check_box :friday
-          = f.label :friday
+        = f.collection_check_boxes :off_days, f.object.class.off_day_options, :first, :last,
+          item_wrapper_class: 'inline'
+
     .panel-footer
       = f.submit action_name, class: 'btn btn-primary'
