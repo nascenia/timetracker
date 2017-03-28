@@ -2,15 +2,19 @@
   .panel-heading
     %h3
       = heading
+
   = form_for @weekend do |f|
+    = render 'shared/error_messages', target: @weekend
+
     .panel-body
       .form-group
         = f.label :name
         = f.text_field :name, class: 'form-control'
       = label_tag 'Select Day(s)'
+
       .checkbox
-        = f.collection_check_boxes :off_days, f.object.class.off_day_options, :first, :last,
-          item_wrapper_class: 'inline'
+        = f.collection_check_boxes(:off_days, f.object.class.off_day_options, :first, :last) do |b|
+          .field= b.check_box + b.label
 
     .panel-footer
       = f.submit action_name, class: 'btn btn-primary'

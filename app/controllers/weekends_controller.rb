@@ -29,7 +29,7 @@ class WeekendsController < ApplicationController
 
   def create
     @weekend = Weekend.create(weekend_params)
-    redirect_to weekends_path if @weekend.save
+    @weekend.save ? redirect_to(weekends_path) : render(:new)
   end
 
   def edit
