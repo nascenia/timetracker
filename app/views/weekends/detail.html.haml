@@ -1,0 +1,32 @@
+.panel.panel-default
+  .panel-heading
+    %h4
+      Weekend Days
+  %table.table.table-bordered.table-hover
+    %tbody
+      - @weekend_days.each do |day|
+        %tr
+          %td
+            = day
+.panel.panel-default
+  .panel-heading
+    %h4
+      Assigned Users
+  - if @assigned_users.count > 0
+    %table.table.table-bordered.table-hover
+      %thead
+        %tr
+          %th
+            Name
+      %tbody
+        - @assigned_users.each do |user|
+          %tr
+            %td
+              = user.name
+            %td
+              = link_to 'Remove', remove_weekend_path(user)
+  - else
+    .panel-body
+      %p No User Assigned
+  .panel-footer
+    = link_to 'Assign New User', weekend_path(@weekend), class: 'btn btn-primary'

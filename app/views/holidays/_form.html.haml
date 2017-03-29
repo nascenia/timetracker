@@ -7,9 +7,10 @@
       = f.hidden_field :holiday_scheme_id, value:@holiday_scheme.id
       .form-group
         = f.label :name
-        = f.text_field :name, class: 'form-control'
+        = f.text_field :name, class: 'form-control', required: true
       .form-group
         = f.label :date
-        = f.text_field :date, class: 'form-control'
+        = f.text_field :date, :class => 'form-control date-picker',
+        :placeholder => 'Enter date (ex: dd/mm/yyyy)', required: true
     .panel-footer
       = f.submit btn_label, class: 'btn btn-primary'

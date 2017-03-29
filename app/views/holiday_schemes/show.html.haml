@@ -30,7 +30,28 @@
                   =link_to 'Destroy', holiday_path(holiday), method: :delete,
                   data: {confirm: 'Are you sure'}
     - else
-      %p No Holiday found
+      .panel.panel-default
+        .panel-heading
+          %h4
+            No Holiday found
+    - if @holiday_scheme.users.count > 0
+      .panel.panel-default
+        .panel-heading
+          %h4
+            Assigned user list
+        %table.table.table-bordered.table-hover
+          %tbody
+            - @holiday_scheme.users.each do |user|
+              %tr
+                %td
+                  = user.name
+                %td
+                  = link_to 'Remove', remove_holiday_scheme_path(user)
+    - else
+      .panel.panel-default
+        .panel-heading
+          %h4
+            No user assigned yet
   .panel-footer
     = link_to 'Add new holiday', new_holiday_path(@holiday_scheme), class: 'btn btn-primary'
     = link_to 'Assign new users', assign_form_holiday_scheme_path(@holiday_scheme), class: 'btn btn-primary'

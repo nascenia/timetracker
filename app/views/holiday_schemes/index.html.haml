@@ -15,13 +15,11 @@
           - @holiday_schemes.each do |scheme|
             %tr
               %td
-                = scheme.name
+                = link_to scheme.name,  holiday_scheme_path(scheme)
               %td
                 = link_to 'Add new holiday', new_holiday_path(scheme)
                 |
                 = link_to 'Assign users', assign_form_holiday_scheme_path(scheme)
-                |
-                = link_to 'Show',  holiday_scheme_path(scheme)
                 |
                 = link_to 'Edit', edit_holiday_scheme_path(scheme)
                 |

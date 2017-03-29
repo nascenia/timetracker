@@ -6,6 +6,6 @@
     .panel-body
       .form-group
         = f.label :name
-        = f.text_field :name, class: 'form-control'
+        = f.text_field :name, class: 'form-control', required: true
     .panel-footer
       = f.submit btn_label, class: 'btn btn-primary'

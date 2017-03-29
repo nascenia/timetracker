@@ -20,3 +20,6 @@
     - if current_user.is_admin?
       %li{:class => current_page?(leaves_path(current_user)) ? 'active' : ''}
         = link_to 'Weekend Scheme', weekends_path
+    - if current_user.is_admin?
+      %li{:class => current_page?(leaves_path(current_user)) ? 'active' : ''}
+        = link_to 'Holiday Scheme', holiday_schemes_path

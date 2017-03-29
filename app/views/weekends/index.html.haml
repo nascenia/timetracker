@@ -12,9 +12,11 @@
           - @weekends.each do |weekend|
             %tr
               %td
-                = weekend.name
+                = link_to weekend.name, detail_weekend_path(weekend)
               %td
                 = link_to 'Assign', weekend_path(weekend)
+                |
+                = link_to 'Remove', detail_weekend_path(weekend)
                 |
                 = link_to 'Edit', edit_weekend_path(weekend)
                 |

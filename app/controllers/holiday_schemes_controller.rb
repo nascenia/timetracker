@@ -1,7 +1,7 @@
 class HolidaySchemesController < ApplicationController
 
   before_action :authenticate_admin_user!
-  before_action :get_holiday_scheme, only: [:show, :edit, :update, :destroy, :assign_form]
+  before_action :get_holiday_scheme, only: [:show, :edit, :update, :destroy, :assign_form, :assign]
 
   layout 'leave'
 
@@ -27,7 +27,6 @@ class HolidaySchemesController < ApplicationController
   end
 
   def edit
-
   end
 
   def update
@@ -43,13 +42,24 @@ class HolidaySchemesController < ApplicationController
   end
 
   def assign_form
-    @available_users = User.all
-    @assigned_users = User.all
+    @available_users = User.has_no_holiday_scheme
+    @assigned_users = @holiday_scheme.users
     @holidays = @holiday_scheme.holidays
   end
 
   def assign
+    employees = params[:employees]
+    employees.each do |employee|
+      user = User.find_by(id: employee)
+      user.update_attribute(:holiday_scheme_id, @holiday_scheme.id)
+    end
+    redirect_to assign_form_holiday_scheme_path(@holiday_scheme)
+  end
 
+  def remove
+    user = User.find(params[:id])
+    user.update_attribute(:holiday_scheme_id, nil)
+    redirect_to :back
   end
 
   private

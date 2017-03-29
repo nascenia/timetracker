@@ -38,6 +38,7 @@ class User < ActiveRecord::Base
   scope :list_of_employees, -> (ttf) {where('role =? AND ttf_id = ? ', User::EMPLOYEE, ttf)}
   scope :has_no_weekend, -> { where( 'weekend_id IS ?', nil) }
   scope :has_weekend, -> (weekend_id) { where( 'weekend_id IS not ? and weekend_id = ?', nil, weekend_id) }
+  scope :has_no_holiday_scheme, -> { where( 'holiday_scheme_id IS ?', nil) }
 
   def is_admin?
     self.email && ADMIN_USER.to_s.include?(self.email)
