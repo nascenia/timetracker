@@ -10,8 +10,8 @@ class Leave < ActiveRecord::Base
   UNANNOUNCED = 3
 
   LEAVE_TYPES = [
-      ['Casual Leave', CASUAL],
-      ['Medical Leave', MEDICAL]
+    ['Casual Leave', CASUAL],
+    ['Medical Leave', MEDICAL]
   ]
 
   ACCEPTED = 1
@@ -22,9 +22,9 @@ class Leave < ActiveRecord::Base
   HOURS_FOR_HALF_DAY = HOURS_FOR_ONE_DAY / 2
 
   LEAVE_STATUSES = [
-      ['Approved', ACCEPTED],
-      ['Rejected', REJECTED],
-      ['Pending', PENDING]
+    ['Approved', ACCEPTED],
+    ['Rejected', REJECTED],
+    ['Pending', PENDING]
   ]
 
   FULL_DAY = 0
@@ -32,10 +32,12 @@ class Leave < ActiveRecord::Base
   SECOND_HALF = 2
 
   LEAVE_DURATIONS = [
-      ['Full Day', FULL_DAY],
-      ['First Half', FIRST_HALF],
-      ['Second Half', SECOND_HALF]
+    ['Full Day', FULL_DAY],
+    ['First Half', FIRST_HALF],
+    ['Second Half', SECOND_HALF]
   ]
+
+  scope :unannounced_leaves, -> { where('leave_type = 3') }
 
   def update_leave_tracker
     consumed_casual_leave = self.user.leave_tracker.consumed_vacation.present? ? self.user.leave_tracker.consumed_vacation : 0

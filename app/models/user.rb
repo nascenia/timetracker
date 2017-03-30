@@ -24,9 +24,9 @@ class User < ActiveRecord::Base
   SUPER_TTF = 3
 
   ROLES = [
-      ['Employee', EMPLOYEE],
-      ['TTF', TTF],
-      ['Super TTF', SUPER_TTF]
+    ['Employee', EMPLOYEE],
+    ['TTF', TTF],
+    ['Super TTF', SUPER_TTF]
   ]
 
   scope :inactive, -> {where('is_active = ?', false)}
@@ -102,16 +102,14 @@ class User < ActiveRecord::Base
 
   def self.create_unannounced_leave
     User.all.each do |u|
-
       today_entry = Attendance.find_first_entry(u.id, Date.today)
-
       unless today_entry.present?
-        unless u.has_applied_for_leave
+        unless u.has_applied_for_leave && Weekend.today?(u) && HolidayScheme.today?(u)
           leave = u.leave.create ({
-              :user_id => u.id,
-              :leave_type => Leave::UNANNOUNCED,
-              :start_date => Time.now,
-              :status => Leave::ACCEPTED
+            :user_id => u.id,
+            :leave_type => Leave::UNANNOUNCED,
+            :start_date => Time.now,
+            :status => Leave::ACCEPTED
           })
           leave.update_leave_tracker
           UserMailer.send_unannounced_leave_notification(leave).deliver
