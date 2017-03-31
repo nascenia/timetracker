@@ -3,6 +3,8 @@ class Leave < ActiveRecord::Base
   belongs_to :user
   belongs_to :leave_tracker
 
+  has_many :leave_comments
+
   validates :pending_at, presence: true
 
   CASUAL = 1

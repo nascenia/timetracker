@@ -22,16 +22,12 @@ Internal::Application.routes.draw do
     end
   end
 
-  # leaves controller resources generates wrong typo in url helper
-  get '/leaves', to: 'leaves#index', as: 'leaves'
-  get '/leaves/new', to: 'leaves#new', as: 'new_leave'
-  post '/leaves', to: 'leaves#create'
-  get '/leaves/:id', to: 'leaves#show', as: 'leave'
-  get '/leaves/:id/edit', to: 'leaves#edit', as: 'edit_leave'
-  put '/leaves/:id', to: 'leaves#update'
-  delete '/leaves/:id', to: 'leaves#destroy'
-  post 'leaves/:id/approve', to: 'leaves#approve', as: 'approve_leave'
-  post 'leaves/:id/reject', to: 'leaves#reject', as: 'reject_leave'
+  # leaves_controller resources generate paths with 'leafe' as singular for 'leaves'
+  # That is why we defined plural and singular for leave in config/initializers/inflections.rb
+  resources :leaves do
+    member { post :approve, :reject}
+    resources :leave_comments, only: :create
+  end
 
   resources :attendances do
     collection do

@@ -1,14 +1,28 @@
 class User < ActiveRecord::Base
-  has_one :leave_tracker, dependent: :destroy
-  has_many :attendances, dependent: :destroy
-  has_many :leaves, class_name: 'Leave', dependent: :destroy
-  has_many :owned_paths, class_name: 'PathChain'
+  #
+  # Relationships
+  #
 
   belongs_to :approval_path
   belongs_to :weekend
   belongs_to :holiday_scheme
 
+  has_one :leave_tracker, dependent: :destroy
+  has_many :attendances, dependent: :destroy
+  has_many :leaves, class_name: 'Leave', dependent: :destroy
+  has_many :owned_paths, class_name: 'PathChain'
+  has_many :leave_comments
+
+  #
+  # Callbacks
+  #
+
   after_create :create_leave_tracker
+
+  #
+  # Plugins
+  #
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
 

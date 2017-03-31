@@ -57,3 +57,12 @@
       %tr
         %th Rejected by
         %td= @rejector ? @rejector.name : 'N/A'
+
+- if params[:id]
+  - render partial: 'leave_comments/form'
+
+  :javascript
+    $(document).ready(function(){
+      $("#modal-window").html("#{j render template: 'shared/modal'}");
+      $("#modal-window").modal("show");
+    })

@@ -1,8 +1,7 @@
 class UserMailer < ActionMailer::Base
   add_template_helper ApplicationHelper
 
-  default from: 'Leave Tracker | Nascenia <no-reply@nascenia.com>',
-          cc: 'leave@nascenia.com'
+  default from: 'Leave Tracker | Nascenia <no-reply@nascenia.com>'
 
   layout 'notification'
 
