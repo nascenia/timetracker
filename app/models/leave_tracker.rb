@@ -45,10 +45,6 @@ class LeaveTracker < ActiveRecord::Base
   def self.populate_with_carried_forward_leave
     User.active.each do |user|
       if user.leave_tracker.present?
-        if user.leave_tracker.accrued_vacation_balance.present?
-          carried_forward_vacation = user.leave_tracker.accrued_vacation_balance < 80 ? user.leave_tracker.accrued_vacation_balance : 80
-          user.leave_tracker.update_attribute(:carried_forward_vacation, carried_forward_vacation)
-        end
         if user.leave_tracker.accrued_medical_balance.present?
           if user.leave_tracker.accrued_medical_balance >= 0
             carried_forward_medical = 0
@@ -59,6 +55,10 @@ class LeaveTracker < ActiveRecord::Base
             user.leave_tracker.update_attribute(:carried_forward_medical, carried_forward_medical)
             user.leave_tracker.update_attribute(:carried_forward_vacation, carried_forward_vacation)
           end
+        end
+        if user.leave_tracker.accrued_vacation_balance.present?
+          carried_forward_vacation = user.leave_tracker.accrued_vacation_balance < 80 ? user.leave_tracker.accrued_vacation_balance : 80
+          user.leave_tracker.update_attribute(:carried_forward_vacation, carried_forward_vacation)
         end
       end
     end
@@ -82,12 +82,12 @@ class LeaveTracker < ActiveRecord::Base
       accrual_medical_balance = accrued_total_medical - self.consumed_medical
 
       self.update_attributes(
-          :accrued_vacation_total => accrued_total_vacation,
-          :accrued_medical_total => accrued_total_medical,
-          :accrued_vacation_balance => accrual_vacation_balance,
-          :accrued_medical_balance => accrual_medical_balance,
-          :accrued_vacation_this_year => accrued_vacation_this_year,
-          :accrued_medical_this_year => accrued_medical_this_year
+        :accrued_vacation_total => accrued_total_vacation,
+        :accrued_medical_total => accrued_total_medical,
+        :accrued_vacation_balance => accrual_vacation_balance,
+        :accrued_medical_balance => accrual_medical_balance,
+        :accrued_vacation_this_year => accrued_vacation_this_year,
+        :accrued_medical_this_year => accrued_medical_this_year
       )
     end
   end
@@ -102,10 +102,10 @@ class LeaveTracker < ActiveRecord::Base
     User.active.each do |user|
       if user.leave_tracker.present?
         user.leave_tracker.update_attributes(
-            :yearly_casual_leave => YEARLY_CASUAL_LEAVE,
-            :yearly_medical_leave => YEARLY_MEDICAL_LEAVE,
-            :accrued_vacation_this_year => 0,
-            :accrued_medical_this_year => 0
+          :yearly_casual_leave => YEARLY_CASUAL_LEAVE,
+          :yearly_medical_leave => YEARLY_MEDICAL_LEAVE,
+          :accrued_vacation_this_year => 0,
+          :accrued_medical_this_year => 0
         )
       end
     end
