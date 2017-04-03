@@ -3,6 +3,7 @@ class LeavesController < ApplicationController
   before_action :set_leave, only: [:index, :show, :edit]
   before_action :check_permission, only: [:show, :approve]
   before_action :find_applied_leave, only: [:approve, :reject]
+  before_action :validate_date, only: [:create]
 
   layout 'leave'
 
@@ -100,5 +101,14 @@ class LeavesController < ApplicationController
   def leave_params
     params.require(:leave).permit(:approval_path_id, :user_id, :reason, :leave_type, :pending_at, :status,
                                   :start_date, :end_date, :half_day)
+  end
+
+  def validate_date
+    if params['leave']['leave_type'] == '1'
+      unless Date.parse(params['leave']['start_date']).future?
+        flash[:alert] = 'Casual leaves can only be applied for future dates'
+        redirect_to new_leave_path
+      end
+    end
   end
 end

@@ -6,6 +6,7 @@ class DashboardController < ApplicationController
   layout 'time_tracker'
 
   def index
+    flash[:alert] = nil
     user = current_user
     @attendance = user.attendances.where(checkin_date: Time.now.strftime('%y-%m-%d')).last
     @attendances = Attendance.daily_attendance_summary(Date.today).includes(:children)
