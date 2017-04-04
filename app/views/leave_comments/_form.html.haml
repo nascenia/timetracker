@@ -1,7 +1,0 @@
-- content_for :modal_title do
-  Additional comment for the applicant
-
-- content_for :modal_body do
-  = form_for [@leave, @leave.leave_comments.build], remote: true do |f|
-    = f.text_area :comment
-    = f.submit 'Submit'

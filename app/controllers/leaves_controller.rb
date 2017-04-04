@@ -72,13 +72,13 @@ class LeavesController < ApplicationController
       UserMailer.send_leave_application_notification(@leave, email).deliver
     end
 
-    redirect_to leave_path(@leave), notice: 'Applicant shall be notified soon. Thanks!'
+    redirect_to new_leave_comment_path(@leave), turbolinks: false
   end
 
   def reject
     @leave.update_attribute(:status, Leave::REJECTED)
     UserMailer.send_approval_or_rejection_notification(@leave).deliver
-    redirect_to leave_path(@leave), :notice => 'Applicant shall be notified soon. Thanks!'
+    redirect_to new_leave_comment_path(@leave), turbolinks: false
   end
 
   private

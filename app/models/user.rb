@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
   has_many :attendances, dependent: :destroy
   has_many :leaves, class_name: 'Leave', dependent: :destroy
   has_many :owned_paths, class_name: 'PathChain'
-  has_many :leave_comments
+  has_many :comments
 
   #
   # Callbacks

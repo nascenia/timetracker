@@ -26,7 +26,7 @@ Internal::Application.routes.draw do
   # That is why we defined plural and singular for leave in config/initializers/inflections.rb
   resources :leaves do
     member { post :approve, :reject}
-    resources :leave_comments, only: :create
+    resources :comments, only: [:new, :create]
   end
 
   resources :attendances do

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170330092912) do
+ActiveRecord::Schema.define(version: 20170404063436) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -65,6 +65,17 @@ ActiveRecord::Schema.define(version: 20170330092912) do
 
   add_index "attendances", ["user_id"], name: "index_attendances_on_user_id", using: :btree
 
+  create_table "comments", force: true do |t|
+    t.text     "body"
+    t.integer  "leave_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "comments", ["leave_id"], name: "index_comments_on_leave_id", using: :btree
+  add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
+
   create_table "holiday_schemes", force: true do |t|
     t.string   "name"
     t.boolean  "active",        default: false
@@ -84,17 +95,6 @@ ActiveRecord::Schema.define(version: 20170330092912) do
   end
 
   add_index "holidays", ["holiday_scheme_id"], name: "index_holidays_on_holiday_scheme_id", using: :btree
-
-  create_table "leave_comments", force: true do |t|
-    t.string   "comment"
-    t.integer  "leave_id"
-    t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "leave_comments", ["leave_id"], name: "index_leave_comments_on_leave_id", using: :btree
-  add_index "leave_comments", ["user_id"], name: "index_leave_comments_on_user_id", using: :btree
 
   create_table "leave_trackers", force: true do |t|
     t.integer  "user_id"
