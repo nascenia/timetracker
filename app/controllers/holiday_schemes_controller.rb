@@ -71,5 +71,4 @@ class HolidaySchemesController < ApplicationController
   def get_holiday_scheme
     @holiday_scheme = HolidayScheme.find(params[:id])
   end
-
 end

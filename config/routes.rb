@@ -44,6 +44,8 @@ Internal::Application.routes.draw do
       get :remove
       get :detail
     end
+
+    resources :exclusion_dates, except: :index
   end
 
   resources :holiday_schemes do
@@ -52,6 +54,8 @@ Internal::Application.routes.draw do
       get :remove
       post :assign
     end
+
+    resources :exclusion_dates, except: :index
   end
 
   resources :holidays

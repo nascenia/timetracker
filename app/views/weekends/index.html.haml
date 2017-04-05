@@ -22,6 +22,9 @@
                 |
                 = link_to 'Destroy', weekend_path(weekend), method: :delete,
                                                             data: {confirm: 'Are you sure ??'}
+                |
+                = link_to 'Add exclusion date', new_polymorphic_path([weekend, ExclusionDate]), remote: true
+
     - else
       %p No weekend scheme present
   .panel-footer

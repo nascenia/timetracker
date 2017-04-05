@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170404063436) do
+ActiveRecord::Schema.define(version: 20170405045231) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -75,6 +75,16 @@ ActiveRecord::Schema.define(version: 20170404063436) do
 
   add_index "comments", ["leave_id"], name: "index_comments_on_leave_id", using: :btree
   add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
+
+  create_table "exclusion_dates", force: true do |t|
+    t.date     "date",          null: false
+    t.integer  "excluded_id"
+    t.string   "excluded_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "exclusion_dates", ["excluded_id", "excluded_type"], name: "index_exclusion_dates_on_excluded_id_and_excluded_type", using: :btree
 
   create_table "holiday_schemes", force: true do |t|
     t.string   "name"

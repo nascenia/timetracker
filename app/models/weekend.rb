@@ -1,5 +1,6 @@
 class Weekend < ActiveRecord::Base
   has_many :users, dependent: :nullify
+  has_many :exclusion_dates, as: :excluded, dependent: :destroy
 
   include OffDays
 
@@ -9,15 +10,11 @@ class Weekend < ActiveRecord::Base
   def self.today? user
     today = Date.today.strftime('%A')
     counter = 0
-    user.weekend.off_days.map(&:capitalize).each do |weekend|
-      if weekend.to_s == today
-        counter += 1
-      end
-    end
-    if counter > 0
-    return true
-    else return false
-    end
-  end
 
+    user.weekend.off_days.map(&:capitalize).each do |weekend|
+      counter += 1 if weekend.to_s == today
+    end
+
+    counter > 0 ? true : false
+  end
 end
