@@ -60,5 +60,7 @@ Internal::Application.routes.draw do
 
   resources :holidays
 
+  resources :admin_leaves
+
   root :to => 'dashboard#index'
 end

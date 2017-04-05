@@ -1,0 +1,2 @@
+module AdminLeavesHelper
+end

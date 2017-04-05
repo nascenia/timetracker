@@ -1,5 +1,9 @@
 = render partial: 'show'
 
-- if @show_actions
+- if @show_actions_to_ttfs
   .row
+    = render partial: 'actions'
+- else
+  - if @show_actions_to_admin
+    .row
     = render partial: 'actions'

@@ -58,7 +58,8 @@ class LeavesController < ApplicationController
     @rejector = User.find_by(id: rejecter_id) if rejecter_id
 
     current_user_priority = @leave.approval_path.path_chains.find_by(user: current_user).try(:priority)
-    @show_actions = @leave.status == Leave::PENDING && @leave.pending_at == current_user_priority ? true : false
+    @show_actions_to_ttfs = @leave.status == Leave::PENDING && @leave.pending_at == current_user_priority ? true : false
+    @show_actions_to_admin = @leave.status ? true : false
   end
 
   def approve
