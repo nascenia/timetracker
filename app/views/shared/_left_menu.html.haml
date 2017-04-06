@@ -23,3 +23,6 @@
     - if current_user.is_admin?
       %li{:class => current_page?(leaves_path(current_user)) ? 'active' : ''}
         = link_to 'Holiday Scheme', holiday_schemes_path
+    - if current_user.is_admin?
+      %li{:class => current_page?(leaves_path(current_user)) ? 'active' : ''}
+        = link_to 'All Leaves', super_admin_leaves_path

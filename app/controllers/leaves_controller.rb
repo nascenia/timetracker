@@ -49,9 +49,10 @@ class LeavesController < ApplicationController
 
   def show
     approver_ids = @leave.approval_path.path_chains.where('priority > ?', @leave.pending_at).pluck(:user_id)
-
-    if @leave.status == Leave::REJECTED
+    rejecter = @leave.approval_path.path_chains.find_by(priority: @leave.pending_at)
+    if @leave.status == Leave::REJECTED && rejecter.present?
       rejecter_id = @leave.approval_path.path_chains.find_by(priority: @leave.pending_at).user_id
+      rejecter_id = false
     end
 
     @approvers = User.where(id: approver_ids).pluck(:name)
@@ -59,24 +60,36 @@ class LeavesController < ApplicationController
 
     current_user_priority = @leave.approval_path.path_chains.find_by(user: current_user).try(:priority)
     @show_actions_to_ttfs = @leave.status == Leave::PENDING && @leave.pending_at == current_user_priority ? true : false
-    @show_actions_to_admin = @leave.status ? true : false
+    @show_actions_to_admin = current_user.try(:is_admin?) ? true : false
   end
 
   def approve
-    if @leave.pending_at == 1
+    if current_user.try(:is_admin?)
       @leave.update_attributes(status: Leave::ACCEPTED, pending_at: 0)
       @leave.update_leave_tracker
       UserMailer.send_approval_or_rejection_notification(@leave).deliver
     else
-      @leave.update_attribute(:pending_at, @leave.pending_at -= 1)
-      email = @leave.approval_path.path_chains.find_by(priority: @leave.pending_at).user.email
-      UserMailer.send_leave_application_notification(@leave, email).deliver
+      if @leave.pending_at == 1
+        @leave.update_attributes(status: Leave::ACCEPTED, pending_at: 0)
+        @leave.update_leave_tracker
+        UserMailer.send_approval_or_rejection_notification(@leave).deliver
+      else
+        @leave.update_attribute(:pending_at, @leave.pending_at -= 1)
+        email = @leave.approval_path.path_chains.find_by(priority: @leave.pending_at).user.email
+        UserMailer.send_leave_application_notification(@leave, email).deliver
+      end
     end
 
     redirect_to new_leave_comment_path(@leave), turbolinks: false
   end
 
   def reject
+    if current_user.try(:is_admin?)
+      @leave.revert_leave_tracker
+    else
+      @leave.update_attribute(:status, Leave::REJECTED)
+      UserMailer.send_approval_or_rejection_notification(@leave).deliver
+    end
     @leave.update_attribute(:status, Leave::REJECTED)
     UserMailer.send_approval_or_rejection_notification(@leave).deliver
     redirect_to new_leave_comment_path(@leave), turbolinks: false
@@ -95,7 +108,9 @@ class LeavesController < ApplicationController
   def check_permission
     @leave = Leave.find_by(id: params[:id])
     unless current_user.id.in? @leave.approval_path.path_chains.pluck(:user_id) << @leave.user_id
-      redirect_to leave_tracker_path(current_user), notice: 'Access Denied'
+      unless current_user.try(:is_admin?)
+        redirect_to leave_tracker_path(current_user), alert: 'Access Denied'
+      end
     end
   end
 

@@ -56,7 +56,12 @@
         %td= @approvers.size > 0 ? @approvers.join(', ') : 'N/A'
       %tr
         %th Rejected by
-        %td= @rejector ? @rejector.name : 'N/A'
+        %td
+          - if @leave.status == Leave::REJECTED
+            = @rejector ? @rejector.name : 'Admin'
+          - else
+            = 'N/A'
+
 
 .panel.panel-default
   .panel-heading
