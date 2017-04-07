@@ -14,23 +14,9 @@
     %tbody
       - @leaves.each do |leave|
         %tr
-          %td
-            = leave.user.name
-          - if leave.leave_type == 1
-            %td Casual
-          - elsif leave.leave_type == 2
-            %td Medical
-          - else
-            %td Unannounced
-          - if leave.status == 1
-            %td Accepted
-          - elsif leave.status == 2
-            %td Rejected
-          - else
-            %td Pending
-          %td
-            = leave.start_date
-          %td
-            = leave.end_date
-          %td
-            = link_to 'Show', leave_path(leave)
+          %td= leave.user.name
+          %td= get_type leave
+          %td= get_status leave.status
+          %td= leave.start_date
+          %td= leave.end_date
+          %td= link_to 'Show', leave_path(leave)

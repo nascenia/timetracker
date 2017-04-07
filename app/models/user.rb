@@ -120,14 +120,15 @@ class User < ActiveRecord::Base
 
       today_entry = u.attendances.find_by(checkin_date: Date.today)
 
-      unless today_entry.present? || u.has_applied_for_leave || Weekend.today?(u) || HolidayScheme.today?(u) ||
-          !Weekend.excluded?(u) || !HolidayScheme.excluded?(u)
+      unless today_entry.present? || u.has_applied_for_leave || Weekend.today?(u) || HolidayScheme.today?(u)
 
         Rails.logger.info "Creating unannounced leave for #{u.name}"
 
-        puts "Creating unannounced leave for #{u.name}"
-        leave = u.leaves.new(leave_type: Leave::UNANNOUNCED, start_date: Time.now, status: Leave::ACCEPTED,
-                             approval_path: u.approval_path, pending_at: u.approval_path.try(:path_chains).try(:count))
+        leave = u.leaves.new(leave_type: Leave::UNANNOUNCED,
+                             start_date: Time.now,
+                             status: Leave::ACCEPTED,
+                             approval_path: u.approval_path,
+                             pending_at: u.approval_path.try(:path_chains).try(:count))
         if leave.save
           leave.update_leave_tracker
           UserMailer.send_unannounced_leave_notification(leave).deliver

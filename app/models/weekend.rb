@@ -11,7 +11,7 @@ class Weekend < ActiveRecord::Base
     user.weekend.off_days.map(&:capitalize).map(&:to_s).include? Date.today.strftime('%A') if user.weekend
   end
 
-  def excluded?(user)
-    user.exclusion_dates.pluck(:date).include? Date.today if user.weekend
+  def self.excluded?(user)
+    user.weekend.exclusion_dates.pluck(:date).include? Date.today if user.weekend
   end
 end

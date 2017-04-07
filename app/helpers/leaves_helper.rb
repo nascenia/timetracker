@@ -17,7 +17,14 @@ module LeavesHelper
   end
 
   def get_type(leave)
-    leave.leave_type == Leave::CASUAL ? 'Casual' : 'Medical'
+    case leave.leave_type
+    when Leave::CASUAL
+      'Casual'
+    when Leave::MEDICAL
+      'Medical'
+    else
+      'Unannounced'
+    end
   end
 
   def has_owned_paths?

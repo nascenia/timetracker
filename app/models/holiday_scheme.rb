@@ -9,7 +9,7 @@ class HolidayScheme < ActiveRecord::Base
     user.holiday_scheme.holidays.include? Date.today if user.holiday_scheme
   end
 
-  def excluded?(user)
+  def self.excluded?(user)
     user.holiday_scheme.exclusion_dates.include? Date.today if user.holiday_scheme
   end
 end

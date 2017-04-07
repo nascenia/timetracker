@@ -60,7 +60,9 @@ Internal::Application.routes.draw do
 
   resources :holidays
 
-  resources :super_admin_leaves
+  resources :super_admin_leaves, only: :index do
+    member { patch :change_type }
+  end
 
   root :to => 'dashboard#index'
 end

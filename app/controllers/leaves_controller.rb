@@ -50,6 +50,7 @@ class LeavesController < ApplicationController
   def show
     approver_ids = @leave.approval_path.path_chains.where('priority > ?', @leave.pending_at).pluck(:user_id)
     rejecter = @leave.approval_path.path_chains.find_by(priority: @leave.pending_at)
+
     if @leave.status == Leave::REJECTED && rejecter.present?
       rejecter_id = @leave.approval_path.path_chains.find_by(priority: @leave.pending_at).user_id
       rejecter_id = false
@@ -60,7 +61,7 @@ class LeavesController < ApplicationController
 
     current_user_priority = @leave.approval_path.path_chains.find_by(user: current_user).try(:priority)
     @show_actions_to_ttfs = @leave.status == Leave::PENDING && @leave.pending_at == current_user_priority ? true : false
-    @show_actions_to_admin = current_user.try(:is_admin?) ? true : false
+    @show_actions_to_admin = current_user.try(:is_admin?) && @leave.leave_type != Leave::UNANNOUNCED ? true : false
   end
 
   def approve

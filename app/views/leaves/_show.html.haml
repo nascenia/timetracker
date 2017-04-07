@@ -35,7 +35,12 @@
         %td= @leave.user.email
       %tr
         %th Leave type
-        %td= get_type @leave
+        %td
+          - if current_user.try(:is_admin?)
+            = select_tag :leave_type, options_for_select(['Casual', 'Medical', 'Unannounced'], get_type(@leave)),
+                         onchange: "change_leave_type(#{@leave.id})"
+          - else
+            = get_type @leave
       %tr
         %th Leave duration
         %td= get_duration @leave
