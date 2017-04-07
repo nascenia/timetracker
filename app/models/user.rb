@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
 
   has_one :leave_tracker, dependent: :destroy
   has_many :attendances, dependent: :destroy
-  has_many :leaves, class_name: 'Leave', dependent: :destroy
+  has_many :leaves, dependent: :destroy
   has_many :owned_paths, class_name: 'PathChain'
   has_many :comments
 
@@ -116,15 +116,19 @@ class User < ActiveRecord::Base
 
   def self.create_unannounced_leave
     User.all.each do |u|
-      today_entry = Attendance.find_first_entry(u.id, Date.today)
-      unless today_entry.present?
-        unless u.has_applied_for_leave && Weekend.today?(u) && HolidayScheme.today?(u)
-          leave = u.leave.create ({
-            :user_id => u.id,
-            :leave_type => Leave::UNANNOUNCED,
-            :start_date => Time.now,
-            :status => Leave::ACCEPTED
-          })
+      Rails.logger.info "Attempting unannounced leave for #{u.name}"
+
+      today_entry = u.attendances.find_by(checkin_date: Date.today)
+
+      unless today_entry.present? || u.has_applied_for_leave || Weekend.today?(u) || HolidayScheme.today?(u) ||
+          !Weekend.excluded?(u) || !HolidayScheme.excluded?(u)
+
+        Rails.logger.info "Creating unannounced leave for #{u.name}"
+
+        puts "Creating unannounced leave for #{u.name}"
+        leave = u.leaves.new(leave_type: Leave::UNANNOUNCED, start_date: Time.now, status: Leave::ACCEPTED,
+                             approval_path: u.approval_path, pending_at: u.approval_path.try(:path_chains).try(:count))
+        if leave.save
           leave.update_leave_tracker
           UserMailer.send_unannounced_leave_notification(leave).deliver
         end
@@ -133,8 +137,8 @@ class User < ActiveRecord::Base
   end
 
   def has_applied_for_leave
-    one_day_leave = self.leave.where('start_date = ? AND status = ?', Time.now.to_date, Leave::ACCEPTED).first
-    multiple_days_leave = self.leave.where('start_date <= ? AND end_date >= ? AND status =?', Time.now.to_date, Time.now.to_date, Leave::ACCEPTED).first
+    one_day_leave = self.leaves.where('start_date = ? AND status = ?', Time.now.to_date, Leave::ACCEPTED).first
+    multiple_days_leave = self.leaves.where('start_date <= ? AND end_date >= ? AND status =?', Time.now.to_date, Time.now.to_date, Leave::ACCEPTED).first
 
     if one_day_leave || multiple_days_leave
       return true

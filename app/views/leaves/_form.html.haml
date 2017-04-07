@@ -1,9 +1,9 @@
 = form_for(@leave, html: { class: 'form-horizontal' }) do |f|
   = render 'shared/error_messages', target: @leave
 
-  = hidden_field_tag 'leave[status]', Leave::PENDING
-  = hidden_field_tag 'leave[pending_at]', current_user.approval_path.try(:path_chains).try(:count)
-  = hidden_field_tag 'leave[approval_path_id]', current_user.approval_path_id
+  = f.hidden_field :status, value: Leave::PENDING
+  = f.hidden_field :pending_at, value: current_user.approval_path.try(:path_chains).try(:count)
+  = f.hidden_field :approval_path_id, value: current_user.approval_path_id
 
   .form-group
     = f.label :leave_type, {:class => 'col-sm-2 control-label'}

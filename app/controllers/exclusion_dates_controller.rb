@@ -54,7 +54,7 @@ class ExclusionDatesController < ApplicationController
   def context_path(context)
     if Weekend === context
       weekends_path
-    elsif HolidayScheme == context
+    elsif HolidayScheme === context
       holiday_schemes_path
     end
   end

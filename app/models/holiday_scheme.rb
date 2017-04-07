@@ -6,13 +6,10 @@ class HolidayScheme < ActiveRecord::Base
   belongs_to :leave_year
 
   def self.today?(user)
-    today = Date.today
-    counter = 0
+    user.holiday_scheme.holidays.include? Date.today if user.holiday_scheme
+  end
 
-    user.holiday_scheme.holidays.each do |holiday|
-      counter += 1 if today.to_date == holiday.date.to_date
-    end
-
-    counter > 0 ? true : false
+  def excluded?(user)
+    user.holiday_scheme.exclusion_dates.include? Date.today if user.holiday_scheme
   end
 end

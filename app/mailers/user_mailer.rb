@@ -10,7 +10,7 @@ class UserMailer < ActionMailer::Base
     @user = @leave.user
     @email = email
 
-    mail :to => @email, :subject => "#{@user.name} has applied for a leave"
+    mail to: @email, subject: "#{@user.name} has applied for a leave"
   end
 
   def send_approval_or_rejection_notification(leave)
@@ -27,7 +27,7 @@ class UserMailer < ActionMailer::Base
       @greetings = '- Better luck next time!'
     end
 
-    mail :to => @user.email, :subject => subject
+    mail to: @user.email, subject: subject
   end
 
   def send_unannounced_leave_notification(leave)
@@ -36,6 +36,6 @@ class UserMailer < ActionMailer::Base
     subject = 'Unannounced leave'
     @greetings = '- Have a nice day!'
 
-    mail :to => 'khalid@nascenia.com', :subject => subject
+    mail to: 'nafiz@nascenia.com', subject: subject
   end
 end

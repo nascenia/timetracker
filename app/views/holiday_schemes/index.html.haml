@@ -25,6 +25,9 @@
                 |
                 = link_to 'Destroy', holiday_scheme_path(scheme),
                 method: :delete, data:{confirm: 'Are you sure'}
+                |
+                = link_to 'Add exclusion date', new_polymorphic_path([scheme, ExclusionDate]), remote: true
+
     - else
       %p No holiday schemes found
   .panel-footer

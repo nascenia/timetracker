@@ -7,14 +7,11 @@ class Weekend < ActiveRecord::Base
   validates_presence_of :name, message: 'must be provided.'
   validates_presence_of :off_days, message: 'cannot be empty.'
 
-  def self.today? user
-    today = Date.today.strftime('%A')
-    counter = 0
+  def self.today?(user)
+    user.weekend.off_days.map(&:capitalize).map(&:to_s).include? Date.today.strftime('%A') if user.weekend
+  end
 
-    user.weekend.off_days.map(&:capitalize).each do |weekend|
-      counter += 1 if weekend.to_s == today
-    end
-
-    counter > 0 ? true : false
+  def excluded?(user)
+    user.exclusion_dates.pluck(:date).include? Date.today if user.weekend
   end
 end
