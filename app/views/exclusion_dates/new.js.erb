@@ -1,0 +1,11 @@
+<% render partial: 'form' %>
+$('#modal-window').html("<%= j render template: 'shared/modal' %>");
+$('#modal-window').modal('show');
+
+$('.modal').on('shown.bs.modal', function () {
+    $('#exclusion_date_date').datepicker({
+        format: 'dd/mm/yyyy'
+    }).on('changeDate', function(e){
+        $(this).datepicker('hide');
+    });
+})

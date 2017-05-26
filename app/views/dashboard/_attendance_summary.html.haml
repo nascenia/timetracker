@@ -12,4 +12,4 @@
         %td= Attendance.monthly_average_hours(@attendance_summary)
       %tr
         %td Total hours
-        %td= Attendance.monthly_total_hours(@attendance_summary)
+        %td= Attendance.get_humanize_total_hour(@attendance_summary)

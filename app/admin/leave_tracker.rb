@@ -13,6 +13,7 @@ ActiveAdmin.register LeaveTracker do
     column :accrued_medical_balance
     column :consumed_vacation
     column :consumed_medical
+    column :commenced_date
     actions
   end
 
@@ -32,5 +33,4 @@ ActiveAdmin.register LeaveTracker do
     end
     f.actions
   end
-
 end

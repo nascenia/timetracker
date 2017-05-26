@@ -1,17 +1,18 @@
-= form_for(@leave, :html => {:class => 'form-horizontal'}) do |f|
-  - if @leave.errors.any?
-    #error_explanation
-      %h2
-        = pluralize(@leave.errors.count, "error")
-        prohibited this leave from being saved:
-      %ul
-        - @leave.errors.full_messages.each do |msg|
-          %li= msg
-  = hidden_field_tag :status, Leave::PENDING
+= form_for(@leave, html: { class: 'form-horizontal' }) do |f|
+  = render 'shared/error_messages', target: @leave
+
+  = f.hidden_field :status, value: Leave::PENDING
+  = f.hidden_field :pending_at, value: current_user.approval_path.try(:path_chains).try(:count)
+  = f.hidden_field :approval_path_id, value: current_user.approval_path_id
+
   .form-group
     = f.label :leave_type, {:class => 'col-sm-2 control-label'}
     .col-sm-10
       = f.select :leave_type, Leave::LEAVE_TYPES, {}, {:class => 'form-control'}
+  .form-group
+    = f.label 'Leave Duration', {:class => 'col-sm-2 control-label'}
+    .col-sm-10
+      = f.select :half_day, Leave::LEAVE_DURATIONS, {}, {:class => 'form-control'}
   .form-group
     = f.label :start_date, {:class => 'col-sm-2 control-label'}
     .col-sm-10
@@ -29,29 +30,4 @@
         characters remaining.
   .form-group
     .col-sm-offset-2.col-sm-10
-      .checkbox
-        %label
-          = f.check_box :half_day
-          is half day
-  .form-group
-    .col-sm-offset-2.col-sm-10
-      = f.submit 'Apply', :class => 'btn btn-default'
-
-:javascript
-  $(document).on('turbolinks:load', function() {
-
-    $('.date-picker').datepicker({
-        format: 'dd/mm/yyyy'
-    }).on('changeDate', function(e){
-        $(this).datepicker('hide');
-    });
-
-    var max_length = 300;
-    $('p.help-block span').html(max_length);
-
-    $(document).on('keyup', '#leave_reason', function() {
-      var current_length = $('#leave_reason').val().length;
-      var remaining_texts = max_length - current_length;
-      $('p.help-block span').html(remaining_texts);
-    });
-  });
+      = f.submit 'Apply', :class => 'btn btn-primary'

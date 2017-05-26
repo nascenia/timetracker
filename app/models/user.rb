@@ -1,8 +1,27 @@
 class User < ActiveRecord::Base
+  #
+  # Relationships
+  #
 
-  has_many :attendances, dependent: :destroy
-  has_many :leave, dependent: :destroy
+  belongs_to :approval_path
+  belongs_to :weekend
+  belongs_to :holiday_scheme
+
   has_one :leave_tracker, dependent: :destroy
+  has_many :attendances, dependent: :destroy
+  has_many :leaves, dependent: :destroy
+  has_many :owned_paths, class_name: 'PathChain'
+  has_many :comments
+
+  #
+  # Callbacks
+  #
+
+  after_create :create_leave_tracker
+
+  #
+  # Plugins
+  #
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -19,9 +38,9 @@ class User < ActiveRecord::Base
   SUPER_TTF = 3
 
   ROLES = [
-      ['Employee', EMPLOYEE],
-      ['TTF', TTF],
-      ['Super TTF', SUPER_TTF]
+    ['Employee', EMPLOYEE],
+    ['TTF', TTF],
+    ['Super TTF', SUPER_TTF]
   ]
 
   scope :inactive, -> {where('is_active = ?', false)}
@@ -31,6 +50,9 @@ class User < ActiveRecord::Base
   scope :employees, -> {where('role = ?', User::EMPLOYEE)}
   scope :list_of_ttfs, -> (super_ttf) {where('role = ? AND sttf_id = ? ', User::TTF, super_ttf)}
   scope :list_of_employees, -> (ttf) {where('role =? AND ttf_id = ? ', User::EMPLOYEE, ttf)}
+  scope :has_no_weekend, -> { where( 'weekend_id IS ?', nil) }
+  scope :has_weekend, -> (weekend_id) { where( 'weekend_id IS not ? and weekend_id = ?', nil, weekend_id) }
+  scope :has_no_holiday_scheme, -> { where( 'holiday_scheme_id IS ?', nil) }
 
   def is_admin?
     self.email && ADMIN_USER.to_s.include?(self.email)
@@ -94,17 +116,20 @@ class User < ActiveRecord::Base
 
   def self.create_unannounced_leave
     User.all.each do |u|
+      Rails.logger.info "Attempting unannounced leave for #{u.name}"
 
-      today_entry = Attendance.find_first_entry(u.id, Date.today)
+      today_entry = u.attendances.find_by(checkin_date: Date.today)
 
-      unless today_entry.present?
-        unless u.has_applied_for_leave
-          leave = u.leave.create ({
-              :user_id => u.id,
-              :leave_type => Leave::UNANNOUNCED,
-              :start_date => Time.now,
-              :status => Leave::ACCEPTED
-          })
+      unless today_entry.present? || u.has_applied_for_leave || Weekend.today?(u) || HolidayScheme.today?(u)
+
+        Rails.logger.info "Creating unannounced leave for #{u.name}"
+
+        leave = u.leaves.new(leave_type: Leave::UNANNOUNCED,
+                             start_date: Time.now,
+                             status: Leave::ACCEPTED,
+                             approval_path: u.approval_path,
+                             pending_at: u.approval_path.try(:path_chains).try(:count))
+        if leave.save
           leave.update_leave_tracker
           UserMailer.send_unannounced_leave_notification(leave).deliver
         end
@@ -113,13 +138,17 @@ class User < ActiveRecord::Base
   end
 
   def has_applied_for_leave
-    one_day_leave = self.leave.where('start_date = ? AND status = ?', Time.now.to_date, Leave::ACCEPTED).first
-    multiple_days_leave = self.leave.where('start_date <= ? AND end_date >= ? AND status =?', Time.now.to_date, Time.now.to_date, Leave::ACCEPTED).first
+    one_day_leave = self.leaves.where('start_date = ? AND status = ?', Time.now.to_date, Leave::ACCEPTED).first
+    multiple_days_leave = self.leaves.where('start_date <= ? AND end_date >= ? AND status =?', Time.now.to_date, Time.now.to_date, Leave::ACCEPTED).first
 
     if one_day_leave || multiple_days_leave
       return true
     end
 
     return false
+  end
+
+  def create_leave_tracker
+    LeaveTracker::create_leave_tracker(self)
   end
 end

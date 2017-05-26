@@ -1,4 +1,7 @@
 module ApplicationHelper
+  def copyright_year
+    Time.zone.now.year
+  end
 
   def is_late_attendance? check_in_time
     Time.at(check_in_time).strftime('%H:%M') > Time.at(Time.parse(Attendance::USUAL_OFFICE_TIME)).strftime('%H:%M')
@@ -31,5 +34,29 @@ module ApplicationHelper
 
   def get_formatted_time time
      time.present? ? Time.at(time).utc.strftime('%I:%M %p') : '-'
+  end
+
+  def link_to_modal(name = nil, options = {}, html_options = {}, &block)
+    data_options = { toggle: 'modal', target: '#modal-window', keyboard: true, turbolinks: false }
+    modal_options = { remote: true }
+
+    if block.present?
+      data_options = data_options.merge(options[:data]) if options[:data]
+      options = modal_options.merge(options).merge(data: data_options)
+    else
+      data_options = data_options.merge(html_options[:data]) if html_options[:data]
+      html_options = modal_options.merge(html_options).merge(data: data_options)
+    end
+    link_to name, options, html_options, &block
+  end
+
+  def link_to_modal_if(condition, name = nil, options = {}, html_options = {}, &block)
+    if condition
+      link_to_modal(name, options, html_options, &block)
+    elsif block.present?
+      capture(&block)
+    else
+      name
+    end
   end
 end

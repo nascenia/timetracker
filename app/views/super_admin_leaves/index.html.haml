@@ -1,0 +1,22 @@
+.panel.panel-default
+  .panel-heading
+    %h3
+      All Leaves
+  %table.table.table-bordered.table-hover
+    %thead
+      %tr
+        %th Name
+        %th Leave type
+        %th Status
+        %th Start date
+        %th End date
+        %th Action
+    %tbody
+      - @leaves.each do |leave|
+        %tr
+          %td= leave.user.name
+          %td= get_type leave
+          %td= get_status leave.status
+          %td= leave.start_date
+          %td= leave.end_date
+          %td= link_to 'Show', leave_path(leave)

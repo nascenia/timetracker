@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170112113515) do
+ActiveRecord::Schema.define(version: 20170407104651) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -46,6 +46,12 @@ ActiveRecord::Schema.define(version: 20170112113515) do
   add_index "admin_users", ["email"], name: "index_admin_users_on_email", unique: true, using: :btree
   add_index "admin_users", ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
 
+  create_table "approval_paths", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "name",       null: false
+  end
+
   create_table "attendances", force: true do |t|
     t.integer  "user_id"
     t.date     "checkin_date"
@@ -58,6 +64,47 @@ ActiveRecord::Schema.define(version: 20170112113515) do
   end
 
   add_index "attendances", ["user_id"], name: "index_attendances_on_user_id", using: :btree
+
+  create_table "comments", force: true do |t|
+    t.text     "body"
+    t.integer  "leave_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "comments", ["leave_id"], name: "index_comments_on_leave_id", using: :btree
+  add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
+
+  create_table "exclusion_dates", force: true do |t|
+    t.date     "date",          null: false
+    t.integer  "excluded_id"
+    t.string   "excluded_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "exclusion_dates", ["excluded_id", "excluded_type"], name: "index_exclusion_dates_on_excluded_id_and_excluded_type", using: :btree
+
+  create_table "holiday_schemes", force: true do |t|
+    t.string   "name"
+    t.boolean  "active",        default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "leave_year_id"
+  end
+
+  add_index "holiday_schemes", ["leave_year_id"], name: "index_holiday_schemes_on_leave_year_id", using: :btree
+
+  create_table "holidays", force: true do |t|
+    t.string   "name"
+    t.date     "date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "holiday_scheme_id"
+  end
+
+  add_index "holidays", ["holiday_scheme_id"], name: "index_holidays_on_holiday_scheme_id", using: :btree
 
   create_table "leave_trackers", force: true do |t|
     t.integer  "user_id"
@@ -80,6 +127,13 @@ ActiveRecord::Schema.define(version: 20170112113515) do
 
   add_index "leave_trackers", ["user_id"], name: "index_leave_trackers_on_user_id", using: :btree
 
+  create_table "leave_years", force: true do |t|
+    t.string   "year"
+    t.boolean  "present"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "leaves", force: true do |t|
     t.integer  "user_id"
     t.text     "reason"
@@ -89,10 +143,23 @@ ActiveRecord::Schema.define(version: 20170112113515) do
     t.datetime "updated_at"
     t.date     "start_date"
     t.date     "end_date"
-    t.boolean  "half_day"
+    t.integer  "half_day",         default: 0, null: false
+    t.integer  "pending_at",                   null: false
+    t.integer  "approval_path_id"
   end
 
+  add_index "leaves", ["approval_path_id"], name: "index_leaves_on_approval_path_id", using: :btree
   add_index "leaves", ["user_id"], name: "index_leaves_on_user_id", using: :btree
+
+  create_table "path_chains", force: true do |t|
+    t.integer  "approval_path_id"
+    t.integer  "user_id",                      null: false
+    t.integer  "priority",         default: 0, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "path_chains", ["approval_path_id"], name: "index_path_chains_on_approval_path_id", using: :btree
 
   create_table "salaats", force: true do |t|
     t.string   "waqt"
@@ -119,9 +186,21 @@ ActiveRecord::Schema.define(version: 20170112113515) do
     t.integer  "role"
     t.integer  "ttf_id"
     t.integer  "sttf_id"
+    t.integer  "approval_path_id"
+    t.integer  "weekend_id"
+    t.integer  "holiday_scheme_id"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["holiday_scheme_id"], name: "index_users_on_holiday_scheme_id", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  add_index "users", ["weekend_id"], name: "index_users_on_weekend_id", using: :btree
+
+  create_table "weekends", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "off_days"
+  end
 
 end

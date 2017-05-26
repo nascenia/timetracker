@@ -13,10 +13,18 @@
 /tmp
 .idea
 
+#ignore vendor/bundle
+vendor/bundle
+
+#ignore bundle ruby
+vendor/ruby
+
 # Ignore ruby version and gemset
 .ruby-version
 .ruby-gemset
 .rvmrc
+vendor/ruby
+vendor/bundle
 
 # Ignore test coverage
 coverage/*

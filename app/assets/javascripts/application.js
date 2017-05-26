@@ -6,3 +6,7 @@
 //= require dataTables.tableTools
 //= require bootstrap-datepicker
 //= require bootstrap/modal
+//= require approval_chains.js
+//= require shared.js
+//= require bootstrap-sprockets
+//= require bootstrap-datepicker.config.js

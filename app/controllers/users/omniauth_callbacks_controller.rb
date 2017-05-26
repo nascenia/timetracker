@@ -1,7 +1,8 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def google_oauth2
-    if request.env["omniauth.auth"][:info][:email].split('@').last == "nascenia.com" || request.env["omniauth.auth"][:info][:email].split('@').last == "bdipo.com"
+    domain = request.env["omniauth.auth"][:info][:email].split('@').last
+    if  CONFIG['domain_whitelist'].include? domain
       @user = User.find_for_google_oauth2(request.env["omniauth.auth"])
       if @user.persisted?
         flash[:notice] = I18n.t "devise.omniauth_callbacks.success", :kind => "Google"

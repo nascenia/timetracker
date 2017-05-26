@@ -4,6 +4,13 @@ Internal::Application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
+  resources :approval_chains do
+    member { post :assign }
+    collection { post :create_chain }
+  end
+
+  resources :leave_tracker
+
   resources :users do
     member do
       get :leave
@@ -15,15 +22,12 @@ Internal::Application.routes.draw do
     end
   end
 
-  # leaves controller resources generates wrong typo in url helper
-  get '/leaves', to: 'leaves#index', as: 'leaves'
-  get '/leaves/new', to: 'leaves#new', as: 'new_leave'
-  post '/leaves', to: 'leaves#create'
-  get '/leaves/:id', to: 'leaves#show', as: 'leave'
-  get '/leaves/:id/edit', to: 'leaves#edit', as: 'edit_leave'
-  put '/leaves/:id', to: 'leaves#update'
-  delete '/leaves/:id', to: 'leaves#destroy'
-  get 'leaves/:id/approve', to: 'leaves#approve', as: 'approve_leave'
+  # leaves_controller resources generate paths with 'leafe' as singular for 'leaves'
+  # That is why we defined plural and singular for leave in config/initializers/inflections.rb
+  resources :leaves do
+    member { post :approve, :reject}
+    resources :comments, only: [:new, :create]
+  end
 
   resources :attendances do
     collection do
@@ -33,6 +37,32 @@ Internal::Application.routes.draw do
   end
 
   resources :salaats
+
+  resources :weekends do
+    member do
+      post :assign
+      get :remove
+      get :detail
+    end
+
+    resources :exclusion_dates, except: :index
+  end
+
+  resources :holiday_schemes do
+    member do
+      get :assign_form
+      get :remove
+      post :assign
+    end
+
+    resources :exclusion_dates, except: :index
+  end
+
+  resources :holidays
+
+  resources :super_admin_leaves, only: :index do
+    member { patch :change_type }
+  end
 
   root :to => 'dashboard#index'
 end
