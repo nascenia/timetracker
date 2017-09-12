@@ -24,6 +24,7 @@ class Leave < ActiveRecord::Base
   HOURS_FOR_HALF_DAY = HOURS_FOR_ONE_DAY / 2
 
   LEAVE_STATUSES = [
+    ['All', 0],
     ['Approved', ACCEPTED],
     ['Rejected', REJECTED],
     ['Pending', PENDING]
@@ -39,6 +40,9 @@ class Leave < ActiveRecord::Base
     ['Second Half', SECOND_HALF]
   ]
 
+  scope :accepted_leaves, -> { where(status: ACCEPTED) }
+  scope :rejected_leaves, -> { where(status: REJECTED) }
+  scope :pending_leaves, -> { where(status: PENDING) }
   scope :unannounced_leaves, -> { where('leave_type = 3') }
 
   def update_leave_tracker
@@ -91,7 +95,7 @@ class Leave < ActiveRecord::Base
     end
   end
 
-  def self.get_leaves(current_user, action)
+  def get_leaves(current_user, action)
     path_priority_list = current_user.owned_paths.pluck(:approval_path_id, :priority)
 
     leaves = Leave.none

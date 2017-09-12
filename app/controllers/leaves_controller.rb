@@ -67,12 +67,12 @@ class LeavesController < ApplicationController
   def approve
     if current_user.try(:is_admin?)
       @leave.update_attributes(status: Leave::ACCEPTED, pending_at: 0)
-      @leave.update_leave_tracker
+      @leave.user.leave_tracker.update_leave_tracker(@leave)
       UserMailer.send_approval_or_rejection_notification(@leave).deliver
     else
       if @leave.pending_at == 1
         @leave.update_attributes(status: Leave::ACCEPTED, pending_at: 0)
-        @leave.update_leave_tracker
+        @leave.user.leave_tracker.update_leave_tracker(@leave)
         UserMailer.send_approval_or_rejection_notification(@leave).deliver
       else
         @leave.update_attribute(:pending_at, @leave.pending_at -= 1)
@@ -85,8 +85,8 @@ class LeavesController < ApplicationController
   end
 
   def reject
-    if current_user.try(:is_admin?)
-      @leave.revert_leave_tracker
+    if current_user.try(:is_admin?) && @leave.status == Leave::ACCEPTED
+      @leave.user.leave_tracker.revert_leave_tracker(@leave)
     else
       @leave.update_attribute(:status, Leave::REJECTED)
       UserMailer.send_approval_or_rejection_notification(@leave).deliver
