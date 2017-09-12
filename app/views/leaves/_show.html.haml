@@ -80,3 +80,8 @@
             %b= comment.user.name + ': '
             = comment.body
             %br
+            - if comment.user == current_user
+              = link_to 'Edit', edit_comment_path(comment), remote: true, turbolinks: false
+              |
+            - if comment.user == current_user || current_user.try(:is_admin?)
+              = link_to 'Delete', comment_path(comment), method: :delete

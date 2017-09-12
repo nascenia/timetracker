@@ -29,6 +29,8 @@ Internal::Application.routes.draw do
     resources :comments, only: [:new, :create]
   end
 
+  resources :comments, only: [:edit, :update, :destroy]
+
   resources :attendances do
     collection do
       get :monthly_summary
