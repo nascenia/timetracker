@@ -24,7 +24,7 @@ Internal::Application.configure do
   # Raise an error on page load if there are pending migrations
   config.active_record.migration_error = :page_load
 
-  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.delivery_method = :letter_opener
   config.action_mailer.smtp_settings = {
       :address  => ENV['SMTP_HOST'],
       :port  => ENV['SMTP_PORT'].to_i,
