@@ -47,7 +47,7 @@ class ApprovalChainsController < ApplicationController
 
   def edit
     @chained_users = PathChain.find_path_chain_users(@path.id)
-    @users = User.where.not( :id => @chained_users.map(&:id) )
+    @users = User.where.not( :id => @chained_users.map(&:id) ).order(name: :asc)
   end
 
   def update
@@ -75,7 +75,7 @@ class ApprovalChainsController < ApplicationController
   end
 
   def find_users
-    @users = User.all.active
+    @users = User.all.active.order(name: :asc)
   end
 
   def set_path

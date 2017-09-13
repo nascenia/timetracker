@@ -43,9 +43,9 @@
         %tr
           %th{:width => '20%'} Name
           %th{:width => '15%'} Type
-          %th{:width => '40%'} Description
-          %th{:width => '15%'} Status
-          %th{:width => '10%'} Action
+          %th{:width => '35%'} Description
+          %th{:width => '10%'} Status
+          %th{:width => '20%'} Action
       %tbody
         - @user.leaves.each do |leave|
           %tr
@@ -53,7 +53,11 @@
             %td= leave.leave_type == Leave::CASUAL ? 'Casual' : 'Medical'
             %td= leave.reason
             %td= get_status(leave.status)
-            %td= link_to 'show', leave_path(leave)
+            %td
+              = link_to 'show', leave_path(leave)
+              - unless leave.start_date < Time.now
+                |
+                = link_to 'Cancel', leave_path(leave), method: :delete, data: { confirm: 'Are you sure' }
   - else
     .alert.alert-info{:role => 'alert'}
       %strong Empty!

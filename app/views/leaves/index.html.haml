@@ -3,7 +3,7 @@
 
 - if has_owned_paths?
   = form_tag leaves_path, method: :get, class: 'form-inline' do
-    = select_tag :category, options_for_select(%w(Pending Accepted Rejected),
+    = select_tag :category, options_for_select(Leave::LEAVE_STATUSES,
                  params[:category]), class: 'form-control'
     = submit_tag 'Submit', class: 'btn btn-success'
 

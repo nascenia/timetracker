@@ -72,6 +72,56 @@ class LeaveTracker < ActiveRecord::Base
     end
   end
 
+  def update_leave_tracker(leave)
+    consumed_casual_leave = consumed_vacation.present? ? consumed_vacation : 0
+    consumed_medical_leave = consumed_medical.present? ? consumed_medical : 0
+
+    if leave.end_date.present?
+      total_hours = (1 + (leave.end_date - leave.start_date).to_i) * Leave::HOURS_FOR_ONE_DAY
+    else
+      total_hours = Leave::HOURS_FOR_ONE_DAY
+    end
+
+    if leave.half_day != 0
+      total_hours_to_be_consumed = total_hours - Leave::HOURS_FOR_HALF_DAY
+    else
+      total_hours_to_be_consumed = total_hours
+    end
+
+    if leave.leave_type == Leave::CASUAL || leave.leave_type == Leave::UNANNOUNCED
+      consumed_casual_leave_balance = consumed_casual_leave.to_i + total_hours_to_be_consumed
+      update_attributes(:consumed_vacation => consumed_casual_leave_balance)
+    else
+      consumed_medical_leave_balance = consumed_medical_leave + total_hours_to_be_consumed
+      update_attributes(:consumed_medical => consumed_medical_leave_balance)
+    end
+  end
+
+  def revert_leave_tracker(leave)
+    consumed_casual_leave = consumed_vacation.present? ? consumed_vacation : 0
+    consumed_medical_leave = consumed_medical.present? ? consumed_medical : 0
+
+    if leave.end_date.present?
+      total_hours = (1+ (leave.end_date - leave.start_date).to_i) * Leave::HOURS_FOR_ONE_DAY
+    else
+      total_hours = Leave::HOURS_FOR_ONE_DAY
+    end
+
+    if leave.half_day != 0
+      total_hours_to_be_consumed = total_hours - Leave::HOURS_FOR_HALF_DAY
+    else
+      total_hours_to_be_consumed = total_hours
+    end
+
+    if leave.leave_type == Leave::CASUAL || leave.leave_type == Leave::UNANNOUNCED
+      consumed_casual_leave_balance = consumed_casual_leave.to_i - total_hours_to_be_consumed
+      update_attributes(:consumed_vacation => consumed_casual_leave_balance)
+    else
+      consumed_medical_leave_balance = consumed_medical_leave - total_hours_to_be_consumed
+      update_attributes(:consumed_medical => consumed_medical_leave_balance)
+    end
+  end
+
   def update_leave_tracker_daily
     if self.commenced_date.present?
       accrued_vacation_this_year = ((((Time.now.to_date - self.commenced_date.to_date).to_i) * CASUAL_LEAVE_IN_DAYS/365.0) * 8).to_i

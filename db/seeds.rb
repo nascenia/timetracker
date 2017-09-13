@@ -8,3 +8,6 @@
 Salaat.create(waqt: 'Zohr', time: '1:30')
 Salaat.create(waqt: 'Asor', time: '4:15')
 Salaat.create(waqt: 'Magrib', time: '5:30')
+
+#Create present year and mark it as present
+LeaveYear.find_or_create_by(year: Date.today.year.to_s, present: true)

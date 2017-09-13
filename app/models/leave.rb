@@ -24,6 +24,7 @@ class Leave < ActiveRecord::Base
   HOURS_FOR_HALF_DAY = HOURS_FOR_ONE_DAY / 2
 
   LEAVE_STATUSES = [
+    ['All', 0],
     ['Approved', ACCEPTED],
     ['Rejected', REJECTED],
     ['Pending', PENDING]
@@ -39,6 +40,9 @@ class Leave < ActiveRecord::Base
     ['Second Half', SECOND_HALF]
   ]
 
+  scope :accepted_leaves, -> { where(status: ACCEPTED) }
+  scope :rejected_leaves, -> { where(status: REJECTED) }
+  scope :pending_leaves, -> { where(status: PENDING) }
   scope :unannounced_leaves, -> { where('leave_type = 3') }
 
   def update_leave_tracker
