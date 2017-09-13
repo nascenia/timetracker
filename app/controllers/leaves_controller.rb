@@ -2,7 +2,7 @@ class LeavesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_leave, only: [:index, :show, :edit]
   before_action :check_permission, only: [:show, :approve]
-  before_action :find_applied_leave, only: [:approve, :reject]
+  before_action :find_applied_leave, only: [:approve, :reject, :destroy]
   before_action :validate_date, only: [:create]
 
   layout 'leave'
@@ -69,11 +69,13 @@ class LeavesController < ApplicationController
       @leave.update_attributes(status: Leave::ACCEPTED, pending_at: 0)
       @leave.user.leave_tracker.update_leave_tracker(@leave)
       UserMailer.send_approval_or_rejection_notification(@leave).deliver
+      UserMailer.send_approval_or_rejection_notification_to_hr(@leave).deliver
     else
       if @leave.pending_at == 1
         @leave.update_attributes(status: Leave::ACCEPTED, pending_at: 0)
         @leave.user.leave_tracker.update_leave_tracker(@leave)
         UserMailer.send_approval_or_rejection_notification(@leave).deliver
+        UserMailer.send_approval_or_rejection_notification_to_hr(@leave).deliver
       else
         @leave.update_attribute(:pending_at, @leave.pending_at -= 1)
         email = @leave.approval_path.path_chains.find_by(priority: @leave.pending_at).user.email
@@ -85,15 +87,28 @@ class LeavesController < ApplicationController
   end
 
   def reject
-    if current_user.try(:is_admin?) && @leave.status == Leave::ACCEPTED
-      @leave.user.leave_tracker.revert_leave_tracker(@leave)
+    if current_user.try(:is_admin?)
+      @leave.user.leave_tracker.revert_leave_tracker(@leave) if @leave.status == Leave::ACCEPTED
     else
       @leave.update_attribute(:status, Leave::REJECTED)
       UserMailer.send_approval_or_rejection_notification(@leave).deliver
+      UserMailer.send_approval_or_rejection_notification_to_hr(@leave).deliver
     end
     @leave.update_attribute(:status, Leave::REJECTED)
     UserMailer.send_approval_or_rejection_notification(@leave).deliver
+    UserMailer.send_approval_or_rejection_notification_to_hr(@leave).deliver
     redirect_to new_leave_comment_path(@leave), turbolinks: false
+  end
+
+  def destroy
+    if @leave.destroy
+      @leave.user.leave_tracker.revert_leave_tracker(@leave) if @leave.status == Leave::ACCEPTED
+      flash[:notice] = 'Leave Cancelled Successfully'
+      redirect_to leave_tracker_path(current_user)
+    else
+      flash[:warning] = 'Leave was not cancelled'
+      redirect_to leave_tracker_path(current_user)
+    end
   end
 
   private

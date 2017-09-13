@@ -16,7 +16,6 @@ class UserMailer < ActionMailer::Base
   def send_approval_or_rejection_notification(leave)
     @leave = leave
     @user = @leave.user
-
     if @leave.is_accepted?
       subject = 'Leave Approved'
       @title = 'Your leave application has just been approved.'
@@ -26,8 +25,21 @@ class UserMailer < ActionMailer::Base
       @title = 'Your leave application has just been rejected.'
       @greetings = '- Better luck next time!'
     end
-
     mail to: @user.email, subject: subject
+  end
+
+  def send_approval_or_rejection_notification_to_hr(leave)
+    @leave = leave
+    @user = @leave.user
+
+    if @leave.is_accepted?
+      subject = 'Leave Approved'
+      @title = 'A leave application has just been approved.'
+    elsif @leave.is_rejected?
+      subject = 'Leave Rejected'
+      @title = 'A leave application has just been rejected.'
+    end
+    mail to: 'leave@nascenia.com', subject: subject
   end
 
   def send_unannounced_leave_notification(leave)

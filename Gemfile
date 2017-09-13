@@ -43,3 +43,5 @@ group :test, :development do
   gem 'factory_girl_rails', '~> 4.7.0'
   gem 'simplecov'
 end
+
+gem 'letter_opener', group: :development

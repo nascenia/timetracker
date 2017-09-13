@@ -95,7 +95,7 @@ class Leave < ActiveRecord::Base
     end
   end
 
-  def get_leaves(current_user, action)
+  def self.get_leaves(current_user, action)
     path_priority_list = current_user.owned_paths.pluck(:approval_path_id, :priority)
 
     leaves = Leave.none
