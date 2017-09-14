@@ -1,0 +1,63 @@
+%h2
+  Employee details
+= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: 'form-horizontal', method: :put }) do |f|
+  = devise_error_messages!
+  .form-group
+    = f.label :personal_email, {:class => 'col-sm-2 control-label'}
+    .col-sm-10
+      =f.email_field :personal_email, {:class => 'form-control'}
+  .form-group
+    = f.label :present_address, {:class => 'col-sm-2 control-label'}
+    .col-sm-10
+      =f.text_area :present_address, {:class => 'form-control'}
+  .form-group
+    = f.label :mobile_number, {:class => 'col-sm-2 control-label'}
+    .col-sm-10
+      =f.text_field :mobile_number, {:class => 'form-control'}
+  .form-group
+    = f.label :alternate_contact, {:class => 'col-sm-2 control-label'}
+    .col-sm-10
+      =f.text_field :alternate_contact, {:class => 'form-control'}
+  .form-group
+    = f.label :permanent_address, {:class => 'col-sm-2 control-label'}
+    .col-sm-10
+      =f.text_area :permanent_address, {:class => 'form-control'}
+  .form-group
+    = f.label :date_of_birth, {:class => 'col-sm-2 control-label'}
+    .col-sm-10
+      = f.text_field :date_of_birth, :class => 'form-control date-picker', data: { date_format: 'YYYY/MM/DD' }
+  .form-group
+    = f.label :last_degree, {:class => 'col-sm-2 control-label'}
+    .col-sm-10
+      =f.text_field :last_degree, {:class => 'form-control'}
+  .form-group
+    = f.label :last_university, {:class => 'col-sm-2 control-label'}
+    .col-sm-10
+      =f.text_field :last_university, {:class => 'form-control'}
+  .form-group
+    = f.label :passing_year, {:class => 'col-sm-2 control-label'}
+    .col-sm-10
+      =f.text_field :passing_year, {:class => 'form-control'}
+  .form-group
+    = f.label :emergency_contact_person_name, {:class => 'col-sm-2 control-label'}
+    .col-sm-10
+      =f.text_field :emergency_contact_person_name, {:class => 'form-control'}
+  .form-group
+    = f.label :emergency_contact_person_relation, {:class => 'col-sm-2 control-label'}
+    .col-sm-10
+      =f.text_field :emergency_contact_person_relation, {:class => 'form-control'}
+  .form-group
+    = f.label :emergency_contact_person_number, {:class => 'col-sm-2 control-label'}
+    .col-sm-10
+      =f.text_field :emergency_contact_person_number, {:class => 'form-control'}
+  .form-group
+    = f.label :blood_group, {:class => 'col-sm-2 control-label'}
+    .col-sm-10
+      = f.select :joining_date, User::BLOOD_GROUPS, {}, {:class => 'form-control'}
+  .form-group
+    = f.label :joining_date, {:class => 'col-sm-2 control-label'}
+    .col-sm-10
+      = f.text_field :date_of_birth, :class => 'form-control date-picker', data: { date_format: 'YYYY/MM/DD' }
+  .form-group
+    .col-sm-offset-2.col-sm-10
+      = f.submit 'Apply', :class => 'btn btn-primary'

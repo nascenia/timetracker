@@ -42,6 +42,7 @@ class User < ActiveRecord::Base
     ['TTF', TTF],
     ['Super TTF', SUPER_TTF]
   ]
+  BLOOD_GROUPS = %w(O+ O- A+ A- B+ B- AB+ AB-)
 
   scope :inactive, -> {where('is_active = ?', false)}
   scope :active, -> {where('is_active = ?', true)}

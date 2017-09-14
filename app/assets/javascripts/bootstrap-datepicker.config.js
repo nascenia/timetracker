@@ -15,6 +15,13 @@ $(document).on('turbolinks:load', function() {
         toggle_dates();
     });
 
+    $(".navbar .dropdown-toggle").on('click',function(){
+        $(this).next().toggle();
+    });
+    $(document).click(function(){
+        $(".navbar .dropdown-menu").hide();
+    });
+
 });
 
 function toggle_dates(){
@@ -24,7 +31,7 @@ function toggle_dates(){
         var date = new Date();
         date.setDate(date.getDate() + 1 );
         $('.date-picker').datepicker({
-            format: 'dd/mm/yyyy',
+            format: 'yyyy-mm-dd',
             startDate: date
         }).on('changeDate', function(e){
             $(this).datepicker('hide');
@@ -33,7 +40,7 @@ function toggle_dates(){
     else if( leave_type == 'Medical Leave' ){
         $('.date-picker').datepicker('remove');
         $('.date-picker').datepicker({
-            format: 'dd/mm/yyyy'
+            format: 'yyyy-mm-dd',
         }).on('changeDate', function(e){
             $(this).datepicker('hide');
         });
@@ -41,7 +48,7 @@ function toggle_dates(){
     else{
         $('.date-picker').datepicker('remove');
         $('.date-picker').datepicker({
-            format: 'dd/mm/yyyy'
+            format: 'yyyy-mm-dd',
         }).on('changeDate', function(e){
             $(this).datepicker('hide');
         });
