@@ -14,5 +14,6 @@ class AddBloodGroupAndJoiningDateToUser < ActiveRecord::Migration
     add_column :users, :emergency_contact_person_number, :string
     add_column :users, :blood_group, :string
     add_column :users, :joining_date, :date
+    add_column :users, :is_published, :boolean, default: false
   end
 end
