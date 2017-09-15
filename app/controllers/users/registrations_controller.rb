@@ -12,6 +12,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
 
     def update_resource(resource, params)
+      params[:date_of_birth] = params[:date_of_birth].to_date
+      params[:joining_date] = params[:joining_date].to_date
       resource.update_without_password(params)
     end
 

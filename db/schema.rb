@@ -202,7 +202,7 @@ ActiveRecord::Schema.define(version: 20170914031126) do
     t.string   "emergency_contact_person_relation"
     t.string   "emergency_contact_person_number"
     t.string   "blood_group"
-    t.datetime "joining_date"
+    t.date     "joining_date"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

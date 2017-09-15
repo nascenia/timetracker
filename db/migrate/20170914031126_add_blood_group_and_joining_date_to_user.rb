@@ -13,6 +13,6 @@ class AddBloodGroupAndJoiningDateToUser < ActiveRecord::Migration
     add_column :users, :emergency_contact_person_relation, :string
     add_column :users, :emergency_contact_person_number, :string
     add_column :users, :blood_group, :string
-    add_column :users, :joining_date, :datetime
+    add_column :users, :joining_date, :date
   end
 end
