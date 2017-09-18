@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170407104651) do
+ActiveRecord::Schema.define(version: 20170914031126) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -169,12 +169,12 @@ ActiveRecord::Schema.define(version: 20170407104651) do
   end
 
   create_table "users", force: true do |t|
-    t.string   "email",                  default: "",   null: false
-    t.string   "encrypted_password",     default: "",   null: false
+    t.string   "email",                             default: "",   null: false
+    t.string   "encrypted_password",                default: "",   null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,    null: false
+    t.integer  "sign_in_count",                     default: 0,    null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -182,13 +182,27 @@ ActiveRecord::Schema.define(version: 20170407104651) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
-    t.boolean  "is_active",              default: true
+    t.boolean  "is_active",                         default: true
     t.integer  "role"
     t.integer  "ttf_id"
     t.integer  "sttf_id"
     t.integer  "approval_path_id"
     t.integer  "weekend_id"
     t.integer  "holiday_scheme_id"
+    t.string   "personal_email"
+    t.text     "present_address"
+    t.string   "mobile_number"
+    t.string   "alternate_contact"
+    t.text     "permanent_address"
+    t.date     "date_of_birth"
+    t.string   "last_degree"
+    t.string   "last_university"
+    t.string   "passing_year"
+    t.string   "emergency_contact_person_name"
+    t.string   "emergency_contact_person_relation"
+    t.string   "emergency_contact_person_number"
+    t.string   "blood_group"
+    t.date     "joining_date"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
