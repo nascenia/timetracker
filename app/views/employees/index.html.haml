@@ -1,0 +1,35 @@
+.panel.panel-default
+  .panel-body
+    = form_tag employees_path, method: :get do
+      .row
+        .col-sm-5
+          .form-group
+            = text_field_tag :name, params[:name], class: 'form-control', placeholder: 'Name'
+        .col-sm-5
+          .form-group
+            = text_field_tag :email, params[:email], class: 'form-control', placeholder: 'Email'
+        .col-sm-2
+          .form-group
+            .col-sm-6
+              = submit_tag 'Search', class: 'btn btn-primary'
+            .col-sm-6
+              =link_to 'Clear', employees_path, class: 'btn btn-default'
+.panel.panel-default
+  .panel-heading
+    %b Employees
+  %table.table.table-bordered.table-hover
+    %thead
+      %tr
+        %th{:width => '25%'} Name
+        %th{:width => '30%'} Email
+        %th{:width => '15%'} Contact Number
+        %th{:width => '15%'} Joining Date
+        %th{:width => '15%'} Blood Group
+    %tbody.word-break
+      - @employees.each do |employee|
+        %tr
+          %td= employee.name
+          %td= employee.email
+          %td= employee.mobile_number
+          %td= employee.joining_date
+          %td= employee.blood_group

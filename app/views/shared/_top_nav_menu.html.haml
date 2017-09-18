@@ -6,6 +6,8 @@
   - if current_user.is_admin?
     %li
       = link_to 'Admin', admin_dashboard_path, :target => '_blank'
+  %li
+    = link_to 'Employee Info', employees_path
   %li.dropdown
     %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
       = current_user.name

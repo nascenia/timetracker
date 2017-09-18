@@ -66,5 +66,6 @@ Internal::Application.routes.draw do
     member { patch :change_type }
   end
 
+  resources :employees
   root :to => 'dashboard#index'
 end
