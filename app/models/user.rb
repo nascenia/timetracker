@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
   #
   # Callbacks
   #
-
+  before_save :alter_user_activity
   after_create :create_leave_tracker
 
   #
@@ -151,5 +151,13 @@ class User < ActiveRecord::Base
 
   def create_leave_tracker
     LeaveTracker::create_leave_tracker(self)
+  end
+
+  def alter_user_activity
+    if resignation_date.present?
+      self.is_active = false
+      self.is_published = false
+    end
+    true
   end
 end

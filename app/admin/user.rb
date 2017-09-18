@@ -3,7 +3,7 @@ ActiveAdmin.register User do
   permit_params :email, :name, :is_active, :role, :ttf_id, :sttf_id, :personal_email, :present_address, :mobile_number,
                 :alternate_contact, :permanent_address, :date_of_birth, :last_degree, :last_university, :passing_year,
                 :emergency_contact_person_name, :emergency_contact_person_relation, :emergency_contact_person_number,
-                :blood_group, :joining_date, :is_published
+                :blood_group, :joining_date, :resignation_date, :is_published
 
   index do
     selectable_column
@@ -33,7 +33,6 @@ ActiveAdmin.register User do
   end
 
   form do |f|
-    # f.object.is_published = true
     f.inputs "User Details" do
       f.input :email
       f.input :name
@@ -43,6 +42,7 @@ ActiveAdmin.register User do
       f.input :sttf_id, as: :select, collection: User.super_ttf
       f.input :date_of_birth
       f.input :joining_date
+      f.input :resignation_date
       f.input :personal_email
       f.input :present_address
       f.input :mobile_number
@@ -55,7 +55,7 @@ ActiveAdmin.register User do
       f.input :emergency_contact_person_relation
       f.input :emergency_contact_person_relation
       f.input :emergency_contact_person_number
-      f.input :is_published, label: '', input_html: { value: true, hidden: true  }
+      f.input :is_published, input_html: { value: true }, as: :hidden
     end
     f.actions
   end
