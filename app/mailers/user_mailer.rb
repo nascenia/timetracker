@@ -11,6 +11,10 @@ class UserMailer < ActionMailer::Base
     @email = email
 
     mail to: @email, subject: "#{@user.name} has applied for a leave"
+    true
+    rescue => e
+    logger.error e.message
+    false
   end
 
   def send_approval_or_rejection_notification(leave)
@@ -26,6 +30,10 @@ class UserMailer < ActionMailer::Base
       @greetings = '- Better luck next time!'
     end
     mail to: @user.email, subject: subject
+    true
+    rescue => e
+    logger.error e.message
+    false
   end
 
   def send_approval_or_rejection_notification_to_hr(leave)
@@ -40,6 +48,10 @@ class UserMailer < ActionMailer::Base
       @title = 'A leave application has just been rejected.'
     end
     mail to: 'leave@nascenia.com', subject: subject
+    true
+    rescue => e
+    logger.error e.message
+    false
   end
 
   def send_unannounced_leave_notification(leave)
@@ -49,5 +61,9 @@ class UserMailer < ActionMailer::Base
     @greetings = '- Have a nice day!'
 
     mail to: 'nafiz@nascenia.com', subject: subject
+    true
+    rescue => e
+    logger.error e.message
+    false
   end
 end
