@@ -68,13 +68,13 @@ Internal::Application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-      address: 'smtp.gmail.com',
-      port: 587,
-      domain: 'gmail.com',
+      address: CONFIG['mailer']['address'],
+      port: CONFIG['mailer']['port'].to_i,
+      domain: CONFIG['mailer']['domain'],
       authentication: 'plain',
       enable_starttls_auto: true,
-      user_name: CONFIG['mailer_email'],
-      password: CONFIG['mailer_password']
+      user_name: CONFIG['mailer']['email'],
+      password: CONFIG['mailer']['password']
   }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to

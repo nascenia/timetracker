@@ -131,7 +131,7 @@ class User < ActiveRecord::Base
                              pending_at: u.approval_path.try(:path_chains).try(:count))
         if leave.save
           leave.update_leave_tracker
-          UserMailer.send_unannounced_leave_notification(leave).deliver
+          UserMailer.send_unannounced_leave_notification(leave).deliver_later
         end
       end
     end
