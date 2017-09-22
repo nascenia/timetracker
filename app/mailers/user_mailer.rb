@@ -60,7 +60,7 @@ class UserMailer < ActionMailer::Base
     subject = 'Unannounced leave'
     @greetings = '- Have a nice day!'
 
-    mail to: 'nafiz@nascenia.com', subject: subject
+    mail to: 'alvi.mahadi@bdipo.com', subject: subject
     true
     rescue => e
     logger.error e.message

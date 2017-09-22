@@ -26,13 +26,13 @@ Internal::Application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-      address: CONFIG['mailer']['address'],
-      port: CONFIG['mailer']['port'].to_i,
-      domain: CONFIG['mailer']['domain'],
+      address: ENV["TT_MAILER_ADDRESS"],
+      port: ENV["TT_MAILER_PORT"].to_i,
+      domain: ENV["TT_MAILER_DOMAIN"],
       authentication: 'plain',
       enable_starttls_auto: true,
-      user_name: CONFIG['mailer']['email'],
-      password: CONFIG['mailer']['password']
+      user_name: ENV["TT_MAILER_EMAIL"],
+      password: ENV["TT_MAILER_PASSWORD"]
   }
 
   # Debug mode disables concatenation and preprocessing of assets.
