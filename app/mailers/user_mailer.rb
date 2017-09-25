@@ -6,17 +6,12 @@ class UserMailer < ActionMailer::Base
   layout 'notification'
 
   def send_leave_application_notification(leave, email)
-    begin
-      @leave = leave
-      @user = @leave.user
-      @email = email
 
-      mail to: @email, subject: "#{@user.name} has applied for a leave"
-      true
-    rescue => e
-      logger.error e.message
-      false
-    end
+    @leave = leave
+    @user = @leave.user
+    @email = email
+
+    mail to: @email, subject: "#{@user.name} has applied for a leave"
   end
 
   def send_approval_or_rejection_notification(leave)
