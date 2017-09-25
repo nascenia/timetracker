@@ -37,14 +37,18 @@ class LeavesController < ApplicationController
     @leave.user_id = current_user.id
 
     approval_user = @leave.approval_path.path_chains.order(priority: :desc).map(&:user_id).first
-    email = User.where(id: approval_user).map(&:email)
+    email = User.find_by(id: approval_user).email
 
     if @leave.save
-      UserMailer.send_leave_application_notification(@leave, email).deliver
-      redirect_to leave_path(@leave), notice: 'Your TTF will be notified soon. Thanks!'
-      # else
-      #   redirect_to leave_path(@leave), alert: 'Sorry something went wrong to send mail, please contact with your TTF'
-      # end
+      logger.info "================================@leave====================================="
+      logger.info "=================================#{@leave.inspect}===================================="
+      logger.info "======================================email==============================="
+      logger.info "========================================#{email.inspect}============================="
+      if UserMailer.send_leave_application_notification(@leave, email).deliver
+        redirect_to leave_path(@leave), notice: 'Your TTF will be notified soon. Thanks!'
+      else
+        redirect_to leave_path(@leave), alert: 'Sorry something went wrong to send mail, please contact with your TTF'
+      end
     else
       render :new
     end
