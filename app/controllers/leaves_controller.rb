@@ -40,11 +40,11 @@ class LeavesController < ApplicationController
     email = User.where(id: approval_user).map(&:email)
 
     if @leave.save
-      if UserMailer.send_leave_application_notification(@leave, email).deliver
-        redirect_to leave_path(@leave), notice: 'Your TTF will be notified soon. Thanks!'
-      else
-        redirect_to leave_path(@leave), alert: 'Sorry something went wrong to send mail, please contact with your TTF'
-      end
+      UserMailer.send_leave_application_notification(@leave, email).deliver
+      redirect_to leave_path(@leave), notice: 'Your TTF will be notified soon. Thanks!'
+      # else
+      #   redirect_to leave_path(@leave), alert: 'Sorry something went wrong to send mail, please contact with your TTF'
+      # end
     else
       render :new
     end
