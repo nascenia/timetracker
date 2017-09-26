@@ -85,8 +85,7 @@ class LeavesController < ApplicationController
         UserMailer.send_leave_application_notification(@leave, email).deliver
       end
     end
-    redirect_to leaves_path
-    # redirect_to new_leave_comment_path(@leave), turbolinks: false
+    redirect_to new_leave_comment_path(@leave), turbolinks: false
   end
 
   def reject
