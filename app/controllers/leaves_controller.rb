@@ -40,10 +40,6 @@ class LeavesController < ApplicationController
     email = User.find_by(id: approval_user).email
 
     if @leave.save
-      logger.info "================================@leave====================================="
-      logger.info "=================================#{@leave.inspect}===================================="
-      logger.info "======================================email==============================="
-      logger.info "========================================#{email.inspect}============================="
       if UserMailer.send_leave_application_notification(@leave, email).deliver
         redirect_to leave_path(@leave), notice: 'Your TTF will be notified soon. Thanks!'
       else
