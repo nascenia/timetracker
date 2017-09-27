@@ -44,7 +44,7 @@ class UserMailer < ActionMailer::Base
       subject = 'Leave Rejected'
       @title = 'A leave application has just been rejected.'
     end
-    mail to: 'alvi.mahadi@bdipo.com', subject: subject
+    mail to: 'afroze@nascenia.com', subject: subject
     true
     rescue => e
     logger.error e.message
