@@ -8,8 +8,13 @@ class LeavesController < ApplicationController
   layout 'leave'
 
   def index
-    @my_employees = User.list_of_employees(current_user.id)
-    @leaves = Leave.get_leaves(current_user, params[:category].try(:downcase))
+    if params[:category].present?
+      @leaves = Leave.where('leaves.approval_path_id IN (?)', current_user.owned_paths.pluck(:approval_path_id))
+                     .where(status: params[:category].to_i).order(created_at: :desc)
+    else
+      @leaves = Leave.where('leaves.approval_path_id IN (?)', current_user.owned_paths.pluck(:approval_path_id))
+                     .pending_leaves.order(created_at: :desc)
+    end
   end
 
   def new

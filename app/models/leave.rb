@@ -24,10 +24,9 @@ class Leave < ActiveRecord::Base
   HOURS_FOR_HALF_DAY = HOURS_FOR_ONE_DAY / 2
 
   LEAVE_STATUSES = [
-    ['All', 0],
+    ['Pending', PENDING],
     ['Approved', ACCEPTED],
-    ['Rejected', REJECTED],
-    ['Pending', PENDING]
+    ['Rejected', REJECTED]
   ]
 
   FULL_DAY = 0
