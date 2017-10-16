@@ -28,17 +28,50 @@
                   %td= LeaveTracker::YEARLY_CASUAL_LEAVE
                   %td= LeaveTracker::YEARLY_MEDICAL_LEAVE
                 %tr
-                  %th Carried Forwarded Leave
+                  %th Accrued in this year
+                  %td= employee.leave_tracker.accrued_vacation_this_year
+                  %td= employee.leave_tracker.accrued_medical_this_year
+                %tr
+                  %th Carried forwarded leave
                   %td= employee.leave_tracker.carried_forward_vacation
                   %td= employee.leave_tracker.carried_forward_medical
                 %tr
-                  %th Accrued Leave
+                  %th Accrued in total
                   %td= employee.leave_tracker.accrued_vacation_total
                   %td= employee.leave_tracker.accrued_medical_total
                 %tr
-                  %th Consumed Leave
+                  %th Consumed leave
                   %td= employee.leave_tracker.consumed_vacation
                   %td= employee.leave_tracker.consumed_medical
+                %tr
+                  %th Accrual balance
+                  %td= employee.leave_tracker.accrued_vacation_balance
+                  %td= employee.leave_tracker.accrued_medical_balance
+          .panel.panel-default
+            .panel-heading
+              %b Leave History
+            - if employee.leaves.count > 0
+              %table.table.table-bordered
+                %thead
+                  %tr
+                    %th{:width => '20%'} Name
+                    %th{:width => '15%'} Type
+                    %th{:width => '35%'} Description
+                    %th{:width => '10%'} Status
+                    %th{:width => '20%'} Action
+                %tbody
+                  - employee.leaves.each do |leave|
+                    %tr
+                      %td= leave.user.name
+                      %td= leave.leave_type == Leave::CASUAL ? 'Casual' : 'Medical'
+                      %td= leave.reason
+                      %td= get_status(leave.status)
+                      %td
+                        = link_to 'show', leave_path(leave)
+            - else
+              .alert.alert-info{:role => 'alert'}
+                %strong Empty!
+                No record found.
 - else
   .alert.alert-info{:role => 'alert'}
     %strong Empty!

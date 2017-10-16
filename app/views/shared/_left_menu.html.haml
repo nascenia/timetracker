@@ -7,10 +7,11 @@
       = link_to 'My leave', leave_tracker_path(current_user)
     %li{:class => current_page?(new_leave_path) ? 'active' : ''}
       = link_to 'Apply leave', new_leave_path
-    %li{:class => current_page?(users_path) ? 'active' : ''}
-      = link_to 'Employees', users_path
-    %li{:class => current_page?(team_user_path(current_user)) ? 'active' : ''}
-      = link_to 'My co-workers', team_user_path(current_user)
+    -#%li{:class => current_page?(users_path) ? 'active' : ''}
+    -#  = link_to 'Employees', users_path
+    - if has_co_worker?
+      %li{:class => current_page?(team_user_path(current_user)) ? 'active' : ''}
+        = link_to 'Employee\'s leaves', team_user_path(current_user)
     - if has_owned_paths?
       %li{:class => current_page?(leaves_path(current_user)) ? 'active' : ''}
         = link_to 'Pending leaves', leaves_path

@@ -151,4 +151,11 @@ class User < ActiveRecord::Base
   def create_leave_tracker
     LeaveTracker::create_leave_tracker(self)
   end
+
+  def get_co_workers
+    users = User.list_of_ttfs(id) +
+            User.list_of_employees(id) +
+            User.where(approval_path_id: ApprovalPath.where(id: owned_paths.pluck(:approval_path_id)).pluck(:id))
+    users.to_set
+  end
 end
