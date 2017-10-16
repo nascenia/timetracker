@@ -38,4 +38,8 @@ module LeavesHelper
       return '-'
     end
   end
+
+  def has_co_worker?
+    has_owned_paths? || current_user.role == User::SUPER_TTF || current_user.role == User::TTF
+  end
 end
