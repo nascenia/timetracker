@@ -28,8 +28,8 @@ class LeavesController < ApplicationController
     elsif user.leave_tracker.accrued_vacation_balance < 8
       flash[:warning] = 'You are running low on Casual leave'
     end
-    unless current_user.approval_path.present?
-      flash[:alert] = 'You have to be assigned to a leave path. Please contact with HR'
+    unless current_user.approval_path.present? && current_user.weekend.present? && current_user.holiday_scheme.present?
+      flash[:alert] = 'You have to be assigned to a leave path, weekend scheme and holiday scheme to apply leave. Please contact with HR'
       flash[:warning] = nil
       flash[:notice] = nil
       @user = current_user
