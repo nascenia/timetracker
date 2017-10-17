@@ -115,7 +115,7 @@ class User < ActiveRecord::Base
   end
 
   def self.create_unannounced_leave
-    User.all.each do |u|
+    User.active.each do |u|
       Rails.logger.info "Attempting unannounced leave for #{u.name}"
 
       today_entry = u.attendances.find_by(checkin_date: Date.today)
@@ -128,10 +128,11 @@ class User < ActiveRecord::Base
                              start_date: Time.now,
                              status: Leave::ACCEPTED,
                              approval_path: u.approval_path,
-                             pending_at: u.approval_path.try(:path_chains).try(:count))
-        if leave.save
+                             # pending_at: u.approval_path.try(:path_chains).try(:count))
+                             pending_at: 0)
+        if leave.save!
           leave.update_leave_tracker
-          UserMailer.send_unannounced_leave_notification(leave).deliver_later
+          UserMailer.send_unannounced_leave_notification(leave).deliver
         end
       end
     end
@@ -157,5 +158,9 @@ class User < ActiveRecord::Base
             User.list_of_employees(id) +
             User.where(approval_path_id: ApprovalPath.where(id: owned_paths.pluck(:approval_path_id)).pluck(:id))
     users.to_set
+  end
+
+  def approval_path_owners
+    User.find(approval_path.path_chains.pluck(:user_id)).map { |owner| owner.email }
   end
 end
