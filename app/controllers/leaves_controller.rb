@@ -130,9 +130,11 @@ class LeavesController < ApplicationController
 
   def check_permission
     @leave = Leave.find_by(id: params[:id])
-    unless current_user.id.in? @leave.approval_path.path_chains.pluck(:user_id) << @leave.user_id
-      unless current_user.try(:is_admin?)
-        redirect_to leave_tracker_path(current_user), alert: 'Access Denied'
+    if @leave.approval_path
+      unless current_user.id.in? @leave.approval_path.path_chains.pluck(:user_id) << @leave.user_id
+        unless current_user.try(:is_admin?)
+          redirect_to leave_tracker_path(current_user), alert: 'Access Denied'
+        end
       end
     end
   end
