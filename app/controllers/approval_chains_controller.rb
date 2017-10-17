@@ -64,6 +64,12 @@ class ApprovalChainsController < ApplicationController
     redirect_to approval_chains_path
   end
 
+  def remove
+    user = User.find(params[:id])
+    user.update_attribute(:approval_path_id, nil)
+    redirect_to :back
+  end
+
   private
 
   def approval_path_params
