@@ -73,7 +73,7 @@ class LeavesController < ApplicationController
       @show_actions_to_admin = current_user.try(:is_admin?) && @leave.leave_type != Leave::UNANNOUNCED ? true : false
     else
       flash[:error] = 'Something went wrong. Please try again'
-      redirect :back and return
+      redirect_to :back
     end
   end
 
