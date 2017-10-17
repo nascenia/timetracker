@@ -72,7 +72,7 @@ class LeavesController < ApplicationController
       @show_actions_to_ttfs = @leave.status == Leave::PENDING && @leave.pending_at == current_user_priority ? true : false
       @show_actions_to_admin = current_user.try(:is_admin?) && @leave.leave_type != Leave::UNANNOUNCED ? true : false
     else
-      flash[:error] = 'Something went wrong. Please try again'
+      flash[:alert] = 'Something went wrong. Please try again'
       redirect_to :back
     end
   end
