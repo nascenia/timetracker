@@ -18,6 +18,29 @@
           %table.table.table-bordered
             %thead
               %tr
+                %th Approval Path
+                %th Weekend Scheme
+                %th Holiday Scheme
+            %tbody
+              %tr
+                %td
+                  - if employee.approval_path.present?
+                    = link_to "#{employee.approval_path.name}", approval_chain_path(employee.approval_path)
+                  - else
+                    %p N/A
+                %td
+                  - if employee.weekend.present?
+                    = link_to "#{employee.weekend.name}", detail_weekend_path(employee.weekend)
+                  - else
+                    %p N/A
+                %td
+                  - if employee.holiday_scheme.present?
+                    = link_to "#{employee.holiday_scheme.name}", holiday_scheme_path(employee.holiday_scheme)
+                  - else
+                    %p N/A
+          %table.table.table-bordered
+            %thead
+              %tr
                 %th
                 %th Casual (hours)
                 %th Medical (hours)
