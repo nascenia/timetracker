@@ -77,7 +77,7 @@ class LeaveTracker < ActiveRecord::Base
     consumed_medical_leave = consumed_medical.present? ? consumed_medical : 0
 
     if leave.end_date.present?
-      total_hours = (1 + (leave.end_date - leave.start_date).to_i) * Leave::HOURS_FOR_ONE_DAY
+      total_hours = leave.number_of_days * Leave::HOURS_FOR_ONE_DAY
     else
       total_hours = Leave::HOURS_FOR_ONE_DAY
     end
@@ -102,7 +102,7 @@ class LeaveTracker < ActiveRecord::Base
     consumed_medical_leave = consumed_medical.present? ? consumed_medical : 0
 
     if leave.end_date.present?
-      total_hours = (1+ (leave.end_date - leave.start_date).to_i) * Leave::HOURS_FOR_ONE_DAY
+      total_hours = leave.number_of_days * Leave::HOURS_FOR_ONE_DAY
     else
       total_hours = Leave::HOURS_FOR_ONE_DAY
     end

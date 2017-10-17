@@ -137,4 +137,10 @@ class Leave < ActiveRecord::Base
   def self.get_half_day_leaves_count user_id
     Leave.where('user_id = ? and half_day != 0', user_id).count
   end
+
+  def number_of_days
+    dates = (start_date..end_date).map(&:to_date) - user.holiday_scheme.holidays.map { |holiday| holiday.date }
+
+    (dates.map(&:to_date).map { |day| day.strftime('%A') } - user.weekend.off_days.map(&:capitalize).map(&:to_s)).count
+  end
 end
