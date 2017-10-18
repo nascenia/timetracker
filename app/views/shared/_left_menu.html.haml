@@ -11,7 +11,7 @@
     -#  = link_to 'Employees', users_path
     - if has_co_worker?
       %li{:class => current_page?(team_user_path(current_user)) ? 'active' : ''}
-        = link_to 'Employee\'s leaves', team_user_path(current_user)
+        = link_to 'Employees\' leaves', team_user_path(current_user)
     - if has_owned_paths?
       %li{:class => current_page?(leaves_path) ? 'active' : ''}
         = link_to 'Pending leaves', leaves_path
