@@ -130,9 +130,11 @@ class User < ActiveRecord::Base
                              approval_path: u.approval_path,
                              # pending_at: u.approval_path.try(:path_chains).try(:count))
                              pending_at: 0)
-        if leave.save!
-          leave.update_leave_tracker
+        if u.leave_tracker.present? && leave.save
+          u.leave_tracker.update_leave_tracker(leave)
           UserMailer.send_unannounced_leave_notification(leave).deliver
+        else
+          Rails.logger.info "Unable to create unannounced leave for #{u.name}"
         end
       end
     end

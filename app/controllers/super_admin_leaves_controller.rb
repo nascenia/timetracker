@@ -32,7 +32,7 @@ class SuperAdminLeavesController < ApplicationController
     else
       @leave.update_attribute(:leave_type, type)
     end
-
+    UserMailer.send_leave_type_change_notification(@leave).deliver
     redirect_to leave_path(@leave)
   end
 

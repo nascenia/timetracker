@@ -63,4 +63,17 @@ class UserMailer < ActionMailer::Base
     logger.error e.message
     false
   end
+
+  def send_leave_type_change_notification(leave)
+    @leave = leave
+    @user = @leave.user
+    subject = "Unannounced leave Converted to #{Leave::LEAVE_TYPES.to_h.key(@leave.leave_type)}"
+    @greetings = '- Have a nice day!'
+
+    mail to: 'istiaq.hasan@nascenia.com', subject: subject
+    true
+  rescue => e
+    logger.error e.message
+    false
+  end
 end
