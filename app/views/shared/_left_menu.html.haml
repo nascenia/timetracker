@@ -13,17 +13,17 @@
       %li{:class => current_page?(team_user_path(current_user)) ? 'active' : ''}
         = link_to 'Employee\'s leaves', team_user_path(current_user)
     - if has_owned_paths?
-      %li{:class => current_page?(leaves_path(current_user)) ? 'active' : ''}
+      %li{:class => current_page?(leaves_path) ? 'active' : ''}
         = link_to 'Pending leaves', leaves_path
     - if current_user.is_admin?
       %li{:class => current_page?(approval_chains_path) ? 'active' : ''}
         = link_to 'Approval Paths', approval_chains_path
     - if current_user.is_admin?
-      %li{:class => current_page?(leaves_path(current_user)) ? 'active' : ''}
+      %li{:class => current_page?(weekends_path) ? 'active' : ''}
         = link_to 'Weekend Scheme', weekends_path
     - if current_user.is_admin?
-      %li{:class => current_page?(leaves_path(current_user)) ? 'active' : ''}
+      %li{:class => current_page?(holiday_schemes_path) ? 'active' : ''}
         = link_to 'Holiday Scheme', holiday_schemes_path
     - if current_user.is_admin?
-      %li{:class => current_page?(leaves_path(current_user)) ? 'active' : ''}
+      %li{:class => current_page?(super_admin_leaves_path) ? 'active' : ''}
         = link_to 'All Leaves', super_admin_leaves_path
