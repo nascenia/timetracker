@@ -124,12 +124,18 @@ class User < ActiveRecord::Base
 
         Rails.logger.info "Creating unannounced leave for #{u.name}"
 
-        leave = u.leaves.new(leave_type: Leave::UNANNOUNCED,
-                             start_date: Time.now,
-                             status: Leave::ACCEPTED,
-                             approval_path: u.approval_path,
-                             # pending_at: u.approval_path.try(:path_chains).try(:count))
-                             pending_at: 0)
+        first_half_day_leave = self.leaves.where('start_date = ? AND status = ? AND half_day = ?', Time.now.to_date, Leave::ACCEPTED, Leave::FIRST_HALF).first
+        second_half_day_leave = self.leaves.where('start_date = ? AND status = ? AND half_day = ?', Time.now.to_date, Leave::ACCEPTED, Leave::SECOND_HALF).first
+
+        leave = u.leaves.new(
+           leave_type: Leave::UNANNOUNCED,
+           start_date: Time.now,
+           status: Leave::ACCEPTED,
+           approval_path: u.approval_path,
+           half_day: 1,
+           # pending_at: u.approval_path.try(:path_chains).try(:count))
+           pending_at: 0
+        )
         if u.leave_tracker.present? && leave.save
           u.leave_tracker.update_leave_tracker(leave)
           UserMailer.send_unannounced_leave_notification(leave).deliver
@@ -141,7 +147,7 @@ class User < ActiveRecord::Base
   end
 
   def has_applied_for_leave
-    one_day_leave = self.leaves.where('start_date = ? AND status = ?', Time.now.to_date, Leave::ACCEPTED).first
+    one_day_leave = self.leaves.where('start_date = ? AND status = ? AND half_day = ?', Time.now.to_date, Leave::ACCEPTED, Leave::FULL_DAY).first
     multiple_days_leave = self.leaves.where('start_date <= ? AND end_date >= ? AND status =?', Time.now.to_date, Time.now.to_date, Leave::ACCEPTED).first
 
     if one_day_leave || multiple_days_leave
