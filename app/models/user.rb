@@ -124,23 +124,12 @@ class User < ActiveRecord::Base
 
         Rails.logger.info "Creating unannounced leave for #{u.name}"
 
-        first_half_day_leave = self.leaves.where('start_date = ? AND status = ? AND half_day = ?', Time.now.to_date, Leave::ACCEPTED, Leave::FIRST_HALF).first
-        second_half_day_leave = self.leaves.where('start_date = ? AND status = ? AND half_day = ?', Time.now.to_date, Leave::ACCEPTED, Leave::SECOND_HALF).first
-
-        leave = u.leaves.new(
-           leave_type: Leave::UNANNOUNCED,
-           start_date: Time.now,
-           status: Leave::ACCEPTED,
-           approval_path: u.approval_path,
-           half_day: 1,
-           # pending_at: u.approval_path.try(:path_chains).try(:count))
-           pending_at: 0
-        )
-        if u.leave_tracker.present? && leave.save
-          u.leave_tracker.update_leave_tracker(leave)
-          UserMailer.send_unannounced_leave_notification(leave).deliver
-        else
-          Rails.logger.info "Unable to create unannounced leave for #{u.name}"
+        first_half_day_leave = u.leaves.where('start_date = ? AND status = ? AND half_day = ?', Time.now.to_date, Leave::ACCEPTED, Leave::FIRST_HALF).first
+        second_half_day_leave = u.leaves.where('start_date = ? AND status = ? AND half_day = ?', Time.now.to_date, Leave::ACCEPTED, Leave::SECOND_HALF).first
+        if first_half_day_leave.nil?
+          u.create_half_day_unannounced_leave(Leave::FIRST_HALF)
+        elsif second_half_day_leave.nil?
+          u.create_half_day_unannounced_leave(Leave::SECOND_HALF)
         end
       end
     end
@@ -170,5 +159,23 @@ class User < ActiveRecord::Base
 
   def approval_path_owners
     User.find(approval_path.path_chains.pluck(:user_id)).map { |owner| owner.email }
+  end
+
+  def create_half_day_unannounced_leave(half_of_the_day)
+    leave = leaves.new(
+        leave_type: Leave::UNANNOUNCED,
+        start_date: Time.now,
+        status: Leave::ACCEPTED,
+        approval_path: approval_path,
+        half_day: half_of_the_day,
+        # pending_at: u.approval_path.try(:path_chains).try(:count))
+        pending_at: 0
+    )
+    if leave_tracker.present? && leave.save
+      leave_tracker.update_leave_tracker(leave)
+      UserMailer.send_unannounced_leave_notification(leave).deliver
+    else
+      Rails.logger.info "Unable to create unannounced leave for #{name}"
+    end
   end
 end

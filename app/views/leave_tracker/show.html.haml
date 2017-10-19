@@ -50,7 +50,7 @@
         - @user.leaves.each do |leave|
           %tr
             %td= leave.user.name
-            %td= leave.leave_type == Leave::CASUAL ? 'Casual' : 'Medical'
+            %td= type_of(leave)
             %td= leave.reason
             %td= get_status(leave.status)
             %td
