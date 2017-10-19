@@ -1,8 +1,8 @@
-every :day, :at => "#{CONFIG['unannounced_leave_time']['second__half']}" do
+every :day, :at => '5:20pm' do
   runner 'User.create_unannounced_leave', output: { error: 'log/error.log', standard: 'log/cron.log' }
 end
 
-every :day, :at => "#{CONFIG['unannounced_leave_time']['second_half']}" do
+every :day, :at => '5:25pm' do
   runner 'User.create_unannounced_leave', output: { error: 'log/error.log', standard: 'log/cron.log' }
 end
 
