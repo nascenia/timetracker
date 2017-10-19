@@ -57,7 +57,9 @@ class UserMailer < ActionMailer::Base
     subject = 'Unannounced leave'
     @greetings = '- Have a nice day!'
 
-    mail to: 'istiaq.hasan@nascenia.com', subject: subject
+    mail to: "#{@user.email}", subject: subject
+    mail to: 'alvi.mahadi@bdipo.com', subject: subject
+    mail to: 'afroze@nascenia.com', subject: subject
     true
     rescue => e
     logger.error e.message
@@ -70,7 +72,9 @@ class UserMailer < ActionMailer::Base
     subject = "Unannounced leave Converted to #{Leave::LEAVE_TYPES.to_h.key(@leave.leave_type)}"
     @greetings = '- Have a nice day!'
 
-    mail to: 'istiaq.hasan@nascenia.com', subject: subject
+    mail to: "#{@user.email}", subject: subject
+    mail to: 'alvi.mahadi@bdipo.com', subject: subject
+    mail to: 'afroze@nascenia.com', subject: subject
     true
   rescue => e
     logger.error e.message
