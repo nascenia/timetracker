@@ -1,8 +1,8 @@
-every :day, :at => '3:45pm' do
+every :day, :at => '4:10pm' do
   runner 'User.create_unannounced_leave', output: { error: 'log/error.log', standard: 'log/cron.log' }
 end
 
-every :day, :at => '3:50pm' do
+every :day, :at => '4:15pm' do
   runner 'User.create_unannounced_leave', output: { error: 'log/error.log', standard: 'log/cron.log' }
 end
 
