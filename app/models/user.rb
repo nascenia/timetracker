@@ -173,7 +173,13 @@ class User < ActiveRecord::Base
     )
     if leave_tracker.present? && leave.save
       leave_tracker.update_leave_tracker(leave)
-      UserMailer.send_unannounced_leave_notification(leave).deliver
+      if approval_path.present?
+        approval_path_owners.each do |email|
+          UserMailer.send_unannounced_leave_notification_to_admin(leave, email).deliver
+        end
+      end
+      UserMailer.send_unannounced_leave_notification_to_user(leave).deliver
+      UserMailer.send_unannounced_leave_notification_to_admin(leave, 'alvi.mahadi@bdipo.com').deliver
     else
       Rails.logger.info "Unable to create unannounced leave for #{name}"
     end

@@ -51,17 +51,28 @@ class UserMailer < ActionMailer::Base
     false
   end
 
-  def send_unannounced_leave_notification(leave)
+  def send_unannounced_leave_notification_to_user(leave)
     @leave = leave
     @user = @leave.user
     subject = 'Unannounced leave'
-    @greetings = '- Have a nice day!'
+    @greetings = ''
 
-    mail to: "#{@user.email}", subject: subject
-    mail to: 'alvi.mahadi@bdipo.com', subject: subject
-    mail to: 'afroze@nascenia.com', subject: subject
+    mail to: @user.email, subject: subject
     true
     rescue => e
+    logger.error e.message
+    false
+  end
+
+  def send_unannounced_leave_notification_to_admin(leave, email)
+    @leave = leave
+    @user = @leave.user
+    subject = 'Unannounced leave'
+    @greetings = ''
+
+    mail to: email, subject: subject
+    true
+  rescue => e
     logger.error e.message
     false
   end
@@ -72,9 +83,7 @@ class UserMailer < ActionMailer::Base
     subject = "Unannounced leave Converted to #{Leave::LEAVE_TYPES.to_h.key(@leave.leave_type)}"
     @greetings = '- Have a nice day!'
 
-    mail to: "#{@user.email}", subject: subject
-    mail to: 'alvi.mahadi@bdipo.com', subject: subject
-    mail to: 'afroze@nascenia.com', subject: subject
+    mail to: @user.email, subject: subject
     true
   rescue => e
     logger.error e.message
