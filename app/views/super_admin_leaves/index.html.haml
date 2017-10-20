@@ -1,6 +1,7 @@
-= form_tag super_admin_leaves_path, method: :get, class: 'form-inline' do
-  = select_tag :category, options_for_select(Leave::LEAVE_STATUSES, params[:category]), class: 'form-control'
-  = submit_tag 'Submit', class: 'btn btn-success'
+-#= form_tag super_admin_leaves_path, method: :get, class: 'form-inline' do
+-#  = select_tag :status, options_for_select(Leave::LEAVE_STATUSES, params[:status]), class: 'form-control', prompt: 'Select leave status'
+-#  = submit_tag 'Submit', class: 'btn btn-success'
+= render partial: 'shared/leave_filter'
 .panel.panel-default
   .panel-heading
     %h3

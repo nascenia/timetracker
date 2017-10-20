@@ -5,21 +5,10 @@ class SuperAdminLeavesController < ApplicationController
   layout 'leave'
 
   def index
-    if params[:category].present?
-      case params[:category].to_i
-        when 0
-          @leaves = Leave.all.order(start_date: :desc)
-        when Leave::ACCEPTED
-          @leaves = Leave.accepted_leaves.order(start_date: :desc)
-        when Leave::REJECTED
-          @leaves = Leave.rejected_leaves.order(start_date: :desc)
-        when Leave::PENDING
-          @leaves = Leave.pending_leaves.order(start_date: :desc)
-      end
-    else
-      @leaves = Leave.all.order(start_date: :desc)
-    end
-
+    @leaves = Leave.all
+    @leaves = @leaves.leaves_by_status(params[:status]) if params[:status].present?
+    @leaves = @leaves.leaves_by_type(params[:type]) if params[:type].present?
+    @leaves = @leaves.order(start_date: :desc)
   end
 
   def change_type

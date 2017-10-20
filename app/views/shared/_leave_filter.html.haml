@@ -1,0 +1,14 @@
+.panel.panel-default
+  .panel-heading
+    %h4 Filter Leaves
+  .panel-body
+    .row
+      = form_tag super_admin_leaves_path, method: :get, class: 'form-inline filter' do
+        .col-md-5
+          = select_tag :status, options_for_select(Leave::LEAVE_STATUSES, params[:status]),
+          class: 'form-control', prompt: 'All leave status'
+        .col-md-5
+          = select_tag :type, options_for_select([['Casual Leave', 1], ['Medical Leave', 2], ['Unannounced Leave', 3]],
+          params[:type]), class: 'form-control', prompt: 'All leave type'
+        .col-md-2
+          = submit_tag 'Submit', class: 'btn btn-success'

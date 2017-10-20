@@ -43,6 +43,8 @@ class Leave < ActiveRecord::Base
   scope :rejected_leaves, -> { where(status: REJECTED) }
   scope :pending_leaves, -> { where(status: PENDING) }
   scope :unannounced_leaves, -> { where('leave_type = 3') }
+  scope :leaves_by_type, -> (type) { where('leave_type = ?', type)}
+  scope :leaves_by_status, -> (status) { where('status = ?', status)}
 
   def update_leave_tracker
     consumed_casual_leave = self.user.leave_tracker.consumed_vacation.present? ? self.user.leave_tracker.consumed_vacation : 0
