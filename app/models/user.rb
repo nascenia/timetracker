@@ -116,20 +116,22 @@ class User < ActiveRecord::Base
 
   def self.create_unannounced_leave
     User.active.each do |u|
-      Rails.logger.info "Attempting unannounced leave for #{u.name}"
+      if u.approval_path.present?
+        Rails.logger.info "Attempting unannounced leave for #{u.name}"
 
-      today_entry = u.attendances.find_by(checkin_date: Date.today)
+        today_entry = u.attendances.find_by(checkin_date: Date.today)
 
-      unless today_entry.present? || u.has_applied_for_leave || Weekend.today?(u) || HolidayScheme.today?(u)
+        unless today_entry.present? || u.has_applied_for_leave || Weekend.today?(u) || HolidayScheme.today?(u)
 
-        Rails.logger.info "Creating unannounced leave for #{u.name}"
+          Rails.logger.info "Creating unannounced leave for #{u.name}"
 
-        first_half_day_leave = u.leaves.where('start_date = ? AND status = ? AND half_day = ?', Time.now.to_date, Leave::ACCEPTED, Leave::FIRST_HALF).first
-        second_half_day_leave = u.leaves.where('start_date = ? AND status = ? AND half_day = ?', Time.now.to_date, Leave::ACCEPTED, Leave::SECOND_HALF).first
-        if first_half_day_leave.nil?
-          u.create_half_day_unannounced_leave(Leave::FIRST_HALF)
-        elsif second_half_day_leave.nil? && Time.now > Time.parse('today at 3:00pm')
-          u.create_half_day_unannounced_leave(Leave::SECOND_HALF)
+          first_half_day_leave = u.leaves.where('start_date = ? AND status = ? AND half_day = ?', Time.now.to_date, Leave::ACCEPTED, Leave::FIRST_HALF).first
+          second_half_day_leave = u.leaves.where('start_date = ? AND status = ? AND half_day = ?', Time.now.to_date, Leave::ACCEPTED, Leave::SECOND_HALF).first
+          if first_half_day_leave.nil?
+            u.create_half_day_unannounced_leave(Leave::FIRST_HALF)
+          elsif second_half_day_leave.nil? && Time.now > Time.parse('today at 3:00pm')
+            u.create_half_day_unannounced_leave(Leave::SECOND_HALF)
+          end
         end
       end
     end
