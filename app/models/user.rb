@@ -181,7 +181,7 @@ class User < ActiveRecord::Base
         end
       end
       UserMailer.send_unannounced_leave_notification_to_user(leave).deliver
-      UserMailer.send_unannounced_leave_notification_to_admin(leave, 'alvi.mahadi@bdipo.com').deliver
+      UserMailer.send_unannounced_leave_notification_to_admin(leave, 'afroze@nascenia.com').deliver
     else
       Rails.logger.info "Unable to create unannounced leave for #{name}"
     end
