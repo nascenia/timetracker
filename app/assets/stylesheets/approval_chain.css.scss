@@ -26,6 +26,10 @@
   text-decoration-color: white;
 }
 
-button, select{
+button{
   margin: 5px;
+}
+
+.filter .form-control{
+  width: 100%;
 }
