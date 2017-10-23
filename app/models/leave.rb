@@ -45,6 +45,7 @@ class Leave < ActiveRecord::Base
   scope :unannounced_leaves, -> { where('leave_type = 3') }
   scope :leaves_by_type, -> (type) { where('leave_type = ?', type)}
   scope :leaves_by_status, -> (status) { where('status = ?', status)}
+  scope :leaves_by_month, -> (month) { where('MONTH(start_date) = ? OR MONTH(end_date) = ?', month, month) }
 
   def update_leave_tracker
     consumed_casual_leave = self.user.leave_tracker.consumed_vacation.present? ? self.user.leave_tracker.consumed_vacation : 0
@@ -144,5 +145,32 @@ class Leave < ActiveRecord::Base
     dates = (start_date..end_date).map(&:to_date) - user.holiday_scheme.holidays.map { |holiday| holiday.date }
 
     (dates.map(&:to_date).map { |day| day.strftime('%A') } - user.weekend.off_days.map(&:capitalize).map(&:to_s)).count
+  end
+
+  def total_leave_hour_of(month)
+    if end_date.present?
+      dates = (start_date..end_date).map(&:to_date) - user.holiday_scheme.holidays.map { |holiday| holiday.date }
+      weekend = user.weekend.off_days.map(&:capitalize).map(&:to_s)
+      dates.delete_if { |date| weekend.include?(date.strftime('%A')) || date.strftime('%m') != month }
+      dates.count * HOURS_FOR_ONE_DAY
+    else
+      if half_day == 0
+        Leave::HOURS_FOR_ONE_DAY
+      else
+        Leave::HOURS_FOR_HALF_DAY
+      end
+    end
+  end
+
+  def total_leave_hour
+    if end_date.present?
+      number_of_days * HOURS_FOR_ONE_DAY
+    else
+      if half_day == 0
+        Leave::HOURS_FOR_ONE_DAY
+      else
+        Leave::HOURS_FOR_HALF_DAY
+      end
+    end
   end
 end
