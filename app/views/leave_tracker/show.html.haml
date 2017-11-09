@@ -44,7 +44,7 @@
            ['May', 5], ['June', 6], ['July', 7], ['August', 8], ['September', 9], ['October', 10], ['November', 11],
            ['December', 12],], params[:month]), class: 'form-control', prompt: 'All months'
           = submit_tag 'Submit', class: 'btn btn-success'
-  - if @leaves.count > 0
+  - if @leaves.present? && @leaves.count > 0
     %table.table.table-bordered
       %thead
         %tr
