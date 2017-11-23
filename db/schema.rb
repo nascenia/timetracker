@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170914031126) do
+ActiveRecord::Schema.define(version: 20171123053738) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -123,6 +123,8 @@ ActiveRecord::Schema.define(version: 20170914031126) do
     t.integer  "accrued_vacation_total",     default: 0
     t.integer  "accrued_medical_total",      default: 0
     t.datetime "commenced_date"
+    t.integer  "rewarded_leave",             default: 0
+    t.string   "note"
   end
 
   add_index "leave_trackers", ["user_id"], name: "index_leave_trackers_on_user_id", using: :btree
@@ -202,9 +204,9 @@ ActiveRecord::Schema.define(version: 20170914031126) do
     t.string   "emergency_contact_person_relation"
     t.string   "emergency_contact_person_number"
     t.string   "blood_group"
-    t.date     "joining_date"
-    t.date     "resignation_date"
+    t.datetime "joining_date"
     t.boolean  "is_published",                      default: false
+    t.date     "resignation_date"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
