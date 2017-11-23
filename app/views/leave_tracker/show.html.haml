@@ -2,7 +2,7 @@
   .panel-heading
     %h4.panel-title.clearfix
       Leave Balance
-      - if @user.is_admin?
+      - if current_user.is_admin?
         %span.pull-right
           %button.btn.btn-primary{"data-target" => "#myModal", "data-toggle" => "modal", :type => "button", "data-turbolinks" => false} Award Leave
   %table.table.table-bordered.table-hover
