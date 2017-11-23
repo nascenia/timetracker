@@ -18,6 +18,6 @@
         %tr
           %td= employee.name
           %td= employee.email
-          %td= phone_number_link(employee.mobile_number)
+          %td= employee.mobile_number.present? ? (employee.mobile_number) : 'N/A'
           %td= employee.joining_date
           %td= employee.blood_group
