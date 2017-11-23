@@ -33,6 +33,7 @@ class LeavesController < ApplicationController
       flash[:warning] = nil
       flash[:notice] = nil
       @user = current_user
+      @leave_tracker = user.leave_tracker
       render 'leave_tracker/show' and return
     end
   end

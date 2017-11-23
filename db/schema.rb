@@ -123,8 +123,8 @@ ActiveRecord::Schema.define(version: 20171123053738) do
     t.integer  "accrued_vacation_total",     default: 0
     t.integer  "accrued_medical_total",      default: 0
     t.datetime "commenced_date"
-    t.integer  "rewarded_leave",             default: 0
-    t.string   "note"
+    t.integer  "awarded_leave",              default: 0
+    t.text     "note"
   end
 
   add_index "leave_trackers", ["user_id"], name: "index_leave_trackers_on_user_id", using: :btree

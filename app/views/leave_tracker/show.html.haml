@@ -1,7 +1,10 @@
 .panel.panel-default
   .panel-heading
-    %b Leave balance
-
+    %h4.panel-title.clearfix
+      Leave Balance
+      - if @user.is_admin?
+        %span.pull-right
+          %button.btn.btn-primary{"data-target" => "#myModal", "data-toggle" => "modal", :type => "button", "data-turbolinks" => false} Award Leave
   %table.table.table-bordered.table-hover
     %thead
       %tr
@@ -26,6 +29,10 @@
         %td= @user.leave_tracker.accrued_vacation_total
         %td= @user.leave_tracker.accrued_medical_total
       %tr
+        %th Awarded Leaves
+        %td= @user.leave_tracker.awarded_leave
+        %td= 'N/A'
+      %tr
         %th Consumed leave
         %td= @user.leave_tracker.consumed_vacation
         %td= @user.leave_tracker.consumed_medical
@@ -33,6 +40,9 @@
         %th Accrual balance
         %td= @user.leave_tracker.accrued_vacation_balance
         %td= @user.leave_tracker.accrued_medical_balance
+      %tr
+        %th Note
+        %td= @user.leave_tracker.note
 
 .panel.panel-default
   .panel-heading
@@ -73,3 +83,26 @@
     .alert.alert-info{:role => 'alert'}
       %strong Empty!
       No record found.
+/ Modal
+#myModal.modal.fade{:role => "dialog"}
+  .modal-dialog
+    / Modal content
+    .modal-content
+      .modal-header
+        %button.close{"data-dismiss" => "modal", :type => "button"} ×
+        %h4.modal-title Award Leave
+      .modal-body
+        = form_for @leave_tracker,  method: 'PATCH', html: { class: 'form-horizontal' } do |f|
+          .form-group
+            = f.label :award_leave, {:class => 'col-sm-3 control-label'}
+            .col-sm-9
+              = f.text_field :award_leave, :class => 'form-control'
+          .form-group
+            = f.label :note, {:class => 'col-sm-3 control-label'}
+            .col-sm-9
+              = f.text_area :note, :class => 'form-control'
+          .form-group
+            .col-sm-offset-3.col-sm-10
+              = f.submit '  Award', :class => 'btn btn-primary'
+      .modal-footer
+        %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"} Close
