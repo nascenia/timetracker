@@ -10,7 +10,12 @@ class LeaveTrackerController < ApplicationController
     flash[:notice] = nil
     flash[:warning] = nil
     flash[:alert] = nil
-    @user = User.includes(:leaves).find params[:id]
+    if session[:user_id].nil?
+      @user = User.includes(:leaves).find params[:id]
+    else
+      @user = User.includes(:leaves).find session[:user_id]
+      session[:user_id] = nil
+    end
     @leave_tracker = @user.leave_tracker
     @leave_tracker.update_leave_tracker_daily
     if params[:month].present?
@@ -35,6 +40,7 @@ class LeaveTrackerController < ApplicationController
     @leave_tracker = LeaveTracker.find(params[:id])
     if @leave_tracker.update_leave_tracker_when_awarded(params[:leave_tracker][:award_leave], params[:leave_tracker][:note])
       flash[:notice] = 'Leave awarded successfully'
+      session[:user_id] = @leave_tracker.user.id
     end
     redirect_to leave_tracker_path(@leave_tracker)
   end
