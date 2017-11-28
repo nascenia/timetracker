@@ -176,7 +176,7 @@ class LeaveTracker < ActiveRecord::Base
       accrual_vacation_balance = accrued_total_vacation + awarded_leave - self.consumed_vacation
       accrual_medical_balance = accrued_total_medical - self.consumed_medical
 
-      self.update_attributes(
+      self.update_attributes!(
           :accrued_vacation_total => accrued_total_vacation,
           :accrued_medical_total => accrued_total_medical,
           :accrued_vacation_balance => accrual_vacation_balance,
