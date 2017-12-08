@@ -26,7 +26,7 @@ set :rake, 'bundle exec rake'
 
 after('deploy:update_code', 'deploy:symlink_shared', 'deploy:migrate')
 
-task :prod do
+task :staging do
   web_server = "timetracker.test.nascenia.com"
   role :web, web_server # Your HTTP server, Apache/etc
   role :app, web_server # This may be the same as your `Web` server
@@ -36,7 +36,7 @@ task :prod do
   set :whenever_command, 'bundle exec whenever'
 end
 
-task :staging do
+task :prod do
   set :branch, "master"
   web_server = "127.0.0.1"
   role :web, web_server # Your HTTP server, Apache/etc
