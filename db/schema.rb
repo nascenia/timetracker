@@ -204,9 +204,9 @@ ActiveRecord::Schema.define(version: 20171123053738) do
     t.string   "emergency_contact_person_relation"
     t.string   "emergency_contact_person_number"
     t.string   "blood_group"
-    t.datetime "joining_date"
-    t.boolean  "is_published",                      default: false
+    t.date     "joining_date"
     t.date     "resignation_date"
+    t.boolean  "is_published",                      default: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
