@@ -26,14 +26,14 @@ gem 'jbuilder', '~> 1.2'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
-  gem 'sdoc', require: false
+  gem 'sdoc', :require => false
 end
 
 gem 'whenever', :require => false
 
 # Use Capistrano for deploymentgem 'net-ssh', '2.7.0'
-gem 'capistrano', '2.14.2', group: :development
-gem 'rvm-capistrano', '1.2.7', require: false
+gem 'capistrano', '2.14.2', :group => :development
+gem 'rvm-capistrano', '1.2.7', :require => false
 
 # Use debugger
 gem 'activeadmin', github: 'activeadmin'
