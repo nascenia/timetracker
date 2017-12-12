@@ -44,4 +44,4 @@ group :test, :development do
   gem 'simplecov'
 end
 
-gem 'letter_opener', :group => development
+gem 'letter_opener', :group => :development
