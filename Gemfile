@@ -36,7 +36,7 @@ gem 'capistrano', '2.14.2', :group => :development
 gem 'rvm-capistrano', '1.2.7', :require => false
 
 # Use debugger
-gem 'activeadmin', github: 'activeadmin'
+gem 'activeadmin', :github => 'activeadmin'
 
 group :test, :development do
   gem 'rspec-rails', '~> 3.5.1'

@@ -6,15 +6,15 @@ every :day, :at => '4:00pm' do
   runner 'User.create_unannounced_leave', output: { error: 'log/error.log', standard: 'log/cron.log' }
 end
 
-every :day, :at => '4:55pm' do
+every :day, :at => '5:15pm' do
   runner 'User.create_unannounced_leave', output: { error: 'log/error.log', standard: 'log/cron.log' }
 end
 
-every :day, :at => '5:00pm' do
+every :day, :at => '5:20pm' do
   runner 'User.create_unannounced_leave', output: { error: 'log/error.log', standard: 'log/cron.log' }
 end
 
-every :day, :at => '5:05pm' do
+every :day, :at => '5:25pm' do
   runner 'User.create_unannounced_leave', output: { error: 'log/error.log', standard: 'log/cron.log' }
 end
 
