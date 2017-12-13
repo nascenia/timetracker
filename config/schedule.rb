@@ -1,18 +1,13 @@
-every :day, :at => '2:00pm' do
+env :PATH, ENV['PATH']
+
+every 5.minutes do
   runner 'User.create_unannounced_leave', output: { error: 'log/error.log', standard: 'log/cron.log' }
 end
 
-every :day, :at => '4:00pm' do
-  runner 'User.create_unannounced_leave', output: { error: 'log/error.log', standard: 'log/cron.log' }
-end
+# every :day, :at => '4:00pm' do
+#   runner 'User.create_unannounced_leave', output: { error: 'log/error.log', standard: 'log/cron.log' }
+# end
 
-every :day, :at => '5:35pm' do
-  runner 'User.create_unannounced_leave', output: { error: 'log/error.log', standard: 'log/cron.log' }
-end
-
-every :day, :at => '5:40pm' do
-  runner 'User.create_unannounced_leave', output: { error: 'log/error.log', standard: 'log/cron.log' }
-end
 
 # every 1.year, at: 'December 31st 11:58pm' do
 #   runner 'LeaveTracker.update_leave_tracker_yearly'
