@@ -30,6 +30,7 @@ group :doc do
 end
 
 gem 'whenever', :require => false
+gem 'rubocop', require: false
 
 # Use Capistrano for deploymentgem 'net-ssh', '2.7.0'
 gem 'capistrano', '2.14.2', :group => :development
