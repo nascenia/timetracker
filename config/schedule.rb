@@ -1,3 +1,7 @@
+every :weekday, :at => '2:00pm' do
+  runner 'User.create_unannounced_leave', output: { error: 'log/error.log', standard: 'log/cron.log' }
+end
+
 every :weekday, :at => '4:00pm' do
   runner 'User.create_unannounced_leave', output: { error: 'log/error.log', standard: 'log/cron.log' }
 end
