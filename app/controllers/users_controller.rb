@@ -12,32 +12,16 @@ class UsersController < ApplicationController
     end
   end
 
-  def leave
-    @user = User.find params[:id]
-    @leave = Leave.new
-
-    if @user.leave_tracker.present?
-      @leave_tracker = @user.leave_tracker
-      @leave_tracker.update_leave_tracker_daily
-    else
-      LeaveTracker::create_leave_tracker(@user)
-    end
-
-    respond_to do |format|
-      format.html
-    end
-  end
-
   def team
     user = User.find params[:id]
 
-    if user.role == User::SUPER_TTF
-      @team = User.list_of_ttfs(user.id)
-    elsif user.role == User::TTF
-      @team = User.list_of_employees(user.id)
+    if user.is_admin?
+      @team = User.active.order(name: :asc)
+    elsif user.role == User::SUPER_TTF || user.role == User::TTF || user.owned_paths.length > 0
+      @team = user.get_co_workers
     else
       flash[:notice] = 'Sorry! This page is only for TTF / Super TTF!'
-      redirect_to leave_user_path(current_user) and return
+      redirect_to leave_tracker_path(current_user) and return
     end
 
     respond_to do |format|

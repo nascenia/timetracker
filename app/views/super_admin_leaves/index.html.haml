@@ -1,0 +1,26 @@
+-#= form_tag super_admin_leaves_path, method: :get, class: 'form-inline' do
+-#  = select_tag :status, options_for_select(Leave::LEAVE_STATUSES, params[:status]), class: 'form-control', prompt: 'Select leave status'
+-#  = submit_tag 'Submit', class: 'btn btn-success'
+= render partial: 'shared/leave_filter'
+.panel.panel-default
+  .panel-heading
+    %h3
+      All Leaves
+  %table.table.table-bordered.table-hover
+    %thead
+      %tr
+        %th Name
+        %th Leave type
+        %th Status
+        %th Start date
+        %th End date
+        %th Action
+    %tbody
+      - @leaves.each do |leave|
+        %tr
+          %td= leave.user.name
+          %td= get_type leave
+          %td= get_status leave.status
+          %td= leave.start_date
+          %td= leave.end_date
+          %td= link_to 'Show', leave_path(leave)

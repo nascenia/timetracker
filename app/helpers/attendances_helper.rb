@@ -21,6 +21,7 @@ module AttendancesHelper
     end if attendance.has_multiple_checkin?
 
     total_hours.round(3)
+    (total_hours.to_i).to_s + ' Hours ' + (((total_hours % 1)* 60).round(0)).to_s + ' Minutes '
   end
 
   def get_attendance_total_hour attendance

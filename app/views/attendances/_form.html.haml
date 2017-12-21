@@ -1,12 +1,6 @@
 = form_for(@attendance) do |f|
-  - if @attendance.errors.any?
-    #error_explanation
-      %h2
-        = pluralize(@attendance.errors.count, "error")
-        prohibited this attendance from being saved:
-      %ul
-        - @attendance.errors.full_messages.each do |msg|
-          %li= msg
+  = render 'shared/error_messages', target: @attendance
+
   .field
     = f.label :user_id
     %br/

@@ -1,0 +1,9 @@
+.modal-dialog
+  .modal-content
+    - if content_for?(:modal_title)
+      .modal-header
+        %h4.modal-title
+          = yield :modal_title
+    .modal-body
+      = yield :modal_body
+      .clear

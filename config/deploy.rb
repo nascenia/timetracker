@@ -10,10 +10,10 @@ set :repository, "https://github.com/nascenia/timetracker.git"
 
 set :scm, :git
 set :deploy_via, :remote_cache
-set :branch, "master"
+set :branch, "development"
 set :keep_releases, 10
 
-set :user, "user"
+set :user, "deployer"
 
 set :use_sudo, false
 
@@ -26,17 +26,17 @@ set :rake, 'bundle exec rake'
 
 after('deploy:update_code', 'deploy:symlink_shared', 'deploy:migrate')
 
-task :prod do
-  web_server = "127.0.0.1"
+task :staging do
+  web_server = "timetracker.test.nascenia.com"
   role :web, web_server # Your HTTP server, Apache/etc
   role :app, web_server # This may be the same as your `Web` server
   role :db, web_server, :primary => true # This is where Rails migrations will run
   set :deploy_to, "/www/apps/#{application}/"
-  set :rails_env, "production"
-  set :delayed_job_id, 1
+  set :delayed_job_id, 2
+  set :whenever_command, 'bundle exec whenever'
 end
 
-task :staging do
+task :prod do
   set :branch, "master"
   web_server = "127.0.0.1"
   role :web, web_server # Your HTTP server, Apache/etc
@@ -59,6 +59,7 @@ namespace :deploy do
   task :symlink_shared do
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
     run "ln -nfs #{shared_path}/config/application.yml #{release_path}/config/application.yml"
+    run "ln -nfs #{shared_path}/config/mailer_conf.yml #{release_path}/config/mailer_conf.yml"
     run "ln -nfs #{shared_path}/system #{release_path}/public/system"
   end
 

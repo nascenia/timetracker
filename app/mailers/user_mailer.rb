@@ -1,45 +1,96 @@
 class UserMailer < ActionMailer::Base
-  default from: 'Leave Tracker | Nascenia <no-reply@nascenia.com>',
-          cc: 'masud@nascenia.com'
+  add_template_helper ApplicationHelper
+
+  default from: 'Leave Tracker | Nascenia <leave.nascenia@gmail.com>'
 
   layout 'notification'
 
-  def send_leave_application_notification(user, leave)
-    @user = user
+  def send_leave_application_notification(leave, email)
+
     @leave = leave
+    @user = @leave.user
+    @email = email
 
-    if @user.ttf_id
-      @ttf = User.find @user.ttf_id
-    else
-      @ttf = User.find @user.sttf_id
-    end
-
-    mail :to => @ttf.email, :subject => "#{@user.name} has applied for a leave"
+    mail to: @email,
+         cc: CONFIG['leave_admin'],
+         subject: "#{@user.name} has applied for a leave"
   end
 
   def send_approval_or_rejection_notification(leave)
     @leave = leave
     @user = @leave.user
-
     if @leave.is_accepted?
       subject = 'Leave Approved'
       @title = 'Your leave application has just been approved.'
       @greetings = '- Enjoy your vacation!'
-    else
+    elsif @leave.is_rejected?
       subject = 'Leave Rejected'
       @title = 'Your leave application has just been rejected.'
       @greetings = '- Better luck next time!'
     end
-
-    mail :to => @user.email, :subject => subject
+    mail to: @user.email,
+         cc: CONFIG['leave_admin'],
+         subject: subject
+    true
+    rescue => e
+    logger.error e.message
+    false
   end
 
-  def send_unannounced_leave_notification(leave)
+  def send_approval_or_rejection_notification_to_hr(leave)
+    @leave = leave
+    @user = @leave.user
+
+    if @leave.is_accepted?
+      subject = 'Leave Approved'
+      @title = 'A leave application has just been approved.'
+    elsif @leave.is_rejected?
+      subject = 'Leave Rejected'
+      @title = 'A leave application has just been rejected.'
+    end
+    mail to: CONFIG['leave_admin'], subject: subject
+    true
+    rescue => e
+    logger.error e.message
+    false
+  end
+
+  def send_unannounced_leave_notification_to_user(leave)
     @leave = leave
     @user = @leave.user
     subject = 'Unannounced leave'
+    @greetings = ''
+
+    mail to: @user.email, subject: subject
+    true
+    rescue => e
+    logger.error e.message
+    false
+  end
+
+  def send_unannounced_leave_notification_to_admin(leave, email)
+    @leave = leave
+    @user = @leave.user
+    subject = 'Unannounced leave'
+    @greetings = ''
+
+    mail to: email, subject: subject
+    true
+  rescue => e
+    logger.error e.message
+    false
+  end
+
+  def send_leave_type_change_notification(leave)
+    @leave = leave
+    @user = @leave.user
+    subject = "Unannounced leave Converted to #{Leave::LEAVE_TYPES.to_h.key(@leave.leave_type)}"
     @greetings = '- Have a nice day!'
 
-    mail :to => 'khalid@nascenia.com', :subject => subject
+    mail to: @user.email, subject: subject
+    true
+  rescue => e
+    logger.error e.message
+    false
   end
 end
