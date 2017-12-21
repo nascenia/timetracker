@@ -5,15 +5,15 @@ gem 'rails', '4.0.1'
 
 gem 'bitmask_attributes', '~> 1.0'
 gem 'devise'
+gem 'bootstrap-sass', '~> 3.3.4.1'
 gem 'omniauth'
-gem 'omniauth-oauth2'
 gem 'omniauth-google-oauth2'
+gem 'omniauth-oauth2'
 
-gem 'html2haml'
 gem 'haml'
+gem 'html2haml'
 gem 'mysql2'
 gem 'sass-rails', '~> 4.0.0'
-gem 'bootstrap-sass', '~> 3.3.4.1'
 gem 'font-awesome-sass'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
@@ -26,10 +26,10 @@ gem 'jbuilder', '~> 1.2'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
-  gem 'sdoc', :require => false
+  gem 'sdoc', require: false
 end
 
-gem 'whenever', :require => false
+gem 'whenever', require: false
 gem 'rubocop', require: false
 
 # Use Capistrano for deploymentgem 'net-ssh', '2.7.0'
