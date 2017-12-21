@@ -58,7 +58,13 @@ class UserMailer < ActionMailer::Base
   def send_unannounced_leave_notification_to_user(leave)
     @leave = leave
     @user = @leave.user
-    subject = 'Unannounced leave'
+    if @leave.half_day
+      subject = 'Unannounced half day leave'
+      @leave_type = 'An unannounced half day leave'
+    else
+      subject = 'Unannounced leave'
+      @leave_type = 'An unannounced leave'
+    end
     @greetings = ''
 
     mail to: @user.email, subject: subject
@@ -71,7 +77,13 @@ class UserMailer < ActionMailer::Base
   def send_unannounced_leave_notification_to_admin(leave, email)
     @leave = leave
     @user = @leave.user
-    subject = 'Unannounced leave'
+    if @leave.half_day
+      subject = 'Unannounced half day leave'
+      @leave_type = 'An unannounced half day leave'
+    else
+      subject = 'Unannounced leave'
+      @leave_type = 'An unannounced leave'
+    end
     @greetings = ''
 
     mail to: email, subject: subject
