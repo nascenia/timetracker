@@ -38,7 +38,7 @@ end
 
 task :prod do
   set :branch, "master"
-  web_server = "127.0.0.1"
+  web_server = "timetracker.nascenia.com"
   role :web, web_server # Your HTTP server, Apache/etc
   role :app, web_server # This may be the same as your `Web` server
   role :db, web_server, :primary => true # This is where Rails migrations will run
