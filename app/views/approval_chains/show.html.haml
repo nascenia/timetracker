@@ -1,0 +1,49 @@
+.row
+  .col-sm-4
+    = form_tag assign_approval_chain_path(params[:id]) do
+      .panel.panel-default
+        .panel-heading
+          %h4 Assign Users
+        .panel-body
+          = select_tag :employees,
+                       options_from_collection_for_select(@available_users, :id, :name),
+                       multiple: true
+        .panel-footer
+          = submit_tag 'Assign Path',
+                        class: 'btn btn-primary'
+  .col-sm-4
+    .panel.panel-default
+      .panel-heading
+        %h4 Currently assigned users
+      .panel-body
+        - if @users.count > 0
+          %table.table.table-bordered.table-hover
+            %thead
+              %tr
+                %th Name
+            %tbody
+              - @users.each do |user|
+                %tr
+                  %td
+                    = user.name
+                  %td
+                    = link_to 'Remove', remove_approval_chain_path(user)
+        - else
+          %h5 No user assigned.
+  .col-sm-4
+    .panel.panel-default
+      .panel-heading
+        %h4 Owners of the Path
+      .panel-body
+        - if @path_owners.count > 0
+          %table.table.table-bordered.table-hover
+            %thead
+              %tr
+                %th Name
+            %tbody
+              - @path_owners.each do |owner|
+                %tr
+                  %td
+                    = owner.name
+        - else
+          %h5 No contributing owners found!

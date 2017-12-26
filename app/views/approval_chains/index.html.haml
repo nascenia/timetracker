@@ -1,0 +1,44 @@
+
+
+.panel.panel-default
+  .panel-heading
+    %h4 Current Paths
+
+  .panel-body
+    %table.table.table-bordered.table-hover
+      %thead
+        %tr
+          %th Path Name
+          %th Path Chain
+          %th Action
+      %tbody
+        - @approval_paths.each do |path|
+          - assigned_users = path.users
+          - warning_message = "Assigned Users :\n"
+          - assigned_users.each do |user|
+            - warning_message += "#{user.name}\n"
+          - warning_message += "Are you sure?"
+          %tr
+            %td
+              = path.name
+            %td
+              - count = path.path_chains.count
+              - path.path_chains.order(priority: :desc).each do |chain|
+                = chain.user.name
+                - if count > 1
+                  %span.fa.fa-chevron-circle-right
+                - count = count - 1
+            %td
+              = link_to 'Assign', approval_chain_path(path)
+              |
+              = link_to 'Edit', edit_approval_chain_path(path)
+              |
+              = link_to 'Delete', approval_chain_path(path),
+                                  method: :delete,
+                                  data: { confirm: warning_message }
+  .panel-footer
+    .link-button
+      = link_to 'Create New Path',
+                 new_approval_chain_path,
+                 :class => 'btn btn-primary',
+                 style: 'inline: block'

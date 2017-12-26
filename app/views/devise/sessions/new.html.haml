@@ -1,1 +1,17 @@
 = link_to 'Sign in with Google', user_omniauth_authorize_path(:google_oauth2), :class => 'btn btn-large btn-primary'
+
+-# Uncomment the lines below if you need to sign in using local accounts on development mode for testing purpose
+-# Also carefully make sure these lines are not pushed or deployed uncommented
+
+-#= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+-#  %div
+-#    = f.label :email
+-#    %br/
+-#    = f.email_field :email, autofocus: true
+-#
+-#  %div
+-#    = f.label :password
+-#    %br/
+-#    = f.password_field :password, autocomplete: 'off'
+-#
+-#  = f.submit 'Sign In'

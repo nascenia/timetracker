@@ -1,5 +1,5 @@
 ActiveAdmin.register Leave do
-  permit_params :user_id, :reason, :leave_type, :status, :start_date, :end_date, :half_day
+  permit_params :user_id, :reason, :leave_type, :pending_at, :status, :start_date, :end_date, :half_day
 
   index do
     selectable_column
@@ -14,7 +14,9 @@ ActiveAdmin.register Leave do
         'Medical'
       end
     end
-    column :reason
+    column :reason do |body|
+      truncate(body.reason, omision: '...', length: 15)
+    end
     column :start_date do |obj|
       obj.start_date.strftime("%d-%m-%Y") if obj.start_date.present?
     end
@@ -22,6 +24,7 @@ ActiveAdmin.register Leave do
       obj.end_date.strftime("%d-%m-%Y") if obj.end_date.present?
     end
     column :half_day
+    column :pending_at
     column :status do |obj|
       if obj.status == Leave::ACCEPTED
         'Approved'
@@ -43,10 +46,9 @@ ActiveAdmin.register Leave do
       f.input :end_date
       f.input :half_day
       f.input :leave_type, as: :select, collection: Leave::LEAVE_TYPES
+      f.input :pending_at
       f.input :status, as: :select, collection: Leave::LEAVE_STATUSES
-
     end
     f.actions
   end
-
 end

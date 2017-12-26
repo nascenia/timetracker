@@ -1,0 +1,57 @@
+.panel.panel-default
+  .panel-heading
+    %h3
+      = @holiday_scheme.name
+  .panel-body
+    - if @holiday_scheme.holidays.count > 0
+      .panel.panel-default
+        .panel-heading
+          %h4
+            Holiday list
+        %table.table.table-bordered.table-hover
+          %thead
+            %tr
+              %th
+                Name
+              %th
+                Date
+              %th
+                Action
+          %tbody
+            - @holiday_scheme.holidays.each do |holiday|
+              %tr
+                %td
+                  = holiday.name
+                %td
+                  = holiday.date
+                %td
+                  = link_to 'Edit', edit_holiday_path(holiday)
+                  |
+                  =link_to 'Destroy', holiday_path(holiday), method: :delete,
+                  data: {confirm: 'Are you sure'}
+    - else
+      .panel.panel-default
+        .panel-heading
+          %h4
+            No Holiday found
+    - if @holiday_scheme.users.count > 0
+      .panel.panel-default
+        .panel-heading
+          %h4
+            Assigned user list
+        %table.table.table-bordered.table-hover
+          %tbody
+            - @holiday_scheme.users.each do |user|
+              %tr
+                %td
+                  = user.name
+                %td
+                  = link_to 'Remove', remove_holiday_scheme_path(user)
+    - else
+      .panel.panel-default
+        .panel-heading
+          %h4
+            No user assigned yet
+  .panel-footer
+    = link_to 'Add new holiday', new_holiday_path(@holiday_scheme), class: 'btn btn-primary'
+    = link_to 'Assign new users', assign_form_holiday_scheme_path(@holiday_scheme), class: 'btn btn-primary'

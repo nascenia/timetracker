@@ -21,10 +21,10 @@
             %a.monthly-summary{:href => 'javascript:void()', :data => {:user => {id: user.id, month: Time.now.month, year: Time.now.year}}}
               = user.name
           %td= Attendance.monthly_average_check_in_time(current_month)
-          %td= Attendance.monthly_total_hours(current_month)
+          %td= Attendance.get_humanize_total_hour(current_month)
           %td= Attendance.monthly_average_hours(current_month)
           %td= Attendance.monthly_average_check_in_time(previous_month)
-          %td= Attendance.monthly_total_hours(previous_month)
+          %td= Attendance.get_humanize_total_hour(previous_month)
           %td= Attendance.monthly_average_hours(previous_month)
 .row
   #attendance-summary &nbsp;
