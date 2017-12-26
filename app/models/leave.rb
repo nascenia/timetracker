@@ -142,9 +142,13 @@ class Leave < ActiveRecord::Base
   end
 
   def number_of_days
-    dates = (start_date..end_date).map(&:to_date) - user.holiday_scheme.holidays.map { |holiday| holiday.date }
+    if user.holiday_scheme && user.weekend
+      dates = (start_date..end_date).map(&:to_date) - user.holiday_scheme.holidays.map { |holiday| holiday.date }
 
-    (dates.map(&:to_date).map { |day| day.strftime('%A') } - user.weekend.off_days.map(&:capitalize).map(&:to_s)).count
+      (dates.map(&:to_date).map { |day| day.strftime('%A') } - user.weekend.off_days.map(&:capitalize).map(&:to_s)).count
+    else
+      0
+    end
   end
 
   def total_leave_hour_of(month)
