@@ -61,9 +61,11 @@ class UserMailer < ActionMailer::Base
     if @leave.half_day
       subject = 'Unannounced half day leave'
       @leave_type = 'An unannounced half day leave'
+      @leave_hour = 'four hours'
     else
       subject = 'Unannounced leave'
       @leave_type = 'An unannounced leave'
+      @leave_hour = 'one day'
     end
     @greetings = ''
 
@@ -80,9 +82,11 @@ class UserMailer < ActionMailer::Base
     if @leave.half_day
       subject = 'Unannounced half day leave'
       @leave_type = 'An unannounced half day leave'
+      @leave_hour = 'four hours'
     else
       subject = 'Unannounced leave'
       @leave_type = 'An unannounced leave'
+      @leave_hour = 'one day'
     end
     @greetings = ''
 
