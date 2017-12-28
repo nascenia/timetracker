@@ -6,11 +6,10 @@ every :day, :at => '4:00pm' do
   runner 'User.create_unannounced_leave', output: { error: 'log/error.log', standard: 'log/cron.log' }
 end
 
-
-every 1.year, at: 'January 1st 12:01am' do
+every 1.year, :at => 'January 1st 12:01am' do
   runner 'LeaveTracker.update_leave_tracker_yearly'
 end
 
-every 1.year, at: 'January 1st 12:10am' do
+every 1.year, :at => 'January 1st 12:10am' do
   runner 'LeaveTracker.initialize_every_leave_with_new_year'
 end
