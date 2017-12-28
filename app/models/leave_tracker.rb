@@ -146,7 +146,11 @@ class LeaveTracker < ActiveRecord::Base
 
   def self.update_leave_tracker_yearly
     User.active.each do |user|
-      user.leave_tracker.update_leave_tracker_daily
+      if user.leave_tracker
+        user.leave_tracker.update_leave_tracker_daily
+      else
+        LeaveTracker::create_leave_tracker(user)
+      end
     end
   end
 
