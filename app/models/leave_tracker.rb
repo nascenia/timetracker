@@ -139,7 +139,12 @@ class LeaveTracker < ActiveRecord::Base
       else
         accrued_total_medical = self.carried_forward_medical +  accrued_medical_this_year
       end
-      accrual_vacation_balance = accrued_total_vacation + self.awarded_leave - self.consumed_vacation
+
+      if self.awarded_leave.nil?
+        accrual_vacation_balance = accrued_total_vacation - self.consumed_vacation
+      else
+        accrual_vacation_balance = accrued_total_vacation + self.awarded_leave - self.consumed_vacation
+      end
       accrual_medical_balance = accrued_total_medical - self.consumed_medical
 
       self.update_attributes(
