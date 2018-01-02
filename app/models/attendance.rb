@@ -125,7 +125,6 @@ class Attendance < ActiveRecord::Base
   # Calculate monthly average attendance of a user
   #
   def self.monthly_average_hours monthly_attendances
-
     total_hours = self.monthly_total_hours(monthly_attendances)
     total_attendance = 1
 

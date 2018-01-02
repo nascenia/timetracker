@@ -138,7 +138,7 @@ class Leave < ActiveRecord::Base
 
 
   def self.get_half_day_leaves_count user_id
-    Leave.where('user_id = ? and half_day != 0', user_id).count
+    Leave.where('user_id = ? and half_day != 0 and created_at >= ? and created_at <= ?', user_id, Date.today.at_beginning_of_month.strftime('%Y-%m-%d'), Date.today.strftime('%Y-%m-%d')).count
   end
 
   def number_of_days
