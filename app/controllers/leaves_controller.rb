@@ -3,7 +3,7 @@ class LeavesController < ApplicationController
   before_action :set_leave, only: [:index, :show, :edit]
   before_action :check_permission, only: [:show, :approve]
   before_action :find_applied_leave, only: [:approve, :reject, :destroy]
-  before_action :validate_date, only: [:create]
+  # before_action :validate_date, only: [:create]
 
   layout 'leave'
 
