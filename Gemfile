@@ -2,12 +2,13 @@ source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.1'
-
+gem 'paperclip', '~> 4.2', '>= 4.2.1'
 gem 'bitmask_attributes', '~> 1.0'
 gem 'devise'
 gem 'omniauth'
 gem 'omniauth-oauth2'
 gem 'omniauth-google-oauth2'
+
 
 gem 'html2haml'
 gem 'haml'

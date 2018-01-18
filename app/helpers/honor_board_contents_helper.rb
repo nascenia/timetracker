@@ -1,0 +1,2 @@
+module HonorBoardContentsHelper
+end

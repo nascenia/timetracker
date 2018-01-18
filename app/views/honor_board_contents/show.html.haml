@@ -1,0 +1,18 @@
+%h1 Honor Board of #{@honor_board_content.honor_board_category.category}
+.container
+.row
+  .col-md-3
+    =render partial: 'honor_board_categories/category_side_menu'
+  .col-md-9
+    .col-md-4
+      .img-responsive
+        =image_tag @honor_board_content.thumbnail.url(:medium)
+    .col-md-8
+      .content-show-item
+        .item-name
+          %h3 Name : #{@honor_board_content.name}
+        .item-category
+          %h4 Category : #{@honor_board_content.honor_board_category.category}
+        %h3 Reason:
+        .item-reason
+          =@honor_board_content.reason
