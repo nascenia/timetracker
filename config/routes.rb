@@ -70,7 +70,7 @@ Internal::Application.routes.draw do
   end
   resources :honor_board_contents
   resources :honor_board_categories
-
+  get 'honor_board/404', to: 'honor_board_contents#method_404'
 
 
   root :to => 'dashboard#index'

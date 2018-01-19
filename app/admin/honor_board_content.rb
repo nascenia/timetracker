@@ -1,5 +1,6 @@
 ActiveAdmin.register HonorBoardContent do
-  permit_params :name, :reason, :thumbnail, :category_id
+  actions :all, except: [:destroy]
+  permit_params :id, :name, :reason, :thumbnail, :category_id, :created_at, :updated_at
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
@@ -19,11 +20,17 @@ ActiveAdmin.register HonorBoardContent do
       f.input :name
       f.input :reason
       f.input :thumbnail
-      f.input :category_id, as: :select , :collection => HonorBoardCategory.ids
+      f.input :category_id, as: :select , :collection => HonorBoardCategory.all.map{|c| [c.category, c.id]}
 
     end
     f.actions
   end
 
+  controller do
+    def destroy # => Because of this the 'Delete' button was still there
+      @honor_board_content = HonorBoardContent.find_by_id(params[:id])
+      @honor_board_content.destroy
+    end
+  end
 
 end

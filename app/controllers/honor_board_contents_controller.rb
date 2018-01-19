@@ -10,35 +10,30 @@ before_action :set_side_menu
 
   def show
     @honor_board_content = HonorBoardContent.find(params[:id])
-
-
   end
-
   def new
-  @honor_board_content = HonorBoardContent.new
-    @honor_board_categories = HonorBoardCategory.all
+    redirect_to honor_board_category_path
   end
-
-  def create
-    @honor_board_content = HonorBoardContent.new(content_params(params))
-    if @honor_board_content.save
-      notice = "Story added successfully"
-      redirect_to honor_board_contents_path, notice: notice
-    else
-      render 'new'
-    end
-  end
-
   def update
+   redirect_to
+  end
+
+  def method_404
+    render :layout => false
+  end
+
+  def destroy
+    @honor_board_content = HonorBoardContent.find(params[:id])
+
+    if @honor_board_content.thumbnail.destroy && @honor_board_content.destroy
+      redirect_to honor_board_contents_path
+    end
 
   end
 
   private
   def set_side_menu
     @honor_board_categories = HonorBoardCategory.all
-  end
-  def content_params(params)
-    params.require(:honor_board_content).permit(:name, :reason, :thumbnail, :category_id)
   end
 
 
