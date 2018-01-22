@@ -9,7 +9,9 @@ gem 'omniauth'
 gem 'omniauth-oauth2'
 gem 'omniauth-google-oauth2'
 
-
+gem 'carrierwave', '~> 1.0'
+gem 'fog'
+gem 'mini_magick'
 gem 'html2haml'
 gem 'haml'
 gem 'mysql2'

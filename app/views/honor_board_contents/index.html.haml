@@ -5,16 +5,17 @@
       .col-sm-3
         .panel-default
           =render partial: 'honor_board_categories/category_side_menu'
-      .col-sm-9
-        -@honor_board_contents.each do |content|
-          .col-md-4
-            .honor-board-content-list
 
-              =link_to honor_board_content_path(content) do
-                .img-responsive
-                  =image_tag content.thumbnail.url(:medium)
-                .content-item-name
-                  =content.name
+      .col-sm-9
+        .row
+          -@honor_board_contents.each do |content|
+            .col-sm-4
+              .honor-board-content-list
+                =link_to honor_board_content_path(content) do
+                  .img-responsive
+                    =image_tag content.photo_url(:medium)
+                  .content-item-name
+                    =content.name
 
 
 

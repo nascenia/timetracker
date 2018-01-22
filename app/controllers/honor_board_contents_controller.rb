@@ -24,8 +24,7 @@ before_action :set_side_menu
 
   def destroy
     @honor_board_content = HonorBoardContent.find(params[:id])
-
-    if @honor_board_content.thumbnail.destroy && @honor_board_content.destroy
+    if@honor_board_content.destroy
       redirect_to honor_board_contents_path
     end
 

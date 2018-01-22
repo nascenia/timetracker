@@ -10,6 +10,6 @@
         .honor-board-content-list
           =link_to honor_board_content_path(content) do
             .img-responsive
-              =image_tag content.thumbnail.url(:medium)
+              =image_tag content.photo.url(:medium)
             .content-item-name
               =content.name
