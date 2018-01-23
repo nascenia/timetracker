@@ -1,0 +1,10 @@
+.panel.panel-default
+  .panel-heading
+    %b Honor Board Category
+
+  %ul.nav.nav-sidebar
+    -@honor_board_categories.each do |c|
+      %li{:class => current_page?(honor_board_category_path(c)) ? 'active' : ''}
+        = link_to c.category, honor_board_category_path(c)
+
+

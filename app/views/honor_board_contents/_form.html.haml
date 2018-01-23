@@ -1,0 +1,27 @@
+.panel.panel-default
+  .panel-heading
+
+
+  = form_for @honor_board_content do |f|
+    .panel-body
+
+      .form-group
+        = f.label :Name
+        = f.text_field :name, class: 'form-control', required: true
+
+      .form-group
+        = f.label :Reason
+        = f.text_area :reason,class: 'form-control', required: true
+
+      .form-group
+        = f.label :Image
+        = f.file_field :thumbnail,class: 'form-control', required: true
+
+      .form-group
+        = f.label :Category
+        =f.select "honor_board_category_id", options_from_collection_for_select(@honor_board_categories,'id','category')
+
+
+
+    .panel-footer
+      =f.submit 'Submit', class: ' btn btn-primary'

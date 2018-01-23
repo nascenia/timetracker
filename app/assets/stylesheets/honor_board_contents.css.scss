@@ -1,0 +1,61 @@
+// Place all the styles related to the honor_board_contents controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.honor-board-content-list{
+
+  border: 5px solid #e6ffef;
+  border-radius: 10px;
+  background-color: #e9ffed;
+  text-align: center;
+  margin: 5px;
+  padding: 5px;
+  font-size: 1.2em;
+  font-family: "Nimbus Roman No9 L";
+  height: 200px;
+
+  .content-item-name{
+    font-size: 1.3em;
+  }
+
+
+  img {
+    width: 100%;
+    border: 15px solid #dcffe3;
+    border-radius: 25px;
+
+
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .honor-board-content-list{
+
+
+    font-size: 20px;
+
+    img {
+      width: 100%;
+
+    }
+  }
+}
+
+.item-reason {
+  font-size: 1.3em;
+  font-family: Helvetica, "Helvetica Neue", Arial, sans-serif;
+}
+
+.class404{
+    align: center;
+    font-family: "Nimbus Sans L";
+  font-size: 1.7em;
+
+
+}
+
+.content-show-item {
+
+  margin-left: 5px;
+  clear: left;
+  padding-left:130px;
+}
