@@ -299,7 +299,6 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.25.1)
     mini_magick (4.8.0)
-    mimemagic (0.3.0)
     mini_portile2 (2.1.0)
     minitest (4.7.5)
     multi_json (1.12.1)

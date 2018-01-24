@@ -1,13 +1,19 @@
 .table-salaat {
+  width: 100%;
+  font-family: "Comic Sans MS";
+  font-size: 24px;
 
-  width: 80%;
-
+  h4 {
+    font-size: 28px;
+  }
 }
 .table-salaat-static {
+  font-family: "Comic Sans MS";
+  font-size: 24px;
   th {
     text-align: center;
   }
-  margin: 20% auto;
-  width: 90%;
+  margin: 50px auto;
+  width: 100%;
   text-align: center;
 }

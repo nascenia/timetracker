@@ -1,7 +1,26 @@
+.col-xs-12.col-md-6
+  %table.table.table-bordered.table-salaat
+    %caption
+      %h4
+        Salah Times using
+        =link_to "Al Adhan", "http://api.aladhan.com/timingsByCity?city=Dhaka&country=BD&method=2&school=1", target: :_blank
+        Rest API
+    %tr
+      %th Waqt
+      %th Time
+    -@salaat_times["data"]["timings"].each do |t|
+      -if t[0] != "Sunset" && t[0] != "Sunrise"
+        -if t[0]== "Imsak"
+          -break;
+        %tr
+          %td
+            =t[0]
+          %td
+            =t[1]
 .panel-collapse.collapse.in
   .panel-body
     .row
-      .col-md-3
+      .col-xs-12.col-md-6
         %table.table.table-bordered.table-salaat-static
           %tr
             %th{:colspan => 2}
@@ -30,23 +49,4 @@
             %th Method
             %th
               =@salaat_times["data"]["meta"]["method"]["name"]
-      .col-md-9
-        %table.table.table-bordered.table-salaat
-          %caption
-            %h4
-              Prayer Times using
-              =link_to "Rest API", "http://api.aladhan.com/timingsByCity?city=Dhaka&country=BD&method=2&school=1", target: :_blank
-
-          %tr
-            %th Waqt
-            %th Time
-          -@salaat_times["data"]["timings"].each do |t|
-            -if t[0] != "Sunset" && t[0] != "Sunrise"
-              -if t[0]== "Imsak"
-                -break;
-              %tr
-                %td
-                  =t[0]
-                %td
-                  =t[1]
 
