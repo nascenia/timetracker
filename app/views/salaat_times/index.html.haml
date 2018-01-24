@@ -27,26 +27,26 @@
               Today:  #{@salaat_times["data"]["date"]["readable"]}
 
           %tr
-            %th Sunrise
+            %td Sunrise
 
-            %th
+            %td
               =@salaat_times["data"]["timings"]["Sunrise"]
           %tr
-            %th Sunset
+            %td Sunset
 
-            %th
+            %td
               =@salaat_times["data"]["timings"]["Sunset"]
           %tr
-            %th Timezone
+            %td Timezone
 
-            %th
+            %td
               =@salaat_times["data"]["meta"]["timezone"]
           %tr
-            %th School
-            %th
+            %td School
+            %td
               =@salaat_times["data"]["meta"]["school"]
           %tr
-            %th Method
-            %th
+            %td Method
+            %td
               =@salaat_times["data"]["meta"]["method"]["name"]
 
