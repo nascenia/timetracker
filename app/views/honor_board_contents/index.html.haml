@@ -9,7 +9,7 @@
       .col-sm-9
         .row
           -@honor_board_contents.each do |content|
-            .col-sm-4
+            .row.col-sm-4
               .honor-board-content-list
                 =link_to honor_board_content_path(content) do
                   .img-responsive

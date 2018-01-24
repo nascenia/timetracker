@@ -3,27 +3,31 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 .honor-board-content-list{
 
-  border: 5px solid #e6ffef;
-  border-radius: 10px;
-  background-color: #e9ffed;
+  border: 1px solid #ecfff2;
+  border-radius: 5px;
+  background-color: white;
   text-align: center;
-  margin: 5px;
-  padding: 5px;
+  margin: 10px;
+  margin-bottom: 10px;
+
+
   font-size: 1.2em;
   font-family: "Nimbus Roman No9 L";
-  height: 200px;
+  height: 225px;
 
   .content-item-name{
     font-size: 1.3em;
+    text-align: center;
+    display: block;
+    margin: 5px;
+    word-break:break-all;
   }
 
 
   img {
+    border-radius: 5px;
+    height: 150px;
     width: 100%;
-    border: 15px solid #dcffe3;
-    border-radius: 25px;
-
-
   }
 }
 
