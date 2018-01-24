@@ -1,0 +1,52 @@
+.panel-collapse.collapse.in
+  .panel-body
+    .row
+      .col-md-3
+        %table.table.table-bordered.table-salaat-static
+          %tr
+            %th{:colspan => 2}
+              Today:  #{@salaat_times["data"]["date"]["readable"]}
+
+          %tr
+            %th Sunrise
+
+            %th
+              =@salaat_times["data"]["timings"]["Sunrise"]
+          %tr
+            %th Sunset
+
+            %th
+              =@salaat_times["data"]["timings"]["Sunset"]
+          %tr
+            %th Timezone
+
+            %th
+              =@salaat_times["data"]["meta"]["timezone"]
+          %tr
+            %th School
+            %th
+              =@salaat_times["data"]["meta"]["school"]
+          %tr
+            %th Method
+            %th
+              =@salaat_times["data"]["meta"]["method"]["name"]
+      .col-md-9
+        %table.table.table-bordered.table-salaat
+          %caption
+            %h4
+              Prayer Times using
+              =link_to "Rest API", "http://api.aladhan.com/timingsByCity?city=Dhaka&country=BD&method=2&school=1", target: :_blank
+
+          %tr
+            %th Waqt
+            %th Time
+          -@salaat_times["data"]["timings"].each do |t|
+            -if t[0] != "Sunset" && t[0] != "Sunrise"
+              -if t[0]== "Imsak"
+                -break;
+              %tr
+                %td
+                  =t[0]
+                %td
+                  =t[1]
+

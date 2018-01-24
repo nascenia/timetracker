@@ -11,13 +11,15 @@
   padding: 5px;
   font-size: 1.2em;
   font-family: "Nimbus Roman No9 L";
+  height: 200px;
 
   .content-item-name{
     font-size: 1.3em;
   }
 
+
   img {
-    width: 220px;
+    width: 100%;
     border: 15px solid #dcffe3;
     border-radius: 25px;
 
@@ -27,7 +29,7 @@
 
 @media only screen and (max-width: 500px) {
   .honor-board-content-list{
-    text-align: left;
+
 
     font-size: 20px;
 
@@ -49,4 +51,11 @@
   font-size: 1.7em;
 
 
+}
+
+.content-show-item {
+
+  margin-left: 5px;
+  clear: left;
+  padding-left:130px;
 }

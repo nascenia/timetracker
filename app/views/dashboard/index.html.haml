@@ -58,19 +58,7 @@
     });
   });
 
-  $(document).on('click', '#salaat', function() {
-    $.ajax({
-      url: "/salaats",
-      type: "GET",
-      data:  {},
-      beforeSend: function() {
-        $("#modal-loading-image").show();
-      },
-      success: function(msg) {
-        $("#modal-loading-image").hide();
-      }
-    });
-  });
+
 
   $(document).on('click', '#rules', function() {
     $("#rulesModal").modal('show');

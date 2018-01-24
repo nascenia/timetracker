@@ -113,9 +113,9 @@ class Attendance < ActiveRecord::Base
 
       total_hours = total_hours + (attendance.total_hours.nil? ? 0 : attendance.total_hours)
 
-      attendance.children.each do |child|
-        total_hours = total_hours + (child.total_hours.nil? ? 0 : child.total_hours)
-      end
+      # attendance.children.each do |child|
+      #   total_hours = total_hours + (child.total_hours.nil? ? 0 : child.total_hours)
+      # end
     end
 
     total_hours.round(2)
@@ -133,9 +133,11 @@ class Attendance < ActiveRecord::Base
       total_attendance = today_attendance.out_time.nil? ? monthly_attendances.size - 1 : monthly_attendances.size
       half_day_count = Leave.get_half_day_leaves_count(monthly_attendances.first.user_id)
       total_attendance = total_attendance - ( half_day_count * 0.5 )
+
     end
     average_hours = total_attendance > 0 ? total_hours / total_attendance : 0
     (average_hours.to_i).to_s + ':' + (((average_hours % 1)* 60).round(0)).to_s
+
   end
 
   #

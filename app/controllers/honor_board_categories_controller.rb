@@ -9,7 +9,7 @@ class HonorBoardCategoriesController < ApplicationController
   end
 
   def show
-    @contents = HonorBoardContent.where ("category_id = #{params[:id]}")
+    @contents = HonorBoardContent.where ("honor_board_category_id = #{params[:id]}")
   end
 
   private

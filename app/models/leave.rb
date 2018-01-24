@@ -138,8 +138,26 @@ class Leave < ActiveRecord::Base
 
 
   def self.get_half_day_leaves_count user_id
-    Leave.where('user_id = ? and half_day != 0 and created_at >= ? and created_at <= ?', user_id, Date.today.at_beginning_of_month.strftime('%Y-%m-%d'), Date.today.strftime('%Y-%m-%d')).count
+    first_half_leaves = Leave.where('user_id = ? and half_day = 1 and created_at >= ? and created_at <= ?', user_id, Date.today.at_beginning_of_month.strftime('%Y-%m-%d'), Date.today.strftime('%Y-%m-%d')).to_a
+    second_half_leaves = Leave.where('user_id = ? and half_day = 2 and created_at >= ? and created_at <= ?', user_id, Date.today.at_beginning_of_month.strftime('%Y-%m-%d'), Date.today.strftime('%Y-%m-%d')).to_a
+    half_day_leaves_count = 0;
+    first_half_leaves.each do  |f|
+      flag = 0;
+      second_half_leaves.each do |s|
+        if f.created_at.strftime('%Y-%m-%d') == s.created_at.strftime('%Y-%m-%d')
+          flag = 1;
+          break;
+        end
+      end
+      if flag == 0
+        half_day_leaves_count +=1
+      end
+    end
+    half_day_leaves_count
+
   end
+
+
 
   def number_of_days
     if user.holiday_scheme && user.weekend

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180117044319) do
+ActiveRecord::Schema.define(version: 20180119090649) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -117,14 +117,11 @@ ActiveRecord::Schema.define(version: 20180117044319) do
     t.text     "reason"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "thumbnail_file_name"
-    t.string   "thumbnail_content_type"
-    t.integer  "thumbnail_file_size"
-    t.datetime "thumbnail_updated_at"
-    t.integer  "category_id"
+    t.integer  "honor_board_category_id"
+    t.string   "photo"
   end
 
-  add_index "honor_board_contents", ["category_id"], name: "index_honor_board_contents_on_category_id", using: :btree
+  add_index "honor_board_contents", ["honor_board_category_id"], name: "index_honor_board_contents_on_honor_board_category_id", using: :btree
 
   create_table "leave_trackers", force: true do |t|
     t.integer  "user_id"

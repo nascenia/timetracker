@@ -6,7 +6,7 @@
   .col-md-9
     .col-md-4
       .img-responsive
-        =image_tag @honor_board_content.thumbnail.url(:medium)
+        =image_tag @honor_board_content.photo.url(:medium)
     .col-md-8
       .content-show-item
         .item-name
@@ -16,4 +16,3 @@
         %h3 Reason:
         .item-reason
           =@honor_board_content.reason
-=link_to 'delete this', honor_board_content_path(@honor_board_content), data: { confirm: 'Are you sure?' }, method: :delete

@@ -41,8 +41,6 @@ Internal::Application.routes.draw do
     end
   end
 
-  resources :salaats
-
   resources :weekends do
     member do
       post :assign
@@ -72,6 +70,6 @@ Internal::Application.routes.draw do
   resources :honor_board_categories
   get 'honor_board/404', to: 'honor_board_contents#method_404'
 
-
+  get 'salaat_times', to: 'salaat_times#index'
   root :to => 'dashboard#index'
 end
