@@ -113,9 +113,9 @@ class Attendance < ActiveRecord::Base
 
       total_hours = total_hours + (attendance.total_hours.nil? ? 0 : attendance.total_hours)
 
-      # attendance.children.each do |child|
-      #   total_hours = total_hours + (child.total_hours.nil? ? 0 : child.total_hours)
-      # end
+      attendance.children.each do |child|
+        total_hours = total_hours + (child.total_hours.nil? ? 0 : child.total_hours)
+      end
     end
 
     total_hours.round(2)
