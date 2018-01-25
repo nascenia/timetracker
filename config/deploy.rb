@@ -61,6 +61,7 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/config/application.yml #{release_path}/config/application.yml"
     run "ln -nfs #{shared_path}/config/mailer_conf.yml #{release_path}/config/mailer_conf.yml"
     run "ln -nfs #{shared_path}/system #{release_path}/public/system"
+    run "ln -nfs #{shared_path}/uploads #{release_path}/public/uploads"
   end
 
   task :create_shared_files_and_directories, :role => :app do
