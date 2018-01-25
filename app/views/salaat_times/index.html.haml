@@ -16,7 +16,7 @@
           %td
             =t[0]
           %td
-            =t[1]
+            =t[1].to_time.strftime("%I:%M %p")
 .panel-collapse.collapse.in
   .panel-body
     .row
@@ -30,12 +30,12 @@
             %td Sunrise
 
             %td
-              =@salaat_times["data"]["timings"]["Sunrise"]
+              =@salaat_times["data"]["timings"]["Sunrise"].to_time.strftime("%I:%M %p")
           %tr
             %td Sunset
 
             %td
-              =@salaat_times["data"]["timings"]["Sunset"]
+              =@salaat_times["data"]["timings"]["Sunset"].to_time.strftime("%I:%M %p")
           %tr
             %td Timezone
 
