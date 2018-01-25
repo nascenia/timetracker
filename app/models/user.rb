@@ -161,4 +161,11 @@ class User < ActiveRecord::Base
     end
     true
   end
+
+  def all_information_provided?
+    (personal_email && present_address && mobile_number && alternate_contact &&
+     permanent_address && date_of_birth && last_degree && last_university && passing_year &&
+     emergency_contact_person_name && emergency_contact_person_relation && emergency_contact_person_number &&
+     blood_group && joining_date).present?
+  end
 end
