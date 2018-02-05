@@ -77,7 +77,8 @@ Internal::Application.configure do
       authentication: 'plain',
       enable_starttls_auto: true,
       user_name: ENV["TT_MAILER_EMAIL"],
-      password: ENV["TT_MAILER_PASSWORD"]
+      password: ENV["TT_MAILER_PASSWORD"],
+      ssl: true
   }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
