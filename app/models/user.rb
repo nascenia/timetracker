@@ -131,8 +131,10 @@ class User < ActiveRecord::Base
             u.leave_tracker.update_attributes!(
               :awarded_leave => u.leave_tracker.awarded_leave.present? ? u.leave_tracker.awarded_leave : 0 + hours
             )
-            UserMailer.send_award_leave_notification_to_user(u, hours).deliver
-            leaves.destroy_all
+            if hours != 0
+                UserMailer.send_award_leave_notification_to_user(u, hours).deliver
+                leaves.destroy_all
+            end
         end
     end
   end
