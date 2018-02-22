@@ -1,9 +1,0 @@
-.panel.panel-default
-  .panel-heading
-    .honor-left-menu
-      %b Category List
-      %ul.nav.nav-sidebar
-        -@honor_board_categories.each do |c|
-          %li{:class => 'active'}
-            = link_to c.category, honor_board_category_path(c)
-

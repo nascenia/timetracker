@@ -6,7 +6,7 @@ class HolidayScheme < ActiveRecord::Base
   belongs_to :leave_year
 
   def self.today?(user)
-    user.holiday_scheme.holidays.include? Date.today if user.holiday_scheme
+    user.holiday_scheme.holidays.map(&:date).include? Date.today if user.holiday_scheme
   end
 
   def self.excluded?(user)

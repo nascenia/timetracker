@@ -114,6 +114,17 @@ class User < ActiveRecord::Base
     end
   end
 
+  def self.award_leave(hours)
+    User.active.each do |u|
+        if u.id == 1
+            u.leave_tracker.update_attributes!(
+              :awarded_leave => u.leave_tracker.awarded_leave + hours
+            )
+            UserMailer.send_unannounced_leave_notification_to_user(u).deliver
+        end
+    end
+  end
+
   def self.create_unannounced_leave
     @robi_weekend = Weekend.where("name like ?", "%robi%").select(:id, :name).take
     User.active.each do |u|
