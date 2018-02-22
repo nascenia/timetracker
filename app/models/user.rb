@@ -114,14 +114,22 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.award_leave(hours)
+  def self.award_leave
     User.active.each do |u|
-        if u.id == 1
-            u.leave_tracker.update_attributes!(
-              :awarded_leave => u.leave_tracker.awarded_leave + hours
-            )
-            UserMailer.send_unannounced_leave_notification_to_user(u).deliver
+        leaves = u.leaves.where("leave_type =? AND start_date =? ", 3, "2018-02-21").count
+        if leaves == 1
+            hours = 4
+        elsif leaves == 2
+            hours = 8
+        else
+            hours = 0
         end
+
+        u.leave_tracker.update_attributes!(
+          :awarded_leave => u.leave_tracker.awarded_leave + hours
+        )
+        UserMailer.send_award_leave_notification_to_user(u, hours).deliver
+
     end
   end
 

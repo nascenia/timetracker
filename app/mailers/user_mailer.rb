@@ -55,8 +55,9 @@ class UserMailer < ActionMailer::Base
     false
   end
 
-  def send_award_leave_notification_to_user(user)
+  def send_award_leave_notification_to_user(user, hours)
     @user = user
+    @hours = hours
     subject = 'Leave Awarded'
     mail to: @user.email, subject: subject
     true
