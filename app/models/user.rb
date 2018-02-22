@@ -115,21 +115,23 @@ class User < ActiveRecord::Base
   end
 
   def self.award_leave
+    @robi_weekend = Weekend.where("name like ?", "%robi%").select(:id, :name).take
     User.active.each do |u|
-        leaves = u.leaves.where("leave_type =? AND start_date =? ", 3, "2018-02-21").count
-        if leaves == 1
-            hours = 4
-        elsif leaves == 2
-            hours = 8
-        else
-            hours = 0
+        if u.weekend != @robi_weekend
+            leaves = u.leaves.where("leave_type =? AND start_date =? ", 3, "2018-02-21").count
+            if leaves == 1
+                hours = 4
+            elsif leaves == 2
+                hours = 8
+            else
+                hours = 0
+            end
+
+            u.leave_tracker.update_attributes!(
+              :awarded_leave => u.leave_tracker.awarded_leave.present? ? u.leave_tracker.awarded_leave : 0 + hours
+            )
+            UserMailer.send_award_leave_notification_to_user(u, hours).deliver
         end
-
-        u.leave_tracker.update_attributes!(
-          :awarded_leave => u.leave_tracker.awarded_leave + hours
-        )
-        UserMailer.send_award_leave_notification_to_user(u, hours).deliver
-
     end
   end
 
