@@ -49,6 +49,7 @@ class LeavesController < ApplicationController
         flash[:notice] = 'Medical Leave has been approved by admin.'
         @leave.update_attributes(status: Leave::ACCEPTED, pending_at: 0)
         @leave.user.leave_tracker.update_leave_tracker(@leave)
+        UserMailer.send_leave_application_notification(@leave, email).deliver
         redirect_to leave_path(@leave)
       elsif UserMailer.send_leave_application_notification(@leave, email).deliver
         redirect_to leave_path(@leave), notice: 'Your TTF will be notified soon. Thanks!'
