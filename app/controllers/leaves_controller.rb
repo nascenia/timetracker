@@ -41,9 +41,7 @@ class LeavesController < ApplicationController
   def create
     @leave = Leave.new(leave_params)
     @leave.user_id = current_user.id
-    #approval_user = @leave.approval_path.path_chains.order(priority: :desc).map(&:user_id).first
     approval_users = @leave.approval_path.path_chains.order(priority: :desc).map(&:user_id)
-    #email = User.find_by(id: approval_user).email
     emails = []
     approval_users.each do |approval_user|
       email = User.find_by(id: approval_user).email
@@ -51,15 +49,7 @@ class LeavesController < ApplicationController
     end
     email = emails[0]
     if @leave.save
-      if @leave.leave_type == 2
-        flash[:notice] = 'Medical Leave has been approved by admin.'
-        @leave.update_attributes(status: Leave::ACCEPTED, pending_at: 0)
-        @leave.user.leave_tracker.update_leave_tracker(@leave)
-        emails.each do |email|
-          UserMailer.send_leave_application_notification(@leave, email).deliver
-        end
-        redirect_to leave_path(@leave)
-      elsif UserMailer.send_leave_application_notification(@leave, emails[0]).deliver
+      if UserMailer.send_leave_application_notification(@leave, emails[0]).deliver
         emails.shift
         emails.each do |email|
           UserMailer.send_leave_application_notification(@leave, email).deliver
