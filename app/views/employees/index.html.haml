@@ -1,0 +1,23 @@
+- if current_user.is_admin?
+  = render partial: 'admin_filter'
+- else
+  = render partial: 'employee_filter'
+.panel.panel-default
+  .panel-heading
+    %b Employees
+  %table.table.table-bordered.table-hover
+    %thead
+      %tr
+        %th{:width => '25%'} Name
+        %th{:width => '30%'} Email
+        %th{:width => '15%'} Contact Number
+        %th{:width => '15%'} Joining Date
+        %th{:width => '15%'} Blood Group
+    %tbody.word-break
+      - @employees.each do |employee|
+        %tr
+          %td= employee.name
+          %td= employee.email
+          %td= employee.mobile_number.present? ? (employee.mobile_number) : 'N/A'
+          %td= employee.joining_date
+          %td= employee.blood_group

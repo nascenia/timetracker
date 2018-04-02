@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
   #
   # Callbacks
   #
-
+  before_save :alter_user_activity
   after_create :create_leave_tracker
 
   #
@@ -42,9 +42,11 @@ class User < ActiveRecord::Base
     ['TTF', TTF],
     ['Super TTF', SUPER_TTF]
   ]
+  BLOOD_GROUPS = %w(O+ O- A+ A- B+ B- AB+ AB-)
 
   scope :inactive, -> {where('is_active = ?', false)}
   scope :active, -> {where('is_active = ?', true)}
+  scope :published, -> { where(is_published: true) }
   scope :ttf, -> {where('role = ?', User::TTF)}
   scope :super_ttf, -> {where('role = ?', User::SUPER_TTF)}
   scope :employees, -> {where('role = ?', User::EMPLOYEE)}
@@ -211,5 +213,20 @@ class User < ActiveRecord::Base
     else
       Rails.logger.info "Unable to create unannounced leave for #{name}"
     end
+  end
+
+  def alter_user_activity
+    if resignation_date.present?
+      self.is_active = false
+      self.is_published = false
+    end
+    true
+  end
+
+  def all_information_provided?
+    (personal_email && present_address && mobile_number && alternate_contact &&
+     permanent_address && date_of_birth && last_degree && last_university && passing_year &&
+     emergency_contact_person_name && emergency_contact_person_relation && emergency_contact_person_number &&
+     blood_group && joining_date).present?
   end
 end

@@ -1,5 +1,5 @@
 Internal::Application.routes.draw do
-  devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
+  devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks", :registrations => 'users/registrations' }
 
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
@@ -41,6 +41,8 @@ Internal::Application.routes.draw do
     end
   end
 
+  resources :salaats
+
   resources :weekends do
     member do
       post :assign
@@ -66,10 +68,8 @@ Internal::Application.routes.draw do
   resources :super_admin_leaves, only: :index do
     member { patch :change_type }
   end
-  resources :honor_board_contents
-  resources :honor_board_categories
-  get 'honor_board/404', to: 'honor_board_contents#method_404'
 
   get 'salaat_times', to: 'salaat_times#index'
+  resources :employees
   root :to => 'dashboard#index'
 end
