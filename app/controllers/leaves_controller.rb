@@ -10,10 +10,10 @@ class LeavesController < ApplicationController
   def index
     if params[:category].present?
       @leaves = Leave.where('leaves.approval_path_id IN (?)', current_user.owned_paths.pluck(:approval_path_id))
-                     .where(status: params[:category].to_i).order(created_at: :desc)
+                    .where(status: params[:category].to_i).order(created_at: :desc)
     else
       @leaves = Leave.where('leaves.approval_path_id IN (?)', current_user.owned_paths.pluck(:approval_path_id))
-                     .pending_leaves.order(created_at: :desc)
+                    .pending_leaves.order(created_at: :desc)
     end
   end
 
@@ -41,12 +41,19 @@ class LeavesController < ApplicationController
   def create
     @leave = Leave.new(leave_params)
     @leave.user_id = current_user.id
-
-    approval_user = @leave.approval_path.path_chains.order(priority: :desc).map(&:user_id).first
-    email = User.find_by(id: approval_user).email
-
+    approval_users = @leave.approval_path.path_chains.order(priority: :desc).map(&:user_id)
+    emails = []
+    approval_users.each do |approval_user|
+      email = User.find_by(id: approval_user).email
+      emails << email
+    end
+    email = emails[0]
     if @leave.save
-      if UserMailer.send_leave_application_notification(@leave, email).deliver
+      if UserMailer.send_leave_application_notification(@leave, emails[0]).deliver
+        emails.shift
+        emails.each do |email|
+          UserMailer.send_leave_application_notification(@leave, email).deliver
+        end
         redirect_to leave_path(@leave), notice: 'Your TTF will be notified soon. Thanks!'
       else
         redirect_to leave_path(@leave), alert: 'Sorry something went wrong to send mail, please contact with your TTF'
@@ -86,10 +93,24 @@ class LeavesController < ApplicationController
       UserMailer.send_approval_or_rejection_notification_to_hr(@leave).deliver
     else
       if @leave.pending_at == 1
+        leaves = 0
+        if @leave.start_date < Date.today
+          @leave.update_attribute(:status, Leave::REJECTED)
+          flash[:warning] = 'Leave tracker already updated and you can not approved it now!'
+          redirect_to :back and return
+        elsif @leave.half_day == 0
+          leaves_total = @leave.user.leaves.where("leave_type =? AND start_date =? ", 3, @leave.start_date)
+        else
+          leaves_total = @leave.user.leaves.where("leave_type =? AND start_date =? ", @leave.half_day , @leave.start_date)
+        end
+        leaves = leaves_total.count
+        hours_leaves = leaves  * 4
+        @leave.user.leave_tracker.update_attribute(:consumed_vacation, @leave.user.leave_tracker.consumed_vacation - hours_leaves)
         @leave.update_attributes(status: Leave::ACCEPTED, pending_at: 0)
         @leave.user.leave_tracker.update_leave_tracker(@leave)
         UserMailer.send_approval_or_rejection_notification(@leave).deliver
         UserMailer.send_approval_or_rejection_notification_to_hr(@leave).deliver
+        leaves_total.destroy_all
       else
         @leave.update_attribute(:pending_at, @leave.pending_at -= 1)
         email = @leave.approval_path.path_chains.find_by(priority: @leave.pending_at).user.email

@@ -4,8 +4,6 @@
   %li{class: (params[:controller].eql?('users') || params[:controller].eql?('leaves') ? 'active' : '')}
     = link_to 'My Leave', leave_tracker_path(current_user)
   %li{class: (params[:controller].eql?('users') || params[:controller].eql?('leaves') ? 'active' : '')}
-    = link_to 'Honor Board', honor_board_contents_path
-  %li{class: (params[:controller].eql?('users') || params[:controller].eql?('leaves') ? 'active' : '')}
     = link_to 'Salaat time', salaat_times_path
 
   - if current_user.is_admin?
