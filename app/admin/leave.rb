@@ -10,6 +10,8 @@ ActiveAdmin.register Leave do
     column :leave_type do |obj|
       if obj.leave_type == Leave::CASUAL
         'Casual'
+      elsif obj.leave_type == Leave::UNANNOUNCED
+        'Unannounced'
       else
         'Medical'
       end

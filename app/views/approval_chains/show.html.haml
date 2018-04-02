@@ -26,6 +26,8 @@
                 %tr
                   %td
                     = user.name
+                  %td
+                    = link_to 'Remove', remove_approval_chain_path(user)
         - else
           %h5 No user assigned.
   .col-sm-4

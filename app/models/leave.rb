@@ -24,10 +24,9 @@ class Leave < ActiveRecord::Base
   HOURS_FOR_HALF_DAY = HOURS_FOR_ONE_DAY / 2
 
   LEAVE_STATUSES = [
-    ['All', 0],
+    ['Pending', PENDING],
     ['Approved', ACCEPTED],
-    ['Rejected', REJECTED],
-    ['Pending', PENDING]
+    ['Rejected', REJECTED]
   ]
 
   FULL_DAY = 0
@@ -44,6 +43,9 @@ class Leave < ActiveRecord::Base
   scope :rejected_leaves, -> { where(status: REJECTED) }
   scope :pending_leaves, -> { where(status: PENDING) }
   scope :unannounced_leaves, -> { where('leave_type = 3') }
+  scope :leaves_by_type, -> (type) { where('leave_type = ?', type)}
+  scope :leaves_by_status, -> (status) { where('status = ?', status)}
+  scope :leaves_by_month, -> (month) { where('MONTH(start_date) = ? OR MONTH(end_date) = ?', month, month) }
 
   def update_leave_tracker
     consumed_casual_leave = self.user.leave_tracker.consumed_vacation.present? ? self.user.leave_tracker.consumed_vacation : 0
@@ -136,6 +138,61 @@ class Leave < ActiveRecord::Base
 
 
   def self.get_half_day_leaves_count user_id
-    Leave.where('user_id = ? and half_day != 0', user_id).count
+    first_half_leaves = Leave.where('user_id = ? and half_day = 1 and created_at >= ? and created_at <= ?', user_id, Date.today.at_beginning_of_month.strftime('%Y-%m-%d'), Date.today.strftime('%Y-%m-%d')).to_a
+    second_half_leaves = Leave.where('user_id = ? and half_day = 2 and created_at >= ? and created_at <= ?', user_id, Date.today.at_beginning_of_month.strftime('%Y-%m-%d'), Date.today.strftime('%Y-%m-%d')).to_a
+    half_day_leaves_count = 0;
+    first_half_leaves.each do  |f|
+      flag = 0;
+      second_half_leaves.each do |s|
+        if f.created_at.strftime('%Y-%m-%d') == s.created_at.strftime('%Y-%m-%d')
+          flag = 1;
+          break;
+        end
+      end
+      if flag == 0
+        half_day_leaves_count +=1
+      end
+    end
+    half_day_leaves_count
+
+  end
+
+
+
+  def number_of_days
+    if user.holiday_scheme && user.weekend
+      dates = (start_date..end_date).map(&:to_date) - user.holiday_scheme.holidays.map { |holiday| holiday.date }
+
+      (dates.map(&:to_date).map { |day| day.strftime('%A') } - user.weekend.off_days.map(&:capitalize).map(&:to_s)).count
+    else
+      0
+    end
+  end
+
+  def total_leave_hour_of(month)
+    if end_date.present?
+      dates = (start_date..end_date).map(&:to_date) - user.holiday_scheme.holidays.map { |holiday| holiday.date }
+      weekend = user.weekend.off_days.map(&:capitalize).map(&:to_s)
+      dates.delete_if { |date| weekend.include?(date.strftime('%A')) || date.strftime('%m') != month }
+      dates.count * HOURS_FOR_ONE_DAY
+    else
+      if half_day == 0
+        Leave::HOURS_FOR_ONE_DAY
+      else
+        Leave::HOURS_FOR_HALF_DAY
+      end
+    end
+  end
+
+  def total_leave_hour
+    if end_date.present?
+      number_of_days * HOURS_FOR_ONE_DAY
+    else
+      if half_day == 0
+        Leave::HOURS_FOR_ONE_DAY
+      else
+        Leave::HOURS_FOR_HALF_DAY
+      end
+    end
   end
 end

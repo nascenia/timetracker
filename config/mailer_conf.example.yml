@@ -1,0 +1,5 @@
+TT_MAILER_ADDRESS: "smtp.gmail.com"
+TT_MAILER_PORT: "587"
+TT_MAILER_DOMAIN: "gmail.com"
+TT_MAILER_EMAIL: "leave.nascenia@gmail.com"
+TT_MAILER_PASSWORD: "LeaveTracker2017"

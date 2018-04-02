@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170914031126) do
+ActiveRecord::Schema.define(version: 20180119090649) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -106,6 +106,23 @@ ActiveRecord::Schema.define(version: 20170914031126) do
 
   add_index "holidays", ["holiday_scheme_id"], name: "index_holidays_on_holiday_scheme_id", using: :btree
 
+  create_table "honor_board_categories", force: true do |t|
+    t.string   "category",   default: "", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "honor_board_contents", force: true do |t|
+    t.string   "name"
+    t.text     "reason"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "honor_board_category_id"
+    t.string   "photo"
+  end
+
+  add_index "honor_board_contents", ["honor_board_category_id"], name: "index_honor_board_contents_on_honor_board_category_id", using: :btree
+
   create_table "leave_trackers", force: true do |t|
     t.integer  "user_id"
     t.integer  "yearly_casual_leave"
@@ -123,6 +140,8 @@ ActiveRecord::Schema.define(version: 20170914031126) do
     t.integer  "accrued_vacation_total",     default: 0
     t.integer  "accrued_medical_total",      default: 0
     t.datetime "commenced_date"
+    t.integer  "awarded_leave",              default: 0
+    t.text     "note"
   end
 
   add_index "leave_trackers", ["user_id"], name: "index_leave_trackers_on_user_id", using: :btree

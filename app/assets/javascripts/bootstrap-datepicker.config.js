@@ -29,7 +29,7 @@ function toggle_dates(){
     if( leave_type == 'Casual Leave'){
         $('.date-picker').datepicker('remove');
         var date = new Date();
-        date.setDate(date.getDate() + 1 );
+        date.setDate(date.getDate() );
         $('.date-picker').datepicker({
             format: 'yyyy-mm-dd',
             startDate: date

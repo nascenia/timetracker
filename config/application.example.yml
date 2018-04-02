@@ -1,6 +1,6 @@
 default: &default
   ip_whitelist: ['192.168.1.1', '192.168.1.2', '127.0.0.1']
-  admins: ['admin@example.com', 'nascenia@example.com', 'masud@example.com']
+  admins: ['admin@example.com', 'imran.saimun@bdipo.com', 'masud@example.com']
   domain_whitelist: ['nascenia.com', 'bdipo.com']
   year_range:
     start: 2010
@@ -15,6 +15,12 @@ default: &default
     file_server:
       name: File server
       url: http://192.168.1.2/
+  mailer:
+    address: 'smtp.gmail.com'
+    port: 587
+    domain: 'gmail.com'
+    email: ''
+    password: ''
 
 development:
   <<: *default

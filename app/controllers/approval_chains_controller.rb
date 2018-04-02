@@ -13,7 +13,7 @@ class ApprovalChainsController < ApplicationController
   def show
     @path_owners = PathChain.find_path_chain_users(@path.id)
     @users = @path.users
-    @available_users = User.active.where.not(id: @users | @path_owners )
+    @available_users = User.active.where.not(id: @users | @path_owners ).order(name: :asc)
   end
 
   def new
@@ -62,6 +62,12 @@ class ApprovalChainsController < ApplicationController
   def destroy
     @path.destroy
     redirect_to approval_chains_path
+  end
+
+  def remove
+    user = User.find(params[:id])
+    user.update_attribute(:approval_path_id, nil)
+    redirect_to :back
   end
 
   private

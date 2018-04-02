@@ -65,17 +65,19 @@ Internal::Application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
-  config.action_mailer.default_url_options = { host:  ENV['HOST'] }
-
+  config.action_mailer.default_url_options = { host: "timetracker.nascenia.com"}
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
+
   config.action_mailer.smtp_settings = {
-      :address  => ENV['SMTP_HOST'],
-      :port  => ENV['SMTP_PORT'].to_i,
-      :domain  => 'example.com',
-      :authentication => 'plain',
-      :user_name  => ENV['SMTP_USERNAME'],
-      :password  => ENV['SMTP_PASSWORD'],
-      :enable_starttls_auto => true
+      address: "smtp.gmail.com",
+      port: ENV["TT_MAILER_PORT"].to_i,
+      domain: ENV["TT_MAILER_DOMAIN"],
+      authentication: 'plain',
+      enable_starttls_auto: true,
+      user_name: ENV["TT_MAILER_EMAIL"],
+      password: ENV["TT_MAILER_PASSWORD"]
   }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to

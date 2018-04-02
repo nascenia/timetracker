@@ -11,7 +11,7 @@ class WeekendsController < ApplicationController
   end
 
   def show
-    @available_users = User.has_no_weekend
+    @available_users = User.has_no_weekend.order(name: :asc)
   end
 
   def assign

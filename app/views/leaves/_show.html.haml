@@ -36,7 +36,7 @@
       %tr
         %th Leave type
         %td
-          - if current_user.try(:is_admin?)
+          - if current_user.try(:is_admin?) && @leave.leave_type == Leave::UNANNOUNCED
             = select_tag :leave_type, options_for_select(['Casual', 'Medical', 'Unannounced'], get_type(@leave)),
                          onchange: "change_leave_type(#{@leave.id})"
           - else

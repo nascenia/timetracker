@@ -1,0 +1,52 @@
+.col-xs-12.col-md-6
+  %table.table.table-bordered.table-salaat
+    %caption
+      %h4
+        Salah Times using
+        =link_to "Al Adhan", "http://api.aladhan.com/timingsByCity?city=Dhaka&country=BD&method=2&school=1", target: :_blank
+        Rest API
+    %tr
+      %th Waqt
+      %th Time
+    -@salaat_times["data"]["timings"].each do |t|
+      -if t[0] != "Sunset" && t[0] != "Sunrise"
+        -if t[0]== "Imsak"
+          -break;
+        %tr
+          %td
+            =t[0]
+          %td
+            =t[1].to_time.strftime("%I:%M %p")
+.panel-collapse.collapse.in
+  .panel-body
+    .row
+      .col-xs-12.col-md-6
+        %table.table.table-bordered.table-salaat-static
+          %tr
+            %th{:colspan => 2}
+              Today:  #{@salaat_times["data"]["date"]["readable"]}
+
+          %tr
+            %td Sunrise
+
+            %td
+              =@salaat_times["data"]["timings"]["Sunrise"].to_time.strftime("%I:%M %p")
+          %tr
+            %td Sunset
+
+            %td
+              =@salaat_times["data"]["timings"]["Sunset"].to_time.strftime("%I:%M %p")
+          %tr
+            %td Timezone
+
+            %td
+              =@salaat_times["data"]["meta"]["timezone"]
+          %tr
+            %td School
+            %td
+              =@salaat_times["data"]["meta"]["school"]
+          %tr
+            %td Method
+            %td
+              =@salaat_times["data"]["meta"]["method"]["name"]
+

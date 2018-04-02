@@ -7,6 +7,9 @@ Internal::Application.routes.draw do
   resources :approval_chains do
     member { post :assign }
     collection { post :create_chain }
+    member do
+      get :remove
+    end
   end
 
   resources :leave_tracker
@@ -66,6 +69,7 @@ Internal::Application.routes.draw do
     member { patch :change_type }
   end
 
+  get 'salaat_times', to: 'salaat_times#index'
   resources :employees
   root :to => 'dashboard#index'
 end

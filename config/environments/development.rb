@@ -24,19 +24,20 @@ Internal::Application.configure do
   # Raise an error on page load if there are pending migrations
   config.active_record.migration_error = :page_load
 
-  config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-      :address  => ENV['SMTP_HOST'],
-      :port  => ENV['SMTP_PORT'].to_i,
-      :domain  => 'gmail.com',
-      :authentication => 'plain',
-      :user_name  => ENV['SMTP_USERNAME'],
-      :password  => ENV['SMTP_PASSWORD'],
-      :enable_starttls_auto => true
+      address: ENV["TT_MAILER_ADDRESS"],
+      port: ENV["TT_MAILER_PORT"].to_i,
+      domain: ENV["TT_MAILER_DOMAIN"],
+      authentication: 'plain',
+      enable_starttls_auto: true,
+      user_name: ENV["TT_MAILER_EMAIL"],
+      password: ENV["TT_MAILER_PASSWORD"]
   }
 
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
   config.assets.debug = true
+  config.serve_static_assets = true
 end

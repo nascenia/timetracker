@@ -1,6 +1,9 @@
 require File.expand_path('../boot', __FILE__)
-require 'csv'
 require 'rails/all'
+require 'csv'
+require 'carrierwave'
+require 'carrierwave/orm/activerecord'
+
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -20,5 +23,12 @@ module Internal
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
     # config.serve_static_assets = true
+
+    config.before_configuration do
+      env_file = File.join(Rails.root, 'config', 'mailer_conf.yml')
+      YAML.load(File.open(env_file)).each do |key, value|
+        ENV[key.to_s] = value
+      end if File.exist?(env_file)
+    end
   end
 end
