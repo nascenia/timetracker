@@ -55,6 +55,23 @@ class UserMailer < ActionMailer::Base
     false
   end
 
+
+  def send_approval_or_rejection_notification_of_employee_registration_to_hr(user)
+    @user = user
+    subject = 'Employee Registration'
+    @title = 'A employee registration form has just been submited.'
+    mail to: "imran.saimun@bdipo.com", subject: subject
+
+    logger.info "---------------"
+    logger.info CONFIG['leave_admin']
+    logger.info user
+    logger.info employee_path(@user)
+    true
+  rescue => e
+    logger.error e.message
+    false
+  end
+
   def send_award_leave_notification_to_user(user, hours)
     @user = user
     @hours = hours

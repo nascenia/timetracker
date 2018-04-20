@@ -1,0 +1,78 @@
+-if flash[:warning].present?
+  .alert.alert-success
+    = flash[:warning]
+%h1  #{@user.name} Details
+
+.row
+  .col-md-8
+    .content-show-item
+      %h3
+        Academic Info:
+        .content-info
+          .item-university
+            %h4 University : #{@user.last_university}
+            .item-last_degree
+              %h5
+                Last Degree:
+                =@user.last_degree
+            .item-passing_year
+              %h5
+                Passing Year:
+                =@user.passing_year
+      %h3
+        Contact Info:
+        .content-info
+          .item-email
+            %h4
+              Email:
+              =@user.email
+          .item-personal_email
+            %h4
+              Personal Mail:
+              =@user.personal_email
+          .item-mobile
+            %h4
+              Mobile:
+              =@user.mobile_number
+          - if @user.alternate_contact.present?
+            .item-alternate_contact
+            %h4
+              Alternate Contact:
+              =@user.alternate_contact
+      %h3
+        Address Info:
+        .content-info
+          .item-present_address
+            %h4 Present Address : #{@user.present_address}
+          .item-permanent_address
+            %h4
+              Permanent Address:
+              =@user.permanent_address
+      %h3
+        Personal Info:
+        .content-info
+          .item-date_of_birth
+            %h5 Date of Birth: #{@user.date_of_birth}
+          .item-blood_group
+            %h5
+              Blood Group:
+              =@user.blood_group
+          .item-emergency_contact_person_name
+            %h5
+              Emergency Contact:
+              =@user.emergency_contact_person_name
+          .item-emergency_contact_person_relation
+            %h5
+              Relation:
+              =@user.emergency_contact_person_relation
+          .item-emergency_contact_person_number
+            %h5
+              Mobile:
+              =@user.emergency_contact_person_number
+  .col-md-4
+    .img-responsive.profile_image
+      =image_tag @user.avatar.url(:large)
+- if @show_actions_to_admin
+  .container_accept_or_reject
+    .row
+      = render partial: 'actions'

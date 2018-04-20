@@ -1,11 +1,7 @@
--if flash[:warning].present?
-  .alert.alert-danger
-    = flash[:warning]
 %h2
   Employee details
 %br
-= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: 'form-horizontal', method: :put }) do |f|
-  = devise_error_messages!
+= form_for(@user, url: review_registration_user_path(@user), html: { class: 'form-horizontal' ,method: :post} ) do |f|
   %fieldset
     %legend Basic
     .form-group
@@ -83,8 +79,11 @@
     .form-group
       = f.label :avatar, 'Image', {:class => 'col-sm-2 control-label'}
       .col-sm-10
-        =f.file_field :avatar, {:class => 'form-control', :required => true}
+        =image_tag f.object.avatar.url(:medium)
+        =f.file_field :avatar, {:class => 'form-control'}
+
   %br
   .form-group
     .col-sm-offset-2.col-sm-10
-      = f.submit 'Update', :class => 'btn btn-primary'
+      = f.submit 'Accept', :class => 'btn btn-success'
+      = f.submit 'Reject', :class => 'btn btn-danger'

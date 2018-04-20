@@ -26,12 +26,19 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
 
+  mount_uploader :avatar, AvatarUploader
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
   devise :omniauthable, :omniauth_providers => [:google_oauth2]
 
   ADMIN_USER = CONFIG['admins']
+
+  REGISTRATION_STATUS = {
+      not_registered: 0,
+      not_approved: 1,
+      registered: 2,
+  }
 
   EMPLOYEE = 1
   TTF = 2
@@ -224,9 +231,6 @@ class User < ActiveRecord::Base
   end
 
   def all_information_provided?
-    (personal_email && present_address && mobile_number && alternate_contact &&
-     permanent_address && date_of_birth && last_degree && last_university && passing_year &&
-     emergency_contact_person_name && emergency_contact_person_relation && emergency_contact_person_number &&
-     blood_group && joining_date).present?
+     registration_status > 0
   end
 end

@@ -18,6 +18,8 @@ Internal::Application.routes.draw do
     member do
       get :leave
       get :team
+      post :review_registration
+      get :edit_review_registration
     end
 
     collection do
