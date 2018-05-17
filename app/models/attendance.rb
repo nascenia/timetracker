@@ -3,7 +3,7 @@ class Attendance < ActiveRecord::Base
   belongs_to :user
   has_many :children, :class_name => 'Attendance', :foreign_key => 'parent_id', :dependent => :destroy
 
-  USUAL_OFFICE_TIME = '10:00'
+  USUAL_OFFICE_TIME = '09:00'
   IP_WHITELIST = CONFIG['ip_whitelist']
   MONTHS = [
       ['1', 'January'],
