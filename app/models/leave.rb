@@ -170,7 +170,7 @@ class Leave < ActiveRecord::Base
   end
 
   def total_leave_hour_of(month)
-    if end_date.present?
+    if end_date.present? && half_day == 0
       dates = (start_date..end_date).map(&:to_date) - user.holiday_scheme.holidays.map { |holiday| holiday.date }
       weekend = user.weekend.off_days.map(&:capitalize).map(&:to_s)
       dates.delete_if { |date| weekend.include?(date.strftime('%A')) || date.strftime('%m') != month }
@@ -185,7 +185,7 @@ class Leave < ActiveRecord::Base
   end
 
   def total_leave_hour
-    if end_date.present?
+    if end_date.present? && half_day == 0
       number_of_days * HOURS_FOR_ONE_DAY
     else
       if half_day == 0
