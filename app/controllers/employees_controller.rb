@@ -4,14 +4,14 @@ class EmployeesController < ApplicationController
 
   def index
     if current_user.is_admin?
-      @employees = User.all.order(name: :asc)
+      @employees = User.where(:is_active => true).order(name: :asc)
     else
-      @employees = User.all.active.order(name: :asc)
+      @employees =  User.where(:is_active => true).order(name: :asc)
     end
 
-    @employees.each do |employee|
-      logger.info employee
-    end
+    # @employees.each do |employee|
+    #   logger.info employee
+    # end
     @employees = @employees.where('lower(name) LIKE ?', "%#{params[:name].strip.downcase}%") if params[:name].present?
     @employees = @employees.where('lower(email) LIKE ?', "%#{params[:email].strip.downcase}%") if params[:email].present?
     if params[:employee_status].present?
