@@ -38,11 +38,11 @@
     .form-group
       = f.label :mobile_number, {:class => 'col-sm-2 control-label'}
       .col-sm-10
-        =f.text_field :mobile_number, {:class => 'form-control', :required => true}
+        =f.text_field :mobile_number, {:class => 'form-control', :required => true, :pattern => '[0][1][56789][0-9]{8}', :title => 'Enter a valid mobile number!'}
     .form-group
       = f.label :alternate_contact, {:class => 'col-sm-2 control-label'}
       .col-sm-10
-        =f.text_field :alternate_contact, {:class => 'form-control', :required => true}
+        =f.text_field :alternate_contact, {:class => 'form-control', :required => true, :pattern => '[0][1][56789][0-9]{8}', :title => 'Enter a valid mobile number!'}
     .form-group
       = f.label :permanent_address, {:class => 'col-sm-2 control-label'}
       .col-sm-10
@@ -61,7 +61,7 @@
     .form-group
       = f.label :passing_year, 'Year', {:class => 'col-sm-2 control-label'}
       .col-sm-10
-        =f.text_field :passing_year, {:class => 'form-control', :required => true}
+        =f.text_field :passing_year, {:class => 'form-control', :required => true, :pattern => '[1-2][0-9]{3}', :title => 'Enter a valid year!'}
   %br
   %fieldset
     %legend Emergency Contact Person
@@ -76,14 +76,22 @@
     .form-group
       = f.label :emergency_contact_person_number, 'Number', {:class => 'col-sm-2 control-label'}
       .col-sm-10
-        =f.text_field :emergency_contact_person_number, {:class => 'form-control', :required => true}
+        =f.text_field :emergency_contact_person_number, {:class => 'form-control', :required => true, :pattern => '[0][1][56789][0-9]{8}', :title => 'Enter a valid mobile number!'}
   %br
   %fieldset
     %legend Photo
     .form-group
       = f.label :avatar, 'Image', {:class => 'col-sm-2 control-label'}
-      .col-sm-10
-        =f.file_field :avatar, {:class => 'form-control', :required => true}
+      -if f.object.avatar.url.present?
+        .col-sm-6
+          =f.file_field :avatar, {:class => 'form-control', :required => false}
+          %br
+        .col-sm-4
+          .img-responsive.profile_image
+            =image_tag f.object.avatar.url(:medium)
+      -else
+        .col-sm-10
+          =f.file_field :avatar, {:class => 'form-control', :required => true}
   %br
   .form-group
     .col-sm-offset-2.col-sm-10

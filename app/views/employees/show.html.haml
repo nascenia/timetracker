@@ -9,66 +9,137 @@
       %h3
         Academic Info:
         .content-info
-          .item-university
-            %h4 University : #{@user.last_university}
+          .row
+            .item-university
+              .col-md-4
+                %h4 University:
+              .col-md-8
+                %h4
+                  #{@user.last_university}
+          .row
             .item-last_degree
-              %h5
-                Last Degree:
-                =@user.last_degree
+              .col-md-4
+                %h5
+                  Last Degree:
+              .col-md-8
+                %h5
+                  =@user.last_degree
+          .row
             .item-passing_year
-              %h5
-                Passing Year:
-                =@user.passing_year
+              .col-md-4
+                %h5
+                  Passing Year:
+              .col-md-8
+                %h5
+                  =@user.passing_year
+          .row
+            .item-passing_year
+              .col-md-4
+                %h5
+                  Joining Date:
+              .col-md-8
+                %h5
+                  =@user.joining_date
+          .clearfix
       %h3
         Contact Info:
         .content-info
-          .item-email
-            %h4
-              Email:
-              =@user.email
-          .item-personal_email
-            %h4
-              Personal Mail:
-              =@user.personal_email
-          .item-mobile
-            %h4
-              Mobile:
-              =@user.mobile_number
+          .row
+            .item-email
+              .col-md-4
+                %h5
+                  Email:
+              .col-md-8
+                %h5
+                  =@user.email
+          .row
+            .item-personal_email
+              .col-md-4
+                %h5
+                  Personal Mail:
+              .col-md-8
+                %h5
+                  =@user.personal_email
+          .row
+            .item-mobile
+              .col-md-4
+                %h5
+                  Mobile:
+              .col-md-8
+                %h5
+                  =@user.mobile_number
           - if @user.alternate_contact.present?
-            .item-alternate_contact
-            %h4
-              Alternate Contact:
-              =@user.alternate_contact
+            .row
+              .item-alternate_contact
+                .col-md-4
+                  %h5
+                    Alternate Contact:
+                .col-md-8
+                  %h5
+                    =@user.alternate_contact
+          .clearfix
       %h3
         Address Info:
         .content-info
-          .item-present_address
-            %h4 Present Address : #{@user.present_address}
-          .item-permanent_address
-            %h4
-              Permanent Address:
-              =@user.permanent_address
+          .row
+            .item-present_address
+              .col-md-4
+                %h5 Present Address :
+              .col-md-8
+                %h5
+                  #{@user.present_address}
+          .row
+            .item-permanent_address
+              .col-md-4
+                %h5
+                  Permanent Address:
+              .col-md-8
+                %h5
+                  =@user.permanent_address
+          .clearfix
       %h3
         Personal Info:
         .content-info
-          .item-date_of_birth
-            %h5 Date of Birth: #{@user.date_of_birth}
-          .item-blood_group
-            %h5
-              Blood Group:
-              =@user.blood_group
-          .item-emergency_contact_person_name
-            %h5
-              Emergency Contact:
-              =@user.emergency_contact_person_name
-          .item-emergency_contact_person_relation
-            %h5
-              Relation:
-              =@user.emergency_contact_person_relation
-          .item-emergency_contact_person_number
-            %h5
-              Mobile:
-              =@user.emergency_contact_person_number
+          .row
+            .item-date_of_birth
+              .col-md-4
+                %h5 Date of Birth:
+              .col-md-8
+                %h5
+                  #{@user.date_of_birth}
+          .row
+            .item-blood_group
+              .col-md-4
+                %h5
+                  Blood Group:
+              .col-md-8
+                %h5
+                  =@user.blood_group
+          .row
+            .item-emergency_contact_person_name
+              .col-md-4
+                %h5
+                  Emergency Contact:
+              .col-md-8
+                %h5
+                  =@user.emergency_contact_person_name
+          .row
+            .item-emergency_contact_person_relation
+              .col-md-4
+                %h5
+                  Relation:
+              .col-md-8
+                %h5
+                  =@user.emergency_contact_person_relation
+          .row
+            .item-emergency_contact_person_number
+              .col-md-4
+                %h5
+                  Mobile:
+              .col-md-8
+                %h5
+                  =@user.emergency_contact_person_number
+          .clearfix
   .col-md-4
     .img-responsive.profile_image
       =image_tag @user.avatar.url(:large)

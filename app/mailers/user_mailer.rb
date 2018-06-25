@@ -60,12 +60,7 @@ class UserMailer < ActionMailer::Base
     @user = user
     subject = 'Employee Registration'
     @title = 'A employee registration form has just been submited.'
-    mail to: "imran.saimun@bdipo.com", subject: subject
-
-    logger.info "---------------"
-    logger.info CONFIG['leave_admin']
-    logger.info user
-    logger.info employee_path(@user)
+    mail to: CONFIG['leave_admin'], subject: subject
     true
   rescue => e
     logger.error e.message
