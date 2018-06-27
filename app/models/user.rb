@@ -53,7 +53,9 @@ class User < ActiveRecord::Base
 
   scope :inactive, -> {where('is_active = ?', false)}
   scope :active, -> {where('is_active = ?', true)}
-  scope :published, -> { where(is_published: true) }
+  scope :published, -> { where(registration_status: 2) }
+  scope :not_published, -> { where(registration_status: 1) }
+  scope :not_register, -> { where(registration_status: 0) }
   scope :ttf, -> {where('role = ?', User::TTF)}
   scope :super_ttf, -> {where('role = ?', User::SUPER_TTF)}
   scope :employees, -> {where('role = ?', User::EMPLOYEE)}

@@ -42,7 +42,7 @@
     .form-group
       = f.label :alternate_contact, {:class => 'col-sm-2 control-label'}
       .col-sm-10
-        =f.text_field :alternate_contact, {:class => 'form-control', :required => true, :pattern => '[0][1][56789][0-9]{8}', :title => 'Enter a valid mobile number!'}
+        =f.text_field :alternate_contact, {:class => 'form-control', :required => false, :pattern => '[0][1][56789][0-9]{8}?', :title => 'Enter a valid mobile number!'}
     .form-group
       = f.label :permanent_address, {:class => 'col-sm-2 control-label'}
       .col-sm-10
