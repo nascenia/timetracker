@@ -10,7 +10,8 @@
         %th{:width => '30%'} Email
         %th{:width => '15%'} Contact Number
         %th{:width => '5%'} Blood Group
-        %th{:width => '10%'} Joining Date
+        - if current_user.is_admin?
+          %th{:width => '10%'} Joining Date
         %th{:width => '15%'} TTF
     %tbody.word-break
       - @employees.each do |employee|
@@ -20,7 +21,8 @@
           %td= employee.email
           %td= employee.mobile_number.present? ? (employee.mobile_number) : 'N/A'
           %td= employee.blood_group
-          %td= employee.joining_date
+          - if current_user.is_admin?
+            %td= employee.joining_date
           -if employee.ttf_id?
             %td= User.find(employee.ttf_id).name
           -else
