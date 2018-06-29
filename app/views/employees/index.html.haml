@@ -1,18 +1,17 @@
 - if current_user.is_admin?
   = render partial: 'admin_filter'
-- else
-  = render partial: 'employee_filter'
 .panel.panel-default
   .panel-heading
     %b Employees
-  %table.table.table-bordered.table-hover
+  %table.table.table-bordered.table-hover#employee-info-table
     %thead
       %tr
         %th{:width => '25%'} Name
         %th{:width => '30%'} Email
         %th{:width => '15%'} Contact Number
         %th{:width => '5%'} Blood Group
-        %th{:width => '10%'} Joining Date
+        - if current_user.is_admin?
+          %th{:width => '10%'} Joining Date
         %th{:width => '15%'} TTF
     %tbody.word-break
       - @employees.each do |employee|
@@ -22,8 +21,26 @@
           %td= employee.email
           %td= employee.mobile_number.present? ? (employee.mobile_number) : 'N/A'
           %td= employee.blood_group
-          %td= employee.joining_date
+          - if current_user.is_admin?
+            %td= employee.joining_date
           -if employee.ttf_id?
             %td= User.find(employee.ttf_id).name
           -else
             %td= "N/A"
+
+:javascript
+  $(document).ready(function() {
+    $('#employee-info-table, #raw-data-table').dataTable({
+      "order": [[2, "desc" ]],
+      "bFilter": true,
+      "bLengthChange": true,
+      "bInfo": false,
+      "iDisplayLength": 100,
+      dom: 'T<"clear">lfrtip',
+      tableTools: {
+          "sSwfPath": "http://cdn.datatables.net/tabletools/2.2.2/swf/copy_csv_xls_pdf.swf",
+          "aButtons": ["pdf", "print", "xls" ]
+      }
+    });
+    $('div.dataTables_length').hide();
+  });

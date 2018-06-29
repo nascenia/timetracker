@@ -5,14 +5,23 @@
         %tr{:style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0; padding: 0;"}
           %td{:style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 14px;", :valign => "top"}
             %strong
+              Hi
+              = @user.name
             = @title
-            You can view the form by clicking the button below.
+        %tr{:style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0; padding: 0;"}
+          %td{:style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 14px;", :valign => "top"}
+            %span{:style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; color: #cc4f4f; margin: 0; padding: 0;"}
+              Your Applicatoin has rejected for following reason-
+              %br
+                %b
+                  = @reason
 
         %tr{:style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0; padding: 0;"}
           %td{:style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 14px;", :valign => "top"}
             %span{:style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; color: #47becc; margin: 0; padding: 0;"}
-              — Thanks, from the LeaveTracker
+              = @greetings
+            %br
+            You can view the application by clicking the button below.
         %tr{:style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0; padding: 0;"}
           %td{:align => "center", :style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: center; margin: 0;", :valign => "top"}
-            -#= link_to 'View this application', edit_review_registration_user_url(@user), :style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; color: #47becc; text-decoration: none; display: inline-block; line-height: 2; text-align: center; cursor: pointer; text-transform: capitalize; border-radius: 100px; background-image: none; margin: 0; padding: 7px 14px; border: 2px solid #47becc;"
-            = link_to 'View this application', employee_url(@user), :style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; color: #47becc; text-decoration: none; display: inline-block; line-height: 2; text-align: center; cursor: pointer; text-transform: capitalize; border-radius: 100px; background-image: none; margin: 0; padding: 7px 14px; border: 2px solid #47becc;"
+            = link_to 'View this application', edit_user_registration_url, :style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; color: #47becc; text-decoration: none; display: inline-block; line-height: 2; text-align: center; cursor: pointer; text-transform: capitalize; border-radius: 100px; background-image: none; margin: 0; padding: 7px 14px; border: 2px solid #47becc;"

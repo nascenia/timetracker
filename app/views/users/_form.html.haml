@@ -1,0 +1,14 @@
+- content_for :modal_title do
+  Rejection reason for the applicant
+
+- content_for :modal_body do
+  = form_tag send_review_registration_comment_user_path(@user) do |f|
+    .form-group
+      = text_area_tag :body, '', maxlength: '300', class: 'form-control', rows: 7
+
+      %p.help-block
+        %span= 300
+        characters remaining.
+
+    .form-group
+      = submit_tag 'Submit', class: 'form-control btn btn-primary'

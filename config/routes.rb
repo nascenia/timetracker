@@ -19,6 +19,8 @@ Internal::Application.routes.draw do
       get :leave
       get :team
       post :review_registration
+      get  :new_review_registration_comment
+      post :send_review_registration_comment
       get :edit_review_registration
     end
 

@@ -1,26 +1,42 @@
 -if flash[:warning].present?
   .alert.alert-success
     = flash[:warning]
-%h1  #{@user.name} Details
+%h1  #{@user.name}
 
 .row
   .col-md-8
     .content-show-item
       %h3
-        Academic Info:
+        Basic Information
         .content-info
+          .row
+            .item-email
+              .col-md-4
+                %h5
+                  Email
+              .col-md-8
+                %h5
+                  =@user.email
+          .row
+            .item-mobile
+              .col-md-4
+                %h5
+                  Mobile
+              .col-md-8
+                %h5
+                  =@user.mobile_number
           .row
             .item-university
               .col-md-4
-                %h4 University:
+                %h5 University
               .col-md-8
-                %h4
+                %h5
                   #{@user.last_university}
           .row
             .item-last_degree
               .col-md-4
                 %h5
-                  Last Degree:
+                  Last Degree
               .col-md-8
                 %h5
                   =@user.last_degree
@@ -28,118 +44,99 @@
             .item-passing_year
               .col-md-4
                 %h5
-                  Passing Year:
+                  Passing Year
               .col-md-8
                 %h5
                   =@user.passing_year
           .row
-            .item-passing_year
-              .col-md-4
-                %h5
-                  Joining Date:
-              .col-md-8
-                %h5
-                  =@user.joining_date
-          .clearfix
-      %h3
-        Contact Info:
-        .content-info
-          .row
-            .item-email
-              .col-md-4
-                %h5
-                  Email:
-              .col-md-8
-                %h5
-                  =@user.email
-          .row
-            .item-personal_email
-              .col-md-4
-                %h5
-                  Personal Mail:
-              .col-md-8
-                %h5
-                  =@user.personal_email
-          .row
-            .item-mobile
-              .col-md-4
-                %h5
-                  Mobile:
-              .col-md-8
-                %h5
-                  =@user.mobile_number
-          - if @user.alternate_contact.present?
-            .row
-              .item-alternate_contact
-                .col-md-4
-                  %h5
-                    Alternate Contact:
-                .col-md-8
-                  %h5
-                    =@user.alternate_contact
-          .clearfix
-      %h3
-        Address Info:
-        .content-info
-          .row
-            .item-present_address
-              .col-md-4
-                %h5 Present Address :
-              .col-md-8
-                %h5
-                  #{@user.present_address}
-          .row
-            .item-permanent_address
-              .col-md-4
-                %h5
-                  Permanent Address:
-              .col-md-8
-                %h5
-                  =@user.permanent_address
-          .clearfix
-      %h3
-        Personal Info:
-        .content-info
-          .row
-            .item-date_of_birth
-              .col-md-4
-                %h5 Date of Birth:
-              .col-md-8
-                %h5
-                  #{@user.date_of_birth}
-          .row
             .item-blood_group
               .col-md-4
                 %h5
-                  Blood Group:
+                  Blood Group
               .col-md-8
                 %h5
                   =@user.blood_group
-          .row
-            .item-emergency_contact_person_name
-              .col-md-4
-                %h5
-                  Emergency Contact:
-              .col-md-8
-                %h5
-                  =@user.emergency_contact_person_name
-          .row
-            .item-emergency_contact_person_relation
-              .col-md-4
-                %h5
-                  Relation:
-              .col-md-8
-                %h5
-                  =@user.emergency_contact_person_relation
-          .row
-            .item-emergency_contact_person_number
-              .col-md-4
-                %h5
-                  Mobile:
-              .col-md-8
-                %h5
-                  =@user.emergency_contact_person_number
+
           .clearfix
+      - if current_user.is_admin?
+        %h3
+          Detail Information
+          .content-info
+            - if @user.alternate_contact.present?
+              .row
+                .item-alternate_contact
+                  .col-md-4
+                    %h5
+                      Alternate Contact
+                  .col-md-8
+                    %h5
+                      =@user.alternate_contact
+              .row
+                .item-personal_email
+                  .col-md-4
+                    %h5
+                      Personal Mail
+                  .col-md-8
+                    %h5
+                      =@user.personal_email
+            .row
+              .item-emergency_contact_person_name
+                .col-md-4
+                  %h5
+                    Emergency Contact
+                .col-md-8
+                  %h5
+                    =@user.emergency_contact_person_name
+            .row
+              .item-emergency_contact_person_relation
+                .col-md-4
+                  %h5
+                    Relation
+                .col-md-8
+                  %h5
+                    =@user.emergency_contact_person_relation
+            .row
+              .item-emergency_contact_person_number
+                .col-md-4
+                  %h5
+                    Mobile
+                .col-md-8
+                  %h5
+                    =@user.emergency_contact_person_number
+
+
+            .row
+              .item-present_address
+                .col-md-4
+                  %h5 Present Address
+                .col-md-8
+                  %h5
+                    #{@user.present_address}
+            .row
+              .item-permanent_address
+                .col-md-4
+                  %h5
+                    Permanent Address
+                .col-md-8
+                  %h5
+                    =@user.permanent_address
+            .row
+              .item-date_of_birth
+                .col-md-4
+                  %h5 Date of Birth
+                .col-md-8
+                  %h5
+                    #{@user.date_of_birth}
+
+            .row
+              .item-passing_year
+                .col-md-4
+                  %h5
+                    Joining Date
+                .col-md-8
+                  %h5
+                    =@user.joining_date
+            .clearfix
   .col-md-4
     .img-responsive.profile_image
       =image_tag @user.avatar.url(:large)
