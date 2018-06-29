@@ -3,7 +3,7 @@
 .panel.panel-default
   .panel-heading
     %b Employees
-  %table.table.table-bordered.table-hover
+  %table.table.table-bordered.table-hover#employee-info-table
     %thead
       %tr
         %th{:width => '25%'} Name
@@ -25,3 +25,20 @@
             %td= User.find(employee.ttf_id).name
           -else
             %td= "N/A"
+
+:javascript
+  $(document).ready(function() {
+    $('#employee-info-table, #raw-data-table').dataTable({
+      "order": [[2, "desc" ]],
+      "bFilter": true,
+      "bLengthChange": true,
+      "bInfo": false,
+      "iDisplayLength": 100,
+      dom: 'T<"clear">lfrtip',
+      tableTools: {
+          "sSwfPath": "http://cdn.datatables.net/tabletools/2.2.2/swf/copy_csv_xls_pdf.swf",
+          "aButtons": ["pdf", "print", "xls" ]
+      }
+    });
+    $('div.dataTables_length').hide();
+  });

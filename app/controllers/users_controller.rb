@@ -38,8 +38,6 @@ class UsersController < ApplicationController
   end
 
   def review_registration
-    logger.info "######## : "
-    logger.info params
     @user = User.find(params[:id])
     if params[:commit] == "Accept"
       @user.update_attributes(user_params)
@@ -49,11 +47,20 @@ class UsersController < ApplicationController
       return
     else
       @user.update_attribute(:registration_status, User::REGISTRATION_STATUS[:not_registered])
-      flash[:warning] = "User registration Rejected. You can edit and update user profile."
-      render :edit_review_registration
+      flash[:warning] = "User registration has been Rejected."
+      redirect_to new_review_registration_comment_user_path(@user), turbolinks: false
     end
 
   end
+  def new_review_registration_comment
+      @user = User.find(params[:id])
+  end
+  def send_review_registration_comment
+    @user = User.find(params[:id])
+    UserMailer.send_rejection_notification_of_employee_registration_to_user(@user,params[:body]).deliver
+    redirect_to employee_path(@user)
+  end
+
 
   def edit_review_registration
     @user = User.find(params[:id])
