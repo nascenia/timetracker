@@ -1,9 +1,9 @@
 .col-sm-3
-  = link_to  'Accept',  review_registration_user_path(@user), method: :post, remote: true, id: 'accept_leave',
+  = link_to  'Accept',  review_registration_user_path(@user, :status => "Accept"), method: :post, remote: false, id: 'accept_leave',
              class: "btn btn-block btn-success #{@user.registration_status == 0 ? 'disabled' : ''}",
              data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>&nbsp;Approving..." }
 
 .col-sm-3
-  = link_to  'Reject', review_registration_user_path(@user), method: :post, remote: true, id: 'reject_leave',
+  = link_to  'Reject', review_registration_user_path(@user, :status => "Reject"), method: :post, remote: true, id: 'reject_leave',
              class: "btn btn-block btn-danger #{@user.registration_status == 0 ? 'disabled' : ''}",
              data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>&nbsp;Rejecting..." }

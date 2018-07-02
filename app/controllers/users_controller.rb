@@ -39,8 +39,7 @@ class UsersController < ApplicationController
 
   def review_registration
     @user = User.find(params[:id])
-    if params[:commit] == "Accept"
-      @user.update_attributes(user_params)
+    if params[:status] == "Accept"
       @user.update_attribute(:registration_status, User::REGISTRATION_STATUS[:registered])
       flash[:warning] = "User registration Accepted"
       redirect_to employee_path(@user)
