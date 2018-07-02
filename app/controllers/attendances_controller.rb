@@ -41,15 +41,19 @@ class AttendancesController < ApplicationController
 
       flash[:notice] = 'Successfully checked in.'
 
-      if attendance.present?
-        if attendance.out_time.present?
-          Attendance.create_attendance(@user.id, attendance)
+      if @user.all_information_provided?
+        if attendance.present?
+          if attendance.out_time.present?
+            Attendance.create_attendance(@user.id, attendance)
+          else
+            flash[:notice] = 'You are already checked in.'
+          end
         else
-          flash[:notice] = 'You are already checked in.'
+          Attendance.create_attendance(@user.id, nil)
+          Attendance.add_missing_checkout_hours(@user)
         end
       else
-        Attendance.create_attendance(@user.id, nil)
-        Attendance.add_missing_checkout_hours(@user)
+        flash[:notice] = 'Please fill up all your details before checking in.'
       end
     end
 

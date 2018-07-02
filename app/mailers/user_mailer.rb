@@ -37,6 +37,21 @@ class UserMailer < ActionMailer::Base
     false
   end
 
+  def send_rejection_notification_of_employee_registration_to_user(user, reason)
+    @user = user
+    @reason = reason
+    subject = 'Employee Registration Form Rejected'
+    @title = 'Your employee registration application has just been rejected.'
+    @greetings = '- Better luck next time!'
+    mail to: @user.email,
+         cc: CONFIG['leave_admin'],
+         subject: subject
+    true
+  rescue => e
+    logger.error e.message
+    false
+  end
+
   def send_approval_or_rejection_notification_to_hr(leave)
     @leave = leave
     @user = @leave.user
@@ -51,6 +66,18 @@ class UserMailer < ActionMailer::Base
     mail to: CONFIG['leave_admin'], subject: subject
     true
     rescue => e
+    logger.error e.message
+    false
+  end
+
+
+  def send_approval_or_rejection_notification_of_employee_registration_to_hr(user)
+    @user = user
+    subject = 'Employee Registration'
+    @title = 'A employee registration form has just been submited.'
+    mail to: CONFIG['leave_admin'], subject: subject
+    true
+  rescue => e
     logger.error e.message
     false
   end

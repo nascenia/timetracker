@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-
+  before_action :authenticate_admin_user!, only: [:edit_review_registration, :review_registration]
   layout 'leave'
 
   before_action :authenticate_user!
@@ -37,9 +37,41 @@ class UsersController < ApplicationController
     end
   end
 
+  def review_registration
+    @user = User.find(params[:id])
+    if params[:commit] == "Accept"
+      @user.update_attributes(user_params)
+      @user.update_attribute(:registration_status, User::REGISTRATION_STATUS[:registered])
+      flash[:warning] = "User registration Accepted"
+      redirect_to employee_path(@user)
+      return
+    else
+      @user.update_attribute(:registration_status, User::REGISTRATION_STATUS[:not_registered])
+      flash[:warning] = "User registration has been Rejected."
+      redirect_to new_review_registration_comment_user_path(@user), turbolinks: false
+    end
+
+  end
+  def new_review_registration_comment
+      @user = User.find(params[:id])
+  end
+  def send_review_registration_comment
+    @user = User.find(params[:id])
+    UserMailer.send_rejection_notification_of_employee_registration_to_user(@user,params[:body]).deliver
+    redirect_to employee_path(@user)
+  end
+
+
+  def edit_review_registration
+    @user = User.find(params[:id])
+  end
+
   private
 
     def user_params
-      params.require(:user).permit(:email, :name, :is_active)
+      params.require(:user).permit(:email, :name, :is_active, :personal_email, :present_address, :mobile_number, :alternate_contact,
+                                   :permanent_address, :date_of_birth, :last_degree, :last_university, :passing_year,
+                                   :emergency_contact_person_name, :emergency_contact_person_relation,
+                                   :emergency_contact_person_number, :blood_group, :joining_date,:name,:avatar)
     end
 end

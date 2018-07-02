@@ -5,6 +5,7 @@ path/
 
 # Ignore omniauth
 /config/initializers/omniauth.rb
+config/mailer_conf.yml
 
 # Ignore the default SQLite database.
 /db/*.sqlite3

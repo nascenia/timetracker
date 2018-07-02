@@ -1,0 +1,21 @@
+.content-info{
+  margin-top: 10px;
+  padding: 5px;
+  padding-left: 25px;
+  background-color: #ecede8;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.container_accept_or_reject{
+  margin-top: 20px;
+  .btn.btn-block {
+    margin: 10px 0px;
+  }
+}
+.img-responsive.profile_image{
+  img {
+    width: 100%;
+    height: auto;
+  }
+
+}
