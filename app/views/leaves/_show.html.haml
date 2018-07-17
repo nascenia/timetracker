@@ -42,14 +42,18 @@
           - else
             = get_type @leave
       %tr
+        %th Applied on
+        %td= @leave.created_at.strftime("%d-%b-%y")
+
+      %tr
         %th Leave duration
         %td= get_duration @leave
       %tr
         %th Start date
-        %td= @leave.start_date || 'N/A'
+        %td= @leave.start_date.strftime("%d-%b-%y") || 'N/A'
       %tr
         %th End date
-        %td= @leave.end_date || 'N/A'
+        %td= @leave.end_date.strftime("%d-%b-%y") || 'N/A'
       %tr
         %th Description
         %td= @leave.reason
