@@ -32,15 +32,11 @@
             = Attendance.humanized_average_hours(Attendance.monthly_average_hours(previous_month))
 .row
   #attendance-summary &nbsp;
-%p#fix_js
 
 
 
 :javascript
   $(document).ready(function() {
-    var x = document.getElementById("fix_js");
-    if (x.style.display !== "none") {
-        x.style.display = "none";
     $('#monthly-attendance-table, #raw-data-table').dataTable({
       "order": [[2, "desc" ]],
       "bFilter": true,
@@ -54,7 +50,6 @@
       }
     });
     $('div.dataTables_length').hide();
-    }
   });
 
   $(document).on('click', '.monthly-summary', function() {

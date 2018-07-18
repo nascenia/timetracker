@@ -27,13 +27,8 @@
             %td= User.find(employee.ttf_id).name
           -else
             %td= "N/A"
-  %p#fix_js
-
 :javascript
   $(document).ready(function() {
-    var x = document.getElementById("fix_js");
-    if (x.style.display !== "none") {
-        x.style.display = "none";
       $('#employee-info-table, #raw-data-table').dataTable({
         "order": [[2, "desc" ]],
         "bFilter": true,
@@ -45,7 +40,10 @@
             "sSwfPath": "http://cdn.datatables.net/tabletools/2.2.2/swf/copy_csv_xls_pdf.swf",
             "aButtons": ["pdf", "print", "xls" ]
         }
+
       });
       $('div.dataTables_length').hide();
-    }
+  });
+  $("#employee-info-table").on("click", function(){
+    $('#employee-info-table, #raw-data-table').DataTable().state.clear();
   });
