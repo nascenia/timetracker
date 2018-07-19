@@ -23,8 +23,8 @@
           %td= Attendance.monthly_average_check_in_time(current_month)
           %td{"data-order" => "#{Attendance.monthly_total_hours(current_month)}"}
             = Attendance.get_humanize_total_hour(current_month)
-          %td{"data-order" => "#{Attendance.monthly_average_hours(previous_month)}"}
-            = Attendance.humanized_average_hours(Attendance.monthly_average_hours(previous_month))
+          %td{"data-order" => "#{Attendance.monthly_average_hours(current_month)}"}
+            = Attendance.humanized_average_hours(Attendance.monthly_average_hours(current_month))
           %td= Attendance.monthly_average_check_in_time(previous_month)
           %td{"data-order" => "#{Attendance.monthly_total_hours(previous_month)}"}
             = Attendance.get_humanize_total_hour(previous_month)
