@@ -26,7 +26,6 @@
           %td= leave.start_date
           %td= leave.end_date
           %td
-            - p leave.leave_type
             - unless unannounced?(leave)
               = link_to 'Show', leave_path(leave)
 -#  %p= paginate @leaves
