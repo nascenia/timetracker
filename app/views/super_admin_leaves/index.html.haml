@@ -6,7 +6,9 @@
   .panel-heading
     %h3
       All Leaves
-  %table.table.table-bordered.table-hover
+
+  -##loading-message Loading table... Please Wait
+  %table.table.table-bordered.table-hover#leave-table
     %thead
       %tr
         %th Name
@@ -23,4 +25,19 @@
           %td= get_status leave.status
           %td= leave.start_date
           %td= leave.end_date
-          %td= link_to 'Show', leave_path(leave)
+          %td
+            - p leave.leave_type
+            - unless unannounced?(leave)
+              = link_to 'Show', leave_path(leave)
+-#  %p= paginate @leaves
+-#:javascript
+-#  $(document).ready( function () {
+-#    $('#leave-table').dataTable({
+-#       "searching": false,
+-#       "pageLength":10,
+-#       "lengthChange": false,
+-#       "ordering": false
+-#    });
+-#    $('#loading-message').hide();
+-#    $('#leave-table').removeClass('hidden');
+-#  } );

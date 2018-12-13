@@ -75,7 +75,8 @@
             %td= get_status(leave.status)
             %td= @month.present? ? leave.total_leave_hour_of(@month) : leave.total_leave_hour
             %td
-              = link_to 'show', leave_path(leave)
+              - unless unannounced?(leave)
+                = link_to 'show', leave_path(leave)
               - unless leave.start_date < Time.now
                 |
                 = link_to 'Cancel', leave_path(leave), method: :delete, data: { confirm: 'Are you sure' }

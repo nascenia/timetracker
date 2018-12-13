@@ -5,6 +5,7 @@ class SuperAdminLeavesController < ApplicationController
   layout 'leave'
 
   def index
+    # @leaves = Leave.page(params[:page]).includes(:user)
     @leaves = Leave.all.includes(:user)
     @leaves = @leaves.leaves_by_status(params[:status]) if params[:status].present?
     @leaves = @leaves.leaves_by_type(params[:type]) if params[:type].present?
