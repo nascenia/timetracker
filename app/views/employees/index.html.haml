@@ -29,21 +29,13 @@
             %td= "N/A"
 :javascript
   $(document).ready(function() {
-      $('#employee-info-table, #raw-data-table').dataTable({
-        "order": [[2, "desc" ]],
-        "bFilter": true,
-        "bLengthChange": true,
-        "bInfo": false,
-        "iDisplayLength": 100,
-        dom: 'T<"clear">lfrtip',
-        tableTools: {
-            "sSwfPath": "http://cdn.datatables.net/tabletools/2.2.2/swf/copy_csv_xls_pdf.swf",
-            "aButtons": ["pdf", "print", "xls" ]
-        }
-
+      var dataTable = $('#employee-info-table').DataTable({
+        lengthChange: false
       });
-      $('div.dataTables_length').hide();
-  });
-  $("#employee-info-table").on("click", function(){
-    $('#employee-info-table, #raw-data-table').DataTable().state.clear();
+      $(document).on("turbolinks:before-cache", function() {
+        if (dataTable !== null) {
+          dataTable.destroy();
+          dataTable = null;
+        }
+      });
   });
