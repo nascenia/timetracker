@@ -16,7 +16,7 @@ class UsersController < ApplicationController
     user = User.find params[:id]
 
     if user.is_admin?
-      @team = User.order(name: :asc)
+      @team = User.includes(:leave_tracker, :approval_path, :holiday_scheme, :weekend).order(name: :asc)
     elsif user.role == User::SUPER_TTF || user.role == User::TTF || user.owned_paths.length > 0
       @team = user.get_co_workers
     else
