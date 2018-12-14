@@ -81,6 +81,14 @@ class User < ActiveRecord::Base
     self.role === User::SUPER_TTF
   end
 
+  def has_resigned?
+    resignation_date.present?
+  end
+
+  def last_working_date
+    has_resigned? ? resignation_date : Time.now.to_date
+  end
+
   def self.find_for_google_oauth2(access_token, signed_in_resource=nil)
     data = access_token.info
     user = User.where(:email => data['email']).first

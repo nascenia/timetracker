@@ -126,8 +126,8 @@ class LeaveTracker < ActiveRecord::Base
 
   def update_leave_tracker_daily
     if self.commenced_date.present?
-      accrued_vacation_this_year = ((((Time.now.to_date - self.commenced_date.to_date).to_i) * CASUAL_LEAVE_IN_DAYS/365.0) * 8).to_i
-      accrued_medical_this_year = ((((Time.now.to_date - self.commenced_date.to_date).to_i) * MEDICAL_LEAVE_IN_DAYS/365.0) * 8).to_i
+      accrued_vacation_this_year = ((((self.user.last_working_date - self.commenced_date.to_date).to_i) * CASUAL_LEAVE_IN_DAYS/365.0) * 8).to_i
+      accrued_medical_this_year = ((((self.user.last_working_date - self.commenced_date.to_date).to_i) * MEDICAL_LEAVE_IN_DAYS/365.0) * 8).to_i
       if self.carried_forward_vacation.nil?
         accrued_total_vacation = accrued_vacation_this_year
       else
@@ -186,8 +186,8 @@ class LeaveTracker < ActiveRecord::Base
 
   def update_leave_tracker_when_awarded(award, note)
     if self.commenced_date.present?
-      accrued_vacation_this_year = ((((Time.now.to_date - self.commenced_date.to_date).to_i) * CASUAL_LEAVE_IN_DAYS/365.0) * 8).to_i
-      accrued_medical_this_year = ((((Time.now.to_date - self.commenced_date.to_date).to_i) * MEDICAL_LEAVE_IN_DAYS/365.0) * 8).to_i
+      accrued_vacation_this_year = ((((self.user.last_working_date - self.commenced_date.to_date).to_i) * CASUAL_LEAVE_IN_DAYS/365.0) * 8).to_i
+      accrued_medical_this_year = ((((self.user.last_working_date - self.commenced_date.to_date).to_i) * MEDICAL_LEAVE_IN_DAYS/365.0) * 8).to_i
       accrued_total_vacation = self.carried_forward_vacation + accrued_vacation_this_year
       accrued_total_medical = self.carried_forward_medical +  accrued_medical_this_year
       awarded_leave = self.awarded_leave + award.to_i
