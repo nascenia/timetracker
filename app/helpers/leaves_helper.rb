@@ -13,7 +13,12 @@ module LeavesHelper
 
   def get_status(leave_id)
     status = Leave::LEAVE_STATUSES.select { |status| status.last == leave_id }
-    status[0].try(:first)
+
+    if status[0].try(:first) == 'Rollbacked'
+      'Rolled back due to resignation'
+    else
+      status[0].try(:first)
+    end
   end
 
   def get_type(leave)

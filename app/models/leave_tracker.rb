@@ -124,8 +124,22 @@ class LeaveTracker < ActiveRecord::Base
     end
   end
 
+  def rollback_leave_tracker
+    leaves_after_last_working_day= user.leaves.leaves_after(user.resignation_date)
+    leaves_after_last_working_day.each do |leave|
+      if leave.status == Leave::ACCEPTED
+        revert_leave_tracker(leave)
+        leave.status=Leave::ROLLBACKED
+        leave.save
+      end
+    end
+  end
+
   def update_leave_tracker_daily
     if self.commenced_date.present?
+
+      rollback_leave_tracker if user.has_resigned?
+
       accrued_vacation_this_year = ((((self.user.last_working_date - self.commenced_date.to_date).to_i) * CASUAL_LEAVE_IN_DAYS/365.0) * 8).to_i
       accrued_medical_this_year = ((((self.user.last_working_date - self.commenced_date.to_date).to_i) * MEDICAL_LEAVE_IN_DAYS/365.0) * 8).to_i
       if self.carried_forward_vacation.nil?

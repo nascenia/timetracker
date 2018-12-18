@@ -10,6 +10,7 @@ class Leave < ActiveRecord::Base
   CASUAL = 1
   MEDICAL = 2
   UNANNOUNCED = 3
+  ROLLBACKED = 4
 
   LEAVE_TYPES = [
     ['Casual Leave', CASUAL],
@@ -26,7 +27,8 @@ class Leave < ActiveRecord::Base
   LEAVE_STATUSES = [
     ['Pending', PENDING],
     ['Approved', ACCEPTED],
-    ['Rejected', REJECTED]
+    ['Rejected', REJECTED],
+    ['Rollbacked', ROLLBACKED]
   ]
 
   FULL_DAY = 0
@@ -43,9 +45,10 @@ class Leave < ActiveRecord::Base
   scope :rejected_leaves, -> { where(status: REJECTED) }
   scope :pending_leaves, -> { where(status: PENDING) }
   scope :unannounced_leaves, -> { where('leave_type = 3') }
-  scope :leaves_by_type, -> (type) { where('leave_type = ?', type)}
-  scope :leaves_by_status, -> (status) { where('status = ?', status)}
-  scope :leaves_by_month, -> (month) { where('MONTH(start_date) = ? OR MONTH(end_date) = ?', month, month) }
+  scope :leaves_by_type, ->(type) { where('leave_type = ?', type)}
+  scope :leaves_by_status, ->(status) { where('status = ?', status)}
+  scope :leaves_by_month, ->(month) { where('MONTH(start_date) = ? OR MONTH(end_date) = ?', month, month) }
+  scope :leaves_after, ->(date) { where('start_date > ?', date.strftime('%Y-%m-%d'))}
 
   def update_leave_tracker
     consumed_casual_leave = self.user.leave_tracker.consumed_vacation.present? ? self.user.leave_tracker.consumed_vacation : 0
