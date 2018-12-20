@@ -27,6 +27,8 @@ module LeavesHelper
       'Casual'
     when Leave::MEDICAL
       'Medical'
+    when Leave::AWARDED
+      'Awarded'
     else
       'Unannounced'
     end

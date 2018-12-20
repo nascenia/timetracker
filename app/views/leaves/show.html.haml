@@ -4,6 +4,6 @@
   .row
     = render partial: 'actions'
 - else
-  - if @show_actions_to_admin
+  - if @show_actions_to_admin and !@leave.is_awarded?
     .row
     = render partial: 'actions'

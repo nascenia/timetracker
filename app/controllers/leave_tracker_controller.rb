@@ -38,12 +38,6 @@ class LeaveTrackerController < ApplicationController
   end
 
   def update
-    @leave_tracker = LeaveTracker.find(params[:id])
-    if @leave_tracker.update_leave_tracker_when_awarded(params[:leave_tracker][:award_leave], params[:leave_tracker][:note])
-      flash[:notice] = 'Leave awarded successfully'
-      session[:user_id] = @leave_tracker.user.id
-    end
-    redirect_to leave_tracker_path(@leave_tracker)
   end
 
   def delete

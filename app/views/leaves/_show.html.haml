@@ -50,10 +50,17 @@
         %td= get_duration @leave
       %tr
         %th Start date
-        %td= @leave.start_date.strftime("%d-%b-%y") || 'N/A'
+        -if @leave.start_date.present?
+          %td= @leave.start_date.strftime("%d-%b-%y")
+        -else
+          %td= 'N/A'
+
       %tr
         %th End date
-        %td= @leave.end_date.strftime("%d-%b-%y") || 'N/A'
+        -if @leave.end_date.present?
+          %td= @leave.end_date.strftime("%d-%b-%y")
+        -else
+          %td= 'N/A'
       %tr
         %th Description
         %td= @leave.reason

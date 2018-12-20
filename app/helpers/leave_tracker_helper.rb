@@ -1,11 +1,13 @@
 module LeaveTrackerHelper
   def type_of(leave)
     case leave.leave_type
-      when 1
+      when Leave::CASUAL
         'Casual'
-      when 2
+      when Leave::MEDICAL
         'Medical'
-      when 3
+      when Leave::AWARDED
+        'Awarded'
+      else
         'Unannounced'
     end
   end

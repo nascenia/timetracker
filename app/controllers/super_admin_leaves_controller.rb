@@ -38,6 +38,8 @@ class SuperAdminLeavesController < ApplicationController
       Leave::CASUAL
     when 'Medical'
       Leave::MEDICAL
+    when 'Awarded'
+      Leave::AWARDED
     else
       Leave::UNANNOUNCED
     end

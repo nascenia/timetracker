@@ -94,7 +94,7 @@
         %h4.modal-title Award Leave
       .modal-body
         = form_for @leave, :url => {:controller => 'leaves', :action => 'award'},  method: 'POST', html: { class: 'form-horizontal' } do |f|
-
+          = f.hidden_field :approval_path_id, value: @user.approval_path_id
           .form-group
             = f.label 'Duration', {:class => 'col-sm-2 control-label'}
             .col-sm-10

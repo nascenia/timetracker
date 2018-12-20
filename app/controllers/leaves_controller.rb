@@ -146,8 +146,21 @@ class LeavesController < ApplicationController
     end
   end
 
+  # TODO: server side validity check for dates
   def award
-    p 'done'
+    @leave = Leave.new(leave_params)
+    @leave.pending_at=0
+    @leave.leave_type = Leave::AWARDED
+    @leave.status =Leave::ACCEPTED
+    @leave.user_id = params[:id]
+
+    if @leave.save
+      flash[:notice]='Leave awarded Successfully'
+      redirect_to leave_path(@leave)
+    else
+      flash[:warning]='Something went wrong ! Try again.'
+      redirect_to leave_tracker_path(params[:id])
+    end
   end
 
   private
