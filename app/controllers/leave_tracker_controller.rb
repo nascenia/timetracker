@@ -25,6 +25,7 @@ class LeaveTrackerController < ApplicationController
       @leaves = @user.leaves.order('start_date DESC')
       @month = nil
     end
+    @leave = Leave.new
   end
 
   def new

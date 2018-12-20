@@ -1,5 +1,6 @@
 class LeavesController < ApplicationController
   before_action :authenticate_user!
+  before_action :authenticate_admin_user!, only: [:award]
   before_action :set_leave, only: [:index, :show, :edit]
   before_action :check_permission, only: [:show, :approve]
   before_action :find_applied_leave, only: [:approve, :reject, :destroy]
@@ -143,6 +144,10 @@ class LeavesController < ApplicationController
       flash[:warning] = 'Leave was not cancelled'
       redirect_to leave_tracker_path(current_user)
     end
+  end
+
+  def award
+    p 'done'
   end
 
   private

@@ -93,17 +93,30 @@
         %button.close{"data-dismiss" => "modal", :type => "button"} ×
         %h4.modal-title Award Leave
       .modal-body
-        = form_for @leave_tracker,  method: 'PATCH', html: { class: 'form-horizontal' } do |f|
+        = form_for @leave, :url => {:controller => 'leaves', :action => 'award'},  method: 'POST', html: { class: 'form-horizontal' } do |f|
+
           .form-group
-            = f.label :award_leave, {:class => 'col-sm-3 control-label'}
-            .col-sm-9
-              = f.text_field :award_leave, :class => 'form-control'
+            = f.label 'Duration', {:class => 'col-sm-2 control-label'}
+            .col-sm-10
+              = f.select :half_day, Leave::AWARD_DURATION, {}, {:class => 'form-control'}
           .form-group
-            = f.label :note, {:class => 'col-sm-3 control-label'}
-            .col-sm-9
-              = f.text_area :note, :class => 'form-control'
+            = f.label :start_date, {:class => 'col-sm-2 control-label'}
+            .col-sm-10
+              = f.text_field :start_date, :class => 'form-control date-picker award', :placeholder => 'Enter start date (ex: dd/mm/yyyy)'
           .form-group
-            .col-sm-offset-3.col-sm-10
+            = f.label :end_date, {:class => 'col-sm-2 control-label'}
+            .col-sm-10
+              = f.text_field :end_date, :class => 'form-control date-picker award', :placeholder => 'Enter end date (ex: dd/mm/yyyy)'
+          .form-group
+            = f.label 'Description', {:class => 'col-sm-2 control-label'}
+            .col-sm-10
+              = f.text_area :reason, :maxlength => '300', :class => 'form-control', :rows => 7
+              %p.help-block
+                %span= 300
+                characters remaining.
+          .form-group
+            .col-sm-offset-2.col-sm-10
               = f.submit '  Award', :class => 'btn btn-primary'
       .modal-footer
         %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"} Close
+

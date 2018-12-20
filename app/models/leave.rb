@@ -41,6 +41,11 @@ class Leave < ActiveRecord::Base
     ['Second Half', SECOND_HALF]
   ]
 
+  AWARD_DURATION= [
+      ['Full Day', FULL_DAY],
+      ['Half Day', FIRST_HALF]
+  ]
+
   scope :accepted_leaves, -> { where(status: ACCEPTED) }
   scope :rejected_leaves, -> { where(status: REJECTED) }
   scope :pending_leaves, -> { where(status: PENDING) }

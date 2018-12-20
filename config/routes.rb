@@ -32,7 +32,7 @@ Internal::Application.routes.draw do
   # leaves_controller resources generate paths with 'leafe' as singular for 'leaves'
   # That is why we defined plural and singular for leave in config/initializers/inflections.rb
   resources :leaves do
-    member { post :approve, :reject}
+    member { post :approve, :reject, :award}
     resources :comments, only: [:new, :create]
   end
 
