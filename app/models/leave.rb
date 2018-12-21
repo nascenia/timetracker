@@ -148,6 +148,13 @@ class Leave < ActiveRecord::Base
 
   def get_leave_type_in_string
     leave_type == 1 ? 'Casual' : 'Medical'
+    if leave_type == CASUAL
+      'Casual'
+    elsif leave_type == MEDICAL
+      'Medical'
+    elsif leave_type == AWARDED
+      'Awarded'
+    end
   end
 
 
