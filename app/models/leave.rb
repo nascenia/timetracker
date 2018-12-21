@@ -57,55 +57,55 @@ class Leave < ActiveRecord::Base
   scope :leaves_by_month, ->(month) { where('MONTH(start_date) = ? OR MONTH(end_date) = ?', month, month) }
   scope :leaves_after, ->(date) { where('start_date > ?', date.strftime('%Y-%m-%d'))}
 
-  def update_leave_tracker
-    consumed_casual_leave = self.user.leave_tracker.consumed_vacation.present? ? self.user.leave_tracker.consumed_vacation : 0
-    consumed_medical_leave = self.user.leave_tracker.consumed_medical.present? ? self.user.leave_tracker.consumed_medical : 0
-
-    if self.end_date.present?
-      total_hours = (1 + (self.end_date - self.start_date).to_i) * HOURS_FOR_ONE_DAY
-    else
-      total_hours = HOURS_FOR_ONE_DAY
-    end
-
-    if self.half_day != 0
-      total_hours_to_be_consumed = total_hours - HOURS_FOR_HALF_DAY
-    else
-      total_hours_to_be_consumed = total_hours
-    end
-
-    if self.leave_type == CASUAL || self.leave_type == UNANNOUNCED
-      consumed_casual_leave_balance = consumed_casual_leave.to_i + total_hours_to_be_consumed
-      self.user.leave_tracker.update_attributes(:consumed_vacation => consumed_casual_leave_balance)
-    else
-      consumed_medical_leave_balance = consumed_medical_leave + total_hours_to_be_consumed
-      self.user.leave_tracker.update_attributes(:consumed_medical => consumed_medical_leave_balance)
-    end
-  end
-
-  def revert_leave_tracker
-    consumed_casual_leave = self.user.leave_tracker.consumed_vacation.present? ? self.user.leave_tracker.consumed_vacation : 0
-    consumed_medical_leave = self.user.leave_tracker.consumed_medical.present? ? self.user.leave_tracker.consumed_medical : 0
-
-    if self.end_date.present?
-      total_hours = (1 + (self.end_date - self.start_date).to_i) * HOURS_FOR_ONE_DAY
-    else
-      total_hours = HOURS_FOR_ONE_DAY
-    end
-
-    if self.half_day != 0
-      total_hours_to_be_consumed = total_hours - HOURS_FOR_HALF_DAY
-    else
-      total_hours_to_be_consumed = total_hours
-    end
-
-    if self.leave_type == CASUAL || self.leave_type == UNANNOUNCED
-      consumed_casual_leave_balance = consumed_casual_leave.to_i - total_hours_to_be_consumed
-      self.user.leave_tracker.update_attributes(:consumed_vacation => consumed_casual_leave_balance)
-    else
-      consumed_medical_leave_balance = consumed_medical_leave - total_hours_to_be_consumed
-      self.user.leave_tracker.update_attributes(:consumed_medical => consumed_medical_leave_balance)
-    end
-  end
+  # def update_leave_tracker
+  #   consumed_casual_leave = self.user.leave_tracker.consumed_vacation.present? ? self.user.leave_tracker.consumed_vacation : 0
+  #   consumed_medical_leave = self.user.leave_tracker.consumed_medical.present? ? self.user.leave_tracker.consumed_medical : 0
+  #
+  #   if self.end_date.present?
+  #     total_hours = (1 + (self.end_date - self.start_date).to_i) * HOURS_FOR_ONE_DAY
+  #   else
+  #     total_hours = HOURS_FOR_ONE_DAY
+  #   end
+  #
+  #   if self.half_day != 0
+  #     total_hours_to_be_consumed = total_hours - HOURS_FOR_HALF_DAY
+  #   else
+  #     total_hours_to_be_consumed = total_hours
+  #   end
+  #
+  #   if self.leave_type == CASUAL || self.leave_type == UNANNOUNCED
+  #     consumed_casual_leave_balance = consumed_casual_leave.to_i + total_hours_to_be_consumed
+  #     self.user.leave_tracker.update_attributes(:consumed_vacation => consumed_casual_leave_balance)
+  #   else
+  #     consumed_medical_leave_balance = consumed_medical_leave + total_hours_to_be_consumed
+  #     self.user.leave_tracker.update_attributes(:consumed_medical => consumed_medical_leave_balance)
+  #   end
+  # end
+  #
+  # def revert_leave_tracker
+  #   consumed_casual_leave = self.user.leave_tracker.consumed_vacation.present? ? self.user.leave_tracker.consumed_vacation : 0
+  #   consumed_medical_leave = self.user.leave_tracker.consumed_medical.present? ? self.user.leave_tracker.consumed_medical : 0
+  #
+  #   if self.end_date.present?
+  #     total_hours = (1 + (self.end_date - self.start_date).to_i) * HOURS_FOR_ONE_DAY
+  #   else
+  #     total_hours = HOURS_FOR_ONE_DAY
+  #   end
+  #
+  #   if self.half_day != 0
+  #     total_hours_to_be_consumed = total_hours - HOURS_FOR_HALF_DAY
+  #   else
+  #     total_hours_to_be_consumed = total_hours
+  #   end
+  #
+  #   if self.leave_type == CASUAL || self.leave_type == UNANNOUNCED
+  #     consumed_casual_leave_balance = consumed_casual_leave.to_i - total_hours_to_be_consumed
+  #     self.user.leave_tracker.update_attributes(:consumed_vacation => consumed_casual_leave_balance)
+  #   else
+  #     consumed_medical_leave_balance = consumed_medical_leave - total_hours_to_be_consumed
+  #     self.user.leave_tracker.update_attributes(:consumed_medical => consumed_medical_leave_balance)
+  #   end
+  # end
 
   def self.get_leaves(current_user, action)
     path_priority_list = current_user.owned_paths.pluck(:approval_path_id, :priority)
@@ -181,6 +181,9 @@ class Leave < ActiveRecord::Base
 
 
   def number_of_days
+    # if is_awarded?
+    #   (start_date..end_date)
+    # else
     if user.holiday_scheme && user.weekend
       dates = (start_date..end_date).map(&:to_date) - user.holiday_scheme.holidays.map { |holiday| holiday.date }
 
@@ -188,6 +191,8 @@ class Leave < ActiveRecord::Base
     else
       0
     end
+    # end
+
   end
 
   def total_leave_hour_of(month)
@@ -206,14 +211,17 @@ class Leave < ActiveRecord::Base
   end
 
   def total_leave_hour
-    if end_date.present? && half_day == 0
-      number_of_days * HOURS_FOR_ONE_DAY
-    else
-      if half_day == 0
-        Leave::HOURS_FOR_ONE_DAY
-      else
-        Leave::HOURS_FOR_HALF_DAY
-      end
-    end
+    total_hours = if end_date.present?
+                    number_of_days * HOURS_FOR_ONE_DAY
+                  else
+                    HOURS_FOR_ONE_DAY
+                  end
+
+    total_hours_to_be_consumed = if half_day != 0
+                                   total_hours - HOURS_FOR_HALF_DAY
+                                 else
+                                   total_hours
+                                 end
+    total_hours_to_be_consumed
   end
 end

@@ -78,17 +78,7 @@ class LeaveTracker < ActiveRecord::Base
     consumed_casual_leave = consumed_vacation.present? ? consumed_vacation : 0
     consumed_medical_leave = consumed_medical.present? ? consumed_medical : 0
 
-    if leave.end_date.present?
-      total_hours = leave.number_of_days * Leave::HOURS_FOR_ONE_DAY
-    else
-      total_hours = Leave::HOURS_FOR_ONE_DAY
-    end
-
-    if leave.half_day != 0
-      total_hours_to_be_consumed = total_hours - Leave::HOURS_FOR_HALF_DAY
-    else
-      total_hours_to_be_consumed = total_hours
-    end
+    total_hours_to_be_consumed = leave.total_leave_hour
 
     if leave.leave_type == Leave::CASUAL || leave.leave_type == Leave::UNANNOUNCED
       consumed_casual_leave_balance = consumed_casual_leave.to_i + total_hours_to_be_consumed
@@ -103,17 +93,7 @@ class LeaveTracker < ActiveRecord::Base
     consumed_casual_leave = consumed_vacation.present? ? consumed_vacation : 0
     consumed_medical_leave = consumed_medical.present? ? consumed_medical : 0
 
-    if leave.end_date.present?
-      total_hours = leave.number_of_days * Leave::HOURS_FOR_ONE_DAY
-    else
-      total_hours = Leave::HOURS_FOR_ONE_DAY
-    end
-
-    if leave.half_day != 0
-      total_hours_to_be_consumed = total_hours - Leave::HOURS_FOR_HALF_DAY
-    else
-      total_hours_to_be_consumed = total_hours
-    end
+    total_hours_to_be_consumed = leave.total_leave_hour
 
     if leave.leave_type == Leave::CASUAL || leave.leave_type == Leave::UNANNOUNCED
       consumed_casual_leave_balance = consumed_casual_leave.to_i - total_hours_to_be_consumed
