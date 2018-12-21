@@ -8,7 +8,7 @@
   .form-group
     = f.label :leave_type, {:class => 'col-sm-2 control-label'}
     .col-sm-10
-      = f.select :leave_type, Leave::LEAVE_TYPES, {}, {:class => 'form-control'}
+      = f.select :leave_type, Leave::LEAVE_TYPES.slice(0,2), {}, {:class => 'form-control'}
   .form-group
     = f.label 'Leave Duration', {:class => 'col-sm-2 control-label'}
     .col-sm-10
@@ -16,11 +16,11 @@
   .form-group
     = f.label :start_date, {:class => 'col-sm-2 control-label'}
     .col-sm-10
-      = f.text_field :start_date, :class => 'form-control date-picker', :placeholder => 'Enter start date (ex: dd/mm/yyyy)'
+      = f.text_field :start_date, :class => 'form-control date-picker', :placeholder => 'Enter start date (ex: dd/mm/yyyy)', :autocomplete => :off
   .form-group
     = f.label :end_date, {:class => 'col-sm-2 control-label'}
     .col-sm-10
-      = f.text_field :end_date, :class => 'form-control date-picker', :placeholder => 'Enter end date (ex: dd/mm/yyyy)'
+      = f.text_field :end_date, :class => 'form-control date-picker', :placeholder => 'Enter end date (ex: dd/mm/yyyy)', :autocomplete => :off
   .form-group
     = f.label :reason, {:class => 'col-sm-2 control-label'}
     .col-sm-10
