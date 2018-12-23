@@ -182,9 +182,7 @@ class Leave < ActiveRecord::Base
 
   def number_of_days
     if is_awarded?
-      p (end_date-start_date).to_i + 1
       (end_date-start_date).to_i + 1
-
     elsif user.holiday_scheme && user.weekend
       dates = (start_date..end_date).map(&:to_date) - user.holiday_scheme.holidays.map { |holiday| holiday.date }
 

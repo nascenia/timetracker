@@ -155,6 +155,7 @@ class LeavesController < ApplicationController
     @leave.user_id = params[:id]
 
     if @leave.save
+      @leave.user.leave_tracker.update_leave_tracker(@leave)
       flash[:notice]='Leave awarded Successfully'
       redirect_to leave_path(@leave)
     else
