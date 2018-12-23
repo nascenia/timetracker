@@ -139,10 +139,10 @@ class LeavesController < ApplicationController
     if @leave.destroy
       @leave.user.leave_tracker.revert_leave_tracker(@leave) if @leave.status == Leave::ACCEPTED
       flash[:notice] = 'Leave Cancelled Successfully'
-      redirect_to leave_tracker_path(current_user)
+      redirect_to leave_tracker_path(@leave.user)
     else
       flash[:warning] = 'Leave was not cancelled'
-      redirect_to leave_tracker_path(current_user)
+      redirect_to leave_tracker_path(@leave.user)
     end
   end
 
