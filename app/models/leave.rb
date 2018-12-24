@@ -222,4 +222,13 @@ class Leave < ActiveRecord::Base
                                  end
     total_hours_to_be_consumed
   end
+  def valid_date?
+    if leave_type == AWARDED
+      if end_date.present?
+        start_date.present? and start_date <= Time.now and end_date <= Time.now
+      else
+        start_date.present? and start_date <= Time.now
+      end
+    end
+  end
 end
