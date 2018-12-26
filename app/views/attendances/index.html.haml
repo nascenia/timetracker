@@ -38,7 +38,10 @@
 :javascript
   $(document).ready(function() {
       var dataTable = $('#monthly-attendance-table').DataTable({
-        lengthChange: false
+        lengthChange: false,
+        pageLength: 100,
+        dom: 'T<"clear">lfrtip',
+        buttons: ['print']
       });
       $(document).on("turbolinks:before-cache", function() {
         if (dataTable !== null) {
