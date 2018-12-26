@@ -21,6 +21,8 @@ class EmployeesController < ApplicationController
       @employees = @employees.inactive if params[:employee_status] == '2'
       @employees = @employees.not_published if params[:employee_status] == '3'
       @employees = @employees.not_register if params[:employee_status] == '4'
+    else
+      @employees = @employees.active
     end
   end
   def show
