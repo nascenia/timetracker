@@ -24,7 +24,7 @@
                   Mobile
               .col-md-8
                 %h5
-                  =@user.mobile_number
+                  %a{:href =>"Tel:#{@user.mobile_number}"}=@user.mobile_number
           .row
             .item-university
               .col-md-4
@@ -70,7 +70,7 @@
                       Alternate Contact
                   .col-md-8
                     %h5
-                      =@user.alternate_contact
+                      %a{:href =>"Tel:#{@user.alternate_contact}"}=@user.alternate_contact
             .row
               .item-personal_email
                 .col-md-4
