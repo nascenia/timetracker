@@ -175,7 +175,8 @@ class LeaveTracker < ActiveRecord::Base
           :yearly_casual_leave => YEARLY_CASUAL_LEAVE,
           :yearly_medical_leave => YEARLY_MEDICAL_LEAVE,
           :accrued_vacation_this_year => 0,
-          :accrued_medical_this_year => 0
+          :accrued_medical_this_year => 0,
+          :awarded_leave => 0,
         )
       end
     end
