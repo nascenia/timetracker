@@ -1,7 +1,9 @@
 .panel.panel-default
   .panel-heading
     %h4.panel-title.clearfix
-      Leave Balance
+      %b
+        = @user.name + "'s"
+        Leave Balance
       - if current_user.is_admin?
         %span.pull-right
           %button.btn.btn-primary{"data-target" => "#myModal", "data-toggle" => "modal", :type => "button", "data-turbolinks" => false} Award Leave
