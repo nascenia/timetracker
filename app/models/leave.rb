@@ -52,6 +52,7 @@ class Leave < ActiveRecord::Base
   scope :rejected_leaves, -> { where(status: REJECTED) }
   scope :pending_leaves, -> { where(status: PENDING) }
   scope :unannounced_leaves, -> { where('leave_type = 3') }
+  scope :not_rollbacked_leaves, -> { where.not(status: ROLLBACKED) }
   scope :leaves_by_type, ->(type) { where('leave_type = ?', type)}
   scope :leaves_by_status, ->(status) { where('status = ?', status)}
   scope :leaves_by_month, ->(month) { where('MONTH(start_date) = ? OR MONTH(end_date) = ?', month, month) }

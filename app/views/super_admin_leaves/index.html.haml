@@ -7,8 +7,8 @@
     %h3
       All Leaves
 
-  -##loading-message Loading table... Please Wait
-  %table.table.table-bordered.table-hover#leave-table
+  #loading-message Loading table... Please Wait
+  %table.table.table-bordered.table-hover.hidden#leave-table
     %thead
       %tr
         %th Name
@@ -29,14 +29,20 @@
             - unless unannounced?(leave)
               = link_to 'Show', leave_path(leave)
 -#  %p= paginate @leaves
--#:javascript
--#  $(document).ready( function () {
--#    $('#leave-table').dataTable({
--#       "searching": false,
--#       "pageLength":10,
--#       "lengthChange": false,
--#       "ordering": false
--#    });
--#    $('#loading-message').hide();
--#    $('#leave-table').removeClass('hidden');
--#  } );
+:javascript
+  $(document).ready(function() {
+      var dataTable = $('#leave-table').DataTable({
+        pageLength: 50,
+        ordering: false,
+        dom: 'rtip'
+      });
+      $('#loading-message').hide();
+      $('#leave-table').removeClass('hidden');
+
+      $(document).on("turbolinks:before-cache", function() {
+        if (dataTable !== null) {
+          dataTable.destroy();
+          dataTable = null;
+        }
+      });
+  });
