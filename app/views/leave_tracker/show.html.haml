@@ -57,14 +57,14 @@
            ['December', 12],], params[:month]), class: 'form-control', prompt: 'All months'
           = submit_tag 'Submit', class: 'btn btn-success'
   - if @leaves.present? && @leaves.count > 0
-    %table.table.table-bordered
+    %table.table.table-bordered#leave-table
       %thead
         %tr
-          %th{:width => '11%'} Start Date
-          %th{:width => '11%'} End Date
+          %th{:width => '15%'} Start Date
+          %th{:width => '15%'} End Date
           %th{:width => '10%'} Type
           %th{:width => '25%'} Description
-          %th{:width => '25%'} Status
+          %th{:width => '15%'} Status
           %th{:width => '5%'} Hours
           %th{:width => '22%'} Action
       %tbody
@@ -122,3 +122,18 @@
       .modal-footer
         %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"} Close
 
+:javascript
+  $(document).ready(function() {
+      var dataTable = $('#leave-table').DataTable({
+        lengthChange: false,
+        pageLength: 10000,
+        order: ( [ 0, 'desc' ] ),
+        dom: '',
+      });
+      $(document).on("turbolinks:before-cache", function() {
+        if (dataTable !== null) {
+          dataTable.destroy();
+          dataTable = null;
+        }
+      });
+  });
