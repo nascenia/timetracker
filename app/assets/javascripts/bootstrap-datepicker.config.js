@@ -1,12 +1,13 @@
-$(document).on('turbolinks:load', function() {
+$(document).on('turbolinks:load', function () {
 
     toggle_dates();
     limit_award_dates();
+    all_leaves_filters_config();
 
     var max_length = 300;
     $('p.help-block span').html(max_length);
 
-    $(document).on('keyup', '#leave_reason, #comment_body', function() {
+    $(document).on('keyup', '#leave_reason, #comment_body', function () {
         var current_length = $('#leave_reason, #comment_body').val().length;
         var remaining_texts = max_length - current_length;
         $('p.help-block span').html(remaining_texts);
@@ -16,51 +17,70 @@ $(document).on('turbolinks:load', function() {
         toggle_dates();
     });
 
-    $(".navbar .dropdown-toggle").on('click',function(){
+    $(".navbar .dropdown-toggle").on('click', function () {
         $(this).next().toggle();
     });
-    $(document).click(function(){
+    $(document).click(function () {
         $(".navbar .dropdown-menu").hide();
     });
 
+
+
+
 });
-function limit_award_dates(){
+
+function all_leaves_filters_config(){
+    $('.date-picker-admin-filter').datepicker('remove');
+
+    $('.date-picker-admin-filter').datepicker({
+        format: 'yyyy-mm-dd',
+    }).on('changeDate', function (e) {
+        $(this).datepicker('hide');
+        $('input:radio[name=time]:checked').prop('checked', false);
+    });
+
+    $('input:radio[name="time"]').change(
+        function(){
+            $('.date-picker-admin-filter').val("").datepicker('update');
+        });
+}
+
+function limit_award_dates() {
     $('.date-picker.award').datepicker('remove');
     var date = new Date();
-    date.setDate(date.getDate() );
+    date.setDate(date.getDate());
     $('.date-picker.award').datepicker({
         format: 'yyyy-mm-dd',
         endDate: date
-    }).on('changeDate', function(e){
+    }).on('changeDate', function (e) {
         $(this).datepicker('hide');
     });
 }
-function toggle_dates(){
+
+function toggle_dates() {
     var leave_type = $('#leave_leave_type option:selected').text();
-    if( leave_type == 'Casual Leave'){
+    if (leave_type == 'Casual Leave') {
         $('.date-picker').datepicker('remove');
         var date = new Date();
-        date.setDate(date.getDate() );
+        date.setDate(date.getDate());
         $('.date-picker').datepicker({
             format: 'yyyy-mm-dd',
             startDate: date
-        }).on('changeDate', function(e){
+        }).on('changeDate', function (e) {
             $(this).datepicker('hide');
         });
-    }
-    else if( leave_type == 'Medical Leave' ){
+    } else if (leave_type == 'Medical Leave') {
         $('.date-picker').datepicker('remove');
         $('.date-picker').datepicker({
             format: 'yyyy-mm-dd',
-        }).on('changeDate', function(e){
+        }).on('changeDate', function (e) {
             $(this).datepicker('hide');
         });
-    }
-    else{
+    } else {
         $('.date-picker').datepicker('remove');
         $('.date-picker').datepicker({
             format: 'yyyy-mm-dd',
-        }).on('changeDate', function(e){
+        }).on('changeDate', function (e) {
             $(this).datepicker('hide');
         });
     }

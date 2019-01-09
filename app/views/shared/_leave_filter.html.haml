@@ -2,13 +2,32 @@
   .panel-heading
     %h4 Filter Leaves
   .panel-body
-    .row
-      = form_tag super_admin_leaves_path, method: :get, class: 'form-inline filter' do
-        .col-md-5
+    = form_tag super_admin_leaves_path, method: :get, class: 'form-inline filter' do
+      .row
+        .col-md-3
+          = text_field_tag 'date', params[:date] , :class => 'form-control date-picker-admin-filter', :placeholder => 'Pick a date', :autocomplete => :off
+        .col-md-8
+          .radio-toolbar
+            %input#1{name: "time", type: "radio", value: "1", :checked => params[:time]=='1'}
+            %label{:for=>'1'}
+              This month
+            %input#2{name: "time", type: "radio", value: "2", :checked => params[:time]=='2'}
+            %label{:for=>'2'}
+              This year
+            %input#3{name: "time", type: "radio", value: "3", :checked => params[:time]=='3'}
+            %label{:for=>'3'}
+              Last month
+            %input#4{name: "time", type: "radio", value: "4", :checked => params[:time]=='4'}
+            %label{:for=>'4'}
+              Last year
+
+
+      .row
+        .col-sm-3
           = select_tag :status, options_for_select(Leave::LEAVE_STATUSES, params[:status]),
-          class: 'form-control', prompt: 'All leave status'
-        .col-md-5
+           class: 'form-control', prompt: 'All leave status'
+        .col-sm-3
           = select_tag :type, options_for_select([['Casual Leave', 1], ['Medical Leave', 2], ['Unannounced Leave', 3]],
-          params[:type]), class: 'form-control', prompt: 'All leave type'
-        .col-md-2
+           params[:type]), class: 'form-control', prompt: 'All leave type'
+        .col-sm-5
           = submit_tag 'Submit', class: 'btn btn-success'

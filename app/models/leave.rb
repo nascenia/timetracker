@@ -56,6 +56,8 @@ class Leave < ActiveRecord::Base
   scope :leaves_by_type, ->(type) { where('leave_type = ?', type)}
   scope :leaves_by_status, ->(status) { where('status = ?', status)}
   scope :leaves_by_month, ->(month) { where('MONTH(start_date) = ? OR MONTH(end_date) = ?', month, month) }
+  scope :leaves_by_year, ->(year) { where('YEAR(start_date) = ? OR YEAR(end_date) = ?', year, year) }
+  scope :leaves_by_date, ->(date) { where('start_date <= ? AND end_date >= ? OR start_date = ? AND end_date IS null', date, date, date) }
   scope :leaves_after, ->(date) { where('start_date > ?', date.strftime('%Y-%m-%d'))}
 
   # def update_leave_tracker
