@@ -1,7 +1,7 @@
 .panel.panel-default
   .panel-heading
-    %h4 Filter Leaves
-  .panel-body
+    %h4.filter-header <u>Filter Leaves</u>
+
     = form_tag super_admin_leaves_path, method: :get, class: 'form-inline filter' do
       .row
         .col-md-3
@@ -20,7 +20,6 @@
             %input#4{name: "time", type: "radio", value: "4", :checked => params[:time]=='4'}
             %label{:for=>'4'}
               Last year
-
 
       .row
         .col-sm-3
