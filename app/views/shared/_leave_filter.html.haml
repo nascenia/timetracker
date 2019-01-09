@@ -23,10 +23,11 @@
 
       .row
         .col-sm-3
-          = select_tag :status, options_for_select(Leave::LEAVE_STATUSES, params[:status]),
-           class: 'form-control', prompt: 'All leave status'
+          = select_tag :status, options_for_select(Leave::LEAVE_STATUSES[0..2], params[:status]),
+           class: 'form-control', prompt: 'All leave status', id: 'leave-status-filter'
         .col-sm-3
           = select_tag :type, options_for_select([['Casual Leave', 1], ['Medical Leave', 2], ['Unannounced Leave', 3]],
-           params[:type]), class: 'form-control', prompt: 'All leave type'
-        .col-sm-5
+           params[:type]), class: 'form-control', prompt: 'All leave type', id: 'leave-type-filter'
+        .col-sm-3
           = submit_tag 'Submit', class: 'btn btn-success'
+          = submit_tag 'Reset', class: 'btn btn-danger', id: 'filter-reset-btn'

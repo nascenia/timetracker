@@ -43,6 +43,16 @@ function all_leaves_filters_config(){
         function(){
             $('.date-picker-admin-filter').val("").datepicker('update');
         });
+
+    $( "#filter-reset-btn" ).on( "click", function() {
+
+        $('.date-picker-admin-filter').val("").datepicker('update');
+        $('input:radio[name=time]:checked').prop('checked', false);
+        $('#leave-status-filter').val("");
+        $('#leave-type-filter').val("");
+
+        return false;
+    });
 }
 
 function limit_award_dates() {
