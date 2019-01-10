@@ -111,12 +111,20 @@ class LeaveTracker < ActiveRecord::Base
   end
 
   def rollback_leave_tracker
-    leaves_after_last_working_day= user.leaves.leaves_after(user.resignation_date)
-    leaves_after_last_working_day.each do |leave|
-      if leave.status == Leave::ACCEPTED
-        revert_leave_tracker(leave)
-        leave.status=Leave::ROLLBACKED
-        leave.save
+
+    user.leaves.each do |leave|
+      if leave.start_date > user.resignation_date
+        if leave.status == Leave::ACCEPTED
+          revert_leave_tracker(leave)
+          leave.status=Leave::ROLLBACKED
+          leave.save
+        end
+      else
+        if leave.status == Leave::ROLLBACKED
+          update_leave_tracker(leave)
+          leave.status=Leave::ACCEPTED
+          leave.save
+        end
       end
     end
   end
@@ -207,4 +215,16 @@ class LeaveTracker < ActiveRecord::Base
       )
     end
   end
+
+  def casual_or_medical_leave_present_after_resignation
+    if user.resignation_date.present?
+      user.leaves.each do |leave|
+        if leave.status == Leave::ROLLBACKED and (leave.leave_type == Leave::CASUAL or leave.leave_type == Leave::MEDICAL)
+          return true
+        end
+      end
+    end
+    false
+  end
+
 end
