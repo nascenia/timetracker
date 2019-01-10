@@ -7,7 +7,7 @@ class HolidaySchemesController < ApplicationController
 
   def index
     @holiday_schemes = HolidayScheme.all
-    @heading = "Holiday Schemes for #{LeaveYear.find_present_year.year}"
+    @heading = "Holiday Schemes"
   end
 
   def show
