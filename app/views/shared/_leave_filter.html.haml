@@ -4,22 +4,13 @@
 
     = form_tag super_admin_leaves_path, method: :get, class: 'form-inline filter' do
       .row
+        .col-sm-3
+          = select_tag :time, options_for_select([['This month', 1], ['This year', 2], ['Last month', 3], ['Last year',4], ['Custom','5']],
+           params[:time]), class: 'form-control', prompt: 'All leaves', id: 'time-dropdown-filter'
         .col-md-3
-          = text_field_tag 'date', params[:date] , :class => 'form-control date-picker-admin-filter', :placeholder => 'Pick a date', :autocomplete => :off
-        .col-md-8
-          .radio-toolbar
-            %input#1{name: "time", type: "radio", value: "1", :checked => params[:time]=='1'}
-            %label{:for=>'1'}
-              This month
-            %input#2{name: "time", type: "radio", value: "2", :checked => params[:time]=='2'}
-            %label{:for=>'2'}
-              This year
-            %input#3{name: "time", type: "radio", value: "3", :checked => params[:time]=='3'}
-            %label{:for=>'3'}
-              Last month
-            %input#4{name: "time", type: "radio", value: "4", :checked => params[:time]=='4'}
-            %label{:for=>'4'}
-              Last year
+          = text_field_tag 'start_date', params[:start_date] , :class => 'form-control start-date-picker-admin-filter', :placeholder => 'Start date', :autocomplete => :off, :required => true
+        .col-md-3
+          = text_field_tag 'end_date', params[:end_date] , :class => 'form-control end-date-picker-admin-filter', :placeholder => 'End date', :autocomplete => :off, :required => true
 
       .row
         .col-sm-3

@@ -30,24 +30,53 @@ $(document).on('turbolinks:load', function () {
 });
 
 function all_leaves_filters_config(){
-    $('.date-picker-admin-filter').datepicker('remove');
 
-    $('.date-picker-admin-filter').datepicker({
+    var date= new Date();
+
+    var start=$('.start-date-picker-admin-filter').datepicker({
         format: 'yyyy-mm-dd',
+        endDate: date,
     }).on('changeDate', function (e) {
         $(this).datepicker('hide');
-        $('input:radio[name=time]:checked').prop('checked', false);
+        end.prop("disabled", false);
+        end.datepicker('setStartDate',start.datepicker('getDate'));
     });
 
-    $('input:radio[name="time"]').change(
-        function(){
-            $('.date-picker-admin-filter').val("").datepicker('update');
-        });
+
+    var end=$('.end-date-picker-admin-filter').datepicker({
+        format: 'yyyy-mm-dd',
+        endDate: date,
+    }).on('changeDate', function (e) {
+        $(this).datepicker('hide');
+        start.datepicker('setEndDate',end.datepicker('getDate'));
+    });
+    var timeFilter = $('#time-dropdown-filter');
+    if (timeFilter.val() !== "5")
+    {
+        start.prop("disabled", true);
+        end.prop("disabled", true);
+    }
+
+    timeFilter.change(function(){
+        if ($(this).val() === "5"){
+            start.prop("disabled", false);
+        }
+        else{
+            start.val("").datepicker('update');
+            end.val("").datepicker('update');
+            start.prop("disabled", true);
+            end.prop("disabled", true);
+        }
+    });
+
 
     $( "#filter-reset-btn" ).on( "click", function() {
 
-        $('.date-picker-admin-filter').val("").datepicker('update');
-        $('input:radio[name=time]:checked').prop('checked', false);
+        start.val("").datepicker('update');
+        end.val("").datepicker('update');
+        start.prop("disabled", true);
+        end.prop("disabled", true);
+        $('#time-dropdown-filter').val("");
         $('#leave-status-filter').val("");
         $('#leave-type-filter').val("");
 
