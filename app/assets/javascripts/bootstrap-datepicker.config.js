@@ -23,10 +23,6 @@ $(document).on('turbolinks:load', function () {
     $(document).click(function () {
         $(".navbar .dropdown-menu").hide();
     });
-
-
-
-
 });
 
 function all_leaves_filters_config(){
@@ -41,7 +37,6 @@ function all_leaves_filters_config(){
         end.prop("disabled", false);
         end.datepicker('setStartDate',start.datepicker('getDate'));
     });
-
 
     var end=$('.end-date-picker-admin-filter').datepicker({
         format: 'yyyy-mm-dd',
@@ -80,7 +75,7 @@ function all_leaves_filters_config(){
         $('#leave-status-filter').val("");
         $('#leave-type-filter').val("");
 
-        return false;
+        return true;
     });
 }
 

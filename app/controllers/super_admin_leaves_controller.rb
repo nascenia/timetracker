@@ -9,12 +9,15 @@ class SuperAdminLeavesController < ApplicationController
     @leaves = Leave.not_rollbacked_leaves.includes(:user)
     @leaves = @leaves.leaves_by_status(params[:status]) if params[:status].present?
     @leaves = @leaves.leaves_by_type(params[:type]) if params[:type].present?
-    @leaves = @leaves.leaves_by_date(params[:date]) if params[:date].present?
+
     if params[:time].present?
       @leaves = @leaves.leaves_by_month(Date.current.strftime('%m')).leaves_by_year(Date.current.strftime('%Y')) if params[:time] == '1'
       @leaves = @leaves.leaves_by_year(Date.current.strftime('%Y')) if params[:time] == '2'
       @leaves = @leaves.leaves_by_month((Date.current-1.month).strftime('%m')).leaves_by_year((Date.current-1.month).strftime('%Y')) if params[:time] == '3'
       @leaves = @leaves.leaves_by_year((Date.current-1.year).strftime('%Y')) if params[:time] == '4'
+    end
+    if params[:start_date].present? && params[:end_date].present?
+      @leaves = @leaves.leaves_in_between(params[:start_date], params[:end_date])
     end
     @leaves = @leaves.order(start_date: :desc)
   end
