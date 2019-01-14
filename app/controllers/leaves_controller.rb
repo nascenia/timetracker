@@ -190,7 +190,7 @@ class LeavesController < ApplicationController
 
   def leave_params
     params.require(:leave).permit(:approval_path_id, :user_id, :reason, :leave_type, :pending_at, :status,
-                                  :start_date, :end_date, :half_day)
+                                  :start_date, :end_date, :half_day, :hour)
   end
 
   def validate_date

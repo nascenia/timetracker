@@ -86,7 +86,7 @@ class LeaveTracker < ActiveRecord::Base
     elsif leave.leave_type == Leave::MEDICAL
       consumed_medical_leave_balance = consumed_medical_leave + total_hours_to_be_consumed
       update_attributes(:consumed_medical => consumed_medical_leave_balance)
-    else
+    elsif leave.leave_type == Leave::AWARDED
       awarded_leave_balance = awarded_leave + total_hours_to_be_consumed
       update_attributes(:awarded_leave => awarded_leave_balance)
     end
@@ -95,7 +95,7 @@ class LeaveTracker < ActiveRecord::Base
   def revert_leave_tracker(leave)
     consumed_casual_leave = consumed_vacation.present? ? consumed_vacation : 0
     consumed_medical_leave = consumed_medical.present? ? consumed_medical : 0
-
+    p leave.total_leave_hour
     total_hours_to_be_consumed = leave.total_leave_hour
 
     if leave.leave_type == Leave::CASUAL || leave.leave_type == Leave::UNANNOUNCED
@@ -104,7 +104,7 @@ class LeaveTracker < ActiveRecord::Base
     elsif leave.leave_type == Leave::MEDICAL
       consumed_medical_leave_balance = consumed_medical_leave - total_hours_to_be_consumed
       update_attributes(:consumed_medical => consumed_medical_leave_balance)
-    else
+    elsif leave.leave_type == Leave::AWARDED
       awarded_leave_balance = awarded_leave - total_hours_to_be_consumed
       update_attributes(:awarded_leave => awarded_leave_balance)
     end

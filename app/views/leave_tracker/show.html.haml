@@ -97,20 +97,17 @@
       .modal-body
         = form_for @leave, :url => {:controller => 'leaves', :action => 'award'},  method: 'POST', html: { class: 'form-horizontal' } do |f|
           = f.hidden_field :approval_path_id, value: @user.approval_path_id
+
           .form-group
-            = f.label 'Duration', {:class => 'col-sm-2 control-label'}
+            = f.label :date, {:class => 'col-sm-2 control-label'}
             .col-sm-10
-              = f.select :half_day, Leave::AWARD_DURATION, {}, {:class => 'form-control'}
+              = f.text_field :start_date, :class => 'form-control date-picker award', :placeholder => 'Enter date (ex: dd/mm/yyyy)', :autocomplete => :off, :required => 'true'
           .form-group
-            = f.label :start_date, {:class => 'col-sm-2 control-label'}
+            =f.label :hour, {:class => 'col-sm-2 control-label'}
             .col-sm-10
-              = f.text_field :start_date, :class => 'form-control date-picker award', :placeholder => 'Enter start date (ex: dd/mm/yyyy)', :autocomplete => :off
+              =f.text_field :hour, :class => 'form-control', :type => 'number', :autocomplete => 'off', :required => 'true'
           .form-group
-            = f.label :end_date, {:class => 'col-sm-2 control-label'}
-            .col-sm-10
-              = f.text_field :end_date, :class => 'form-control date-picker award', :placeholder => 'Enter end date (ex: dd/mm/yyyy)', :autocomplete => :off
-          .form-group
-            = f.label 'Description', {:class => 'col-sm-2 control-label'}
+            = f.label 'Note', {:class => 'col-sm-2 control-label'}
             .col-sm-10
               = f.text_area :reason, :maxlength => '300', :class => 'form-control', :rows => 7
               %p.help-block

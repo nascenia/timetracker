@@ -128,19 +128,19 @@ class Leave < ActiveRecord::Base
   end
 
   def is_awarded?
-    self.leave_type==AWARDED
+    leave_type==AWARDED
   end
 
   def is_pending?
-    self.status == PENDING
+    status == PENDING
   end
 
   def is_accepted?
-    self.status == ACCEPTED
+    status == ACCEPTED
   end
 
   def is_rejected?
-    self.status == REJECTED
+    status == REJECTED
   end
 
   def self.get_users_on_leave_today
@@ -173,9 +173,7 @@ class Leave < ActiveRecord::Base
           break;
         end
       end
-      if flag == 0
-        half_day_leaves_count +=1
-      end
+      half_day_leaves_count +=1 if flag == 0
     end
     half_day_leaves_count
 
@@ -197,6 +195,8 @@ class Leave < ActiveRecord::Base
   end
 
   def total_leave_hour_of(month)
+    return hour if leave_type == AWARDED
+
     if end_date.present? && half_day == 0
       dates = (start_date..end_date).map(&:to_date) - user.holiday_scheme.holidays.map { |holiday| holiday.date }
       weekend = user.weekend.off_days.map(&:capitalize).map(&:to_s)
@@ -212,6 +212,8 @@ class Leave < ActiveRecord::Base
   end
 
   def total_leave_hour
+    return hour if leave_type == AWARDED
+
     total_hours = if end_date.present?
                     number_of_days * HOURS_FOR_ONE_DAY
                   else
@@ -226,12 +228,6 @@ class Leave < ActiveRecord::Base
     total_hours_to_be_consumed
   end
   def valid_date?
-    if leave_type == AWARDED
-      if end_date.present?
-        start_date.present? and start_date <= Time.now and end_date <= Time.now
-      else
-        start_date.present? and start_date <= Time.now
-      end
-    end
+    start_date.present? and start_date <= Time.now if leave_type == AWARDED
   end
 end

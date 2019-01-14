@@ -1,6 +1,7 @@
 module LeavesHelper
 
   def get_duration(leave)
+    return leave.hour if leave.leave_type == Leave::AWARDED
     case leave.half_day
       when 0
         'Full Day'
