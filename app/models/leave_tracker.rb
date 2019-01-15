@@ -110,21 +110,30 @@ class LeaveTracker < ActiveRecord::Base
     end
   end
 
-  def rollback_leave_tracker
-
-    user.leaves.each do |leave|
-      if leave.start_date > user.resignation_date
-        if leave.status == Leave::ACCEPTED
-          revert_leave_tracker(leave)
-          leave.status=Leave::ROLLBACKED
-          leave.save
+  def update_rollback_leave_tracker
+    if user.has_resigned?
+      user.leaves.each do |leave|
+        if leave.start_date > user.resignation_date
+          if leave.status == Leave::ACCEPTED
+            revert_leave_tracker(leave)
+            leave.status=Leave::ROLLBACKED
+            leave.save
+          end
+        else
+          if leave.status == Leave::ROLLBACKED
+            update_leave_tracker(leave)
+            leave.status=Leave::ACCEPTED
+            leave.save
+          end
         end
-      else
-        if leave.status == Leave::ROLLBACKED
-          update_leave_tracker(leave)
-          leave.status=Leave::ACCEPTED
-          leave.save
-        end
+      end
+    else
+      user.leaves.each do |leave|
+          if leave.status == Leave::ROLLBACKED
+            update_leave_tracker(leave)
+            leave.status=Leave::ACCEPTED
+            leave.save
+          end
       end
     end
   end
@@ -132,7 +141,7 @@ class LeaveTracker < ActiveRecord::Base
   def update_leave_tracker_daily
     if self.commenced_date.present?
 
-      rollback_leave_tracker if user.has_resigned?
+      update_rollback_leave_tracker
 
       accrued_vacation_this_year = ((((self.user.last_working_date - self.commenced_date.to_date).to_i) * CASUAL_LEAVE_IN_DAYS/365.0) * 8).to_i
       accrued_medical_this_year = ((((self.user.last_working_date - self.commenced_date.to_date).to_i) * MEDICAL_LEAVE_IN_DAYS/365.0) * 8).to_i
