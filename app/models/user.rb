@@ -33,6 +33,7 @@ class User < ActiveRecord::Base
   devise :omniauthable, :omniauth_providers => [:google_oauth2]
 
   ADMIN_USER = CONFIG['admins']
+  MODERATOR_USER = CONFIG['leave_admin']
 
   REGISTRATION_STATUS = {
       not_registered: 0,
@@ -67,6 +68,10 @@ class User < ActiveRecord::Base
 
   def is_admin?
     self.email && ADMIN_USER.to_s.include?(self.email)
+  end
+
+  def is_moderator?
+    self.email && MODERATOR_USER.to_s.include?(self.email)
   end
 
   def is_employee?

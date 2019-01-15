@@ -4,7 +4,7 @@
       %b
         = @user.name + "'s"
         Leave Balance
-      - if current_user.is_admin?
+      - if should_admin_action_show? @user
         %span.pull-right
           %button.btn.btn-primary{"data-target" => "#myModal", "data-toggle" => "modal", :type => "button", "data-turbolinks" => false} Award Leave
   %table.table.table-bordered.table-hover

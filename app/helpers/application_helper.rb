@@ -70,4 +70,14 @@ module ApplicationHelper
     leave.leave_type == Leave::UNANNOUNCED
   end
 
+  def should_admin_action_show?(for_user)
+    if current_user == for_user && current_user.is_moderator?
+      false
+    elsif current_user.is_admin?
+      true
+    else
+      false
+    end
+  end
+
 end
