@@ -119,6 +119,13 @@
       .modal-footer
         %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"} Close
 
+
+
+-if @resignation_error_msg
+  = render 'shared/error_popup_modal', locals: {title: 'Warning', msg: @resignation_error_msg}
+  :javascript
+    $('#error-modal').modal('show');
+
 :javascript
   $(document).ready(function() {
       var dataTable = $('#leave-table').DataTable({

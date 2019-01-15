@@ -26,7 +26,7 @@ class LeaveTrackerController < ApplicationController
       @month = nil
     end
     @leave = Leave.new
-    flash[:notice] = 'The employee has Casual/Medical leaves after Last day of working!' if @leave_tracker.casual_or_medical_leave_present_after_resignation
+    @resignation_error_msg = 'The employee has Casual/ Medical leaves after Last day of working!' if @leave_tracker.casual_or_medical_leave_present_after_resignation
   end
 
   def new

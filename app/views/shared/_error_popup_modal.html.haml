@@ -1,0 +1,15 @@
+#error-modal.modal.fade{:role => "dialog"}
+  .modal-dialog
+    / Modal content
+    .modal-content
+      .modal-header
+        %button.close{"data-dismiss" => "modal", :type => "button"} ×
+        %h4.modal-title
+          = locals[:title]
+      .modal-body
+        <br>
+        =locals[:msg]
+      <br>
+      .modal-footer
+
+        %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"} Close
