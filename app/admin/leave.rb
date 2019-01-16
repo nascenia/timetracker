@@ -1,6 +1,27 @@
 ActiveAdmin.register Leave do
   permit_params :user_id, :reason, :leave_type, :pending_at, :status, :start_date, :end_date, :half_day
 
+  controller do
+    def update
+      p params
+      if User.has_edit_permission_for?(current_user, User.find(id=params[:leave][:user_id]))
+        update!
+      else
+        flash[:error] = "You don't have permission to edit. Contact the Super Admin."
+        redirect_to :edit_admin_leave and return
+      end
+    end
+
+    def create
+      if User.has_edit_permission_for?(current_user, User.find(id=params[:leave][:user_id]))
+        create!
+      else
+        flash[:error] = "You don't have permission to create. Contact the Super Admin."
+        redirect_to :new_admin_leave and return
+      end
+    end
+  end
+
   index do
     selectable_column
     id_column

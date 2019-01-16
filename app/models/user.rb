@@ -248,4 +248,14 @@ class User < ActiveRecord::Base
   def all_information_provided?
      registration_status > 0
   end
+  def self.has_edit_permission_for?(current_user,user_to_be_edited)
+    if current_user == user_to_be_edited && current_user.is_moderator?
+      false
+    elsif current_user.is_admin?
+      true
+    else
+      false
+    end
+  end
+
 end

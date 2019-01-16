@@ -5,6 +5,26 @@ ActiveAdmin.register User do
                 :emergency_contact_person_name, :emergency_contact_person_relation, :emergency_contact_person_number,
                 :blood_group, :joining_date, :resignation_date, :is_published
 
+  controller do
+    def update
+      if User.has_edit_permission_for?(current_user, User.find(id=params[:id]))
+        update!
+      else
+        flash[:error] = "You don't have permission to edit. Contact the Super Admin."
+        redirect_to :edit_admin_user and return
+      end
+    end
+
+    def create
+      if User.has_edit_permission_for?(current_user, User.find(id=params[:id]))
+        create!
+      else
+        flash[:error] = "You don't have permission to create. Contact the Super Admin."
+        redirect_to :new_admin_user and return
+      end
+    end
+  end
+
   index do
     selectable_column
     id_column

@@ -2,6 +2,26 @@ ActiveAdmin.register Attendance do
 
    permit_params :user_id, :checkin_date, :in_time, :out_time, :total_hours, :parent_id
 
+   controller do
+     def update
+       if User.has_edit_permission_for?(current_user, User.find(id=params[:attendance][:user_id]))
+         update!
+       else
+         flash[:error] = "You don't have permission to edit. Contact the Super Admin."
+         redirect_to :edit_admin_attendance and return
+       end
+     end
+
+     def create
+       if User.has_edit_permission_for?(current_user, User.find(id=params[:attendance][:user_id]))
+         create!
+       else
+         flash[:error] = "You don't have permission to create. Contact the Super Admin."
+         redirect_to :new_admin_attendance and return
+       end
+     end
+   end
+
    index do
      selectable_column
      id_column
