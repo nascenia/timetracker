@@ -12,11 +12,15 @@ class Leave < ActiveRecord::Base
   UNANNOUNCED = 3
   ROLLBACKED = 4
   AWARDED = 5
+  PATERNITY = 6
+  MATERNITY = 7
 
   LEAVE_TYPES = [
     ['Casual Leave', CASUAL],
     ['Medical Leave', MEDICAL],
-    ['Awarded Leave', AWARDED]
+    ['Awarded Leave', AWARDED],
+    ['Paternity Leave', PATERNITY],
+    ['Maternity Leave', MATERNITY]
   ]
 
   ACCEPTED = 1
@@ -128,7 +132,7 @@ class Leave < ActiveRecord::Base
   end
 
   def is_awarded?
-    leave_type==AWARDED
+    leave_type == AWARDED || leave_type == MATERNITY || leave_type == PATERNITY
   end
 
   def is_pending?

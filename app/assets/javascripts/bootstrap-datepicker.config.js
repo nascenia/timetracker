@@ -2,6 +2,7 @@ $(document).on('turbolinks:load', function () {
 
     toggle_dates();
     limit_award_dates();
+    limit_special_award_dates();
     all_leaves_filters_config();
 
     var max_length = 300;
@@ -86,6 +87,18 @@ function limit_award_dates() {
     $('.date-picker.award').datepicker({
         format: 'yyyy-mm-dd',
         endDate: date
+    }).on('changeDate', function (e) {
+        $(this).datepicker('hide');
+    });
+}
+
+function limit_special_award_dates() {
+    $('.date-picker.sp-award').datepicker('remove');
+    var date = new Date();
+    date.setDate(date.getDate());
+    $('.date-picker.sp-award').datepicker({
+        format: 'yyyy-mm-dd',
+        startDate: date
     }).on('changeDate', function (e) {
         $(this).datepicker('hide');
     });

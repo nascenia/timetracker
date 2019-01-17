@@ -30,6 +30,10 @@ module LeavesHelper
       'Medical'
     when Leave::AWARDED
       'Awarded'
+    when Leave::PATERNITY
+      'Paternity'
+    when Leave::MATERNITY
+      'Maternity'
     else
       'Unannounced'
     end

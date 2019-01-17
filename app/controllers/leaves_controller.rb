@@ -167,6 +167,23 @@ class LeavesController < ApplicationController
     end
   end
 
+  def special_award
+    @leave = Leave.new(leave_params)
+    @leave.pending_at = 0
+    @leave.leave_type = params[:type]
+    @leave.status = Leave::ACCEPTED
+    @leave.user_id = params[:id]
+
+    if @leave.save
+      @leave.user.leave_tracker.update_leave_tracker(@leave)
+      flash[:notice] = 'Special leave awarded Successfully'
+      redirect_to leave_path(@leave)
+    else
+      flash[:warning] = 'Something went wrong ! Try again.'
+      redirect_to leave_tracker_path(params[:id])
+    end
+  end
+
   private
 
   def set_leave

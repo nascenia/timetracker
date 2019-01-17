@@ -50,6 +50,10 @@ class SuperAdminLeavesController < ApplicationController
       Leave::MEDICAL
     when 'Awarded'
       Leave::AWARDED
+    when 'Paternity'
+      Leave::PATERNITY
+    when 'Maternity'
+      Leave::MATERNITY
     else
       Leave::UNANNOUNCED
     end

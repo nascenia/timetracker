@@ -28,6 +28,9 @@
           %td
             - unless unannounced?(leave)
               = link_to 'Show', leave_path(leave)
+            - if leave.start_date >= Time.now or leave.is_awarded?
+              |
+              = link_to 'Cancel', leave_path(leave), method: :delete, data: { confirm: 'Are you sure' }
 -#  %p= paginate @leaves
 :javascript
   $(document).ready(function() {

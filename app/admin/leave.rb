@@ -31,10 +31,16 @@ ActiveAdmin.register Leave do
     column :leave_type do |obj|
       if obj.leave_type == Leave::CASUAL
         'Casual'
+      elsif obj.leave_type == Leave::MEDICAL
+        'Medical'
       elsif obj.leave_type == Leave::UNANNOUNCED
         'Unannounced'
-      else
-        'Medical'
+      elsif obj.leave_type == Leave::AWARDED
+        'Awarded'
+      elsif obj.leave_type == Leave::PATERNITY
+        'Paternity'
+      elsif obj.leave_type == Leave::MATERNITY
+        'Maternity'
       end
     end
     column :reason do |body|

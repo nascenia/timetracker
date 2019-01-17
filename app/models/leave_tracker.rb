@@ -95,7 +95,6 @@ class LeaveTracker < ActiveRecord::Base
   def revert_leave_tracker(leave)
     consumed_casual_leave = consumed_vacation.present? ? consumed_vacation : 0
     consumed_medical_leave = consumed_medical.present? ? consumed_medical : 0
-    p leave.total_leave_hour
     total_hours_to_be_consumed = leave.total_leave_hour
 
     if leave.leave_type == Leave::CASUAL || leave.leave_type == Leave::UNANNOUNCED
