@@ -6,7 +6,7 @@ ActiveAdmin.register LeaveTracker do
 
   controller do
     def update
-      if User.has_edit_permission_for?(current_user, LeaveTracker.find(id=params[:id]).user)
+      if current_user.has_edit_permission_for?(LeaveTracker.find(id=params[:id]).user)
         update!
       else
         flash[:error] = "You don't have permission to edit. Contact the Super Admin."

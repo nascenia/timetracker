@@ -79,7 +79,7 @@ class LeavesController < ApplicationController
 
       current_user_priority = @leave.approval_path.path_chains.find_by(user: current_user).try(:priority)
       @show_actions_to_ttfs = @leave.status == Leave::PENDING && @leave.pending_at == current_user_priority ? true : false
-      @show_actions_to_admin = current_user.try(:is_admin?) && @leave.leave_type != Leave::UNANNOUNCED ? true : false
+      @show_actions_to_admin = current_user.try(:has_admin_privilege?) && @leave.leave_type != Leave::UNANNOUNCED ? true : false
     else
       flash[:alert] = 'Something went wrong. Please try again'
       redirect_to :back
@@ -87,7 +87,7 @@ class LeavesController < ApplicationController
   end
 
   def approve
-    if current_user.try(:is_admin?)
+    if current_user.try(:has_admin_privilege?)
       @leave.update_attributes(status: Leave::ACCEPTED, pending_at: 0)
       @leave.user.leave_tracker.update_leave_tracker(@leave)
       UserMailer.send_approval_or_rejection_notification(@leave).deliver
@@ -122,7 +122,7 @@ class LeavesController < ApplicationController
   end
 
   def reject
-    if current_user.try(:is_admin?)
+    if current_user.try(:has_admin_privilege?)
       @leave.user.leave_tracker.revert_leave_tracker(@leave) if @leave.status == Leave::ACCEPTED
       @leave.update_attribute(:status, Leave::REJECTED)
       UserMailer.send_approval_or_rejection_notification(@leave).deliver
@@ -198,7 +198,7 @@ class LeavesController < ApplicationController
     @leave = Leave.find_by(id: params[:id])
     if @leave.approval_path
       unless current_user.id.in? @leave.approval_path.path_chains.pluck(:user_id) << @leave.user_id
-        unless current_user.try(:is_admin?)
+        unless current_user.try(:has_admin_privilege?)
           redirect_to leave_tracker_path(current_user), alert: 'Access Denied'
         end
       end

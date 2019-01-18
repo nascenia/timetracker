@@ -1,4 +1,4 @@
-- if current_user.is_admin?
+- if current_user.has_admin_privilege?
   = render partial: 'admin_filter'
 .panel.panel-default
 
@@ -9,7 +9,7 @@
         %th{:width => '30%'} Email
         %th{:width => '15%'} Contact Number
         %th{:width => '5%'} Blood Group
-        - if current_user.is_admin?
+        - if current_user.has_admin_privilege?
           %th{:width => '10%'} Joining Date
         %th{:width => '15%'} TTF
     %tbody.word-break
@@ -24,7 +24,7 @@
           - else
             %td= 'N/A'
           %td= employee.blood_group
-          - if current_user.is_admin?
+          - if current_user.has_admin_privilege?
             %td= employee.joining_date
           -if employee.ttf_id?
             %td= User.find(employee.ttf_id).name

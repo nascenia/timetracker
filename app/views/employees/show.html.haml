@@ -58,7 +58,7 @@
                   =@user.blood_group
 
           .clearfix
-      - if current_user.is_admin?
+      - if current_user.has_admin_privilege?
         %h3
           Detail Information
           .content-info

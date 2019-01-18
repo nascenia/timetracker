@@ -32,8 +32,8 @@ class User < ActiveRecord::Base
 
   devise :omniauthable, :omniauth_providers => [:google_oauth2]
 
-  ADMIN_USER = CONFIG['admins']
-  MODERATOR_USER = CONFIG['leave_admin']
+  SUPER_ADMIN_USERS = CONFIG['super_admins']
+  ADMIN_USERS = CONFIG['admins']
 
   REGISTRATION_STATUS = {
       not_registered: 0,
@@ -66,12 +66,12 @@ class User < ActiveRecord::Base
   scope :has_weekend, -> (weekend_id) { where( 'weekend_id IS not ? and weekend_id = ?', nil, weekend_id) }
   scope :has_no_holiday_scheme, -> { where( 'holiday_scheme_id IS ?', nil) }
 
-  def is_admin?
-    self.email && ADMIN_USER.to_s.include?(self.email)
+  def admin?
+    email && ADMIN_USERS.to_s.include?(email)
   end
 
-  def is_moderator?
-    self.email && MODERATOR_USER.to_s.include?(self.email)
+  def super_admin?
+    email && SUPER_ADMIN_USERS.to_s.include?(email)
   end
 
   def is_employee?
@@ -246,16 +246,23 @@ class User < ActiveRecord::Base
   end
 
   def all_information_provided?
-     registration_status > 0
+    registration_status > 0
   end
-  def self.has_edit_permission_for?(current_user,user_to_be_edited)
-    if current_user == user_to_be_edited && current_user.is_moderator?
-      false
-    elsif current_user.is_admin?
-      true
-    else
-      false
+
+  def has_edit_permission_for?(user_to_be_edited)
+    return true if super_admin?
+    if admin?
+      if self == user_to_be_edited
+        return false
+      else
+        return true
+      end
     end
+    return false
+  end
+
+  def has_admin_privilege?
+    super_admin? || admin?
   end
 
 end

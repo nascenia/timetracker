@@ -6,7 +6,7 @@
   %li{class: (params[:controller].eql?('salaat_times') ? 'active' : '')}
     = link_to 'Salaat time', salaat_times_path
 
-  - if current_user.is_admin?
+  - if current_user.has_admin_privilege?
     %li
       = link_to 'Admin', admin_dashboard_path, :target => '_blank'
   %li{class: (params[:controller].eql?('employees') ? 'active' : '')}

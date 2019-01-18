@@ -1,4 +1,4 @@
-- if current_user.is_admin?
+- if current_user.has_admin_privilege?
   = render partial: 'user_filter'
 .panel.panel-default
   .panel-heading

@@ -7,7 +7,7 @@ ActiveAdmin.register User do
 
   controller do
     def update
-      if User.has_edit_permission_for?(current_user, User.find(id=params[:id]))
+      if current_user.has_edit_permission_for?(User.find(id=params[:id]))
         update!
       else
         flash[:error] = "You don't have permission to edit. Contact the Super Admin."
@@ -16,7 +16,7 @@ ActiveAdmin.register User do
     end
 
     def create
-      if User.has_edit_permission_for?(current_user, User.find(id=params[:id]))
+      if current_user.has_edit_permission_for?(User.find(id=params[:id]))
         create!
       else
         flash[:error] = "You don't have permission to create. Contact the Super Admin."

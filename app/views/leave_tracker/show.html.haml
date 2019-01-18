@@ -4,7 +4,7 @@
       %b
         = @user.name + "'s"
         Leave Balance
-      - if should_admin_action_show? @user
+      - if current_user.has_edit_permission_for? @user
         %span.pull-right
           %button.btn.btn-primary{"data-target" => "#sp-award-modal", "data-toggle" => "modal", :type => "button", "data-turbolinks" => false} Award Special Leave
           %button.btn.btn-primary{"data-target" => "#myModal", "data-toggle" => "modal", :type => "button", "data-turbolinks" => false} Award Leave

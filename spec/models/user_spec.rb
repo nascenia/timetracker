@@ -40,14 +40,14 @@ RSpec.describe User, type: :model do
 
     context 'when user is admin' do
       it 'should return true' do
-        expect(user.is_admin?).to eq(true)
+        expect(user.has_admin_privilege?).to eq(true)
       end
     end
 
     context 'when user is not admin' do
       it 'should return false' do
         user.email = 'example@email.com'
-        expect(user.is_admin?).to eq(false)
+        expect(user.has_admin_privilege?).to eq(false)
       end
     end
   end
