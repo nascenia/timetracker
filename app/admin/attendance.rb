@@ -2,6 +2,10 @@ ActiveAdmin.register Attendance do
 
    permit_params :user_id, :checkin_date, :in_time, :out_time, :total_hours, :parent_id
 
+   after_create do |attendance|
+     attendance.out_time=nil
+     attendance.save
+   end
    controller do
      def update
        if current_user.has_edit_permission_for?(User.find(id=params[:attendance][:user_id]))
@@ -21,6 +25,8 @@ ActiveAdmin.register Attendance do
        end
      end
    end
+
+
 
    index do
      selectable_column
