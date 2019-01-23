@@ -6,6 +6,12 @@ ActiveAdmin.register Attendance do
      attendance.out_time=nil
      attendance.save
    end
+   after_update do |attendance|
+     if attendance.in_time.present? && attendance.out_time.present?
+       attendance.total_hours = ((attendance.out_time.to_time - attendance.in_time.to_time) / 1.hour).round(2)
+       attendance.save
+     end
+   end
    controller do
      def update
        if current_user.has_edit_permission_for?(User.find(id=params[:attendance][:user_id]))
