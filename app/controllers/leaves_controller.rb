@@ -159,7 +159,7 @@ class LeavesController < ApplicationController
     end
     if @leave.save
       @leave.user.leave_tracker.update_leave_tracker(@leave)
-      flash[:notice] = 'Leave awarded Successfully'
+      flash[:notice] = 'Leave awarded Successfully!'
       redirect_to leave_path(@leave)
     else
       flash[:warning] = 'Something went wrong ! Try again.'
@@ -176,7 +176,7 @@ class LeavesController < ApplicationController
 
     if @leave.save
       @leave.user.leave_tracker.update_leave_tracker(@leave)
-      flash[:notice] = 'Special leave awarded Successfully'
+      flash[:notice] = 'Special leave awarded Successfully!'
       redirect_to leave_path(@leave)
     else
       flash[:warning] = 'Something went wrong ! Try again.'

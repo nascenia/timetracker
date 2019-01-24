@@ -14,11 +14,11 @@
     .col-sm-10
       = f.select :half_day, Leave::LEAVE_DURATIONS, {}, {:class => 'form-control'}
   .form-group
-    = f.label :start_date, {:class => 'col-sm-2 control-label'}
+    = f.label :start_date, 'Start date *', {:class => 'col-sm-2 control-label'}
     .col-sm-10
       = f.text_field :start_date, :class => 'form-control date-picker', :placeholder => 'Enter start date (ex: dd/mm/yyyy)', :autocomplete => :off, :required => 'true'
   .form-group
-    = f.label :end_date, {:class => 'col-sm-2 control-label'}
+    = f.label :end_date, 'End date *', {:class => 'col-sm-2 control-label'}
     .col-sm-10
       = f.text_field :end_date, :class => 'form-control date-picker', :placeholder => 'Enter end date (ex: dd/mm/yyyy)', :autocomplete => :off, :required => 'true'
   .form-group
