@@ -11,6 +11,16 @@ class HolidaySchemesController < ApplicationController
   end
 
   def show
+    @holidays = @holiday_scheme.holidays
+    @assigned_users = @holiday_scheme.users
+    if params[:employee_status].present?
+      @assigned_users = @assigned_users.active if params[:employee_status] == '1'
+      @assigned_users = @assigned_users.inactive if params[:employee_status] == '2'
+    end
+
+    @holidays = @holiday_scheme.holidays.by_year(params[:year]) if params[:year].present?
+
+
   end
 
   def new

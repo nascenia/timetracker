@@ -1,0 +1,7 @@
+= form_tag holiday_scheme_path, method: :get do
+  .col-sm-3
+    .form-group
+      = select_tag :employee_status, options_for_select([['Current Employees', 1],['Ex Employees', 2]], params[:employee_status]), class: 'form-control', prompt: 'All'
+  .col-sm-1
+    .form-group
+      = submit_tag 'Submit', class: 'btn btn-primary'

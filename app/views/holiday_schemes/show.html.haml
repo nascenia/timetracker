@@ -3,11 +3,15 @@
     %h3
       = @holiday_scheme.name
   .panel-body
-    - if @holiday_scheme.holidays.count > 0
+    - if @holidays.count > 0
       .panel.panel-default
         .panel-heading
-          %h4
-            Holiday list
+          .row
+            .col-sm-8
+              %h4
+                Holiday list
+            = render partial: 'holiday_filter'
+
         %table.table.table-bordered.table-hover
           %thead
             %tr
@@ -18,7 +22,7 @@
               %th
                 Action
           %tbody
-            - @holiday_scheme.holidays.each do |holiday|
+            - @holidays.each do |holiday|
               %tr
                 %td
                   = holiday.name
@@ -32,16 +36,23 @@
     - else
       .panel.panel-default
         .panel-heading
-          %h4
-            No Holiday found
-    - if @holiday_scheme.users.count > 0
+          .row
+            .col-sm-8
+              %h4
+                No holiday found
+            = render partial: 'holiday_filter'
+    - if @assigned_users.count > 0
       .panel.panel-default
         .panel-heading
-          %h4
-            Assigned user list
+          .row
+            .col-sm-7
+              %h4
+                Assigned user list
+            = render partial: 'employee_filter'
+
         %table.table.table-bordered.table-hover
           %tbody
-            - @holiday_scheme.users.each do |user|
+            - @assigned_users.each do |user|
               %tr
                 %td
                   = user.name
@@ -50,8 +61,11 @@
     - else
       .panel.panel-default
         .panel-heading
-          %h4
-            No user assigned yet
+          .row
+            .col-sm-7
+              %h4
+                No user assigned yet
+            = render partial: 'employee_filter'
   .panel-footer
     = link_to 'Add new holiday', new_holiday_path(@holiday_scheme), class: 'btn btn-primary'
     = link_to 'Assign new users', assign_form_holiday_scheme_path(@holiday_scheme), class: 'btn btn-primary'
