@@ -3,11 +3,19 @@ ActiveAdmin.register Attendance do
    permit_params :user_id, :checkin_date, :in_time, :out_time, :total_hours, :parent_id
 
    after_create do |attendance|
-     attendance.out_time=nil
+
+     if params[:attendance]['out_time(4i)'].present? && params[:attendance]['out_time(5i)'].present?
+       attendance= Attendance.find(attendance.id)
+       attendance.total_hours = ((attendance.out_time.to_time - attendance.in_time.to_time) / 1.hour).round(2)
+     else
+       attendance.out_time = nil
+     end
      attendance.save
+
    end
    after_update do |attendance|
      if attendance.in_time.present? && attendance.out_time.present?
+       attendance= Attendance.find(attendance.id)
        attendance.total_hours = ((attendance.out_time.to_time - attendance.in_time.to_time) / 1.hour).round(2)
        attendance.save
      end
