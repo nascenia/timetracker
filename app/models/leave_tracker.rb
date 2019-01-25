@@ -47,21 +47,14 @@ class LeaveTracker < ActiveRecord::Base
   def self.populate_with_carried_forward_leave
     User.active.each do |user|
       if user.leave_tracker.present?
-        if user.leave_tracker.accrued_medical_balance.present?
-          if user.leave_tracker.accrued_medical_balance >= 0
-            carried_forward_medical = 0
-            user.leave_tracker.update_attribute(:carried_forward_medical, carried_forward_medical)
-          else
-            carried_forward_vacation = user.leave_tracker.accrued_medical_balance + user.leave_tracker.accrued_vacation_balance
-            carried_forward_medical = 0
-            user.leave_tracker.update_attribute(:carried_forward_medical, carried_forward_medical)
-            user.leave_tracker.update_attribute(:carried_forward_vacation, carried_forward_vacation)
-          end
-        end
-        if user.leave_tracker.accrued_vacation_balance.present?
-          carried_forward_vacation = user.leave_tracker.accrued_vacation_balance < 80 ? user.leave_tracker.accrued_vacation_balance : 80
-          user.leave_tracker.update_attribute(:carried_forward_vacation, carried_forward_vacation)
-        end
+
+        avb = user.leave_tracker.accrued_vacation_balance
+        amb = user.leave_tracker.accrued_medical_balance
+        carried_forward_vacation = [80, avb + [amb, 0].min].min
+        carried_forward_medical = 0
+
+        user.leave_tracker.update_attribute(:carried_forward_vacation, carried_forward_vacation)
+        user.leave_tracker.update_attribute(:carried_forward_medical, carried_forward_medical)
       end
     end
   end
