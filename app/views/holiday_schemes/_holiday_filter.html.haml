@@ -1,7 +1,7 @@
 = form_tag holiday_scheme_path, method: :get do
   .col-sm-2
     .form-group
-      = select_tag :year, options_for_select(Time.current.year.downto(2014).to_a, params[:year]), class: 'form-control', prompt: 'All'
+      = select_tag :year, options_for_select(Time.current.year.downto(2018).to_a, params[:year]), class: 'form-control', prompt: 'All'
   .col-sm-2
     .form-group
       = submit_tag 'Submit', class: 'btn btn-primary'

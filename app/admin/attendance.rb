@@ -41,7 +41,6 @@ ActiveAdmin.register Attendance do
    end
 
 
-
    index do
      selectable_column
      id_column
