@@ -52,7 +52,18 @@ ActiveAdmin.register Leave do
     column :end_date do |obj|
       obj.end_date.strftime("%d-%m-%Y") if obj.end_date.present?
     end
-    column :half_day
+    column :half_day do |obj|
+      if obj.half_day == Leave::FIRST_HALF
+        'First Half'
+      elsif obj.half_day == Leave::SECOND_HALF
+        'Second Half'
+      elsif obj.half_day == Leave::FIRST_QUARTER
+        'Late'
+      elsif obj.half_day == Leave::FULL_DAY
+        'Full Day'
+      end
+
+    end
     column :pending_at
     column :status do |obj|
       if obj.status == Leave::ACCEPTED
