@@ -29,6 +29,7 @@ class Leave < ActiveRecord::Base
 
   HOURS_FOR_ONE_DAY = 8
   HOURS_FOR_HALF_DAY = HOURS_FOR_ONE_DAY / 2
+  HOURS_FOR_QUARTER_DAY = HOURS_FOR_ONE_DAY / 4
 
   LEAVE_STATUSES = [
     ['Pending', PENDING],
@@ -40,6 +41,7 @@ class Leave < ActiveRecord::Base
   FULL_DAY = 0
   FIRST_HALF = 1
   SECOND_HALF = 2
+  FIRST_QUARTER = 3
 
   LEAVE_DURATIONS = [
     ['Full Day', FULL_DAY],
@@ -183,12 +185,8 @@ class Leave < ActiveRecord::Base
 
   end
 
-
-
   def number_of_days
-    if is_awarded?
-      (end_date-start_date).to_i + 1
-    elsif user.holiday_scheme && user.weekend
+    if user.holiday_scheme && user.weekend
       dates = (start_date..end_date).map(&:to_date) - user.holiday_scheme.holidays.map { |holiday| holiday.date }
 
       (dates.map(&:to_date).map { |day| day.strftime('%A') } - user.weekend.off_days.map(&:capitalize).map(&:to_s)).count
@@ -218,20 +216,39 @@ class Leave < ActiveRecord::Base
   def total_leave_hour
     return hour if leave_type == AWARDED
 
-    total_hours = if end_date.present?
-                    number_of_days * HOURS_FOR_ONE_DAY
-                  else
-                    HOURS_FOR_ONE_DAY
-                  end
 
-    total_hours_to_be_consumed = if half_day != 0
-                                   total_hours - HOURS_FOR_HALF_DAY
-                                 else
-                                   total_hours
-                                 end
+    if leave_type == UNANNOUNCED
+      if half_day == FIRST_QUARTER
+        total_hours_to_be_consumed = HOURS_FOR_QUARTER_DAY
+      elsif half_day == FIRST_HALF
+        if quarter_day_leave_present?
+          total_hours_to_be_consumed = HOURS_FOR_QUARTER_DAY
+        else
+          total_hours_to_be_consumed = HOURS_FOR_HALF_DAY
+        end
+      elsif half_day == SECOND_HALF
+        total_hours_to_be_consumed = HOURS_FOR_HALF_DAY
+      end
+    else
+      total_hours = if end_date.present?
+                      number_of_days * HOURS_FOR_ONE_DAY
+                    else
+                      HOURS_FOR_ONE_DAY
+                    end
+
+      total_hours_to_be_consumed = if half_day != 0
+                                     total_hours - HOURS_FOR_HALF_DAY
+                                   else
+                                     total_hours
+                                   end
+    end
     total_hours_to_be_consumed
   end
   def valid_date?
     start_date.present? and start_date <= Time.now if leave_type == AWARDED
+  end
+
+  def quarter_day_leave_present?
+    Leave.where(:user=> user, :start_date=> start_date,:half_day=> FIRST_QUARTER,:leave_type=> UNANNOUNCED).present?
   end
 end
