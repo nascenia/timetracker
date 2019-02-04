@@ -19,10 +19,10 @@ class LeaveTrackerController < ApplicationController
     @leave_tracker = @user.leave_tracker
     @leave_tracker.update_leave_tracker_daily
     if params[:month].present?
-      @leaves = @user.leaves.leaves_by_month(params[:month]).order('start_date DESC')
+      @leaves = @user.leaves.leaves_by_month(params[:month]).order('start_date DESC, created_at DESC')
       @month = params[:month]
     else
-      @leaves = @user.leaves.order('start_date DESC')
+      @leaves = @user.leaves.order('start_date DESC, created_at DESC')
       @month = nil
     end
     @leave = Leave.new
