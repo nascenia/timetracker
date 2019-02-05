@@ -35,7 +35,7 @@
       var dataTable = $('#employee-info-table').DataTable({
         lengthChange: false,
         pageLength: 100,
-        dom: 'T<"clear">lfrtip',
+        dom: '<"top-left"f><"top-right"T>lrtip',
         buttons: ['print']
       });
       $(document).on("turbolinks:before-cache", function() {

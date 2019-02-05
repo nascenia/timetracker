@@ -1,6 +1,5 @@
 .panel.panel-default
   .panel-heading
-    %h4.filter-header <u>Filter Leaves</u>
 
     = form_tag super_admin_leaves_path, method: :get, class: 'form-inline filter' do
       .row
@@ -20,5 +19,5 @@
           = select_tag :type, options_for_select([['Casual Leave', 1], ['Medical Leave', 2], ['Unannounced Leave', 3]],
            params[:type]), class: 'form-control', prompt: 'All leave type', id: 'leave-type-filter'
         .col-sm-3
-          = submit_tag 'Submit', class: 'btn btn-success'
-          = submit_tag 'Reset', class: 'btn btn-danger', id: 'filter-reset-btn'
+          = submit_tag 'Submit', class: 'btn btn-primary'
+          = submit_tag 'Reset', class: 'btn btn-default', id: 'filter-reset-btn'
