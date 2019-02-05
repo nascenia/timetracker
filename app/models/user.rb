@@ -178,7 +178,6 @@ class User < ActiveRecord::Base
           first_half_day_leave = u.leaves.where('start_date = ? AND status = ? AND half_day = ?', Time.now.to_date, Leave::ACCEPTED, Leave::FIRST_HALF).first
           second_half_day_leave = u.leaves.where('start_date = ? AND status = ? AND half_day = ?', Time.now.to_date, Leave::ACCEPTED, Leave::SECOND_HALF).first
           if first_half_day_leave.nil?
-            u.create_half_day_unannounced_leave(Leave::FIRST_HALF)
             if Time.now > Time.parse('today at 10:30am') && Time.now < Time.parse('today at 11:30am')
               u.create_half_day_unannounced_leave(Leave::FIRST_QUARTER)
             else
