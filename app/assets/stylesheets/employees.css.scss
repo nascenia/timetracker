@@ -17,12 +17,30 @@
     width: 100%;
     height: auto;
   }
+}
+.dt-top-left{
+  padding: 10px;
+}
 
+.dataTables_filter input{
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 6px 12px;
+  height: 34px;
+  box-sizing: border-box;
+  font-weight: normal;
+  margin-right: 20px;
 }
-.top-left{
-  position: fixed;
-  padding: 10px;
-}
-.top-right{
-  padding: 10px;
+#employee_status{
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 6px 12px;
+  height: 34px;
+  width: 200px;
+  background: white;
+  box-sizing: border-box;
+  font-weight: normal;
+  margin-right: 10px;
 }
