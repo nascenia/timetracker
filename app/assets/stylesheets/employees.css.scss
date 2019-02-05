@@ -22,25 +22,36 @@
   padding: 10px;
 }
 
-.dataTables_filter input{
+.dataTables_filter{
+  float: left;
   display: inline-block;
+  margin-top: 0 !important;
+
+
+}
+.dataTables_filter input{
   border: 1px solid #ccc;
   border-radius: 4px;
   padding: 6px 12px;
-  height: 34px;
+  height: 32px;
   box-sizing: border-box;
   font-weight: normal;
   margin-right: 20px;
 }
 #employee_status{
-  display: inline-block;
   border: 1px solid #ccc;
   border-radius: 4px;
   padding: 6px 12px;
-  height: 34px;
-  width: 200px;
+  height: 32px;
+  width: 254px;
   background: white;
   box-sizing: border-box;
   font-weight: normal;
   margin-right: 10px;
+}
+.employee-filter-form{
+    float: left;
+}
+.DTTT_button{
+  float: right;
 }
