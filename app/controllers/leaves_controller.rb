@@ -175,6 +175,11 @@ class LeavesController < ApplicationController
     @leave.status = Leave::ACCEPTED
     @leave.user_id = params[:id]
 
+    unless @leave.valid_date?
+      flash[:alert] = 'End date should be greater or equal to Start date'
+      redirect_to leave_tracker_path(params[:id]) and return
+    end
+
     if @leave.save
       @leave.user.leave_tracker.update_leave_tracker(@leave)
       flash[:notice] = 'Special leave awarded Successfully!'

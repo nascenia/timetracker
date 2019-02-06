@@ -7,9 +7,6 @@ class LeaveTrackerController < ApplicationController
   end
 
   def show
-    flash[:notice] = nil
-    flash[:warning] = nil
-    flash[:alert] = nil
     if session[:user_id].nil?
       @user = User.includes(:leaves).find params[:id]
     else
