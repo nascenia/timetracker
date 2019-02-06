@@ -40,6 +40,7 @@
       var dataTable = $('#monthly-attendance-table').DataTable({
         lengthChange: false,
         pageLength: 100,
+        order: [2,'desc'],
         dom: 'T<"clear">lfrtip',
         buttons: ['print']
       });

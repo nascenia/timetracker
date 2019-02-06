@@ -102,7 +102,7 @@
                     Mobile
                 .col-md-8
                   %h5
-                    =@user.emergency_contact_person_number
+                    %a{:href =>"Tel:#{@user.emergency_contact_person_number}"}=@user.emergency_contact_person_number
 
 
             .row
