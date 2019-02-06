@@ -245,7 +245,7 @@ class Leave < ActiveRecord::Base
     total_hours_to_be_consumed
   end
   def valid_date?
-    start_date.present? and start_date <= Time.now if leave_type == AWARDED
+    start_date.present? && start_date <= Time.now if leave_type == AWARDED
   end
 
   def quarter_day_leave_present?

@@ -4,7 +4,7 @@ class LeavesController < ApplicationController
   before_action :set_leave, only: [:index, :show, :edit]
   before_action :check_permission, only: [:show, :approve]
   before_action :find_applied_leave, only: [:approve, :reject, :destroy]
-  # before_action :validate_date, only: [:create]
+  before_action :validate_date, only: [:create]
 
   layout 'leave'
 
@@ -40,6 +40,10 @@ class LeavesController < ApplicationController
   end
 
   def create
+    if invalid_date?
+      render :new
+      return
+    end
     @leave = Leave.new(leave_params)
     @leave.user_id = current_user.id
     approval_users = @leave.approval_path.path_chains.order(priority: :desc).map(&:user_id)
@@ -211,11 +215,30 @@ class LeavesController < ApplicationController
   end
 
   def validate_date
-    if params['leave']['leave_type'] == '1'
-      unless Date.parse(params['leave']['start_date']).future?
-        flash[:alert] = 'Casual leaves can only be applied for future dates'
-        redirect_to new_leave_path
+    start_date=params['leave']['start_date']
+    end_date=params['leave']['end_date']
+    type=params['leave']['leave_type']
+
+    if start_date.nil? || end_date.nil?
+      flash[:alert] = 'Start date and End date must be filled.'
+      redirect_to new_leave_path and return
+    end
+    if Date.parse(start_date) > Date.parse(end_date)
+      flash[:alert] = 'End date should be greater or equal to Start date'
+      redirect_to new_leave_path and return
+    end
+    if params['leave']['half_day'] != Leave::FULL_DAY.to_s
+      if start_date != end_date
+        flash[:alert] = 'Start date and End date should be same for Half day leaves.'
+        redirect_to new_leave_path and return
+      end
+    end
+    if type == Leave::CASUAL.to_s
+      if Date.parse(start_date) < Date.current || Date.parse(end_date) < Date.current
+        flash[:alert] = 'Casual leaves can only be applied for future dates.'
+        redirect_to new_leave_path and return
       end
     end
   end
+
 end
