@@ -18,12 +18,10 @@ class LeaveTrackerController < ApplicationController
     end
     @leave_tracker = @user.leave_tracker
     @leave_tracker.update_leave_tracker_daily
-    if params[:month].present?
-      @leaves = @user.leaves.leaves_by_month(params[:month]).order('start_date DESC, created_at DESC')
-      @month = params[:month]
+    if params[:year].present?
+      @leaves = @user.leaves.leaves_by_year(params[:year]).order('start_date DESC, created_at DESC')
     else
       @leaves = @user.leaves.order('start_date DESC, created_at DESC')
-      @month = nil
     end
     @leave = Leave.new
     @resignation_error_msg = 'The employee has Casual/ Medical leaves after Last day of working!' if @leave_tracker.casual_or_medical_leave_present_after_resignation

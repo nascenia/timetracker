@@ -53,9 +53,7 @@
       Leave History
       %span.pull-right
         = form_tag leave_tracker_path(@user), method: :get, class: 'form-inline' do
-          = select_tag :month, options_for_select([['January', 1], ['February', 2], ['March', 3], ['April', 4],
-           ['May', 5], ['June', 6], ['July', 7], ['August', 8], ['September', 9], ['October', 10], ['November', 11],
-           ['December', 12],], params[:month]), class: 'form-control', prompt: 'All months'
+          = select_tag :year, options_for_select(Time.current.year.downto(2017).to_a, params[:year]), class: 'form-control', prompt: 'All years'
           = submit_tag 'Submit', class: 'btn btn-success'
   - if @leaves.present? && @leaves.count > 0
     %table.table.table-bordered#leave-table
@@ -76,7 +74,7 @@
             %td= type_of(leave)
             %td= leave.reason
             %td= get_status(leave.status)
-            %td= @month.present? ? leave.total_leave_hour_of(@month) : leave.total_leave_hour
+            %td= leave.total_leave_hour
             %td
               - unless unannounced?(leave)
                 = link_to 'show', leave_path(leave)
