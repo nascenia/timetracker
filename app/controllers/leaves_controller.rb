@@ -41,6 +41,7 @@ class LeavesController < ApplicationController
 
   def create
     @leave = Leave.new(leave_params)
+    @leave.status = Leave::PENDING
     @leave.user_id = current_user.id
     approval_users = @leave.approval_path.path_chains.order(priority: :desc).map(&:user_id)
     emails = []
