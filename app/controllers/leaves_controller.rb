@@ -40,10 +40,6 @@ class LeavesController < ApplicationController
   end
 
   def create
-    if invalid_date?
-      render :new
-      return
-    end
     @leave = Leave.new(leave_params)
     @leave.user_id = current_user.id
     approval_users = @leave.approval_path.path_chains.order(priority: :desc).map(&:user_id)
