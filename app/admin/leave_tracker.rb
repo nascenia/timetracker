@@ -5,6 +5,7 @@ ActiveAdmin.register LeaveTracker do
                 :accrued_medical_this_year, :accrued_vacation_total, :accrued_medical_total, :awarded_leave
 
   preserve_default_filters!
+  remove_filter :leave
   filter :user, label: 'User', collection: proc { User.order(:name)}
 
   controller do
