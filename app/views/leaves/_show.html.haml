@@ -70,7 +70,7 @@
       - unless @leave.is_awarded?
         %tr
           %th Approved by
-          %td= @approvers.size > 0 ? @approvers.join(', ') : 'N/A'
+          %td= @approvers.present? && @approvers.size > 0 ? @approvers.join(', ') : 'N/A'
         %tr
           %th Rejected by
           %td
