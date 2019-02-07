@@ -225,16 +225,18 @@ class LeavesController < ApplicationController
       flash[:alert] = 'Start date and End date must be filled.'
       redirect_to new_leave_path and return
     end
-    if Date.parse(start_date) > Date.parse(end_date)
-      flash[:alert] = 'End date should be greater or equal to Start date'
-      redirect_to new_leave_path and return
-    end
+
     if params['leave']['half_day'] != Leave::FULL_DAY.to_s
       if start_date != end_date
         flash[:alert] = 'Start date and End date should be same for Half day leaves.'
         redirect_to new_leave_path and return
       end
     end
+    if Date.parse(start_date) > Date.parse(end_date)
+      flash[:alert] = 'End date should be greater or equal to Start date'
+      redirect_to new_leave_path and return
+    end
+
     if type == Leave::CASUAL.to_s
       if Date.parse(start_date) < Date.current || Date.parse(end_date) < Date.current
         flash[:alert] = 'Casual leaves can only be applied for future dates.'
