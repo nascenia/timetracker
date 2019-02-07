@@ -25,6 +25,10 @@ class UsersController < ApplicationController
       redirect_to leave_tracker_path(current_user) and return
     end
 
+    @team.each do |user|
+      user.leave_tracker.update_leave_tracker_daily
+    end
+
     respond_to do |format|
       format.html
     end
