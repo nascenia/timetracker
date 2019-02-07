@@ -1,6 +1,9 @@
 ActiveAdmin.register Leave do
   permit_params :user_id, :reason, :leave_type, :pending_at, :status, :start_date, :end_date, :half_day
 
+  preserve_default_filters!
+  filter :user, label: 'User', collection: proc { User.order(:name)}
+
   controller do
     def update
       p params

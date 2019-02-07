@@ -1,5 +1,7 @@
 ActiveAdmin.register Attendance do
-
+   preserve_default_filters!
+   remove_filter :children
+   filter :user, label: 'User', collection: proc { User.order(:name)}
    permit_params :user_id, :checkin_date, :in_time, :out_time, :total_hours, :parent_id
 
    after_create do |attendance|

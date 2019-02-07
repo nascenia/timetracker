@@ -5,6 +5,7 @@ ActiveAdmin.register User do
                 :emergency_contact_person_name, :emergency_contact_person_relation, :emergency_contact_person_number,
                 :blood_group, :joining_date, :resignation_date, :is_published
 
+  remove_filter :attendances, :leaves, :leave_tracker
   controller do
     def update
       if current_user.has_edit_permission_for?(User.find(id=params[:id]))
