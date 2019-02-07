@@ -245,9 +245,9 @@ class Leave < ActiveRecord::Base
     total_hours_to_be_consumed
   end
   def valid_date?
-    start_date.present? && start_date <= Time.now if leave_type == AWARDED
+    return start_date.present? && start_date <= Time.now if leave_type == AWARDED
     if leave_type == PATERNITY || leave_type == MATERNITY
-      start_date.present? && end_date.present? && start_date <= end_date
+      return start_date.present? && end_date.present? && start_date <= end_date
     end
   end
 
