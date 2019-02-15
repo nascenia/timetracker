@@ -26,7 +26,9 @@ class UsersController < ApplicationController
     end
 
     @team.each do |user|
-      user.leave_tracker.update_leave_tracker_daily
+      if user.present? && user.leave_tracker.present?
+        user.leave_tracker.update_leave_tracker_daily
+      end
     end
 
     respond_to do |format|
