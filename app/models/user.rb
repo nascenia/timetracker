@@ -95,12 +95,13 @@ class User < ActiveRecord::Base
   end
 
   def self.find_for_google_oauth2(access_token, signed_in_resource=nil)
-    data = access_token.info
-    user = User.where(:email => data['email']).first
+    email=access_token.extra.id_info['email']
+    name=access_token.info['name']
+    user = User.where(:email => email).first
 
     unless user
-      user = User.create(name: data['name'],
-                         email: data['email'],
+      user = User.create(name: name,
+                         email: email,
                          password: Devise.friendly_token[0, 20])
     end
 
