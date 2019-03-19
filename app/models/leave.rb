@@ -254,4 +254,17 @@ class Leave < ActiveRecord::Base
   def quarter_day_leave_present?
     Leave.where(:user=> user, :start_date=> start_date,:half_day=> FIRST_QUARTER,:leave_type=> UNANNOUNCED).present?
   end
+
+
+  def remove_unannounced_for_same_date
+    leave_on_same_date=user.leaves.where("leave_type =? AND start_date =? ", Leave::UNANNOUNCED, start_date)
+    leave_on_same_date.each do |leave|
+      leave.user.leave_tracker.update_attribute(:consumed_vacation, leave.user.leave_tracker.consumed_vacation - leave.total_leave_hour)
+    end
+    leave_on_same_date.destroy_all
+  end
+
+
+
+
 end

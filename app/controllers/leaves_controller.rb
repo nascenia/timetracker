@@ -97,24 +97,18 @@ class LeavesController < ApplicationController
       UserMailer.send_approval_or_rejection_notification_to_hr(@leave).deliver
     else
       if @leave.pending_at == 1
-        leaves = 0
         if @leave.start_date < Date.today
           @leave.update_attribute(:status, Leave::REJECTED)
           flash[:warning] = 'Leave tracker already updated and you can not approved it now!'
           redirect_to :back and return
-        elsif @leave.half_day == 0
-          leaves_total = @leave.user.leaves.where("leave_type =? AND start_date =? ", 3, @leave.start_date)
-        else
-          leaves_total = @leave.user.leaves.where("leave_type =? AND start_date =? ", @leave.half_day , @leave.start_date)
         end
-        leaves = leaves_total.count
-        hours_leaves = leaves  * 4
-        @leave.user.leave_tracker.update_attribute(:consumed_vacation, @leave.user.leave_tracker.consumed_vacation - hours_leaves)
+
+        @leave.remove_unannounced_for_same_date
+
         @leave.update_attributes(status: Leave::ACCEPTED, pending_at: 0)
         @leave.user.leave_tracker.update_leave_tracker(@leave)
         UserMailer.send_approval_or_rejection_notification(@leave).deliver
         UserMailer.send_approval_or_rejection_notification_to_hr(@leave).deliver
-        leaves_total.destroy_all
       else
         @leave.update_attribute(:pending_at, @leave.pending_at -= 1)
         email = @leave.approval_path.path_chains.find_by(priority: @leave.pending_at).user.email
