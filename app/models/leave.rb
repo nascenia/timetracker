@@ -263,8 +263,4 @@ class Leave < ActiveRecord::Base
     end
     leave_on_same_date.destroy_all
   end
-
-
-
-
 end
