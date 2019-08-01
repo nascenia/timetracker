@@ -1,0 +1,53 @@
+<table style="width:100%">
+    <tr>
+        <th>Date</th>
+        <th>Description</th>
+        <th>Project Name </th>
+        <th>Task </th>
+        <th>Ticket Number </th>
+        <th>Ticket Link </th>
+        <th>Hours </th>
+        <th>Minutes </th>
+        <th></th>
+    </tr>
+
+
+<% @timesheets.each do |timesheet| %>
+    <%#= timesheet.date %>
+<!--    <br>-->
+    <%#= timesheet.description %>
+<!--    <br>-->
+    <%#= timesheet.user.email %>
+<!--    <br>-->
+        <% project = @projects.find(timesheet.project_id) %>
+        <tr>
+            <td><%= timesheet.date%></td>
+            <td><%= timesheet.description%></td>
+            <td><%= project.project_name %></td>
+            <td><%= timesheet.task %></td>
+            <td><%= timesheet.ticket_number %></td>
+            <td><%= timesheet.ticket_link %></td>
+            <td><%= timesheet.hours %></td>
+            <td><%= timesheet.minutes %></td>
+            <td> <%= link_to 'Edit', edit_timesheet_path(timesheet) %> </td>
+        </tr>
+<% end %>
+
+</table>
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+</style>

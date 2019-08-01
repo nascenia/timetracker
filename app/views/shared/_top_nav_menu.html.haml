@@ -3,8 +3,6 @@
     = link_to 'Monthly TT', attendances_path
   %li{class: (params[:controller].eql?('users') || params[:controller].eql?('leaves') ? 'active' : '')}
     = link_to 'My Leave', leave_tracker_path(current_user)
-  %li{class: (params[:controller].eql?('users') || params[:controller].eql?('leaves') ? 'active' : '')}
-    = link_to 'Salaat time', salaat_times_path
 
   - if current_user.is_admin?
     %li
@@ -12,7 +10,7 @@
   %li
     = link_to 'Employee Info', employees_path
   %li.dropdown
-    %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
+    %a.dropdown-toggle{"data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false",:href => "#"}
       = current_user.name
       %span.caret
     %ul.dropdown-menu
@@ -20,3 +18,19 @@
         = link_to 'Profile', edit_user_registration_path
       %li
         = link_to 'Logout', destroy_user_session_path, method: :delete
+  %li.dropdown
+    %a.dropdown-toggle{"data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false",:href => "#"}
+      = 'Work Log'
+
+      %span.caret
+    %ul.dropdown-menu
+      %li
+        = link_to 'New Time Entry', new_timesheet_path
+      %li
+        = link_to 'Create Project', new_project_path
+      %li
+        = link_to 'Projects', projects_path
+      %li
+        = link_to 'Summarized Project', projects_path
+      %li
+        = link_to 'Individual Log', timesheets_path

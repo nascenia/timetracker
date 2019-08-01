@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180410122326) do
+ActiveRecord::Schema.define(version: 20190723103741) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -165,6 +165,7 @@ ActiveRecord::Schema.define(version: 20180410122326) do
     t.integer  "half_day",         default: 0, null: false
     t.integer  "pending_at",                   null: false
     t.integer  "approval_path_id"
+    t.integer  "hour"
   end
 
   add_index "leaves", ["approval_path_id"], name: "index_leaves_on_approval_path_id", using: :btree
@@ -180,12 +181,42 @@ ActiveRecord::Schema.define(version: 20180410122326) do
 
   add_index "path_chains", ["approval_path_id"], name: "index_path_chains_on_approval_path_id", using: :btree
 
+  create_table "projects", force: true do |t|
+    t.string   "project_name"
+    t.string   "description"
+    t.boolean  "is_active"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "projects_users", id: false, force: true do |t|
+    t.integer "user_id",    null: false
+    t.integer "project_id", null: false
+  end
+
   create_table "salaats", force: true do |t|
     t.string   "waqt"
     t.time     "time"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "timesheets", force: true do |t|
+    t.date     "date"
+    t.text     "description"
+    t.integer  "project_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "task"
+    t.string   "ticket_number"
+    t.text     "ticket_link"
+    t.integer  "hours"
+    t.integer  "minutes"
+  end
+
+  add_index "timesheets", ["project_id"], name: "index_timesheets_on_project_id", using: :btree
+  add_index "timesheets", ["user_id"], name: "index_timesheets_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                             default: "",    null: false

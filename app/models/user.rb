@@ -12,6 +12,8 @@ class User < ActiveRecord::Base
   has_many :leaves, dependent: :destroy
   has_many :owned_paths, class_name: 'PathChain'
   has_many :comments, dependent: :destroy
+  has_many :timesheets, dependent: :destroy
+  has_and_belongs_to_many :projects
 
   #
   # Callbacks

@@ -1,0 +1,46 @@
+<table style="width:100%">
+    <tr>
+        <th>Project Name</th>
+        <th>Description</th>
+        <th>Users </th>
+        <th>Is Active </th>
+        <th>Action </th>
+    </tr>
+<% @projects.each do |project| %>
+        <% $isActive %>
+        <% if(project.is_active) %>
+            <%  $isActive = 'Yes'%>
+            <%else %>
+            <%  $isActive = 'No'%>
+        <% end %>
+            <tr>
+                <td><%= project.project_name%></td>
+                <td><%= project.description%></td>
+                <td><% project.users.each do |user| %>
+                        <%= user.email %>
+                        <br>
+                    <% end %>
+                </td>
+                <td><%=$isActive %></td>
+                <td> <%= link_to 'Edit', edit_project_path(project) %> </td>
+            </tr>
+<% end %>
+</table>
+
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+</style>

@@ -1,0 +1,78 @@
+<%= form_for @timesheets do |f| %>
+    <div class="row">
+        <div class="col-md-6">
+            <p>
+                <%= label :date, 'Date' %>
+            </p>
+            <p>
+                <%= f.text_field :date, :class => 'form-control date-picker', value: @timesheets.date %>
+            </p>
+        </div>
+        <div class="col-md-6">
+            <p>
+                <%= label :project, 'Project Name' %>
+            </p>
+            <p>
+                <%= f.select :project_id, options_for_select(@projects.collect { | project | [project.project_name,  project.id] }, selected: @timesheets.project_id), {}, {required: 'true', autofocus: 'true', class: 'form-control'}%>
+            </p>
+        </div>
+        <div class="col-md-6">
+            <p>
+                <%= label :project, 'Task' %>
+            </p>
+            <p>
+                <%= f.text_field :task ,:class => 'form-control'%>
+            </p>
+        </div>
+        <div class="col-md-6">
+            <p>
+                <%= label :project, 'Ticket Number' %>
+            </p>
+            <p>
+                <%= f.text_field :ticket_number,:class => 'form-control' %>
+            </p>
+        </div>
+        <div class="col-md-6">
+            <p>
+                <%= label :project, 'Ticket Link' %>
+            <p>
+                <%= f.text_field :ticket_link,:class => 'form-control' %>
+            </p>
+        </div>
+        <div class="col-md-6" >
+            <div class="row">
+                <div class="col-md-6">
+                    <p>
+                        <%= label :project, 'Hours spent' %>
+                    </p>
+                    <p>
+                        <%= f.select :hours, options_for_select(0..14, selected: @timesheets.hours) , {}, {required: 'true', autofocus: 'true', class: 'form-control'}%>
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <p>
+                        <%= label :project, 'Minutes spent' %>
+                    </p>
+                    <p>
+                        <%= f.select :minutes, options_for_select((0..3).map {|n| n*15 }, selected: @timesheets.minutes) , {}, {required: 'true', autofocus: 'true', class: 'form-control'}%>
+                    </p>
+                </div>
+
+            </div>
+
+
+
+        </div>
+
+        <div class="col-md-6" style="clear: left;">
+            <p>
+                <%= label :description, 'Description/Comments' %>
+            </p>
+            <p>
+                <%= f.text_area :description,:class => 'form-control' , cols: "30", rows: "10"%>
+            </p>
+        </div>
+    </div>
+
+    <%= f.submit "Create" %>
+<% end %>

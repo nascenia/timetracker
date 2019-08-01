@@ -65,6 +65,7 @@ class AttendancesController < ApplicationController
   end
 
   def update
+    #/users/auth/google_oauth2/callback?state=0fda7623dc84dd38452620d0adcca9b9bd89b31c90e2a4d3&code=4/fAHucfKWCPp3vS0CjsKOuTanU4T3F9NTAyM410e6VLfk15dLL7DtBskWO6xkoxgDvihoo0os3Uj5BWGKoPJz0s0&scope=email%20profile%20https://www.googleapis.com/auth/userinfo.profile%20https://www.googleapis.com/auth/userinfo.email&authuser=0&hd=nascenia.com&session_state=95aa078cf0b927a4a9bf5dd3f2f2ad4730fc1e55..ee49&prompt=none
     unless !restrict_access?
       if params[:id] == 'invalid'
         flash[:notice] = 'You did not log in today! Please log in first!'
@@ -110,7 +111,7 @@ class AttendancesController < ApplicationController
     end
   end
 
-  def download
+  def downloadz
     @attendances = Attendance.last_six_months
 
     respond_to do |format|

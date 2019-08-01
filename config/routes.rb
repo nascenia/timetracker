@@ -1,4 +1,5 @@
 Internal::Application.routes.draw do
+  get "projects/index"
   devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks", :registrations => 'users/registrations' }
 
   devise_for :admin_users, ActiveAdmin::Devise.config
@@ -29,7 +30,7 @@ Internal::Application.routes.draw do
     end
   end
 
-  # leaves_controller resources generate paths with 'leafe' as singular for 'leaves'
+  # leaves_controller projects generate paths with 'leafe' as singular for 'leaves'
   # That is why we defined plural and singular for leave in config/initializers/inflections.rb
   resources :leaves do
     member { post :approve, :reject}
@@ -44,6 +45,17 @@ Internal::Application.routes.draw do
       get :download
     end
   end
+  resources :timesheets do
+    # collection do
+    #   get :index
+    # end
+  end
+  resources :projects do
+    # collection do
+    #   get :index
+    # end
+  end
+
 
   resources :salaats
 

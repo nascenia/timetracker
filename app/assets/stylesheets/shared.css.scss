@@ -21,3 +21,15 @@ legend
   padding: 5px 5px 5px 10px;
   background-color: #ffffff;
 }
+
+.dropdown.open {
+  .dropdown-menu {
+    display: block !important;
+  }
+}
+
+.dropdown {
+  .dropdown-menu {
+    display: none !important;
+  }
+}
