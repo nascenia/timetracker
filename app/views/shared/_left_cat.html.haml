@@ -9,21 +9,21 @@
       = link_to 'Apply leave', new_leave_path
     -#%li{:class => current_page?(users_path) ? 'active' : ''}
     -#  = link_to 'Employees', users_path
-    - if has_co_worker? || current_user.is_admin?
+    - if has_co_worker? || current_user.has_admin_privilege?
       %li{:class => current_page?(team_user_path(current_user)) ? 'active' : ''}
         = link_to 'Employees\' leaves', team_user_path(current_user)
-    - if has_owned_paths? || current_user.is_admin?
+    - if has_owned_paths? || current_user.has_admin_privilege?
       %li{:class => current_page?(leaves_path) ? 'active' : ''}
         = link_to 'Pending leaves', leaves_path
-    - if current_user.is_admin?
+    - if current_user.has_admin_privilege?
       %li{:class => current_page?(approval_chains_path) ? 'active' : ''}
         = link_to 'Approval Paths', approval_chains_path
-    - if current_user.is_admin?
+    - if current_user.has_admin_privilege?
       %li{:class => current_page?(weekends_path) ? 'active' : ''}
         = link_to 'Weekend Scheme', weekends_path
-    - if current_user.is_admin?
+    - if current_user.has_admin_privilege?
       %li{:class => current_page?(holiday_schemes_path) ? 'active' : ''}
         = link_to 'Holiday Scheme', holiday_schemes_path
-    - if current_user.is_admin?
+    - if current_user.has_admin_privilege?
       %li{:class => current_page?(super_admin_leaves_path) ? 'active' : ''}
         = link_to 'All Leaves', super_admin_leaves_path

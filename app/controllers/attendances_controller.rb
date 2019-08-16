@@ -73,7 +73,10 @@ class AttendancesController < ApplicationController
       end
 
       @today_entry = Attendance.find_first_entry(current_user.id, Date.today)
-
+      @timesheets = Timesheet.all.where(user_id: current_user.id, date: Date.today)
+      if @timesheets.size<=0
+        redirect_to new_timesheet_path
+      else
       if @attendance.user_id == current_user.id
         if @today_entry
           @attendance.out_time = Time.now.to_s(:time)
@@ -86,10 +89,12 @@ class AttendancesController < ApplicationController
           flash[:notice] = 'You did not log in today.'
         end
       end
-    end
 
     respond_to do |format|
       format.html { redirect_to :back }
+    end
+
+      end
     end
   end
 

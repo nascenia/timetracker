@@ -1,0 +1,11 @@
+.panel.panel-default
+  .panel-heading
+    %h4 Filter Users
+  .panel-body
+    .row
+      = form_tag team_user_path, method: :get, class: 'form-inline filter' do
+        .col-md-5
+          = select_tag :status, options_for_select(["Ex Employees"], params[:status]),
+          class: 'form-control', prompt: 'Current Employees'
+        .col-md-2
+          = submit_tag 'Submit', class: 'btn btn-success'

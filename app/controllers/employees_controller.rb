@@ -21,10 +21,12 @@ class EmployeesController < ApplicationController
       @employees = @employees.inactive if params[:employee_status] == '2'
       @employees = @employees.not_published if params[:employee_status] == '3'
       @employees = @employees.not_register if params[:employee_status] == '4'
+    else
+      @employees = @employees.active
     end
   end
   def show
     @user = User.find params[:id];
-    @show_actions_to_admin = current_user.try(:is_admin?) && @user.registration_status == User::REGISTRATION_STATUS[:not_approved] ? true : false
+    @show_actions_to_admin = current_user.try(:has_admin_privilege?) && @user.registration_status == User::REGISTRATION_STATUS[:not_approved] ? true : false
   end
 end

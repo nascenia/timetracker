@@ -1,135 +1,139 @@
-%h1.page-header
-  My Team
+- if current_user.has_admin_privilege?
+  = render partial: 'user_filter'
+.panel.panel-default
+  .panel-heading
+    %h3
+      My Team
 
-- if @team.size > 0
-  -##accordion1.panel-group
-  -#  .panel.panel-default
-  -#    - @team.each do |employee|
-  -#      .panel-heading
-  -#        %h4.panel-title
-  -#          %a{"data-parent" => "#accordion1", "data-toggle" => "collapse", :href => "#collapse_#{employee.id}"}
-  -#            = employee.name
-  -#            %span.pull-right
-  -#              - if employee.is_employee?
-  -#                Employee
-  -#              - elsif employee.is_ttf?
-  -#                TTF
-  -#      .panel-collapse.collapse{:id => "collapse_#{employee.id}"}
-  -#        %table.table.table-bordered
-  -#          %thead
-  -#            %tr
-  -#              %th Approval Path
-  -#              %th Weekend Scheme
-  -#              %th Holiday Scheme
-  -#          %tbody
-  -#            %tr
-  -#              %td
-  -#                - if employee.approval_path.present?
-  -#                  = link_to "#{employee.approval_path.name}", approval_chain_path(employee.approval_path)
-  -#                - else
-  -#                  %p N/A
-  -#              %td
-  -#                - if employee.weekend.present?
-  -#                  = link_to "#{employee.weekend.name}", detail_weekend_path(employee.weekend)
-  -#                - else
-  -#                  %p N/A
-  -#              %td
-  -#                - if employee.holiday_scheme.present?
-  -#                  = link_to "#{employee.holiday_scheme.name}", holiday_scheme_path(employee.holiday_scheme)
-  -#                - else
-  -#                  %p N/A
-  -#        %table.table.table-bordered
-  -#          %thead
-  -#            %tr
-  -#              %th
-  -#              %th Casual (hours)
-  -#              %th Medical (hours)
-  -#          %tbody
-  -#            - if employee.leave_tracker.present?
-  -#              %tr
-  -#                %th Yearly Leave
-  -#                %td= LeaveTracker::YEARLY_CASUAL_LEAVE
-  -#                %td= LeaveTracker::YEARLY_MEDICAL_LEAVE
-  -#              %tr
-  -#                %th Accrued in this year
-  -#                %td= employee.leave_tracker.accrued_vacation_this_year
-  -#                %td= employee.leave_tracker.accrued_medical_this_year
-  -#              %tr
-  -#                %th Carried forwarded leave
-  -#                %td= employee.leave_tracker.carried_forward_vacation
-  -#                %td= employee.leave_tracker.carried_forward_medical
-  -#              %tr
-  -#                %th Accrued in total
-  -#                %td= employee.leave_tracker.accrued_vacation_total
-  -#                %td= employee.leave_tracker.accrued_medical_total
-  -#              %tr
-  -#                %th Consumed leave
-  -#                %td= employee.leave_tracker.consumed_vacation
-  -#                %td= employee.leave_tracker.consumed_medical
-  -#              %tr
-  -#                %th Accrual balance
-  -#                %td= employee.leave_tracker.accrued_vacation_balance
-  -#                %td= employee.leave_tracker.accrued_medical_balance
-  -#        .panel.panel-default
-  -#          .panel-heading
-  -#            %b Leave History
-  -#          - if employee.leaves.count > 0
-  -#            %table.table.table-bordered
-  -#              %thead
-  -#                %tr
-  -#                  %th{:width => '20%'} Name
-  -#                  %th{:width => '15%'} Type
-  -#                  %th{:width => '35%'} Description
-  -#                  %th{:width => '10%'} Status
-  -#                  %th{:width => '20%'} Action
-  -#              %tbody
-  -#                - employee.leaves.each do |leave|
-  -#                  %tr
-  -#                    %td= leave.user.name
-  -#                    %td= leave.leave_type == Leave::CASUAL ? 'Casual' : 'Medical'
-  -#                    %td= leave.reason
-  -#                    %td= get_status(leave.status)
-  -#                    %td
-  -#                      = link_to 'show', leave_path(leave)
-  -#          - else
-  -#            .alert.alert-info{:role => 'alert'}
-  -#              %strong Empty!
-  -#              No record found.
-  %table.table.table-responsive.table-bordered
-    %thead
-      %tr
-        %th Name
-        %th Approval Path
-        %th Weekend Scheme
-        %th Holiday Scheme
-        %th Accrual Casual Balance
-        %th Accrual Medical Balance
-    %tbody
-      - @team.each do |employee|
+  - if @team.size > 0
+    -##accordion1.panel-group
+    -#  .panel.panel-default
+    -#    - @team.each do |employee|
+    -#      .panel-heading
+    -#        %h4.panel-title
+    -#          %a{"data-parent" => "#accordion1", "data-toggle" => "collapse", :href => "#collapse_#{employee.id}"}
+    -#            = employee.name
+    -#            %span.pull-right
+    -#              - if employee.is_employee?
+    -#                Employee
+    -#              - elsif employee.is_ttf?
+    -#                TTF
+    -#      .panel-collapse.collapse{:id => "collapse_#{employee.id}"}
+    -#        %table.table.table-bordered
+    -#          %thead
+    -#            %tr
+    -#              %th Approval Path
+    -#              %th Weekend Scheme
+    -#              %th Holiday Scheme
+    -#          %tbody
+    -#            %tr
+    -#              %td
+    -#                - if employee.approval_path.present?
+    -#                  = link_to "#{employee.approval_path.name}", approval_chain_path(employee.approval_path)
+    -#                - else
+    -#                  %p N/A
+    -#              %td
+    -#                - if employee.weekend.present?
+    -#                  = link_to "#{employee.weekend.name}", detail_weekend_path(employee.weekend)
+    -#                - else
+    -#                  %p N/A
+    -#              %td
+    -#                - if employee.holiday_scheme.present?
+    -#                  = link_to "#{employee.holiday_scheme.name}", holiday_scheme_path(employee.holiday_scheme)
+    -#                - else
+    -#                  %p N/A
+    -#        %table.table.table-bordered
+    -#          %thead
+    -#            %tr
+    -#              %th
+    -#              %th Casual (hours)
+    -#              %th Medical (hours)
+    -#          %tbody
+    -#            - if employee.leave_tracker.present?
+    -#              %tr
+    -#                %th Yearly Leave
+    -#                %td= LeaveTracker::YEARLY_CASUAL_LEAVE
+    -#                %td= LeaveTracker::YEARLY_MEDICAL_LEAVE
+    -#              %tr
+    -#                %th Accrued in this year
+    -#                %td= employee.leave_tracker.accrued_vacation_this_year
+    -#                %td= employee.leave_tracker.accrued_medical_this_year
+    -#              %tr
+    -#                %th Carried forwarded leave
+    -#                %td= employee.leave_tracker.carried_forward_vacation
+    -#                %td= employee.leave_tracker.carried_forward_medical
+    -#              %tr
+    -#                %th Accrued in total
+    -#                %td= employee.leave_tracker.accrued_vacation_total
+    -#                %td= employee.leave_tracker.accrued_medical_total
+    -#              %tr
+    -#                %th Consumed leave
+    -#                %td= employee.leave_tracker.consumed_vacation
+    -#                %td= employee.leave_tracker.consumed_medical
+    -#              %tr
+    -#                %th Accrual balance
+    -#                %td= employee.leave_tracker.accrued_vacation_balance
+    -#                %td= employee.leave_tracker.accrued_medical_balance
+    -#        .panel.panel-default
+    -#          .panel-heading
+    -#            %b Leave History
+    -#          - if employee.leaves.count > 0
+    -#            %table.table.table-bordered
+    -#              %thead
+    -#                %tr
+    -#                  %th{:width => '20%'} Name
+    -#                  %th{:width => '15%'} Type
+    -#                  %th{:width => '35%'} Description
+    -#                  %th{:width => '10%'} Status
+    -#                  %th{:width => '20%'} Action
+    -#              %tbody
+    -#                - employee.leaves.each do |leave|
+    -#                  %tr
+    -#                    %td= leave.user.name
+    -#                    %td= leave.leave_type == Leave::CASUAL ? 'Casual' : 'Medical'
+    -#                    %td= leave.reason
+    -#                    %td= get_status(leave.status)
+    -#                    %td
+    -#                      = link_to 'show', leave_path(leave)
+    -#          - else
+    -#            .alert.alert-info{:role => 'alert'}
+    -#              %strong Empty!
+    -#              No record found.
+    %table.table.table-responsive.table-bordered
+      %thead
         %tr
-          %td
-            = link_to employee.name, leave_tracker_path(employee)
-          %td
-            - if employee.approval_path.present?
-              = link_to "#{employee.approval_path.name}", approval_chain_path(employee.approval_path)
-            - else
-              %p ---
-          %td
-            - if employee.weekend.present?
-              = link_to "#{employee.weekend.name}", detail_weekend_path(employee.weekend)
-            - else
-              %p ---
-          %td
-            - if employee.holiday_scheme.present?
-              = link_to "#{employee.holiday_scheme.name}", holiday_scheme_path(employee.holiday_scheme)
-            - else
-              %p ---
-          %td= employee.leave_tracker.present? ? employee.leave_tracker.accrued_vacation_balance : '---'
-          %td= employee.leave_tracker.present? ? employee.leave_tracker.accrued_medical_balance : '---'
+          %th Name
+          %th Approval Path
+          %th Weekend Scheme
+          %th Holiday Scheme
+          %th Accrual Casual Balance
+          %th Accrual Medical Balance
+      %tbody
+        - @team.each do |employee|
+          %tr
+            %td
+              = link_to employee.name, leave_tracker_path(employee)
+            %td
+              - if employee.approval_path.present?
+                = link_to "#{employee.approval_path.name}", approval_chain_path(employee.approval_path)
+              - else
+                %p ---
+            %td
+              - if employee.weekend.present?
+                = link_to "#{employee.weekend.name}", detail_weekend_path(employee.weekend)
+              - else
+                %p ---
+            %td
+              - if employee.holiday_scheme.present?
+                = link_to "#{employee.holiday_scheme.name}", holiday_scheme_path(employee.holiday_scheme)
+              - else
+                %p ---
+            %td= employee.leave_tracker.present? ? employee.leave_tracker.accrued_vacation_balance : '---'
+            %td= employee.leave_tracker.present? ? employee.leave_tracker.accrued_medical_balance : '---'
 
 
 
-- else
-  .alert.alert-info{:role => 'alert'}
-    %strong Empty!
-    No record found.
+  - else
+    .alert.alert-info{:role => 'alert'}
+      %strong Empty!
+      No record found.

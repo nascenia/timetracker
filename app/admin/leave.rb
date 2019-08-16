@@ -1,6 +1,30 @@
 ActiveAdmin.register Leave do
   permit_params :user_id, :reason, :leave_type, :pending_at, :status, :start_date, :end_date, :half_day
 
+  preserve_default_filters!
+  filter :user, label: 'User', collection: proc { User.order(:name)}
+
+  controller do
+    def update
+      p params
+      if current_user.has_edit_permission_for?(User.find(id=params[:leave][:user_id]))
+        update!
+      else
+        flash[:error] = "You don't have permission to edit. Contact the Super Admin."
+        redirect_to :edit_admin_leave and return
+      end
+    end
+
+    def create
+      if current_user.has_edit_permission_for?(User.find(id=params[:leave][:user_id]))
+        create!
+      else
+        flash[:error] = "You don't have permission to create. Contact the Super Admin."
+        redirect_to :new_admin_leave and return
+      end
+    end
+  end
+
   index do
     selectable_column
     id_column
@@ -10,10 +34,16 @@ ActiveAdmin.register Leave do
     column :leave_type do |obj|
       if obj.leave_type == Leave::CASUAL
         'Casual'
+      elsif obj.leave_type == Leave::MEDICAL
+        'Medical'
       elsif obj.leave_type == Leave::UNANNOUNCED
         'Unannounced'
-      else
-        'Medical'
+      elsif obj.leave_type == Leave::AWARDED
+        'Awarded'
+      elsif obj.leave_type == Leave::PATERNITY
+        'Paternity'
+      elsif obj.leave_type == Leave::MATERNITY
+        'Maternity'
       end
     end
     column :reason do |body|
@@ -25,7 +55,18 @@ ActiveAdmin.register Leave do
     column :end_date do |obj|
       obj.end_date.strftime("%d-%m-%Y") if obj.end_date.present?
     end
-    column :half_day
+    column :half_day do |obj|
+      if obj.half_day == Leave::FIRST_HALF
+        'First Half'
+      elsif obj.half_day == Leave::SECOND_HALF
+        'Second Half'
+      elsif obj.half_day == Leave::FIRST_QUARTER
+        'Late'
+      elsif obj.half_day == Leave::FULL_DAY
+        'Full Day'
+      end
+
+    end
     column :pending_at
     column :status do |obj|
       if obj.status == Leave::ACCEPTED

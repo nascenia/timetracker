@@ -1,31 +1,90 @@
-<table style="width:100%">
-    <tr>
-        <th>Project Name</th>
-        <th>Description</th>
-        <th>Users </th>
-        <th>Is Active </th>
-        <th>Action </th>
-    </tr>
-<% @projects.each do |project| %>
+
+<table style="width:100%" id="projects-list-table">
+
+    <% if @is_active %>
+        <%= link_to 'Inactive Projects', projects_path(is_active: false) %>
+    <%else %>
+        <%= link_to 'Active Projects', projects_path(is_active: true) %>
+    <% end %>
+<!--    <tfoot class="col-search">-->
+<!--    <tr>-->
+<!--        <th>Project Name</th>-->
+<!--        <th>Description</th>-->
+<!--        <th>Users</th>-->
+<!--        <th>Is Active</th>-->
+<!--        <th>Action</th>-->
+<!--    </tr>-->
+<!--    </tfoot>-->
+    <thead>
+        <tr>
+            <th>Project Name</th>
+            <th>Description</th>
+            <th>Team Members</th>
+            <th>Is Active</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+    <% @projects.each do |project| %>
         <% $isActive %>
-        <% if(project.is_active) %>
-            <%  $isActive = 'Yes'%>
-            <%else %>
-            <%  $isActive = 'No'%>
+        <% if (project.is_active) %>
+            <% $isActive = 'Yes' %>
+        <% else %>
+            <% $isActive = 'No' %>
         <% end %>
-            <tr>
-                <td><%= project.project_name%></td>
-                <td><%= project.description%></td>
-                <td><% project.users.each do |user| %>
-                        <%= user.email %>
-                        <br>
-                    <% end %>
-                </td>
-                <td><%=$isActive %></td>
-                <td> <%= link_to 'Edit', edit_project_path(project) %> </td>
-            </tr>
-<% end %>
+        <tr>
+            <td><%= link_to project.project_name, project_path(project,:start_date => Time.now.strftime("%Y/%m/%d"), :end_date => Time.now.strftime("%Y/%m/%d"), :selected_index => 1) %></td>
+            <td><%= project.description %></td>
+            <td>
+                <% project.users.each do |user| %>
+                    <%= link_to  user.email , employee_path(user)%>
+
+                    <br>
+                <% end %>
+            </td>
+            <td><%= $isActive %></td>
+            <td> <%= link_to 'Edit', edit_project_path(project) %> </td>
+        </tr>
+    <% end %>
+    </tbody>
+
 </table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        // $('#projects-list-table tfoot th').each( function () {
+        //     var title = $(this).text();
+        //     $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+        // } );
+
+        var dataTable = $('#projects-list-table').DataTable({
+            lengthChange: false,
+            pageLength: 100,
+            dom: '<"dt-top-left"Tf>lrtip',
+            // buttons: ['print']
+        });
+        // console.log(dataTable.columns()[0]);
+        // dataTable.columns().every( function () {
+        //     var that = this;
+        //     console.log(this);
+        //
+        //     $( 'input', this.footer() ).on( 'keyup change clear', function () {
+        //         if ( that.search() !== this.value ) {
+        //             that
+        //                 .search( this.value )
+        //                 .draw();
+        //         }
+        //     } );
+        // } );
+        $(document).on("turbolinks:before-cache", function () {
+            if (dataTable !== null) {
+                dataTable.destroy();
+                dataTable = null;
+            }
+        });
+    });
+</script>
 
 <style>
     table {

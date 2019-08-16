@@ -15,13 +15,20 @@ class UsersController < ApplicationController
   def team
     user = User.find params[:id]
 
-    if user.is_admin?
-      @team = User.active.order(name: :asc)
+    if user.has_admin_privilege?
+      @team = User.includes(:leave_tracker, :approval_path, :holiday_scheme, :weekend).order(name: :asc)
+      @team = params[:status].present? ? @team.inactive : @team.active
     elsif user.role == User::SUPER_TTF || user.role == User::TTF || user.owned_paths.length > 0
       @team = user.get_co_workers
     else
       flash[:notice] = 'Sorry! This page is only for TTF / Super TTF!'
       redirect_to leave_tracker_path(current_user) and return
+    end
+
+    @team.each do |user|
+      if user.present? && user.leave_tracker.present?
+        user.leave_tracker.update_leave_tracker_daily
+      end
     end
 
     respond_to do |format|

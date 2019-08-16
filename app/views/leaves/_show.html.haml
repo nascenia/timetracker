@@ -36,7 +36,7 @@
       %tr
         %th Leave type
         %td
-          - if current_user.try(:is_admin?) && @leave.leave_type == Leave::UNANNOUNCED
+          - if current_user.try(:has_admin_privilege?) && @leave.leave_type == Leave::UNANNOUNCED
             = select_tag :leave_type, options_for_select(['Casual', 'Medical', 'Unannounced'], get_type(@leave)),
                          onchange: "change_leave_type(#{@leave.id})"
           - else
@@ -46,30 +46,38 @@
         %td= @leave.created_at.strftime("%d-%b-%y")
 
       %tr
-        %th Leave duration
+        %th Duration
         %td= get_duration @leave
       %tr
         %th Start date
-        %td= @leave.start_date.strftime("%d-%b-%y") || 'N/A'
+        -if @leave.start_date.present?
+          %td= @leave.start_date.strftime("%d-%b-%y")
+        -else
+          %td= 'N/A'
+
       %tr
         %th End date
-        %td= @leave.end_date.strftime("%d-%b-%y") || 'N/A'
+        -if @leave.end_date.present?
+          %td= @leave.end_date.strftime("%d-%b-%y")
+        -else
+          %td= 'N/A'
       %tr
         %th Description
         %td= @leave.reason
       %tr
         %th Status
         %td= get_status @leave.status
-      %tr
-        %th Approved by
-        %td= @approvers.size > 0 ? @approvers.join(', ') : 'N/A'
-      %tr
-        %th Rejected by
-        %td
-          - if @leave.status == Leave::REJECTED
-            = @rejector ? @rejector.name : 'Admin'
-          - else
-            = 'N/A'
+      - unless @leave.is_awarded?
+        %tr
+          %th Approved by
+          %td= @approvers.present? && @approvers.size > 0 ? @approvers.join(', ') : 'N/A'
+        %tr
+          %th Rejected by
+          %td
+            - if @leave.status == Leave::REJECTED
+              = @rejector ? @rejector.name : 'Admin'
+            - else
+              = 'N/A'
 
 
 .panel.panel-default
@@ -87,5 +95,5 @@
             - if comment.user == current_user
               = link_to 'Edit', edit_comment_path(comment), remote: true, turbolinks: false
               |
-            - if comment.user == current_user || current_user.try(:is_admin?)
+            - if comment.user == current_user || current_user.try(:has_admin_privilege?)
               = link_to 'Delete', comment_path(comment), method: :delete

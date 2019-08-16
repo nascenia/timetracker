@@ -1,16 +1,18 @@
 %ul.nav.navbar-nav
   %li{class: (params[:controller].eql?('attendances') ? 'active' : '')}
     = link_to 'Monthly TT', attendances_path
-  %li{class: (params[:controller].eql?('users') || params[:controller].eql?('leaves') ? 'active' : '')}
+  %li{class: (params[:controller].eql?('users') || params[:controller].eql?('leaves') || params[:controller].eql?('leave_tracker')  || params[:controller].eql?('approval_chains')  || params[:controller].eql?('weekends')  || params[:controller].eql?('holiday_schemes')  || params[:controller].eql?('super_admin_leaves') ? 'active' : '')}
     = link_to 'My Leave', leave_tracker_path(current_user)
+  %li{class: (params[:controller].eql?('salaat_times') ? 'active' : '')}
+    = link_to 'Salaat time', salaat_times_path
 
-  - if current_user.is_admin?
+  - if current_user.has_admin_privilege?
     %li
       = link_to 'Admin', admin_dashboard_path, :target => '_blank'
-  %li
+  %li{class: (params[:controller].eql?('employees') ? 'active' : '')}
     = link_to 'Employee Info', employees_path
-  %li.dropdown
-    %a.dropdown-toggle{"data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false",:href => "#"}
+  %li{class: (params[:controller].eql?('users/registrations')? 'dropdown active' : 'dropdown')}
+    %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
       = current_user.name
       %span.caret
     %ul.dropdown-menu
@@ -29,8 +31,8 @@
       %li
         = link_to 'Create Project', new_project_path
       %li
-        = link_to 'Projects', projects_path
+        = link_to 'Projects', projects_path(is_active: true)
       %li
-        = link_to 'Summarized Project', projects_path
+        = link_to 'Summarized Project', show_all_projects_path
       %li
-        = link_to 'Individual Log', timesheets_path
+        = link_to 'Individual Log', timesheets_path(selected_index: 0,start_date: (Time.now-14.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))

@@ -37,19 +37,19 @@
 
 :javascript
   $(document).ready(function() {
-    $('#monthly-attendance-table, #raw-data-table').dataTable({
-      "order": [[2, "desc" ]],
-      "bFilter": true,
-      "bLengthChange": true,
-      "bInfo": false,
-      "iDisplayLength": 100,
-      dom: 'T<"clear">lfrtip',
-      tableTools: {
-          "sSwfPath": "http://cdn.datatables.net/tabletools/2.2.2/swf/copy_csv_xls_pdf.swf",
-          "aButtons": ["pdf", "print", "xls" ]
-      }
-    });
-    $('div.dataTables_length').hide();
+      var dataTable = $('#monthly-attendance-table').DataTable({
+        lengthChange: false,
+        pageLength: 100,
+        order: [2,'desc'],
+        dom: 'T<"clear">lfrtip',
+        buttons: ['print']
+      });
+      $(document).on("turbolinks:before-cache", function() {
+        if (dataTable !== null) {
+          dataTable.destroy();
+          dataTable = null;
+        }
+      });
   });
 
   $(document).on('click', '.monthly-summary', function() {

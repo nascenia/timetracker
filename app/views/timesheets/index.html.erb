@@ -1,34 +1,69 @@
+<%= link_to 'Go Back', projects_path(is_active: true) %>
+
+<h5>Time sheet for <%= @user.name %></h5>
+
+<!--<input type="hidden" value="<%#=@user.name %>" id="user_id">-->
+<!--<input class = "timesheet-date-picker" type="text" id="dt1" data-date-format="yyyy/mm/dd" value="<%#=@start_date %>">-->
+<!--<input type="text" id="dt2" class = "timesheet-date-picker " data-date-format="yyyy/mm/dd" value="<%#=@end_date %>">-->
+<!--<select id = "time_select" onchange="fixedTimeSelect()" >-->
+    <%#if @selected_index =="0" %>
+<!--        <option id= "today" value="0" selected="selected"></option>-->
+    <%#else %>
+<!--        <option id= "today" value="0"></option>-->
+    <%#end %>
+    <%#if @selected_index =="1" %>
+<!--        <option id= "today" value="0" selected="selected">Today</option>-->
+    <%#else %>
+<!--        <option id= "today" value="0">Today</option>-->
+    <%#end %>
+    <%#if @selected_index =="2" %>
+<!--        <option id= "last_week" value="7" selected="selected">Last week</option>-->
+    <%#else %>
+<!--        <option id= "last_week" value="7">Last week</option>-->
+    <%#end %>
+    <%#if @selected_index =="3" %>
+<!--        <option id= "last_two_week" value="14" selected="selected">Last 14 days</option>-->
+    <%#else %>
+<!--        <option id= "last_two_week" value="14" >Last 14 days</option>-->
+    <%#end %>
+    <%#if @selected_index =="4" %>
+<!--        <option id= "last_month" value="30" selected="selected">Last 30 days</option>-->
+    <%#else %>
+<!--        <option id= "last_month" value="30">Last 30 days</option>-->
+    <%#end %>
+    <%#if @selected_index ==5 %>
+<!--        <option id= "last_month" value="90" selected="selected">Last 90 day</option>-->
+    <%#else %>
+<!--        <option id= "last_month" value="90">Last 90 days</option>-->
+    <%#end %>
+<!--</select>-->
+<!--<br>-->
+<br>
+
 <table style="width:100%">
     <tr>
         <th>Date</th>
-        <th>Description</th>
         <th>Project Name </th>
         <th>Task </th>
         <th>Ticket Number </th>
         <th>Ticket Link </th>
         <th>Hours </th>
         <th>Minutes </th>
+        <th>Description</th>
         <th></th>
     </tr>
 
 
 <% @timesheets.each do |timesheet| %>
-    <%#= timesheet.date %>
-<!--    <br>-->
-    <%#= timesheet.description %>
-<!--    <br>-->
-    <%#= timesheet.user.email %>
-<!--    <br>-->
-        <% project = @projects.find(timesheet.project_id) %>
         <tr>
             <td><%= timesheet.date%></td>
-            <td><%= timesheet.description%></td>
-            <td><%= project.project_name %></td>
+            <td><%= link_to timesheet.project.project_name, project_path(timesheet.project,:start_date => Time.now.strftime("%Y/%m/%d"), :end_date => Time.now.strftime("%Y/%m/%d"), :selected_index => 1) %></td>
             <td><%= timesheet.task %></td>
             <td><%= timesheet.ticket_number %></td>
             <td><%= timesheet.ticket_link %></td>
             <td><%= timesheet.hours %></td>
             <td><%= timesheet.minutes %></td>
+            <td><%= timesheet.description%></td>
             <td> <%= link_to 'Edit', edit_timesheet_path(timesheet) %> </td>
         </tr>
 <% end %>

@@ -1,11 +1,78 @@
 class ProjectsController < ApplicationController
   layout 'time_tracker'
 
+  def show
+    @project= Project.find(params[:id])
+    @logs=[]
+    User.all.each do |user|
+    @start_date = params[:start_date]
+    @end_date = params[:end_date]
+    @selected_index = params[:selected_index]
+      timesheets = user.timesheets.where(project: @project,date: params[:start_date]..params[:end_date]).group(:user_id)
+      total_hours_hash=timesheets.sum(:hours)
+      total_minute_hash=timesheets.sum(:minutes)
+
+      if total_hours_hash.size > 0 || total_minute_hash.size > 0
+        total_hours= total_hours_hash.values[0]
+        total_minute= total_minute_hash.values[0]
+        if total_minute >= 60
+              total_hours += total_minute/60
+              total_minute = total_minute%60
+        end
+        @logs.push({ username: user.name,
+                     hours: total_hours,
+                     minutes: total_minute,
+                     id: user.id,
+                   project_id: params[:id]}
+        )
+
+        p user.name
+        p total_hours
+        p total_minute
+      end
+
+    end
+
+  end
+
   def index
-    @projects = Project.all
+
+    if params[:is_active] == "false"
+      @projects = Project.all.where(is_active: false)
+      @is_active = false
+    else
+      @projects = Project.all.where(is_active: true)
+      @is_active = true
+    end
+
   end
   def new
     @project = Project.new
+  end
+  def show_all
+    @timesheets = Timesheet.all
+    projects = Project.all.where(is_active: true)
+    users = User.active
+    @users = []
+    users.each do |user|
+      tmp = { user: user.name , projects: [], total_sum: 0}
+      total_sum = 0
+      projects.each do |project|
+
+        t = user.timesheets.where(project: project)
+
+        hours = t.sum(:hours)
+        minutes = t.sum(:minutes)
+        if minutes >= 60
+          hours += minutes/60
+          minutes = minutes%60
+        end
+        total_sum+= hours
+        tmp[:projects] << { object: project, hours: hours, minutes: minutes }
+      end
+      tmp[:total_sum]= total_sum
+      @users << tmp
+    end
   end
   def create
     @project = Project.create(project_params)
@@ -16,7 +83,7 @@ class ProjectsController < ApplicationController
     end
 
     if @project.save
-      redirect_to projects_path
+      redirect_to projects_path(is_active: true)
     else
       flash[:alert] = 'failed'
       redirect_to root_path
@@ -41,7 +108,7 @@ class ProjectsController < ApplicationController
     end
 
     if @project.save && @project.update(project_params)
-      redirect_to projects_path
+      redirect_to projects_path(is_active: true)
     else
       flash[:alert] = 'failed'
       redirect_to root_path

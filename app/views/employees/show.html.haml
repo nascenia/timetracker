@@ -24,7 +24,7 @@
                   Mobile
               .col-md-8
                 %h5
-                  =@user.mobile_number
+                  %a{:href =>"Tel:#{@user.mobile_number}"}=@user.mobile_number
           .row
             .item-university
               .col-md-4
@@ -58,7 +58,7 @@
                   =@user.blood_group
 
           .clearfix
-      - if current_user.is_admin?
+      - if current_user.has_admin_privilege?
         %h3
           Detail Information
           .content-info
@@ -70,7 +70,7 @@
                       Alternate Contact
                   .col-md-8
                     %h5
-                      =@user.alternate_contact
+                      %a{:href =>"Tel:#{@user.alternate_contact}"}=@user.alternate_contact
             .row
               .item-personal_email
                 .col-md-4
@@ -102,7 +102,7 @@
                     Mobile
                 .col-md-8
                   %h5
-                    =@user.emergency_contact_person_number
+                    %a{:href =>"Tel:#{@user.emergency_contact_person_number}"}=@user.emergency_contact_person_number
 
 
             .row

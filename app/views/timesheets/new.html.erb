@@ -1,27 +1,35 @@
 <%= form_for @timesheet do |f| %>
+    <% current_user_projects = current_user.projects %>
     <div class="row">
         <div class="col-md-6">
             <p>
                 <%= label :date, 'Date' %>
             </p>
             <p>
-                <%= f.text_field :date, :class => 'form-control date-picker', value: Time.now.strftime("%Y/%m/%d") %>
+                <%= f.text_field :date, :class => 'form-control timesheet-date-picker', value: Time.now.strftime("%Y/%m/%d") %>
             </p>
         </div>
         <div class="col-md-6">
             <p>
                 <%= label :project, 'Project Name' %>
+                <%= label '', ' *', class: 'required-asterisk' %>
             </p>
             <p>
-                <%= f.select :project_id, options_for_select(@projects.collect { | project | [project.project_name,  project.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control'}%>
+                <%= f.select :project_id, options_for_select(current_user_projects.collect { | project | [project.project_name,  project.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-current-user-projects'}%>
+                <%= f.select :project_id, options_for_select(@projects.collect { | project | [project.project_name,  project.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'}%>
+                <%= label :show_others_project, 'Show Others project' %>
+                <input id="other-projects-cb" type="checkbox" />
             </p>
+
+
         </div>
         <div class="col-md-6">
             <p>
                 <%= label :project, 'Task' %>
+                <%= label '', ' *', class: 'required-asterisk' %>
             </p>
             <p>
-                <%= f.text_field :task ,:class => 'form-control'%>
+                <%= f.text_field :task ,:class => 'form-control', required: 'true'%>
             </p>
         </div>
         <div class="col-md-6">
@@ -46,12 +54,13 @@
                     <%= label :project, 'Hours spent' %>
                 </p>
                     <p>
-                        <%= f.select :hours, options_for_select(0..14) , {}, {required: 'true', autofocus: 'true', class: 'form-control'}%>
+                        <%= f.select :hours, options_for_select(0..@total_hours) , {}, {required: 'true', autofocus: 'true', class: 'form-control'}%>
                     </p>
                 </div>
                 <div class="col-md-6">
                     <p>
                         <%= label :project, 'Minutes spent' %>
+                        <%= label '', ' *', class: 'required-asterisk' %>
                     </p>
                     <p>
                         <%= f.select :minutes, options_for_select((0..3).map {|n| n*15 }) , {}, {required: 'true', autofocus: 'true', class: 'form-control'}%>
@@ -66,7 +75,8 @@
 
         <div class="col-md-6" style="clear: left;">
             <p>
-                <%= label :description, 'Description/Comments' %>
+                <%= label :description, 'Description / ' %>
+                <%= label :description, 'Comments' %>
             </p>
             <p>
                 <%= f.text_area :description,:class => 'form-control' , cols: "30", rows: "10"%>
@@ -76,3 +86,24 @@
 
     <%= f.submit "Create" %>
 <% end %>
+<script type="text/javascript">
+    $('#select-other-projects').hide();
+    $('#select-other-projects').prop('disabled',true);
+
+    $('#other-projects-cb').on('click',function () {
+        if(this.checked)
+        {
+            $('#select-current-user-projects').hide();
+            $('#select-current-user-projects').prop('disabled',true);
+            $('#select-other-projects').show();
+            $('#select-other-projects').prop('disabled',false);
+        } else{
+            $('#select-other-projects').hide();
+            $('#select-other-projects').prop('disabled',true);
+            $('#select-current-user-projects').show();
+            $('#select-current-user-projects').prop('disabled',false);
+
+        }
+       return true;
+    });
+</script>
