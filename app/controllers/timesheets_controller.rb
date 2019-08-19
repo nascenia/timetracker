@@ -37,7 +37,11 @@ class TimesheetsController < ApplicationController
         total_hours_hash=user_timesheet.sum(:hours)
         total_minute_hash=user_timesheet.sum(:minutes)
             @total_hours -= total_hours_hash
-
+        @total_mins = 3
+        if(@total_hours ==0)
+            total_min = @total_hours*60
+            @total_mins = (total_min%60)/15
+        end
         @timesheet = Timesheet.new
     end
     def create

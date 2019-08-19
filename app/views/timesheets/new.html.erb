@@ -6,7 +6,7 @@
                 <%= label :date, 'Date' %>
             </p>
             <p>
-                <%= f.text_field :date, :class => 'form-control timesheet-date-picker', value: Time.now.strftime("%Y/%m/%d") %>
+                <%= f.text_field :date, :class => 'form-control timesheet-date-picker', value: Time.now.strftime("%Y/%m/%d"),:onkeydown=>"return false" %>
             </p>
         </div>
         <div class="col-md-6">
@@ -29,7 +29,7 @@
                 <%= label '', ' *', class: 'required-asterisk' %>
             </p>
             <p>
-                <%= f.text_field :task ,:class => 'form-control', required: 'true'%>
+                <%= f.text_field :task ,:class => 'form-control', required: 'true',:maxlength=>"256"%>
             </p>
         </div>
         <div class="col-md-6">
@@ -37,14 +37,14 @@
                 <%= label :project, 'Ticket Number' %>
             </p>
             <p>
-                <%= f.text_field :ticket_number,:class => 'form-control' %>
+                <%= f.text_field :ticket_number,:class => 'form-control' ,:maxlength=>"256"%>
             </p>
         </div>
         <div class="col-md-6">
             <p>
                 <%= label :project, 'Ticket Link' %>
             <p>
-                <%= f.text_field :ticket_link,:class => 'form-control' %>
+                <%= f.text_field :ticket_link,:class => 'form-control' ,:maxlength=>"256"%>
             </p>
         </div>
         <div class="col-md-6" >
@@ -52,9 +52,10 @@
                 <div class="col-md-6">
                     <p>
                     <%= label :project, 'Hours spent' %>
+                        <%= label '', ' *', class: 'required-asterisk' %>
                 </p>
                     <p>
-                        <%= f.select :hours, options_for_select(0..@total_hours) , {}, {required: 'true', autofocus: 'true', class: 'form-control'}%>
+                        <%= f.select :hours, options_for_select(0..@total_hours) , {}, {required: 'true', autofocus: 'true', class: 'form-control',:maxlength=>"256"}%>
                     </p>
                 </div>
                 <div class="col-md-6">
@@ -63,7 +64,7 @@
                         <%= label '', ' *', class: 'required-asterisk' %>
                     </p>
                     <p>
-                        <%= f.select :minutes, options_for_select((0..3).map {|n| n*15 }) , {}, {required: 'true', autofocus: 'true', class: 'form-control'}%>
+                        <%= f.select :minutes, options_for_select((0..@total_mins).map {|n| n*15 }) , {}, {required: 'true', autofocus: 'true', class: 'form-control',:maxlength=>"256"}%>
                     </p>
                 </div>
 
@@ -79,7 +80,7 @@
                 <%= label :description, 'Comments' %>
             </p>
             <p>
-                <%= f.text_area :description,:class => 'form-control' , cols: "30", rows: "10"%>
+                <%= f.text_area :description,:class => 'form-control' , cols: "30", rows: "10",:maxlength=>"512"%>
             </p>
         </div>
     </div>
