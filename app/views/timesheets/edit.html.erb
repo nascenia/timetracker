@@ -5,7 +5,7 @@
                 <%= label :date, 'Date' %>
             </p>
             <p>
-                <%= f.text_field :date, :class => 'form-control date-picker', value: @timesheets.date %>
+                <%= f.text_field :date, :class => 'form-control date-picker', value: @timesheets.date ,:onkeydown=>"return false"%>
             </p>
         </div>
         <div class="col-md-6">
@@ -13,7 +13,7 @@
                 <%= label :project, 'Project Name' %>
             </p>
             <p>
-                <%= f.select :project_id, options_for_select(@projects.collect { | project | [project.project_name,  project.id] }, selected: @timesheets.project_id), {}, {required: 'true', autofocus: 'true', class: 'form-control'}%>
+                <%= f.select :project_id, options_for_select(@projects.collect { | project | [project.project_name,  project.id] }, selected: @timesheets.project_id), {}, {required: 'true', autofocus: 'true', class: 'form-control',:maxlength=>"256"}%>
             </p>
         </div>
         <div class="col-md-6">
@@ -21,7 +21,7 @@
                 <%= label :project, 'Task' %>
             </p>
             <p>
-                <%= f.text_field :task ,:class => 'form-control'%>
+                <%= f.text_field :task ,:class => 'form-control',:maxlength=>"256"%>
             </p>
         </div>
         <div class="col-md-6">
@@ -29,14 +29,14 @@
                 <%= label :project, 'Ticket Number' %>
             </p>
             <p>
-                <%= f.text_field :ticket_number,:class => 'form-control' %>
+                <%= f.text_field :ticket_number,:class => 'form-control',:maxlength=>"256" %>
             </p>
         </div>
         <div class="col-md-6">
             <p>
                 <%= label :project, 'Ticket Link' %>
             <p>
-                <%= f.text_field :ticket_link,:class => 'form-control' %>
+                <%= f.text_field :ticket_link,:class => 'form-control' ,:maxlength=>"256"%>
             </p>
         </div>
         <div class="col-md-6" >
@@ -69,7 +69,7 @@
                 <%= label :description, 'Description/Comments' %>
             </p>
             <p>
-                <%= f.text_area :description,:class => 'form-control' , cols: "30", rows: "10"%>
+                <%= f.text_area :description,:class => 'form-control' , cols: "30", rows: "10",:maxlength=>"512"%>
             </p>
         </div>
     </div>
