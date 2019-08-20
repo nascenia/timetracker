@@ -104,7 +104,7 @@
         document.getElementById("dt1").value = formatted_date2;
         var x = document.getElementById("time_select").selectedIndex;
         var y = document.getElementById("time_select").options;
-        window.location = "http://localhost:3000/timesheets/"+timesheetIDNuserID+'?end_date='
+        window.location = "/timesheets/"+timesheetIDNuserID+'?end_date='
             +document.getElementById("dt2").value
             +'&selected_index='+ y[x].index
             +'&start_date='+document.getElementById("dt1").value
@@ -124,7 +124,7 @@
         var timesheetIDNprojectID = document.getElementById("project_id").value;
         var x = document.getElementById("time_select").selectedIndex;
         var y = document.getElementById("time_select").options;
-        window.location = "http://localhost:3000/timesheets/"+timesheetIDNuserID+'?end_date='
+        window.location = "/timesheets/"+timesheetIDNuserID+'?end_date='
             +document.getElementById("dt2").value
             +'&start_date='+document.getElementById("dt1").value
             +'&selected_index=0'+"&project_id="+timesheetIDNprojectID
@@ -138,7 +138,7 @@
         var timesheetIDNprojectID = document.getElementById("project_id").value;
 
         var timesheetIDNuserID = document.getElementById("user_id").value;
-        window.location = "http://localhost:3000/timesheets/"+timesheetIDNuserID+'?end_date='
+        window.location = "/timesheets/"+timesheetIDNuserID+'?end_date='
             +document.getElementById("dt2").value
             +'&start_date='+document.getElementById("dt1").value
             +'&selected_index=0'+"&project_id="+timesheetIDNprojectID
