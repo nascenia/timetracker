@@ -1,3 +1,4 @@
+<%= link_to 'Go Back', timesheets_path(selected_index: 0,start_date: (Time.now-14.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d")) %>
 <%= form_for @timesheets do |f| %>
     <div class="row">
         <div class="col-md-6">
@@ -46,7 +47,7 @@
                         <%= label :project, 'Hours spent' %>
                     </p>
                     <p>
-                        <%= f.select :hours, options_for_select(0..14, selected: @timesheets.hours) , {}, {required: 'true', autofocus: 'true', class: 'form-control'}%>
+                        <%= f.select :hours, options_for_select(0..@total_hours, selected: @timesheets.hours) , {}, {required: 'true', autofocus: 'true', class: 'form-control'}%>
                     </p>
                 </div>
                 <div class="col-md-6">
@@ -54,7 +55,7 @@
                         <%= label :project, 'Minutes spent' %>
                     </p>
                     <p>
-                        <%= f.select :minutes, options_for_select((0..3).map {|n| n*15 }, selected: @timesheets.minutes) , {}, {required: 'true', autofocus: 'true', class: 'form-control'}%>
+                        <%= f.select :minutes, options_for_select((0..@total_mins).map {|n| n*15 }, selected: @timesheets.minutes) , {}, {required: 'true', autofocus: 'true', class: 'form-control'}%>
                     </p>
                 </div>
 

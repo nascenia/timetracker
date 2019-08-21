@@ -4,7 +4,9 @@
 <br>
 
 <input type="hidden" value="<%=@project.id %>" id="project_id"></input>
+
 <input class = "timesheet-date-picker" type="text" id="dt1" data-date-format="yyyy/mm/dd" value="<%=@start_date %>">
+<lebel > To </lebel>
 <input type="text" id="dt2" class = "timesheet-date-picker " data-date-format="yyyy/mm/dd" value="<%=@end_date %>">
 <select id = "time_select" onchange="fixedTimeSelect()" >
     <%if @selected_index =="0" %>

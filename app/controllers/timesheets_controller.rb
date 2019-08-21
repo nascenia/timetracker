@@ -36,7 +36,7 @@ class TimesheetsController < ApplicationController
         user_timesheet = current_user.timesheets.where(date: Time.now.to_date)
         total_hours_hash=user_timesheet.sum(:hours)
         total_minute_hash=user_timesheet.sum(:minutes)
-            @total_hours -= total_hours_hash
+            @total_hours -= total_hours_hash + (total_minute_hash/60)
         @total_mins = 3
         if(@total_hours ==0)
             total_min = @total_hours*60
@@ -61,8 +61,18 @@ class TimesheetsController < ApplicationController
     end
 
     def edit
+        @total_hours = 14;
         @timesheets = Timesheet.find(params[:id])
         @projects = Project.all
+        user_timesheet = current_user.timesheets.where(date: Time.now.to_date)
+        total_hours_hash=user_timesheet.sum(:hours)
+        total_minute_hash=user_timesheet.sum(:minutes)
+        @total_hours -=total_hours_hash + (total_minute_hash/60)
+        @total_mins = 3
+        if(@total_hours ==0)
+            total_min = @total_hours*60
+            @total_mins = (total_min%60)/15
+        end
     end
 
     def update
