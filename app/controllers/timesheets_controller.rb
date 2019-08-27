@@ -70,7 +70,7 @@ class TimesheetsController < ApplicationController
         # @total_hours -=total_hours_hash + (total_minute_hash/60)
         @total_mins = 3
         @total_hours = (14 - (total_hours_hash+total_minute_hash/60))+Timesheet.find(params[:id]).hours
-        if(@total_hours ==0)
+        if(14 - (total_hours_hash+total_minute_hash/60) ==0)
             total_min = @total_hours*60
             @total_mins = (total_min%60)/15
         end

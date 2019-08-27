@@ -84,8 +84,9 @@
             </p>
         </div>
     </div>
-
+    <%if @total_hours != 0 && @total_mins !=0 %>
     <%= f.submit "Create" %>
+        <%end %>
 <% end %>
 <script type="text/javascript">
     $('#select-other-projects').hide();
