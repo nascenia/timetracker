@@ -1,4 +1,40 @@
 
+<input class = "timesheet-date-picker" type="text" id="dt1" data-date-format="yyyy/mm/dd" value="<%=@start_date %>">
+<lebel > To </lebel>
+<input type="text" id="dt2" class = "timesheet-date-picker " data-date-format="yyyy/mm/dd" value="<%=@end_date %>">
+<select id = "time_select" onchange="fixedTimeSelect()" >
+    <%if @selected_index =="0" %>
+        <option id= "today" value="0" selected="selected"></option>
+    <%else %>
+        <option id= "today" value="0"></option>
+    <%end %>
+    <%if @selected_index =="1" %>
+        <option id= "today" value="0" selected="selected">Today</option>
+    <%else %>
+        <option id= "today" value="0">Today</option>
+    <%end %>
+    <%if @selected_index =="2" %>
+        <option id= "last_week" value="7" selected="selected">Last week</option>
+    <%else %>
+        <option id= "last_week" value="7">Last week</option>
+    <%end %>
+    <%if @selected_index =="3" %>
+        <option id= "last_two_week" value="14" selected="selected">Last 14 days</option>
+    <%else %>
+        <option id= "last_two_week" value="14" >Last 14 days</option>
+    <%end %>
+    <%if @selected_index =="4" %>
+        <option id= "last_month" value="30" selected="selected">Last 30 days</option>
+    <%else %>
+        <option id= "last_month" value="30">Last 30 days</option>
+    <%end %>
+    <%if @selected_index ==5 %>
+        <option id= "last_month" value="90" selected="selected">Last 90 day</option>
+    <%else %>
+        <option id= "last_month" value="90">Last 90 days</option>
+    <%end %>
+</select>
+
 <table style="width:100%" id="projects-list-table-details">
     <thead>
     <tr>
@@ -27,6 +63,55 @@
 
 
 <script type="text/javascript">
+
+
+    function fixedTimeSelect() {
+        var date_interval = document.getElementById("time_select").value;
+        let current_datetime = new Date();
+        let formatted_date = current_datetime.getFullYear()+"-"+appendLeadingZeroes((current_datetime.getMonth()+ 1)) + "-"
+            +appendLeadingZeroes (current_datetime.getDate());
+        document.getElementById("dt2").value = formatted_date;
+        let previous_datetime = new Date();
+        previous_datetime.setDate( previous_datetime.getDate() - date_interval );
+        let formatted_date2 = previous_datetime.getFullYear()+"-"+appendLeadingZeroes((previous_datetime.getMonth()+ 1)) + "-"
+            +appendLeadingZeroes (previous_datetime.getDate());
+        document.getElementById("dt1").value = formatted_date2;
+        var x = document.getElementById("time_select").selectedIndex;
+        var y = document.getElementById("time_select").options;
+
+        window.location = "/projects/show_all"+'?end_date='
+            +document.getElementById("dt2").value
+            +'&selected_index='+ y[x].index
+            +'&start_date='+document.getElementById("dt1").value
+    }
+    function appendLeadingZeroes(n){
+        if(n <= 9){
+            return "0" + n;
+        }
+        return n
+    }
+
+    $('#dt2').datepicker().on('changeDate', function (ev) {
+        $('#dt2').change();
+
+        var x = document.getElementById("time_select").selectedIndex;
+        var y = document.getElementById("time_select").options;
+        window.location = "/projects/show_all"+'?end_date='
+            +document.getElementById("dt2").value
+            +'&selected_index=0'
+            +'&start_date='+document.getElementById("dt1").value
+    });
+    $('#dt1').datepicker().on('changeDate', function (ev) {
+        $('#dt1').change();
+        var x = document.getElementById("time_select").selectedIndex;
+        var y = document.getElementById("time_select").options;
+
+        window.location = "/projects/show_all"+'?end_date='
+            +document.getElementById("dt2").value
+            +'&selected_index=0'
+            +'&start_date='+document.getElementById("dt1").value
+    });
+
     $(document).ready(function () {
 
         // $('#projects-list-table tfoot th').each( function () {

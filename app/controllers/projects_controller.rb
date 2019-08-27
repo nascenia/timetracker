@@ -50,7 +50,11 @@ class ProjectsController < ApplicationController
     @project = Project.new
   end
   def show_all
+    @start_date = params[:start_date]
+    @end_date = params[:end_date]
+    @selected_index = params[:selected_index]
     @timesheets = Timesheet.all
+    # projects = Project.all.where(is_active: true,date: params[:start_date]..params[:end_date])
     projects = Project.all.where(is_active: true)
     users = User.active
     @users = []
@@ -59,7 +63,7 @@ class ProjectsController < ApplicationController
       total_sum = 0
       projects.each do |project|
 
-        t = user.timesheets.where(project: project)
+        t = user.timesheets.where(project: project,date: params[:start_date]..params[:end_date])
 
         hours = t.sum(:hours)
         minutes = t.sum(:minutes)

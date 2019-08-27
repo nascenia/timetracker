@@ -64,11 +64,12 @@ class TimesheetsController < ApplicationController
         @total_hours = 14;
         @timesheets = Timesheet.find(params[:id])
         @projects = Project.all
-        user_timesheet = current_user.timesheets.where(date: Time.now.to_date)
+        user_timesheet = current_user.timesheets.where(date: Timesheet.find(params[:id]).date)
         total_hours_hash=user_timesheet.sum(:hours)
         total_minute_hash=user_timesheet.sum(:minutes)
-        @total_hours -=total_hours_hash + (total_minute_hash/60)
+        # @total_hours -=total_hours_hash + (total_minute_hash/60)
         @total_mins = 3
+        @total_hours = (14 - (total_hours_hash+total_minute_hash/60))+Timesheet.find(params[:id]).hours
         if(@total_hours ==0)
             total_min = @total_hours*60
             @total_mins = (total_min%60)/15
@@ -78,7 +79,7 @@ class TimesheetsController < ApplicationController
     def update
         @timesheets = Timesheet.find(params[:id])
         if @timesheets.save && @timesheets.update(timesheet_params)
-            redirect_to timesheets_path
+            redirect_to timesheets_path(selected_index: 0,start_date: (Time.now-14.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
         else
             flash[:alert] = 'failed'
             redirect_to root_path
