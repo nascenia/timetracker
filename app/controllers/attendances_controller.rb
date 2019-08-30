@@ -75,6 +75,7 @@ class AttendancesController < ApplicationController
       @today_entry = Attendance.find_first_entry(current_user.id, Date.today)
       @timesheets = Timesheet.all.where(user_id: current_user.id, date: Date.today)
       if @timesheets.size<=0
+        flash[:alert] = 'Please fill the timeshet first'
         redirect_to new_timesheet_path
       else
       if @attendance.user_id == current_user.id

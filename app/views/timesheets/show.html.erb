@@ -32,10 +32,10 @@
     <%else %>
         <option id= "last_month" value="30">Last 30 days</option>
     <%end %>
-    <%if @selected_index ==5 %>
-        <option id= "last_month" value="90" selected="selected">Last 90 day</option>
+    <%if @selected_index =="5" %>
+        <option id= "last_three_month" value="90" selected="selected">Last 90 day</option>
     <%else %>
-        <option id= "last_month" value="90">Last 90 days</option>
+        <option id= "last_three_month" value="90">Last 90 days</option>
     <%end %>
 </select>
 <br>
