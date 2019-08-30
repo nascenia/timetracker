@@ -17,7 +17,7 @@
             <p>
                 <%= f.select :project_id, options_for_select(current_user_projects.collect { | project | [project.project_name,  project.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-current-user-projects'}%>
                 <%= f.select :project_id, options_for_select(@projects.collect { | project | [project.project_name,  project.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'}%>
-                <%= label :show_others_project, 'Show Others project' %>
+                <%= label :show_other_projects, 'Show other projects' %>
                 <input id="other-projects-cb" type="checkbox" />
             </p>
 

@@ -34,6 +34,24 @@
         <option id= "last_month" value="90">Last 90 days</option>
     <%end %>
 </select>
+<select id = "ttf_select" onchange="fixedTTFSelect()"  >
+    <option id="all_ttf" value="-1" > All TTF</option>
+    <% @ttf_list.each do |ttf_list| %>
+        <option id=<%= ttf_list.email  %> value=<%=ttf_list.id  %>
+                <%if @selected_ttf_id == ttf_list.id.to_s %>
+                    selected="selected"
+                <%end %>><%= ttf_list.name %></option>
+    <% end %>
+</select>
+<select id = "project_select" onchange="fixedProjectsSelect()">
+    <option id="all_ttf" value="-1" > All Projects</option>
+    <% @project_list.each do |project_list| %>
+        <option id=<%= project_list.id  %> value=<%=project_list.id  %>
+                <%if @project_list_id == project_list.id.to_s %>
+                    selected="selected"
+                <%end %>><%= project_list.project_name %></option>
+    <% end %>
+</select>
 
 <table style="width:100%" id="projects-list-table-details">
     <thead>
@@ -65,7 +83,9 @@
 <script type="text/javascript">
 
 
-    function fixedTimeSelect() {
+    function fixedProjectsSelect() {
+        var ttf_id = document.getElementById("ttf_select").value;
+        var project_id = document.getElementById("project_select").value;
         var date_interval = document.getElementById("time_select").value;
         let current_datetime = new Date();
         let formatted_date = current_datetime.getFullYear()+"-"+appendLeadingZeroes((current_datetime.getMonth()+ 1)) + "-"
@@ -83,6 +103,53 @@
             +document.getElementById("dt2").value
             +'&selected_index='+ y[x].index
             +'&start_date='+document.getElementById("dt1").value
+        +'&ttf_id='+ttf_id+'&projects_id='+project_id
+    }
+
+    function fixedTTFSelect() {
+        var ttf_id = document.getElementById("ttf_select").value;
+        var project_id = document.getElementById("project_select").value;
+        var date_interval = document.getElementById("time_select").value;
+        let current_datetime = new Date();
+        let formatted_date = current_datetime.getFullYear()+"-"+appendLeadingZeroes((current_datetime.getMonth()+ 1)) + "-"
+            +appendLeadingZeroes (current_datetime.getDate());
+        document.getElementById("dt2").value = formatted_date;
+        let previous_datetime = new Date();
+        previous_datetime.setDate( previous_datetime.getDate() - date_interval );
+        let formatted_date2 = previous_datetime.getFullYear()+"-"+appendLeadingZeroes((previous_datetime.getMonth()+ 1)) + "-"
+            +appendLeadingZeroes (previous_datetime.getDate());
+        document.getElementById("dt1").value = formatted_date2;
+        var x = document.getElementById("time_select").selectedIndex;
+        var y = document.getElementById("time_select").options;
+
+        window.location = "/projects/show_all"+'?end_date='
+            +document.getElementById("dt2").value
+            +'&selected_index='+ y[x].index
+            +'&start_date='+document.getElementById("dt1").value
+            +'&ttf_id='+ttf_id+'&projects_id='+project_id
+    }
+
+    function fixedTimeSelect() {
+        var ttf_id = document.getElementById("ttf_select").value;
+        var project_id = document.getElementById("project_select").value;
+        var date_interval = document.getElementById("time_select").value;
+        let current_datetime = new Date();
+        let formatted_date = current_datetime.getFullYear()+"-"+appendLeadingZeroes((current_datetime.getMonth()+ 1)) + "-"
+            +appendLeadingZeroes (current_datetime.getDate());
+        document.getElementById("dt2").value = formatted_date;
+        let previous_datetime = new Date();
+        previous_datetime.setDate( previous_datetime.getDate() - date_interval );
+        let formatted_date2 = previous_datetime.getFullYear()+"-"+appendLeadingZeroes((previous_datetime.getMonth()+ 1)) + "-"
+            +appendLeadingZeroes (previous_datetime.getDate());
+        document.getElementById("dt1").value = formatted_date2;
+        var x = document.getElementById("time_select").selectedIndex;
+        var y = document.getElementById("time_select").options;
+
+        window.location = "/projects/show_all"+'?end_date='
+            +document.getElementById("dt2").value
+            +'&selected_index='+ y[x].index
+            +'&start_date='+document.getElementById("dt1").value
+            +'&ttf_id='+ttf_id+'&projects_id='+project_id
     }
     function appendLeadingZeroes(n){
         if(n <= 9){
@@ -94,15 +161,20 @@
     $('#dt2').datepicker().on('changeDate', function (ev) {
         $('#dt2').change();
 
+        var ttf_id = document.getElementById("ttf_select").value;
+        var project_id = document.getElementById("project_select").value;
         var x = document.getElementById("time_select").selectedIndex;
         var y = document.getElementById("time_select").options;
         window.location = "/projects/show_all"+'?end_date='
             +document.getElementById("dt2").value
             +'&selected_index=0'
             +'&start_date='+document.getElementById("dt1").value
+            +'&ttf_id='+ttf_id+'&projects_id='+project_id
     });
     $('#dt1').datepicker().on('changeDate', function (ev) {
         $('#dt1').change();
+        var ttf_id = document.getElementById("ttf_select").value;
+        var project_id = document.getElementById("project_select").value;
         var x = document.getElementById("time_select").selectedIndex;
         var y = document.getElementById("time_select").options;
 
@@ -110,6 +182,7 @@
             +document.getElementById("dt2").value
             +'&selected_index=0'
             +'&start_date='+document.getElementById("dt1").value
+            +'&ttf_id='+ttf_id+'&projects_id='+project_id
     });
 
     $(document).ready(function () {

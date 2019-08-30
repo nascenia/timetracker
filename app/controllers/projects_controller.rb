@@ -54,9 +54,29 @@ class ProjectsController < ApplicationController
     @end_date = params[:end_date]
     @selected_index = params[:selected_index]
     @timesheets = Timesheet.all
+    @ttf_list = User.active.where(role: 2)
     # projects = Project.all.where(is_active: true,date: params[:start_date]..params[:end_date])
-    projects = Project.all.where(is_active: true)
-    users = User.active
+
+    if params[:ttf_id] && params[:ttf_id]!="-1"
+      users = User.active.where(ttf_id: params[:ttf_id])
+      @selected_ttf_id = params[:ttf_id]
+    else
+      users = User.active
+      @selected_ttf_id = 0
+    end
+    if params[:projects_id] && params[:projects_id]!="-1"
+      projects = Project.all.where(is_active: true,id: params[:projects_id])
+      @project_list_id = params[:projects_id]
+    else
+      projects = Project.all.where(is_active: true)
+      @project_list_id = 0
+    end
+    @project_list = Project.all.where(is_active: true)
+
+    if users.size == 0
+      users = User.active
+      @selected_ttf_id = 0
+    end
     @users = []
     users.each do |user|
       tmp = { user: user.name , projects: [], total_sum: 0}
