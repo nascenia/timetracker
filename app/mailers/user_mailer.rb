@@ -10,7 +10,7 @@ class UserMailer < ActionMailer::Base
     @leave = leave
     @user = @leave.user
     @email = email
-    if email == CONFIG['leave_admin']
+    if CONFIG['leave_admin'].include?(email)
       subject = "#{@user.name} has applied for a leave. You need to approve or reject it."
     else
       subject = "#{@user.name} has applied for a leave"
