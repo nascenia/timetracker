@@ -18,12 +18,13 @@
         %th{:width => '10'}
     %tbody
       - @leaves.each do |leave|
-        %tr
-          %td= leave.user.name
-          %td= leave.leave_type == Leave::CASUAL ? 'Casual' : 'Medical'
-          %td= leave.reason
-          %td= get_status(leave.status)
-          %td= link_to 'show', leave_path(leave)
+        - if show_pending_leave?(leave)
+          %tr
+            %td= leave.user.name
+            %td= leave.leave_type == Leave::CASUAL ? 'Casual' : 'Medical'
+            %td= leave.reason
+            %td= get_status(leave.status)
+            %td= link_to 'show', leave_path(leave)
 - else
   .alert.alert-info{:role => 'alert'}
     %strong Empty!
