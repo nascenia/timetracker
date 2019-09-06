@@ -88,7 +88,7 @@ ActiveAdmin.register Leave do
       f.input :start_date
       f.input :end_date
       f.input :half_day
-      f.input :leave_type, as: :select, collection: Leave::LEAVE_TYPES.push(['Unannounced Leave', Leave::UNANNOUNCED])
+      f.input :leave_type, as: :select, collection: Leave::LEAVE_TYPES + [['Unannounced Leave', Leave::UNANNOUNCED]]
       f.input :pending_at
       f.input :status, as: :select, collection: Leave::LEAVE_STATUSES
     end
