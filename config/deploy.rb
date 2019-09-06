@@ -34,6 +34,7 @@ task :staging do
   role :db, web_server, :primary => true # This is where Rails migrations will run
   set :deploy_to, "/www/apps/#{application}/"
   set :delayed_job_id, 2
+  set :whenever_identifier, defer { "#{application}-staging" }
   set :whenever_command, 'bundle exec whenever'
 end
 
@@ -46,6 +47,7 @@ task :prod do
   set :deploy_to, "/www/apps/#{application}-staging/"
   set :rails_env, "staging"
   set :delayed_job_id, 2
+  set :whenever_identifier, defer { "#{application}-prod" }
   set :whenever_command, 'bundle exec whenever'
 end
 
@@ -70,7 +72,7 @@ namespace :deploy do
     run "mkdir -p #{shared_path}/config/.bundle"
     #run "mkdir -p #{shared_path}/bundle"
     #run "touch #{shared_path}/config/.bundle/config"
-    
+
     #run "echo '---' >> #{shared_path}/config/.bundle/config"
     #run "echo 'BUNDLE_PATH: vendor/bundle' >> #{shared_path}/config/.bundle/config"
     #run "echo \"BUNDLE_DISABLE_SHARED_GEMS: '1'\" >> #{shared_path}/config/.bundle/config"
