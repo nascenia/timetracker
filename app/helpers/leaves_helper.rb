@@ -56,7 +56,11 @@ module LeavesHelper
   end
 
   def show_pending_leave?(leave)
-    current_user_priority = leave.approval_path.path_chains.find_by(user: current_user).try(:priority)
-    leave.pending_at == current_user_priority ? true : false
+    if leave.approval_path.present?
+      current_user_priority = leave.approval_path.path_chains.find_by(user: current_user).try(:priority)
+      leave.pending_at == current_user_priority ? true : false
+    else
+      false
+    end
   end
 end
