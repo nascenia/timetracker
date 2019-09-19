@@ -79,8 +79,9 @@ class ProjectsController < ApplicationController
     end
     @users = []
     users.each do |user|
-      tmp = { user: user.name , projects: [], total_sum: 0}
+      tmp = { user: user.name , projects: [], total_sum: 0, total_sum_min: 0}
       total_sum = 0
+      total_sum_min = 0
       projects.each do |project|
 
         t = user.timesheets.where(project: project,date: params[:start_date]..params[:end_date])
@@ -92,9 +93,15 @@ class ProjectsController < ApplicationController
           minutes = minutes%60
         end
         total_sum+= hours
+        total_sum_min+=minutes
         tmp[:projects] << { object: project, hours: hours, minutes: minutes }
       end
+      if total_sum_min >= 60
+        total_sum += total_sum_min/60
+        total_sum_min = total_sum_min%60
+      end
       tmp[:total_sum]= total_sum
+      tmp[:total_sum_min]= total_sum_min
       @users << tmp
     end
   end

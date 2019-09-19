@@ -59,7 +59,7 @@
         <th>Member name</th>
         <th>Total hours</th>
         <% @users[0][:projects].each do |project| %>
-            <th><%= project[:object].project_name %></th>
+            <th><%= project[:object].project_name+' (HH:MM)' %></th>
         <% end %>
     </tr>
     </thead>
@@ -67,7 +67,7 @@
     <% @users.each do |user| %>
         <tr>
             <td><%= user[:user] %></td>
-            <td><%= user[:total_sum]%></td>
+            <td><%= user[:total_sum].to_s + ':'+ user[:total_sum_min].to_s  %></td>
             <% user[:projects].each do |project| %>
                 <td>
                     <%= project[:hours].to_s +  ':'+ project[:minutes].to_s   %>
