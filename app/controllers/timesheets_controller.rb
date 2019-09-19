@@ -10,14 +10,16 @@ class TimesheetsController < ApplicationController
         @start_date = params[:start_date]
         @end_date = params[:end_date]
         @project_id = params[:project_id]
-        @timesheets= Timesheet.where(user_id: params[:id],project_id: params[:project_id],date: params[:start_date]..params[:end_date])
+        @timesheets= Timesheet.where(user_id: params[:id],project_id: params[:project_id],
+                                     date: params[:start_date]..params[:end_date]).order(date: :desc)
         @username = User.find(params[:id])
     end
     def index
         @selected_index = params[:selected_index]
         @start_date = params[:start_date]
         @end_date = params[:end_date]
-        @timesheets = Timesheet.all.where(user_id: current_user.id,date: params[:start_date]..params[:end_date])
+        @timesheets = Timesheet.all.where(user_id: current_user.id,
+                                          date: params[:start_date]..params[:end_date]).order(date: :desc)
         @projects = Project.all
         @user= current_user
 
@@ -47,17 +49,22 @@ class TimesheetsController < ApplicationController
     def create
         @timesheet = Timesheet.create(timesheet_params)
         @timesheet.user_id = current_user.id
-        if @timesheet.date.to_date <= Time.now.to_date
-            if @timesheet.save
-                redirect_to root_path
+        if(@timesheet.date.to_date>=Time.now.to_date-35)
+            if @timesheet.date.to_date <= Time.now.to_date
+                if @timesheet.save
+                    redirect_to root_path
+                else
+                    flash[:alert] = 'failed'
+                    redirect_to new_timesheet_path
+                end
             else
                 flash[:alert] = 'failed'
-                redirect_to root_path
+                redirect_to new_timesheet_path
             end
         else
-            flash[:alert] = 'failed'
-            redirect_to root_path
-            end
+            flash[:alert] = 'You cannot insert before 35 days'
+            redirect_to new_timesheet_path
+        end
     end
 
     def edit
