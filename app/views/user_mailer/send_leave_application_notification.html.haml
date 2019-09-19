@@ -8,6 +8,13 @@
             %strong
               = @user.name
             has just applied for a leave.
+            - if @approvers.present?
+              = " This leave application has been approved by: "
+              - @approvers.each_with_index do |a, i|
+                - if i+1 == @approvers.length
+                  = a + '.'
+                - else
+                  = a + ', '
             You can view and
             %strong
               Approve/Reject
