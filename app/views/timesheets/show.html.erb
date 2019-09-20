@@ -49,7 +49,9 @@
         <th>Ticket Link </th>
         <th>Hours </th>
         <th>Minutes </th>
-        <th></th>
+        <% if @is_editable!=0 %>
+            <th></th>
+            <%end %>
     </tr>
 
 
@@ -63,7 +65,10 @@
             <td><%= timesheet.ticket_link %></td>
             <td><%= timesheet.hours %></td>
             <td><%= timesheet.minutes %></td>
-            <td> <%= link_to 'Edit', edit_timesheet_path(timesheet) %> </td>
+
+            <% if @is_editable !=0%>
+                <td> <%= link_to 'Edit', edit_timesheet_path(timesheet) %> </td>
+            <%end %>
         </tr>
     <% end %>
 

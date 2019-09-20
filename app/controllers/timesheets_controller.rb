@@ -1,7 +1,7 @@
 class TimesheetsController < ApplicationController
     layout 'time_tracker'
     def show
-
+        @is_editable = 0
         # if params[:selected_index]
         #     @selected_index =0
         # else
@@ -13,6 +13,9 @@ class TimesheetsController < ApplicationController
         @timesheets= Timesheet.where(user_id: params[:id],project_id: params[:project_id],
                                      date: params[:start_date]..params[:end_date]).order(date: :desc)
         @username = User.find(params[:id])
+        if @username == current_user || current_user
+            @is_editable = 1
+        end
     end
     def index
         @selected_index = params[:selected_index]
