@@ -13,7 +13,7 @@ class TimesheetsController < ApplicationController
         @timesheets= Timesheet.where(user_id: params[:id],project_id: params[:project_id],
                                      date: params[:start_date]..params[:end_date]).order(date: :desc)
         @username = User.find(params[:id])
-        if @username == current_user || current_user
+        if @username == current_user
             @is_editable = 1
         end
     end
