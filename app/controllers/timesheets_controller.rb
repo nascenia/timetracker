@@ -71,7 +71,7 @@ class TimesheetsController < ApplicationController
     end
 
     def edit
-        @total_hours = 14;
+        @total_hours = 14
         @timesheets = Timesheet.find(params[:id])
         @projects = Project.all
         user_timesheet = current_user.timesheets.where(date: Timesheet.find(params[:id]).date)
@@ -88,11 +88,16 @@ class TimesheetsController < ApplicationController
 
     def update
         @timesheets = Timesheet.find(params[:id])
-        if @timesheets.save && @timesheets.update(timesheet_params)
-            redirect_to timesheets_path(selected_index: 0,start_date: (Time.now-14.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
+        if @timesheets.date.to_date>=Time.now.to_date-35
+            if @timesheets.save && @timesheets.update(timesheet_params)
+                redirect_to timesheets_path(selected_index: 0,start_date: (Time.now-14.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
+            else
+                flash[:alert] = 'failed'
+                redirect_to root_path
+            end
         else
-            flash[:alert] = 'failed'
-            redirect_to root_path
+            flash[:alert] = 'You cannot insert before 35 days'
+            redirect_to new_timesheet_path
         end
 
     end

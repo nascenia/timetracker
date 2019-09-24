@@ -6,7 +6,7 @@
     <br /> <br />
     <%= label :project_description, 'Project Description' %>
     <br />
-    <%= f.text_area :description, size: "60x12" %>
+    <%= f.text_area :description, size: "60x12",:maxlength=>"128" %>
     <br /> <br />
     <%= f.radio_button :is_active, 'true', :checked => true %>
     <%= label :contactmethod_email, 'Active' %>
