@@ -28,8 +28,9 @@
     %ul.dropdown-menu
       %li
         = link_to 'New Time Entry', new_timesheet_path
-      %li
-        = link_to 'Create Project', new_project_path
+      - if current_user.has_admin_privilege?
+        %li
+          = link_to 'Create Project', new_project_path
       %li
         = link_to 'Projects', projects_path(is_active: true)
       %li

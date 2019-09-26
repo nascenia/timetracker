@@ -28,6 +28,15 @@ class TimesheetsController < ApplicationController
 
     end
     def new
+
+        @is_from_attent = 0
+        if session[:is_from_checkout] == 1
+            @is_from_attent = 1
+            session[:is_from_checkout] = 0
+            session[:should_force_check_out] = 1
+        else
+            session[:should_force_check_out] = 0
+        end
         projects = current_user.projects
         p '#####CU project'
         projects.each do |project|
@@ -55,16 +64,37 @@ class TimesheetsController < ApplicationController
         if(@timesheet.date.to_date>=Time.now.to_date-35)
             if @timesheet.date.to_date <= Time.now.to_date
                 if @timesheet.save
-                    redirect_to root_path
+                    if session[:should_force_check_out] == 1
+                        @attendance = session[:attendence_id].present? ? Attendance.find(session[:attendence_id]) : Attendance.new
+                        @today_entry = Attendance.find_first_entry(current_user.id, Date.today)
+                        if @attendance.user_id == current_user.id
+                            if @today_entry
+                                @attendance.out_time = Time.now.to_s(:time)
+                                @attendance.save!
+                                total_hours = ((@attendance.out_time.to_time - @attendance.in_time.to_time) / 1.hour).round(2)
+                                @attendance.total_hours = total_hours
+                                @attendance.save!
+                                flash[:notice] = 'Successfully checked out.'
+                            else
+                                flash[:notice] = 'You did not log in today.'
+                            end
+                        end
+                        redirect_to root_path
+                    else
+                        redirect_to root_path
+                    end
                 else
                     flash[:alert] = 'failed'
+                    session[:is_from_checkout] = 0
                     redirect_to new_timesheet_path
                 end
             else
+                session[:is_from_checkout] = 0
                 flash[:alert] = 'failed'
                 redirect_to new_timesheet_path
             end
         else
+            session[:is_from_checkout] = 0
             flash[:alert] = 'You cannot insert before 35 days'
             redirect_to new_timesheet_path
         end
@@ -96,7 +126,8 @@ class TimesheetsController < ApplicationController
                 redirect_to root_path
             end
         else
-            flash[:alert] = 'You cannot insert before 35 days'
+            session[:is_from_checkout] = 0
+            flash[:alert] = 'You cannot update before 35 days'
             redirect_to new_timesheet_path
         end
 

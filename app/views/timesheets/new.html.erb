@@ -86,8 +86,12 @@
         </div>
     </div>
     <%if @total_hours != 0 && @total_mins !=0 %>
-    <%= f.submit "Create" %>
+        <% if @is_from_attent == 1 %>
+            <%= f.submit "Create and Checkout" %>
+        <%else %>
+            <%= f.submit "Create" %>
         <%end %>
+    <%end %>
 <% end %>
 <script type="text/javascript">
     $('#select-other-projects').hide();

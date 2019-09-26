@@ -36,7 +36,10 @@ class ProjectsController < ApplicationController
   end
 
   def index
-
+    @is_admin = 0
+    if current_user.has_admin_privilege?
+      @is_admin = 1
+    end
     if params[:is_active] == "false"
       @projects = Project.all.where(is_active: false)
       @is_active = false
@@ -78,6 +81,8 @@ class ProjectsController < ApplicationController
       @selected_ttf_id = 0
     end
     @users = []
+    @total_hours_project_wise = {}
+    @total_minutes_project_wise = {}
     users.each do |user|
       tmp = { user: user.name , projects: [], total_sum: 0, total_sum_min: 0}
       total_sum = 0
@@ -88,6 +93,14 @@ class ProjectsController < ApplicationController
 
         hours = t.sum(:hours)
         minutes = t.sum(:minutes)
+        if @total_hours_project_wise[project.id].present?
+          @total_hours_project_wise[project.id] += hours
+          @total_minutes_project_wise[project.id] += minutes
+        else
+          @total_hours_project_wise[project.id] =0
+          @total_minutes_project_wise[project.id] =0
+        end
+
         if minutes >= 60
           hours += minutes/60
           minutes = minutes%60
@@ -106,6 +119,7 @@ class ProjectsController < ApplicationController
     end
   end
   def create
+    if current_user.has_admin_privilege?
     @project = Project.create(project_params)
     user_ids = params[:user_ids].split(',')
     user_ids.each do |uid|
@@ -119,7 +133,10 @@ class ProjectsController < ApplicationController
       flash[:alert] = 'failed'
       redirect_to root_path
     end
-
+    else
+      flash[:alert] = 'Only Admin Can Create'
+      redirect_to projects_path(is_active: true)
+    end
   end
 
   def edit
@@ -130,19 +147,23 @@ class ProjectsController < ApplicationController
     # redirect_to edit_project_path
   end
   def update
-    @project = Project.find(params[:id])
-    @project.users.delete_all
-    user_ids = params[:user_ids].split(',')
-    user_ids.each do |uid|
-      u = User.find uid
-      @project.users << u
-    end
-
-    if @project.save && @project.update(project_params)
-      redirect_to projects_path(is_active: true)
+    if current_user.has_admin_privilege?
+      @project = Project.find(params[:id])
+      @project.users.delete_all
+      user_ids = params[:user_ids].split(',')
+      user_ids.each do |uid|
+        u = User.find uid
+        @project.users << u
+      end
+      if @project.save && @project.update(project_params)
+        redirect_to projects_path(is_active: true)
+      else
+        flash[:alert] = 'failed'
+        redirect_to root_path
+      end
     else
-      flash[:alert] = 'failed'
-      redirect_to root_path
+      flash[:alert] = 'Only Admin Can edit'
+      redirect_to projects_path(is_active: true)
     end
   end
 

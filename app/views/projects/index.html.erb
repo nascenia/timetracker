@@ -21,8 +21,10 @@
             <th>Description</th>
             <th>Team Members</th>
             <th>Is Active</th>
-            <th>Action</th>
-        </tr>
+            <% if @is_admin == 1 %>
+                <th> Action</th>
+            <% end %>
+                </tr>
     </thead>
     <tbody>
     <% @projects.each do |project| %>
@@ -43,7 +45,9 @@
                 <% end %>
             </td>
             <td><%= $isActive %></td>
-            <td> <%= link_to 'Edit', edit_project_path(project) %> </td>
+            <% if @is_admin == 1 %>
+                <td> <%= link_to 'Edit', edit_project_path(project) %> </td>
+            <%end %>
         </tr>
     <% end %>
     </tbody>
