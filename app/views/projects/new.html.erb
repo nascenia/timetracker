@@ -2,7 +2,7 @@
 <%= form_for @project do |f| %>
     <%= label :project_name, 'Project Name' %>
     <br />
-    <%= f.text_field :project_name ,:maxlength=>"64"%>
+    <%= f.text_field :project_name ,:maxlength=>"64",required: 'true'%>
     <br /> <br />
     <%= label :project_description, 'Project Description' %>
     <br />

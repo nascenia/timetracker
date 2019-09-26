@@ -6,7 +6,7 @@
                 <%= label :date, 'Date' %>
             </p>
             <p>
-                <%= f.text_field :date, :class => 'form-control date-picker', value: @timesheets.date ,:onkeydown=>"return false"%>
+                <%= f.text_field :date, :class => 'form-control timesheet-date-picker', value: @timesheets.date ,:onkeydown=>"return false"%>
             </p>
         </div>
         <div class="col-md-6">
@@ -14,7 +14,7 @@
                 <%= label :project, 'Project Name' %>
             </p>
             <p>
-                <%= f.select :project_id, options_for_select(@projects.collect { | project | [project.project_name,  project.id] }, selected: @timesheets.project_id), {}, {required: 'true', autofocus: 'true', class: 'form-control',:maxlength=>"256"}%>
+                <%= f.select :project_id, options_for_select(@projects.collect { | project | [project.project_name,  project.id] }, selected: @timesheets.project_id), {}, {required: 'true', autofocus: 'true', class: 'form-control',:maxlength=>"128"}%>
             </p>
         </div>
         <div class="col-md-6">
@@ -22,7 +22,7 @@
                 <%= label :project, 'Task' %>
             </p>
             <p>
-                <%= f.text_field :task ,:class => 'form-control',:maxlength=>"256"%>
+                <%= f.text_field :task ,:class => 'form-control',:maxlength=>"128"%>
             </p>
         </div>
         <div class="col-md-6">
@@ -30,7 +30,7 @@
                 <%= label :project, 'Ticket Number' %>
             </p>
             <p>
-                <%= f.text_field :ticket_number,:class => 'form-control',:maxlength=>"256" %>
+                <%= f.text_field :ticket_number,:class => 'form-control',:maxlength=>"128" %>
             </p>
         </div>
         <div class="col-md-6">
