@@ -104,13 +104,7 @@ class TimesheetsController < ApplicationController
         @timesheets = Timesheet.find(params[:id])
         if @timesheets.date.to_date>=Time.now.to_date-35
              @total_hours = 14
-             projects = current_user.projects
-             p '#####CU project'
-             projects.each do |project|
-                 p project
-             end
-             p '#####CU project'
-             @projects = Project.where.not(id: current_user.projects)
+             @projects = Project.all
              user_timesheet = current_user.timesheets.where(date: Timesheet.find(params[:id]).date)
              total_hours_hash=user_timesheet.sum(:hours)
              total_minute_hash=user_timesheet.sum(:minutes)

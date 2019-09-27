@@ -18,11 +18,7 @@
                 <%= label '', ' *', class: 'required-asterisk' %>
             </p>
             <p>
-                <%= f.select :project_id, options_for_select(current_user_projects.collect { | project | [project.project_name,  project.id] }, selected: @timesheets.project_id), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-current-user-projects'}%>
-                <%= f.select :project_id, options_for_select(@projects.collect { | project | [project.project_name,  project.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'}%>
-                <%#= label :show_other_projects, 'Show other projects'  %>
-                <label class="lebel-nonbold" ><%= 'Show other projects' %></label>
-                <input id="other-projects-cb" type="checkbox" />
+                <%= f.select :project_id, options_for_select(@projects.collect { | project | [project.project_name,  project.id] }, selected: @timesheets.project_id), {}, {required: 'true', autofocus: 'true', class: 'form-control',:maxlength=>"128"}%>
             </p>
         </div>
         <div class="col-md-6">
@@ -31,7 +27,7 @@
                 <%= label '', ' *', class: 'required-asterisk' %>
             </p>
             <p>
-                <%= f.text_field :task ,:class => 'form-control',:maxlength=>"128"%>
+                <%= f.text_field :task ,:class => 'form-control',required: 'true',:maxlength=>"128"%>
             </p>
         </div>
         <div class="col-md-6">
