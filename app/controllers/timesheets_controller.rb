@@ -65,23 +65,28 @@ class TimesheetsController < ApplicationController
         if(@timesheet.date.to_date>=Time.now.to_date-35)
             if @timesheet.date.to_date <= Time.now.to_date
                 if @timesheet.save
-                    if session[:should_force_check_out] == 1
-                        @attendance = session[:attendence_id].present? ? Attendance.find(session[:attendence_id]) : Attendance.new
-                        @today_entry = Attendance.find_first_entry(current_user.id, Date.today)
-                        if @attendance.user_id == current_user.id
-                            if @today_entry
-                                @attendance.out_time = Time.now.to_s(:time)
-                                @attendance.save!
-                                total_hours = ((@attendance.out_time.to_time - @attendance.in_time.to_time) / 1.hour).round(2)
-                                @attendance.total_hours = total_hours
-                                @attendance.save!
-                                flash[:notice] = 'Successfully checked out.'
-                            else
-                                flash[:notice] = 'You did not log in today.'
+                    if restrict_access?
+                        if session[:should_force_check_out] == 1
+                            @attendance = session[:attendence_id].present? ? Attendance.find(session[:attendence_id]) : Attendance.new
+                            @today_entry = Attendance.find_first_entry(current_user.id, Date.today)
+                            if @attendance.user_id == current_user.id
+                                if @today_entry
+                                    @attendance.out_time = Time.now.to_s(:time)
+                                    @attendance.save!
+                                    total_hours = ((@attendance.out_time.to_time - @attendance.in_time.to_time) / 1.hour).round(2)
+                                    @attendance.total_hours = total_hours
+                                    @attendance.save!
+                                    flash[:notice] = 'Successfully checked out.'
+                                else
+                                    flash[:notice] = 'You did not log in today.'
+                                end
                             end
-                        end
-                        redirect_to root_path
+                            redirect_to root_path
+                        else
+                            redirect_to timesheets_path(selected_index: 0,start_date: (Time.now-14.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
+                            end
                     else
+                        flash[:notice] = 'You cant logged out from outside network'
                         redirect_to timesheets_path(selected_index: 0,start_date: (Time.now-14.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
                     end
                 else
@@ -141,5 +146,16 @@ class TimesheetsController < ApplicationController
     def timesheet_params
         params.require(:timesheet).permit(:date,:project_id,:task,
                                          :ticket_number,:ticket_link,:hours,:minutes,:description )
+    end
+    def restrict_access?
+        if request.remote_ip.present?
+            unless (Attendance::IP_WHITELIST.include? request.remote_ip)
+                flash[:alert] = 'Check in or out is restricted from outside office.'
+
+                return false
+            else
+                return true
+            end
+        end
     end
 end
