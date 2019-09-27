@@ -14,7 +14,7 @@ class AttendancesController < ApplicationController
       format.html
     end
   end
-  
+
   def show
     @attendance = Attendance.includes(:children).includes(:user).find params[:id]
 
@@ -79,7 +79,7 @@ class AttendancesController < ApplicationController
         session[:attendence_id] = @attendance.id
         # session[:all_attendence_info] = @attendance
         flash[:alert] = 'Please fill the timesheet first'
-        redirect_to new_timesheet_path
+        redirect_to new_timesheet_path and return
       else
       if @attendance.user_id == current_user.id
         if @today_entry
