@@ -1,9 +1,12 @@
 <%= link_to 'Go Back', timesheets_path(selected_index: 0,start_date: (Time.now-14.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d")) %>
+<h3>Edit Timesheet </h3><br>
 <%= form_for @timesheets do |f| %>
+    <% current_user_projects = current_user.projects %>
     <div class="row">
         <div class="col-md-6">
             <p>
                 <%= label :date, 'Date' %>
+                <%= label '', ' *', class: 'required-asterisk' %>
             </p>
             <p>
                 <%= f.text_field :date, :class => 'form-control timesheet-date-picker', value: @timesheets.date ,:onkeydown=>"return false"%>
@@ -12,14 +15,20 @@
         <div class="col-md-6">
             <p>
                 <%= label :project, 'Project Name' %>
+                <%= label '', ' *', class: 'required-asterisk' %>
             </p>
             <p>
-                <%= f.select :project_id, options_for_select(@projects.collect { | project | [project.project_name,  project.id] }, selected: @timesheets.project_id), {}, {required: 'true', autofocus: 'true', class: 'form-control',:maxlength=>"128"}%>
+                <%= f.select :project_id, options_for_select(current_user_projects.collect { | project | [project.project_name,  project.id] }, selected: @timesheets.project_id), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-current-user-projects'}%>
+                <%= f.select :project_id, options_for_select(@projects.collect { | project | [project.project_name,  project.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'}%>
+                <%#= label :show_other_projects, 'Show other projects'  %>
+                <label class="lebel-nonbold" ><%= 'Show other projects' %></label>
+                <input id="other-projects-cb" type="checkbox" />
             </p>
         </div>
         <div class="col-md-6">
             <p>
                 <%= label :project, 'Task' %>
+                <%= label '', ' *', class: 'required-asterisk' %>
             </p>
             <p>
                 <%= f.text_field :task ,:class => 'form-control',:maxlength=>"128"%>
@@ -45,6 +54,7 @@
                 <div class="col-md-6">
                     <p>
                         <%= label :project, 'Hours spent' %>
+                        <%= label '', ' *', class: 'required-asterisk' %>
                     </p>
                     <p>
                         <%= f.select :hours, options_for_select(0..@total_hours, selected: @timesheets.hours) , {}, {required: 'true', autofocus: 'true', class: 'form-control'}%>
@@ -53,6 +63,7 @@
                 <div class="col-md-6">
                     <p>
                         <%= label :project, 'Minutes spent' %>
+                        <%= label '', ' *', class: 'required-asterisk' %>
                     </p>
                     <p>
                         <%= f.select :minutes, options_for_select((0..@total_mins).map {|n| n*15 }, selected: @timesheets.minutes) , {}, {required: 'true', autofocus: 'true', class: 'form-control'}%>
@@ -77,3 +88,25 @@
 
     <%= f.submit "Update" %>
 <% end %>
+
+<script type="text/javascript">
+    $('#select-other-projects').hide();
+    $('#select-other-projects').prop('disabled',true);
+
+    $('#other-projects-cb').on('click',function () {
+        if(this.checked)
+        {
+            $('#select-current-user-projects').hide();
+            $('#select-current-user-projects').prop('disabled',true);
+            $('#select-other-projects').show();
+            $('#select-other-projects').prop('disabled',false);
+        } else{
+            $('#select-other-projects').hide();
+            $('#select-other-projects').prop('disabled',true);
+            $('#select-current-user-projects').show();
+            $('#select-current-user-projects').prop('disabled',false);
+
+        }
+        return true;
+    });
+</script>

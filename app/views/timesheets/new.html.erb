@@ -1,3 +1,4 @@
+<h3>New Time Entry </h3><br>
 <%= form_for @timesheet do |f| %>
     <% current_user_projects = current_user.projects %>
     <div class="row">
@@ -88,6 +89,8 @@
     <%if @total_hours != 0 && @total_mins !=0 %>
         <% if @is_from_attent == 1 %>
             <%= f.submit "Create and Checkout" %>
+<!--            &nbsp;&nbsp;&nbsp;&nbsp;-->
+            <%#= f.submit "Create" %>
         <%else %>
             <%= f.submit "Create" %>
         <%end %>

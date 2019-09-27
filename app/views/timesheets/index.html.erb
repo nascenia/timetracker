@@ -1,6 +1,6 @@
 <%= link_to 'Go Back', projects_path(is_active: true) %>
 
-<h5>Time sheet for <%= @user.name %></h5>
+<h3>Time sheet for <%= @user.name %></h3>
 <br>
 
 <input type="hidden" value="<%=@user.id %>" id="user_id">
@@ -39,18 +39,21 @@
         <option id= "last_three_month" value="90">Last 90 days</option>
     <%end %>
 </select>
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="button" value="add_button" id="add_button", onclick="redirectToNewTimeSHeet()">
 <br>
 <br>
 <table style="width:100%">
     <tr>
         <th>Date</th>
         <th>Project Name </th>
+        <th>Description</th>
         <th>Task </th>
         <th>Ticket Number </th>
         <th>Ticket Link </th>
         <th>Hours </th>
         <th>Minutes </th>
-        <th>Description</th>
         <th></th>
     </tr>
 
@@ -59,12 +62,12 @@
         <tr>
             <td><%= timesheet.date%></td>
             <td><%= link_to timesheet.project.project_name, project_path(timesheet.project,:start_date => Time.now.strftime("%Y/%m/%d"), :end_date => Time.now.strftime("%Y/%m/%d"), :selected_index => 1) %></td>
+            <td><%= timesheet.description%></td>
             <td><%= timesheet.task %></td>
             <td><%= timesheet.ticket_number %></td>
             <td><%= timesheet.ticket_link %></td>
             <td><%= timesheet.hours %></td>
             <td><%= timesheet.minutes %></td>
-            <td><%= timesheet.description%></td>
             <td> <%= link_to 'Edit', edit_timesheet_path(timesheet) %> </td>
         </tr>
 <% end %>
@@ -90,6 +93,10 @@
 
 
 <script type="text/javascript">
+    function redirectToNewTimeSHeet() {
+
+        window.location = "/timesheets/"+'new'
+    }
     function fixedTimeSelect() {
 
         var date_interval = document.getElementById("time_select").value;

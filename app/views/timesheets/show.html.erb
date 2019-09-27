@@ -1,6 +1,6 @@
 <%= link_to 'Go Back', projects_path(is_active: true) %>
 
-<h5>Time sheet for <%= @username.name %></h5>
+<h3>Time sheet for <%= @username.name %></h3>
 
 <input type="hidden" value="<%=@project_id %>" id="project_id">
 <input type="hidden" value="<%=@username.id %>" id="user_id">
@@ -42,8 +42,8 @@
 <table style="width:100%">
     <tr>
         <th>Date</th>
-        <th>Description</th>
         <th>Project Name </th>
+        <th>Description</th>
         <th>Task </th>
         <th>Ticket Number </th>
         <th>Ticket Link </th>
@@ -58,8 +58,8 @@
     <% @timesheets.each do |timesheet| %>
         <tr>
             <td><%= timesheet.date%></td>
-            <td><%= timesheet.description%></td>
             <td><%= timesheet.project.project_name%></td>
+            <td><%= timesheet.description%></td>
             <td><%= timesheet.task %></td>
             <td><%= timesheet.ticket_number %></td>
             <td><%= timesheet.ticket_link %></td>
