@@ -81,24 +81,22 @@ class AttendancesController < ApplicationController
         flash[:alert] = 'Please fill the timesheet first'
         redirect_to new_timesheet_path and return
       else
-      if @attendance.user_id == current_user.id
-        if @today_entry
-          @attendance.out_time = Time.now.to_s(:time)
-          @attendance.save!
-          total_hours = ((@attendance.out_time.to_time - @attendance.in_time.to_time) / 1.hour).round(2)
-          @attendance.total_hours = total_hours
-          @attendance.save!
-          flash[:notice] = 'Successfully checked out.'
-        else
-          flash[:notice] = 'You did not log in today.'
+        if @attendance.user_id == current_user.id
+          if @today_entry
+            @attendance.out_time = Time.now.to_s(:time)
+            @attendance.save!
+            total_hours = ((@attendance.out_time.to_time - @attendance.in_time.to_time) / 1.hour).round(2)
+            @attendance.total_hours = total_hours
+            @attendance.save!
+            flash[:notice] = 'Successfully checked out.'
+          else
+            flash[:notice] = 'You did not log in today.'
+          end
         end
       end
-
+    end
     respond_to do |format|
       format.html { redirect_to :back }
-    end
-
-      end
     end
   end
 
