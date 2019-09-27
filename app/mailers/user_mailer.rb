@@ -13,7 +13,7 @@ class UserMailer < ActionMailer::Base
     approver_ids = @leave.approval_path.path_chains.where('priority > ?', @leave.pending_at).pluck(:user_id)
     @approvers = User.where(id: approver_ids).pluck(:name)
     if CONFIG['leave_admin'].include?(email)
-      subject = "#{@user.name} has applied for a leave. You need to approve or reject it."
+      subject = "Action required: #{@user.name} has applied for a leave."
     else
       subject = "#{@user.name} has applied for a leave"
     end
