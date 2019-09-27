@@ -79,7 +79,7 @@ class TimesheetsController < ApplicationController
                                 flash[:notice] = 'You did not log in today.'
                             end
                         end
-                        redirect_to timesheets_path(selected_index: 0,start_date: (Time.now-14.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
+                        redirect_to root_path
                     else
                         redirect_to timesheets_path(selected_index: 0,start_date: (Time.now-14.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
                     end

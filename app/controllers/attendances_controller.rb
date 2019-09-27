@@ -78,7 +78,7 @@ class AttendancesController < ApplicationController
         session[:is_from_checkout] = 1
         session[:attendence_id] = @attendance.id
         # session[:all_attendence_info] = @attendance
-        flash[:alert] = 'Please fill the timeshet first'
+        flash[:alert] = 'Please fill the timesheet first'
         redirect_to new_timesheet_path
       else
       if @attendance.user_id == current_user.id
