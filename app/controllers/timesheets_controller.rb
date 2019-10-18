@@ -24,9 +24,25 @@ class TimesheetsController < ApplicationController
         @timesheets = Timesheet.all.where(user_id: current_user.id,
                                           date: params[:start_date]..params[:end_date]).order(date: :desc)
         @projects = Project.all
-        @user= current_user
-
+        @user = current_user
+        @number_span = {}
+        @daily_total_time = {}
+        daily_total_time_in_min = 0
+        @timesheets.each do |timesheet|
+            daily_total_time_in_min = (timesheet.hours*60).to_i+timesheet.minutes.to_i
+            if @number_span[timesheet.date].present?
+                @number_span[timesheet.date] = @number_span[timesheet.date]+1
+            else
+                @number_span[timesheet.date] = 1
+            end
+            if @daily_total_time[timesheet.date].present?
+                @daily_total_time[timesheet.date] = @daily_total_time[timesheet.date].to_i+daily_total_time_in_min
+            else
+                @daily_total_time[timesheet.date] = daily_total_time_in_min
+            end
+        end
     end
+
     def new
 
         @is_from_attent = 0

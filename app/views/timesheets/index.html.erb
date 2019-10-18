@@ -48,27 +48,37 @@
     <tr>
         <th>Date</th>
         <th>Project Name </th>
+        <th>Time </th>
+        <th>Total time in days </th>
         <th>Description</th>
         <th>Task </th>
         <th>Ticket Number </th>
         <th>Ticket Link </th>
-        <th>Hours </th>
-        <th>Minutes </th>
-        <th></th>
+        <th>Action</th>
     </tr>
-
-
+    <% last_date = ''%>
+    <% rowspan_val = 1%>
 <% @timesheets.each do |timesheet| %>
         <tr>
-            <td><%= timesheet.date%></td>
+            <% if timesheet.date != last_date%>
+                <td rowspan =<%=@number_span[timesheet.date] %>><%= timesheet.date%></td>
+                <%end %>
+
             <td><%= link_to timesheet.project.project_name, project_path(timesheet.project,:start_date => Time.now.strftime("%Y/%m/%d"), :end_date => Time.now.strftime("%Y/%m/%d"), :selected_index => 1) %></td>
+
+            <td><%= timesheet.hours.to_s+":"+timesheet.minutes.to_s %></td>
+
+            <% if timesheet.date != last_date%>
+                <%hours_timesheet = @daily_total_time[timesheet.date]/60  %>
+                <%minuties_timesheet = @daily_total_time[timesheet.date]%60  %>
+                <td rowspan =<%=@number_span[timesheet.date] %>><%= hours_timesheet.to_s+":"+minuties_timesheet.to_s %></td>
+                <%end %>
             <td><%= timesheet.description%></td>
             <td><%= timesheet.task %></td>
             <td><%= timesheet.ticket_number %></td>
             <td><%= timesheet.ticket_link %></td>
-            <td><%= timesheet.hours %></td>
-            <td><%= timesheet.minutes %></td>
             <td> <%= link_to 'Edit', edit_timesheet_path(timesheet) %> </td>
+            <% last_date = timesheet.date%>
         </tr>
 <% end %>
 

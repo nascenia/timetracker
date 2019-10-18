@@ -74,7 +74,15 @@
             <td><%= user[:total_sum].to_s + ':'+ user[:total_sum_min].to_s  %></td>
             <% user[:projects].each do |project| %>
                 <td>
-                    <%= project[:hours].to_s +  ':'+ project[:minutes].to_s   %>
+                    <% project_hour_local = project[:hours]%>
+                    <% project_minute_local = project[:minutes]%>
+                    <% if project[:hours]< 10  %>
+                        <%  project_hour_local = '0'+project_hour_local.to_s%>
+                    <% end %>
+                    <% if project[:minutes]< 10  %>
+                        <%  project_minute_local = '0'+project_minute_local.to_s%>
+                    <% end %>
+                    <%= project_hour_local.to_s +  ':'+ project_minute_local.to_s   %>
                 </td>
             <% end %>
         </tr>
