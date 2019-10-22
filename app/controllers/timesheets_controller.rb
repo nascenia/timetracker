@@ -16,6 +16,21 @@ class TimesheetsController < ApplicationController
         if @username == current_user
             @is_editable = 1
         end
+        @number_span = {}
+        @daily_total_time = {}
+        @timesheets.each do |timesheet|
+            daily_total_time_in_min = (timesheet.hours*60).to_i+timesheet.minutes.to_i
+            if @number_span[timesheet.date].present?
+                @number_span[timesheet.date] = @number_span[timesheet.date]+1
+            else
+                @number_span[timesheet.date] = 1
+            end
+            if @daily_total_time[timesheet.date].present?
+                @daily_total_time[timesheet.date] = @daily_total_time[timesheet.date].to_i+daily_total_time_in_min
+            else
+                @daily_total_time[timesheet.date] = daily_total_time_in_min
+            end
+        end
     end
     def index
         @selected_index = params[:selected_index]
@@ -27,7 +42,6 @@ class TimesheetsController < ApplicationController
         @user = current_user
         @number_span = {}
         @daily_total_time = {}
-        daily_total_time_in_min = 0
         @timesheets.each do |timesheet|
             daily_total_time_in_min = (timesheet.hours*60).to_i+timesheet.minutes.to_i
             if @number_span[timesheet.date].present?
@@ -99,11 +113,11 @@ class TimesheetsController < ApplicationController
                             end
                             redirect_to root_path
                         else
-                            redirect_to timesheets_path(selected_index: 0,start_date: (Time.now-14.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
+                            redirect_to timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
                             end
                     else
                         flash[:notice] = 'You cant logged out from outside network'
-                        redirect_to timesheets_path(selected_index: 0,start_date: (Time.now-14.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
+                        redirect_to timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
                     end
                 else
                     flash[:alert] = 'failed'
@@ -139,7 +153,7 @@ class TimesheetsController < ApplicationController
              end
         else
             flash[:alert] = 'You cannot edit before 35 days'
-            redirect_to timesheets_path(selected_index: 0,start_date: (Time.now-14.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
+            redirect_to timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
         end
     end
 
@@ -147,15 +161,15 @@ class TimesheetsController < ApplicationController
         @timesheets = Timesheet.find(params[:id])
         if timesheet_params[:date].to_date>=Time.now.to_date-35
             if @timesheets.save && @timesheets.update(timesheet_params)
-                redirect_to timesheets_path(selected_index: 0,start_date: (Time.now-14.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
+                redirect_to timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
             else
                 flash[:alert] = 'failed'
-                redirect_to timesheets_path(selected_index: 0,start_date: (Time.now-14.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
+                redirect_to timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
             end
         else
             session[:is_from_checkout] = 0
             flash[:alert] = 'You cannot update before 35 days'
-            redirect_to timesheets_path(selected_index: 0,start_date: (Time.now-14.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
+            redirect_to timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
         end
 
     end

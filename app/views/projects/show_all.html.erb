@@ -71,27 +71,10 @@
     <% @users.each do |user| %>
         <tr>
             <td><%= user[:user] %></td>
-
-            <% project_hour_total_local = user[:total_sum]%>
-            <% project_minute_total_local = user[:total_sum_min]%>
-            <% if project_hour_total_local< 10  %>
-                <%  project_hour_total_local = '0'+project_hour_total_local.to_s%>
-            <% end %>
-            <% if project_minute_total_local< 10  %>
-                <%  project_minute_total_local = '0'+project_minute_total_local.to_s%>
-            <% end %>
-            <td><%= project_hour_total_local.to_s + ':'+ project_minute_total_local.to_s  %></td>
+            <td><%= user[:total_sum].to_s + ':'+ user[:total_sum_min].to_s  %></td>
             <% user[:projects].each do |project| %>
                 <td>
-                    <% project_hour_local = project[:hours]%>
-                    <% project_minute_local = project[:minutes]%>
-                    <% if project[:hours]< 10  %>
-                        <%  project_hour_local = '0'+project_hour_local.to_s%>
-                    <% end %>
-                    <% if project[:minutes]< 10  %>
-                        <%  project_minute_local = '0'+project_minute_local.to_s%>
-                    <% end %>
-                    <%= project_hour_local.to_s +  ':'+ project_minute_local.to_s   %>
+                    <%= project[:hours].to_s +  ':'+ project[:minutes].to_s   %>
                 </td>
             <% end %>
         </tr>

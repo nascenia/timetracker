@@ -1,4 +1,5 @@
-<%= link_to 'Go Back', projects_path(is_active: true) %>
+<%#= link_to 'Go Back', projects_path(is_active: true) %>
+<a href="#" onclick="history.go(-1)">Go Back</a>
 
 <h3>Time sheet for <%= @username.name %></h3>
 
@@ -42,33 +43,40 @@
 <table style="width:100%">
     <tr>
         <th>Date</th>
+        <th>Total hours</th>
         <th>Project Name </th>
-        <th>Description</th>
+        <th>Time </th>
         <th>Task </th>
         <th>Ticket Number </th>
         <th>Ticket Link </th>
-        <th>Hours </th>
-        <th>Minutes </th>
+        <th>Description</th>
         <% if @is_editable!=0 %>
             <th>Action</th>
             <%end %>
     </tr>
 
-
+    <% last_date = ''%>
     <% @timesheets.each do |timesheet| %>
         <tr>
-            <td><%= timesheet.date%></td>
-            <td><%= timesheet.project.project_name%></td>
-            <td><%= timesheet.description%></td>
+            <% if timesheet.date != last_date%>
+                <td rowspan =<%=@number_span[timesheet.date] %>><%= timesheet.date%></td>
+            <%end %>
+            <% if timesheet.date != last_date%>
+                <%hours_timesheet = @daily_total_time[timesheet.date]/60  %>
+                <%minuties_timesheet = @daily_total_time[timesheet.date]%60  %>
+                <td rowspan =<%=@number_span[timesheet.date] %>><%= hours_timesheet.to_s+":"+minuties_timesheet.to_s %></td>
+            <%end %>
+            <td><%= link_to timesheet.project.project_name, project_path(timesheet.project,:start_date => Time.now.strftime("%Y/%m/%d"), :end_date => Time.now.strftime("%Y/%m/%d"), :selected_index => 1) %></td>
+
+            <td><%= timesheet.hours.to_s+":"+timesheet.minutes.to_s %></td>
+
+
             <td><%= timesheet.task %></td>
             <td><%= timesheet.ticket_number %></td>
             <td><%= timesheet.ticket_link %></td>
-            <td><%= timesheet.hours %></td>
-            <td><%= timesheet.minutes %></td>
-
-            <% if @is_editable !=0%>
-                <td> <%= link_to 'Edit', edit_timesheet_path(timesheet) %> </td>
-            <%end %>
+            <td><%= timesheet.description%></td>
+            <td> <%= link_to 'Edit', edit_timesheet_path(timesheet) %> </td>
+            <% last_date = timesheet.date%>
         </tr>
     <% end %>
 

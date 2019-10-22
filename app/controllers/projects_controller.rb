@@ -15,7 +15,7 @@ class ProjectsController < ApplicationController
       if total_hours_hash.size > 0 || total_minute_hash.size > 0
         total_hours= total_hours_hash.values[0]
         total_minute= total_minute_hash.values[0]
-        if total_minute > 60
+        if total_minute >= 60
               total_hours += total_minute/60
               total_minute = total_minute%60
         end
@@ -101,7 +101,7 @@ class ProjectsController < ApplicationController
           @total_minutes_project_wise[project.id] =0
         end
 
-        if minutes > 60
+        if minutes >= 60
           hours += minutes/60
           minutes = minutes%60
         end
@@ -109,7 +109,7 @@ class ProjectsController < ApplicationController
         total_sum_min+=minutes
         tmp[:projects] << { object: project, hours: hours, minutes: minutes }
       end
-      if total_sum_min > 60
+      if total_sum_min >= 60
         total_sum += total_sum_min/60
         total_sum_min = total_sum_min%60
       end
