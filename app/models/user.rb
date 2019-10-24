@@ -141,6 +141,122 @@ class User < ActiveRecord::Base
     end
   end
 
+  def self.to_csv_timesheet(options2= {})
+    options = {}
+    options[:col_sep] = "\t"
+
+    @total_hours_project_wise = {}
+    @total_minutes_project_wise = {}
+    @ttf_list = User.active.where(role: 2)
+    @sttf_list = User.active.where(role: 3)
+    @member_list = User.active.where(role: 1)
+    @all_user = User.active
+    projects = Project.all.where(is_active: true)
+    @users = []
+
+    options2[:end_date].tr("/", "-")
+    options2[:start_date].tr("/", "-")
+    date_difference = (options2[:end_date].to_date - options2[:start_date].to_date).to_i
+
+    User.active.each do |user|
+      begin
+      ttf_name = @all_user.find(user.ttf_id).name
+      rescue Exception => exc
+        ttf_name = ''
+      end
+      begin
+        sttf_name = @all_user.find(user.ttf_id).name
+      rescue Exception => exc
+        sttf_name = ''
+      end
+      tmp = { id:user.id, name: user.name , projects: [], total_sum: 0, total_sum_min: 0,ttf_name: ttf_name ,sttf_name: sttf_name}
+      total_sum = 0
+      total_sum_min = 0
+      projects.each do |project|
+        t = user.timesheets.where(project: project,date: options2[:start_date]..options2[:end_date])
+
+        hours = t.sum(:hours)
+        minutes = t.sum(:minutes)
+        if @total_hours_project_wise[project.id].present?
+          @total_hours_project_wise[project.id] += hours
+          @total_minutes_project_wise[project.id] += minutes
+        else
+          @total_hours_project_wise[project.id] =0
+          @total_minutes_project_wise[project.id] =0
+        end
+
+        if minutes >= 60
+          hours += minutes/60
+          minutes = minutes%60
+        end
+        total_sum+= hours
+        total_sum_min+=minutes
+        if(hours > 0 || minutes > 0)
+          tmp[:projects] << { object: project, hours: hours, minutes: minutes }
+        end
+      end
+      if total_sum_min >= 60
+        total_sum += total_sum_min/60
+        total_sum_min = total_sum_min%60
+      end
+      tmp[:total_sum]= total_sum
+      tmp[:total_sum_min]= total_sum_min
+      @users << tmp
+    end
+
+    CSV.generate(options) do |csv|
+      csv << ['STTF', 'TTF', 'Projects', 'Name', 'Expected time to spend in office (work days - leave)*9', 'Expected productive hrs(weekly working days- Leave)*8(g)', 'Spent Hours in Office', 'Hours Logged In(i)', 'Hours not accounted for any project(g-i)/g']
+      @users.each do |user|
+        project_name_total = ''
+        expected_time_to_spend_in_office  = date_difference*9
+        expected_productive_time_to_in_office  = date_difference*8
+        total_hours_spend_in_office = 0
+        total_hours_logged_in = 0
+        if user[:projects].size >0
+
+          user[:projects].each do |user_project|
+
+
+            hour_logged_in_timesheet = Timesheet.all.where(:user_id => user[:id],date: options2[:start_date].to_date..options2[:end_date].to_date)
+            hour_logged_in_timesheet.each do |hour_logged_in_timesheet_individual|
+              tota_hour_logged_local = (hour_logged_in_timesheet_individual.hours*60+hour_logged_in_timesheet_individual.minutes)/60;
+              total_hours_logged_in = total_hours_logged_in +tota_hour_logged_local
+            end
+            attendance_hour_count_by_date = Attendance.all.where(:user_id => user[:id],checkin_date: options2[:start_date].to_date..options2[:end_date].to_date)
+            attendance_hour_count_by_date.each do |attendance_hour_count_by_date_individual|
+              if !attendance_hour_count_by_date_individual.total_hours.nil?
+                total_hours_spend_in_office = total_hours_spend_in_office+attendance_hour_count_by_date_individual.total_hours
+              end
+            end
+
+            leave_count_by_date = Leave.all.where(:user_id => user[:id],start_date: options2[:start_date].to_date..options2[:end_date].to_date)
+            leave_count_by_date.each do |leave_count_by_date_individual|
+              if leave_count_by_date_individual.end_date.nil?
+                expected_time_to_spend_in_office  = (date_difference-1)*9
+                expected_productive_time_to_in_office  = (date_difference-1)*8
+              else
+                date_diff_db = (leave_count_by_date_individual.end_date.to_date - leave_count_by_date_individual.start_date.to_date).to_i
+                expected_time_to_spend_in_office  = (date_difference-date_diff_db)*9
+                expected_productive_time_to_in_office  = (date_difference-date_diff_db)*8
+              end
+            end
+            if project_name_total.empty?
+              project_name_total =  user_project[:object].project_name.to_s
+            else
+              project_name_total = project_name_total+','+ user_project[:object].project_name.to_s
+            end
+          end
+          begin
+          hours_not_accounted_for_any_project = (expected_productive_time_to_in_office - total_hours_logged_in)/expected_productive_time_to_in_office
+          rescue Exception => exc
+            hours_not_accounted_for_any_project = 0;
+          end
+          csv <<[user[:sttf_name],user[:ttf_name],project_name_total,user[:name],expected_time_to_spend_in_office,expected_productive_time_to_in_office,ActionController::Base.helpers.number_with_precision(total_hours_spend_in_office, precision: 2) ,ActionController::Base.helpers.number_with_precision(total_hours_logged_in, precision: 2) ,ActionController::Base.helpers.number_to_percentage(hours_not_accounted_for_any_project, precision: 2)]
+        end
+      end
+    end
+  end
+
   def self.award_leave
     @robi_weekend = Weekend.where("name like ?", "%robi%").select(:id, :name).take
     User.active.each do |u|

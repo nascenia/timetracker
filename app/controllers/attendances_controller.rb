@@ -118,7 +118,7 @@ class AttendancesController < ApplicationController
     end
   end
 
-  def downloadz
+  def download
     @attendances = Attendance.last_six_months
 
     respond_to do |format|

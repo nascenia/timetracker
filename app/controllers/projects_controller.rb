@@ -167,6 +167,15 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def download
+    @users = User.all.order(:email)
+
+    respond_to do |format|
+      format.xls {send_data @users.to_csv_timesheet(start_date: params[:start_date], end_date: params[:end_date])}
+    end
+    end
+
+
   private
   # Using a private method to encapsulate the permissible parameters is
   # a good pattern since you'll be able to reuse the same permit

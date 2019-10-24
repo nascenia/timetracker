@@ -1,4 +1,5 @@
 module ApplicationHelper
+  include ActionView::Helpers::NumberHelper
   def copyright_year
     Time.zone.now.year
   end
