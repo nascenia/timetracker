@@ -215,8 +215,6 @@ class User < ActiveRecord::Base
         if user[:projects].size >0
 
           user[:projects].each do |user_project|
-
-
             hour_logged_in_timesheet = Timesheet.all.where(:user_id => user[:id],date: options2[:start_date].to_date..options2[:end_date].to_date)
             hour_logged_in_timesheet.each do |hour_logged_in_timesheet_individual|
               tota_hour_logged_local = (hour_logged_in_timesheet_individual.hours*60+hour_logged_in_timesheet_individual.minutes)/60;

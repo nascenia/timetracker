@@ -108,6 +108,8 @@
    }
    function reDirectToTimeSheet(i){
 
+       var x = document.getElementById("time_select").selectedIndex;
+       var y = document.getElementById("time_select").options;
        var timesheetIDNprojectID = document.getElementById("helloid"+i).name.split(',');
        window.location = ""+'/timesheets/' +
             +timesheetIDNprojectID[0]+
@@ -115,6 +117,7 @@
            +document.getElementById("dt2").value+
            '&start_date='+document.getElementById("dt1").value+
            '&project_id='+timesheetIDNprojectID[1]
+           +'&selected_index='+ y[x].index
    }
 
    $('#dt2').datepicker().on('changeDate', function (ev) {

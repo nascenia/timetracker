@@ -60,7 +60,7 @@
         <th>Member name</th>
         <th>Total hours</th>
         <% @users[0][:projects].each do |project| %>
-            <% if @total_minutes_project_wise[project[:object].id] > 60 %>
+            <% if @total_minutes_project_wise[project[:object].id] >= 60 %>
             <% @total_hours_project_wise[project[:object].id] += @total_minutes_project_wise[project[:object].id]/60%>
             <% @total_minutes_project_wise[project[:object].id] = @total_minutes_project_wise[project[:object].id]%60%>
             <%end %>
