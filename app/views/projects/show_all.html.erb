@@ -2,7 +2,7 @@
 <input class = "timesheet-date-picker" type="text" id="dt1" data-date-format="yyyy/mm/dd" value="<%=@start_date %>">
 <lebel > To </lebel>
 <input type="text" id="dt2" class = "timesheet-date-picker " data-date-format="yyyy/mm/dd" value="<%=@end_date %>">
-<select id = "time_select" onchange="fixedTimeSelect()" >
+<select id = "time_select" onchange="fixedTimeSelect()"  style="height:1.8em;">
     <%if @selected_index =="0" %>
         <option id= "today" value="0" selected="selected"></option>
     <%else %>
@@ -34,7 +34,7 @@
         <option id= "last_three_month" value="90">Last 90 days</option>
     <%end %>
 </select>
-<select id = "ttf_select" onchange="fixedTTFSelect()"  >
+<select id = "ttf_select" onchange="fixedTTFSelect()"  style="height:1.8em;" >
     <option id="all_ttf" value="-1" > All TTF</option>
     <% @ttf_list.each do |ttf_list| %>
         <option id=<%= ttf_list.email  %> value=<%=ttf_list.id  %>
@@ -43,7 +43,7 @@
                 <%end %>><%= ttf_list.name %></option>
     <% end %>
 </select>
-<select id = "project_select" onchange="fixedProjectsSelect()">
+<select id = "project_select" onchange="fixedProjectsSelect()"  style="height:1.8em;">
     <option id="all_ttf" value="-1" > All Projects</option>
     <% @project_list.each do |project_list| %>
         <option id=<%= project_list.id  %> value=<%=project_list.id  %>

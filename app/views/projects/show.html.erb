@@ -8,7 +8,7 @@
 <input class = "timesheet-date-picker" type="text" id="dt1" data-date-format="yyyy/mm/dd" value="<%=@start_date %>">
 <lebel > To </lebel>
 <input type="text" id="dt2" class = "timesheet-date-picker " data-date-format="yyyy/mm/dd" value="<%=@end_date %>">
-<select id = "time_select" onchange="fixedTimeSelect()" >
+<select id = "time_select" onchange="fixedTimeSelect()"  style="height:1.8em;">
     <%if @selected_index =="0" %>
         <option id= "today" value="0" selected="selected"></option>
     <%else %>
