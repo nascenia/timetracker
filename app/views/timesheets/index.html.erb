@@ -4,9 +4,9 @@
 <br>
 
 <input type="hidden" value="<%=@user.id %>" id="user_id">
-<input class = "timesheet-date-picker" type="text" id="dt1" data-date-format="yyyy/mm/dd" value="<%=@start_date %>">
+<input class = "timesheet-date-picker" type="text" id="dt1" data-date-format="yyyy/mm/dd" value="<%=@start_date %>" style="text-align:center;">
 <lebel > To </lebel>
-<input type="text" id="dt2" class = "timesheet-date-picker " data-date-format="yyyy/mm/dd" value="<%=@end_date %>">
+<input type="text" id="dt2" class = "timesheet-date-picker " data-date-format="yyyy/mm/dd" value="<%=@end_date %>" style="text-align:center;">
 <select id = "time_select" onchange="fixedTimeSelect()" style="height:1.8em;">
     <%if @selected_index =="0" %>
         <option id= "today" value="0" selected="selected"></option>
