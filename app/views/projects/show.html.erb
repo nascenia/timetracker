@@ -40,7 +40,9 @@
         <option id= "last_three_month" value="90">Last 90 days</option>
     <%end %>
 </select>
+<input type="button" value="Project Details xml" onclick="downloadXLSheet()">
 
+<br>
 <table id="timesheetprojecttable" style="width:100%">
     <tr>
         <th>Team Member</th>
@@ -79,7 +81,19 @@
     }
 </style>
 <script type="text/javascript">
-   function fixedTimeSelect() {
+
+
+    function downloadXLSheet() {
+        var timesheetIDNprojectID = document.getElementById("project_id").value;
+        var location = "/projects/download_projects.xls"+'?end_date='
+            +document.getElementById("dt2").value
+            +'&start_date='+document.getElementById("dt1").value
+            +'&project_id='+timesheetIDNprojectID
+        window.open(location)
+    }
+
+
+    function fixedTimeSelect() {
 
        var timesheetIDNprojectID = document.getElementById("project_id").value;
        var date_interval = document.getElementById("time_select").value;

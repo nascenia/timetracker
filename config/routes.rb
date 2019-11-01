@@ -54,6 +54,7 @@ Internal::Application.routes.draw do
     collection do
       get :show_all
       get :download
+      get :download_projects
     end
   end
 
