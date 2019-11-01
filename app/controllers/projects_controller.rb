@@ -179,7 +179,7 @@ class ProjectsController < ApplicationController
     @timesheets= Timesheet.all
 
     respond_to do |format|
-      format.xls {send_data @timesheets.to_csv_timesheet(start_date: params[:start_date], end_date: params[:end_date])}
+      format.xls {send_data @timesheets.to_csv_timesheet(start_date: params[:start_date], end_date: params[:end_date], project_id: params[:project_id])}
     end
     end
 

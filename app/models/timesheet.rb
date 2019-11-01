@@ -8,7 +8,8 @@ class Timesheet < ActiveRecord::Base
     options[:col_sep] = "\t"
 
     @user = User.all
-    @timesheets = Timesheet.all.where(date: options2[:start_date].tr("/", "-")..options2[:end_date].tr("/", "-")).order(date: :desc)
+    @timesheets = Timesheet.all.where(project_id: options2[:project_id],
+        date: options2[:start_date].tr("/", "-")..options2[:end_date].tr("/", "-")).order(date: :desc)
     options2[:end_date].tr("/", "-")
 
 
