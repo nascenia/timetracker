@@ -4,6 +4,17 @@ ActiveAdmin.register Attendance do
    filter :user, label: 'User', collection: proc { User.order(:name)}
    permit_params :user_id, :checkin_date, :in_time, :out_time, :total_hours, :parent_id
 
+   csv do
+     column :id
+     column (:name) { |a| a.user.name}
+     column :checkin_date
+     column :in_time
+     column :out_time
+     column :created_at
+     column :updated_at
+     column :total_hours
+   end
+
    after_create do |attendance|
 
      if params[:attendance]['out_time(4i)'].present? && params[:attendance]['out_time(5i)'].present?
