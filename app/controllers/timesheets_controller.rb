@@ -113,7 +113,12 @@ class TimesheetsController < ApplicationController
                             end
                             redirect_to root_path
                         else
-                            redirect_to timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
+                            if  params[:commit] == 'Submit and Add new'
+                                redirect_to new_timesheet_path
+                            else
+                                redirect_to timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
+
+                            end
                             end
                     else
                         flash[:notice] = 'You cant logged out from outside network'

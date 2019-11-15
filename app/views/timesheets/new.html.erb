@@ -88,13 +88,15 @@
     </div>
     <%if @total_hours != 0 && @total_mins !=0 %>
         <% if @is_from_attent == 1 %>
-            <%= f.submit "Create and Checkout" %>
+            <%= f.submit "Submit and Checkout" %>
 <!--            &nbsp;&nbsp;&nbsp;&nbsp;-->
             <%#= f.submit "Create" %>
         <%else %>
-            <%= f.submit "Create" %>
+            <%= f.submit "Submit" %>
         <%end %>
     <%end %>
+    <%= f.submit "Submit and Add new" %>
+<!--    <input type="button" value="Submit and Add new" >-->
 <% end %>
 <script type="text/javascript">
     $('#select-other-projects').hide();
