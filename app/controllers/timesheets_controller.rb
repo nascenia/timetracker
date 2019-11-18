@@ -111,9 +111,13 @@ class TimesheetsController < ApplicationController
                                     flash[:notice] = 'You did not log in today.'
                                 end
                             end
-                            redirect_to root_path
+                            if  params[:commit] == 'Submit and Add New'
+                                redirect_to new_timesheet_path
+                            else
+                                redirect_to root_path
+                            end
                         else
-                            if  params[:commit] == 'Submit and Add new'
+                            if  params[:commit] == 'Submit and Add New'
                                 redirect_to new_timesheet_path
                             else
                                 redirect_to timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
