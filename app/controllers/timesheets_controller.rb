@@ -170,6 +170,7 @@ class TimesheetsController < ApplicationController
         @timesheets = Timesheet.find(params[:id])
         if timesheet_params[:date].to_date>=Time.now.to_date-35
             if @timesheets.save && @timesheets.update(timesheet_params)
+                flash[:notice] = 'Data updated sccessfully'
                 redirect_to timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
             else
                 flash[:alert] = 'failed'

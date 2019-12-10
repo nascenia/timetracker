@@ -99,6 +99,8 @@ class ProjectsController < ApplicationController
         else
           @total_hours_project_wise[project.id] =0
           @total_minutes_project_wise[project.id] =0
+          @total_hours_project_wise[project.id] += hours
+          @total_minutes_project_wise[project.id] += minutes
         end
 
         if minutes >= 60
