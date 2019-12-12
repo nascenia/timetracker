@@ -86,6 +86,12 @@
             </p>
         </div>
     </div>
+
+    <div class="col-md-6" style="clear: left;">
+
+        <div class="row">
+            <div class="col-md-6">
+        <p>
     <%if @total_hours != 0 && @total_mins !=0 %>
         <% if @is_from_attent == 1 %>
             <%= f.submit "Submit and Checkout" %>
@@ -95,7 +101,17 @@
             <%= f.submit "Submit" %>
         <%end %>
     <%end %>
-    &nbsp&nbsp&nbsp&nbsp&nbsp<%= f.submit "Submit and Add New" %>
+
+        </p>
+            </div>
+            <div class="col-md-6">
+            <p>
+    <%= f.submit "Submit and Add New" %>
+        </p>
+
+    </div>
+    </div>
+    </div>
 <!--    <input type="button" value="Submit and Add new" >-->
 <% end %>
 <script type="text/javascript">
