@@ -133,7 +133,7 @@
         return n
     }
 
-    $('#dt2').datepicker().on('changeDate', function (ev) {
+    $('#dt2').datepicker({startDate: document.getElementById("dt1").value}).on('changeDate', function (ev) {
         $('#dt2').change();
 
         var timesheetIDNuserID = document.getElementById("user_id").value;

@@ -1,4 +1,5 @@
 <h3>Projects Summary</h3><br>
+
 <input class = "timesheet-date-picker" type="text" id="dt1" data-date-format="yyyy/mm/dd" value="<%=@start_date %>" style="text-align:center;">
 <lebel > To </lebel>
 <input type="text" id="dt2" class = "timesheet-date-picker " data-date-format="yyyy/mm/dd" value="<%=@end_date %>" style="text-align:center;">
@@ -172,9 +173,8 @@
         return n
     }
 
-    $('#dt2').datepicker().on('changeDate', function (ev) {
+    $('#dt2').datepicker({startDate: document.getElementById("dt1").value}).on('changeDate', function (ev) {
         $('#dt2').change();
-
         var ttf_id = document.getElementById("ttf_select").value;
         var project_id = document.getElementById("project_select").value;
         var x = document.getElementById("time_select").selectedIndex;
@@ -232,6 +232,19 @@
             }
         });
     });
+    // $('#start').datepicker({
+    //     onSelect: function(dateText, inst){
+    //         $('#end').datepicker('option', 'minDate', new Date(dateText));
+    //     },
+    // });
+
+    // $('#dt2').datepicker({
+    //     onSelect: function(dateText, inst){
+    //         alert("HI HELLO");
+    //         $('#dt1').datepicker('option', 'maxDate', new Date(dateText));
+    //     }
+    // });
+
 </script>
 <style>
     table {

@@ -134,7 +134,7 @@
            +'&selected_index='+ y[x].index
    }
 
-   $('#dt2').datepicker().on('changeDate', function (ev) {
+   $('#dt2').datepicker({startDate: document.getElementById("dt1").value}).on('changeDate', function (ev) {
        $('#dt2').change();
 
        var timesheetIDNprojectID = document.getElementById("project_id").value;
