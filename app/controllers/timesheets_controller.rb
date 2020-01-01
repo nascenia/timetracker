@@ -90,7 +90,19 @@ class TimesheetsController < ApplicationController
         @timesheet = Timesheet.new
     end
     def create
+
+        begin
+        sumhours = Timesheet.where(user_id: current_user.id,date: timesheet_params[:date].tr("/", "-")).sum(:hours)
+        if (sumhours+timesheet_params[:hour]<14)
+            redirect_to new_timesheet_path
+        end
+        rescue Exception => e # Never do this!
+            print e
+        end
+
         @timesheet = Timesheet.create(timesheet_params)
+
+
         @timesheet.user_id = current_user.id
         if(@timesheet.date.to_date>=Time.now.to_date-35)
             if @timesheet.date.to_date <= Time.now.to_date
@@ -167,6 +179,16 @@ class TimesheetsController < ApplicationController
     end
 
     def update
+
+        begin
+            sumhours = Timesheet.where(user_id: current_user.id,date: params[:date].tr("/", "-")).sum(:hours)
+            if (sumhours+params[:hour]<14)
+                redirect_to new_timesheet_path
+            end
+        rescue Exception => e # Never do this!
+            print e
+        end
+
         @timesheets = Timesheet.find(params[:id])
         if timesheet_params[:date].to_date>=Time.now.to_date-35
             if @timesheets.save && @timesheets.update(timesheet_params)
