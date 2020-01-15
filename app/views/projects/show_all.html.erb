@@ -55,6 +55,7 @@
 </select>
 <%#= link_to 'Download users CSV', download_projects_path(:format => :xls,start_date: (Time.now-0.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"), ),title: 'All users', target: '_blank'%>
 <input type="button" value="Download timesheet" onclick="downloadXLSheet()">
+<input type="button" value="Download Monthly Report" onclick="downloadMonthlyReport()">
 <table style="width:100%" id="projects-list-table-details">
     <thead>
     <tr>
@@ -116,6 +117,13 @@
 
     function downloadXLSheet() {
         var location = "/projects/download.xls"+'?end_date='
+            +document.getElementById("dt2").value
+            +'&start_date='+document.getElementById("dt1").value
+        window.open(location)
+    }
+
+    function downloadMonthlyReport() {
+        var location = "/projects/monthly_report.xls"+'?end_date='
             +document.getElementById("dt2").value
             +'&start_date='+document.getElementById("dt1").value
         window.open(location)

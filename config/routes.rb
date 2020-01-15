@@ -55,6 +55,7 @@ Internal::Application.routes.draw do
       get :show_all
       get :download
       get :download_projects
+      get :monthly_report
     end
   end
 

@@ -177,11 +177,11 @@ class ProjectsController < ApplicationController
     end
     end
 
-  def download_projects
-    @timesheets= Timesheet.all
+  def monthly_report
+    @users = User.all.order(:email)
 
     respond_to do |format|
-      format.xls {send_data @timesheets.to_csv_timesheet(start_date: params[:start_date], end_date: params[:end_date], project_id: params[:project_id])}
+      format.xls {send_data @users.to_csv_monthly_report(start_date: params[:start_date], end_date: params[:end_date])}
     end
     end
 

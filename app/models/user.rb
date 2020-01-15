@@ -255,6 +255,83 @@ class User < ActiveRecord::Base
     end
   end
 
+  def self.to_csv_monthly_report(options2= {})
+    options = {}
+    options[:col_sep] = "\t"
+
+    @total_hours_project_wise = {}
+    @total_minutes_project_wise = {}
+    @ttf_list = User.active.where(role: 2)
+    @sttf_list = User.active.where(role: 3)
+    @member_list = User.active.where(role: 1)
+    @all_user = User.active
+    projects = Project.all.where(is_active: true)
+    @users = []
+
+    options2[:end_date].tr("/", "-")
+    options2[:start_date].tr("/", "-")
+    date_difference = (options2[:end_date].to_date - options2[:start_date].to_date).to_i
+
+    User.active.each do |user|
+      begin
+      ttf_name = @all_user.find(user.ttf_id).name
+      rescue Exception => exc
+        ttf_name = ''
+      end
+      begin
+        sttf_name = @all_user.find(user.ttf_id).name
+      rescue Exception => exc
+        sttf_name = ''
+      end
+      tmp = { id:user.id, name: user.name , projects: [], total_sum: 0, total_sum_min: 0,ttf_name: ttf_name ,sttf_name: sttf_name}
+      total_sum = 0
+      total_sum_min = 0
+      projects.each do |project|
+        t = user.timesheets.where(project: project,date: options2[:start_date]..options2[:end_date])
+
+        hours = t.sum(:hours)
+        minutes = t.sum(:minutes)
+        if @total_hours_project_wise[project.id].present?
+          @total_hours_project_wise[project.id] += hours
+          @total_minutes_project_wise[project.id] += minutes
+        else
+          @total_hours_project_wise[project.id] =0
+          @total_minutes_project_wise[project.id] =0
+        end
+
+        if minutes >= 60
+          hours += minutes/60
+          minutes = minutes%60
+        end
+        total_sum+= hours
+        total_sum_min+=minutes
+        if(hours > 0 || minutes > 0)
+          tmp[:projects] << { object: project, hours: hours, minutes: minutes }
+        end
+      end
+      if total_sum_min >= 60
+        total_sum += total_sum_min/60
+        total_sum_min = total_sum_min%60
+      end
+      tmp[:total_sum]= total_sum
+      tmp[:total_sum_min]= total_sum_min
+      @users << tmp
+    end
+
+    CSV.generate(options) do |csv|
+      csv << ['Name','Projects','Hours' ]
+      @users.each do |user|
+        if user[:projects].size >0
+
+          user[:projects].each do |user_project|
+            totaltimeinhour = user_project[:hours].to_i+(user_project[:minutes].to_f/60)
+            csv <<[user[:name],user_project[:object].project_name.to_s,ActionController::Base.helpers.number_with_precision(totaltimeinhour, precision: 2)]
+          end
+        end
+      end
+    end
+  end
+
   def self.award_leave
     @robi_weekend = Weekend.where("name like ?", "%robi%").select(:id, :name).take
     User.active.each do |u|
