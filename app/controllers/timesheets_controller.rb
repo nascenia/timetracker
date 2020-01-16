@@ -104,6 +104,11 @@ class TimesheetsController < ApplicationController
             print e
         end
 
+        if timesheet_params[:hours] == "0" && timesheet_params[:minutes] == "0"
+            flash[:alert] = 'Hours and Minutes cannot be 0'
+            redirect_to new_timesheet_path
+            return
+        end
         @timesheet = Timesheet.create(timesheet_params)
 
 
