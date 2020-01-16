@@ -193,8 +193,14 @@ class TimesheetsController < ApplicationController
 
         begin
             sumhours = Timesheet.where(user_id: current_user.id,date: timesheet_params[:date].tr("/", "-")).sum(:hours).to_i
+            if sumhours>= 14
+                flash[:alert] = 'You are not allowed to enter more than 14 hours'
+                session[:is_from_timesheet_edit] = 0
+                redirect_to new_timesheet_path
+                return
+            end
             total_sum  = sumhours+timesheet_params[:hours].to_i
-            if total_sum>=15  && !session[:is_from_timesheet_edit] == 1
+            if  total_sum>=15  && !session[:is_from_timesheet_edit] == 1
                 flash[:alert] = 'You are not allowed to enter more than 14 hours'
                 session[:is_from_timesheet_edit] = 0
                 redirect_to new_timesheet_path
