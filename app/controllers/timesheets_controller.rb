@@ -181,7 +181,7 @@ class TimesheetsController < ApplicationController
                  total_min = @total_hours*60
                  @total_mins = (total_min%60)/15
              end
-             session[:is_from_timesheet_edit] = 1
+             session[:is_from_timesheet_edit] = @timesheets.date.to_date
         else
             flash[:alert] = 'You cannot edit before 35 days'
             redirect_to timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
@@ -193,14 +193,13 @@ class TimesheetsController < ApplicationController
 
         begin
             sumhours = Timesheet.where(user_id: current_user.id,date: timesheet_params[:date].tr("/", "-")).sum(:hours).to_i
-            if sumhours>= 14
-                flash[:alert] = 'You are not allowed to enter more than 14 hours'
-                session[:is_from_timesheet_edit] = 0
-                redirect_to new_timesheet_path
-                return
+            if session[:is_from_timesheet_edit].to_s != timesheet_params[:date]
+                total_sum  = sumhours+timesheet_params[:hours].to_i
+            else
+                total_sum = sumhours
             end
-            total_sum  = sumhours+timesheet_params[:hours].to_i
-            if  total_sum>=15  && !session[:is_from_timesheet_edit] == 1
+
+            if  total_sum>=15
                 flash[:alert] = 'You are not allowed to enter more than 14 hours'
                 session[:is_from_timesheet_edit] = 0
                 redirect_to new_timesheet_path
