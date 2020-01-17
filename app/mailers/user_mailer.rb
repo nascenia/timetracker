@@ -83,83 +83,83 @@ class UserMailer < ActionMailer::Base
 
 
   def send_approval_or_rejection_notification_of_employee_registration_to_hr(user)
-  #   @user = user
-  #   subject = 'Employee Registration'
-  #   @title = 'A employee registration form has just been submited.'
-  #   mail to: CONFIG['leave_admin'], subject: subject
-  #   true
-  # rescue => e
-  #   logger.error e.message
-  #   false
+    @user = user
+    subject = 'Employee Registration'
+    @title = 'A employee registration form has just been submited.'
+    mail to: CONFIG['leave_admin'], subject: subject
+    true
+  rescue => e
+    logger.error e.message
+    false
     true
   end
 
   def send_award_leave_notification_to_user(user, hours)
-    # @user = user
-    # @hours = hours
-    # subject = 'Leave Awarded'
-    # mail to: @user.email, subject: subject
+    @user = user
+    @hours = hours
+    subject = 'Leave Awarded'
+    mail to: @user.email, subject: subject
     true
   end
 
   def send_unannounced_leave_notification_to_user(leave)
-  #   @leave = leave
-  #   @user = @leave.user
-  #
-  #   if @leave.half_day == Leave::FIRST_QUARTER
-  #     subject = '2 hours of unannounced leave'
-  #     @leave_hour = '2'
-  #   elsif @leave.half_day == Leave::FIRST_HALF
-  #     subject = 'Half day of unannounced leave'
-  #     @leave_hour = '4'
-  #   else
-  #     subject = 'Full day of unannounced leave'
-  #     @leave_hour = '8'
-  #   end
-  #
-  #   @greetings = ''
-  #
-  #   mail to: @user.email, subject: subject
-  #   true
-  # rescue => e
-  #   logger.error e.message
-  #   false
+    @leave = leave
+    @user = @leave.user
+
+    if @leave.half_day == Leave::FIRST_QUARTER
+      subject = '2 hours of unannounced leave'
+      @leave_hour = '2'
+    elsif @leave.half_day == Leave::FIRST_HALF
+      subject = 'Half day of unannounced leave'
+      @leave_hour = '4'
+    else
+      subject = 'Full day of unannounced leave'
+      @leave_hour = '8'
+    end
+
+    @greetings = ''
+
+    mail to: @user.email, subject: subject
+    true
+  rescue => e
+    logger.error e.message
+    false
     true
   end
 
   def send_unannounced_leave_notification_to_admin(leave, email)
-  #   @leave = leave
-  #   @user = @leave.user
-  #   if @leave.half_day == Leave::FIRST_QUARTER
-  #     subject = "2 hours of unannounced leave by #{@user.name}"
-  #     @leave_hour = '2'
-  #   elsif @leave.half_day == Leave::FIRST_HALF
-  #     subject = "Half day of unannounced leave by #{@user.name}"
-  #     @leave_hour = '4'
-  #   else
-  #     subject = "Full day of unannounced leave by #{@user.name}"
-  #     @leave_hour = '8'
-  #   end
-  #   @greetings = ''
-  #   mail to: email, subject: subject
-  #   true
-  # rescue => e
-  #   logger.error e.message
-  #   false
+    @leave = leave
+    @user = @leave.user
+    if @leave.half_day == Leave::FIRST_QUARTER
+      subject = "2 hours of unannounced leave by #{@user.name}"
+      @leave_hour = '2'
+    elsif @leave.half_day == Leave::FIRST_HALF
+      subject = "Half day of unannounced leave by #{@user.name}"
+      @leave_hour = '4'
+    else
+      subject = "Full day of unannounced leave by #{@user.name}"
+      @leave_hour = '8'
+    end
+    @greetings = ''
+    mail to: email, subject: subject
+    true
+  rescue => e
+    logger.error e.message
+    false
     true
   end
 
   def send_leave_type_change_notification(leave)
-  #   @leave = leave
-  #   @user = @leave.user
-  #   subject = "Unannounced leave Converted to #{Leave::LEAVE_TYPES.to_h.key(@leave.leave_type)}"
-  #   @greetings = '- Have a nice day!'
-  #
-  #   mail to: @user.email, subject: subject
-  #   true
-  # rescue => e
-  #   logger.error e.message
-  #   false
+    @leave = leave
+    @user = @leave.user
+    subject = "Unannounced leave Converted to #{Leave::LEAVE_TYPES.to_h.key(@leave.leave_type)}"
+    @greetings = '- Have a nice day!'
+
+    mail to: @user.email, subject: subject
+    true
+  rescue => e
+    logger.error e.message
+    false
     true
   end
 end
