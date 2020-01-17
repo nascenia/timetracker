@@ -202,7 +202,7 @@ class TimesheetsController < ApplicationController
             if  total_sum>=15
                 flash[:alert] = 'You are not allowed to enter more than 14 hours'
                 session[:is_from_timesheet_edit] = 0
-                redirect_to new_timesheet_path
+                redirect_to edit_timesheet_path(timesheet_params)
                 return
             end
         rescue Exception => e # Never do this!
