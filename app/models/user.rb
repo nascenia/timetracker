@@ -227,17 +227,17 @@ class User < ActiveRecord::Base
               end
             end
 
-            leave_count_by_date = Leave.all.where(:user_id => user[:id],start_date: options2[:start_date].to_date..options2[:end_date].to_date)
-            leave_count_by_date.each do |leave_count_by_date_individual|
-              if leave_count_by_date_individual.end_date.nil?
-                expected_time_to_spend_in_office  = (date_difference-1)*9
-                expected_productive_time_to_in_office  = (date_difference-1)*8
-              else
-                date_diff_db = (leave_count_by_date_individual.end_date.to_date - leave_count_by_date_individual.start_date.to_date).to_i
-                expected_time_to_spend_in_office  = (date_difference-date_diff_db)*9
-                expected_productive_time_to_in_office  = (date_difference-date_diff_db)*8
-              end
-            end
+            # leave_count_by_date = Leave.all.where(:user_id => user[:id],start_date: options2[:start_date].to_date..options2[:end_date].to_date)
+            # leave_count_by_date.each do |leave_count_by_date_individual|
+            #   if leave_count_by_date_individual.end_date.nil?
+            #     expected_time_to_spend_in_office  = (date_difference-1)*9
+            #     expected_productive_time_to_in_office  = (date_difference-1)*8
+            #   else
+            #     date_diff_db = (leave_count_by_date_individual.end_date.to_date - leave_count_by_date_individual.start_date.to_date).to_i
+            #     expected_time_to_spend_in_office  = (date_difference-date_diff_db)*9
+            #     expected_productive_time_to_in_office  = (date_difference-date_diff_db)*8
+            #   end
+            # end
             if project_name_total.empty?
               project_name_total =  user_project[:object].project_name.to_s
             else
@@ -245,7 +245,7 @@ class User < ActiveRecord::Base
             end
           end
           begin
-          hours_not_accounted_for_any_project = (expected_productive_time_to_in_office - total_hours_logged_in)/expected_productive_time_to_in_office
+          hours_not_accounted_for_any_project = ActionController::Base.helpers.number_with_precision((expected_productive_time_to_in_office - total_hours_logged_in).to_f/expected_productive_time_to_in_office).to_f
           rescue Exception => exc
             hours_not_accounted_for_any_project = 0;
           end
