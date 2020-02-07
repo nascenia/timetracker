@@ -216,10 +216,9 @@ class User < ActiveRecord::Base
         attendance_hour_count_by_date = Attendance.all.where(:user_id => user[:id],checkin_date: options2[:start_date].to_date..options2[:end_date].to_date)
         attendance_hour_count_by_date.each do |attendance_hour_count_by_date_individual|
           if !attendance_hour_count_by_date_individual.total_hours.nil?
-            total_hours_spend_in_office = attendance_hour_count_by_date_individual.total_hours
+            total_hours_spend_in_office = total_hours_spend_in_office+attendance_hour_count_by_date_individual.total_hours
           end
         end
-
         if user[:projects].size >0
 
           user[:projects].each do |user_project|
