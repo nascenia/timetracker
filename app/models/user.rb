@@ -156,7 +156,7 @@ class User < ActiveRecord::Base
 
     options2[:end_date].tr("/", "-")
     options2[:start_date].tr("/", "-")
-    date_difference = (options2[:end_date].to_date - options2[:start_date].to_date).to_i +1
+    date_difference = (((options2[:end_date].to_date - options2[:start_date].to_date).to_i)+ +1).to_i
 
     User.active.each do |user|
       begin
