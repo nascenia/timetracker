@@ -223,21 +223,21 @@ class User < ActiveRecord::Base
             attendance_hour_count_by_date = Attendance.all.where(:user_id => user[:id],checkin_date: options2[:start_date].to_date..options2[:end_date].to_date)
             attendance_hour_count_by_date.each do |attendance_hour_count_by_date_individual|
               if !attendance_hour_count_by_date_individual.total_hours.nil?
-                total_hours_spend_in_office = total_hours_spend_in_office+attendance_hour_count_by_date_individual.total_hours
+                total_hours_spend_in_office = attendance_hour_count_by_date_individual.total_hours
               end
             end
 
-            # leave_count_by_date = Leave.all.where(:user_id => user[:id],start_date: options2[:start_date].to_date..options2[:end_date].to_date)
-            # leave_count_by_date.each do |leave_count_by_date_individual|
-            #   if leave_count_by_date_individual.end_date.nil?
-            #     expected_time_to_spend_in_office  = (date_difference-1)*9
-            #     expected_productive_time_to_in_office  = (date_difference-1)*8
-            #   else
-            #     date_diff_db = (leave_count_by_date_individual.end_date.to_date - leave_count_by_date_individual.start_date.to_date).to_i
-            #     expected_time_to_spend_in_office  = (date_difference-date_diff_db)*9
-            #     expected_productive_time_to_in_office  = (date_difference-date_diff_db)*8
-            #   end
-            # end
+            leave_count_by_date = Leave.all.where(:user_id => user[:id],start_date: options2[:start_date].to_date..options2[:end_date].to_date)
+            leave_count_by_date.each do |leave_count_by_date_individual|
+              if leave_count_by_date_individual.end_date.nil?
+                expected_time_to_spend_in_office  = (date_difference-1)*9
+                expected_productive_time_to_in_office  = (date_difference-1)*8
+              else
+                date_diff_db = (leave_count_by_date_individual.end_date.to_date - leave_count_by_date_individual.start_date.to_date).to_i
+                expected_time_to_spend_in_office  = (date_difference-date_diff_db)*9
+                expected_productive_time_to_in_office  = (date_difference-date_diff_db)*8
+              end
+            end
             if project_name_total.empty?
               project_name_total =  user_project[:object].project_name.to_s
             else
@@ -249,7 +249,7 @@ class User < ActiveRecord::Base
           rescue Exception => exc
             hours_not_accounted_for_any_project = 0;
           end
-          csv <<[user[:sttf_name],user[:ttf_name],project_name_total,user[:name],expected_time_to_spend_in_office,expected_productive_time_to_in_office,ActionController::Base.helpers.number_with_precision(total_hours_spend_in_office, precision: 2) ,ActionController::Base.helpers.number_with_precision(total_hours_logged_in, precision: 2) ,ActionController::Base.helpers.number_to_percentage(hours_not_accounted_for_any_project, precision: 2)]
+          csv <<[user[:sttf_name],user[:ttf_name],project_name_total,user[:name],expected_time_to_spend_in_office,expected_productive_time_to_in_office,ActionController::Base.helpers.number_with_precision(total_hours_spend_in_office, precision: 2) ,ActionController::Base.helpers.number_with_precision(total_hours_logged_in, precision: 2) ,ActionController::Base.helpers.number_to_percentage(hours_not_accounted_for_any_project*100, precision: 2)]
         end
       end
     end
