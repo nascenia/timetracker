@@ -156,7 +156,7 @@ class User < ActiveRecord::Base
 
     options2[:end_date].tr("/", "-")
     options2[:start_date].tr("/", "-")
-    date_difference = (options2[:end_date].to_date - options2[:start_date].to_date).to_i
+    date_difference = (options2[:end_date].to_date - options2[:start_date].to_date).to_i +1
 
     User.active.each do |user|
       begin
@@ -208,7 +208,6 @@ class User < ActiveRecord::Base
       csv << [ 'TTF', 'Projects', 'Name', 'Expected time to spend in office (work days - leave)*9', 'Expected productive hrs(weekly working days- Leave)*8(g)', 'Spent Hours in Office', 'Hours Logged In(i)', 'Hours not accounted for any project(g-i)/g']
       @users.each do |user|
         project_name_total = ''
-        date_difference = date_difference+1
         expected_time_to_spend_in_office  = date_difference*9
         expected_productive_time_to_in_office  = date_difference*8
         total_hours_spend_in_office = 0
@@ -225,7 +224,6 @@ class User < ActiveRecord::Base
           tota_hour_logged_local = (hour_logged_in_timesheet_individual.hours*60+hour_logged_in_timesheet_individual.minutes)/60;
           total_hours_logged_in = total_hours_logged_in +tota_hour_logged_local
         end
-
         if user[:projects].size >0
 
           user[:projects].each do |user_project|
@@ -233,8 +231,8 @@ class User < ActiveRecord::Base
             leave_count_by_date = Leave.all.where(:user_id => user[:id],start_date: options2[:start_date].to_date..options2[:end_date].to_date)
             leave_count_by_date.each do |leave_count_by_date_individual|
               if leave_count_by_date_individual.end_date.nil?
-                expected_time_to_spend_in_office  = (date_difference)*9
-                expected_productive_time_to_in_office  = (date_difference)*8
+                expected_time_to_spend_in_office  = (date_difference-1)*9
+                expected_productive_time_to_in_office  = (date_difference-1)*8
               else
                 date_diff_db = (leave_count_by_date_individual.end_date.to_date - leave_count_by_date_individual.start_date.to_date).to_i
                 expected_time_to_spend_in_office  = (date_difference-date_diff_db)*9
