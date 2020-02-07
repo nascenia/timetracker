@@ -224,20 +224,22 @@ class User < ActiveRecord::Base
           tota_hour_logged_local = (hour_logged_in_timesheet_individual.hours*60+hour_logged_in_timesheet_individual.minutes)/60;
           total_hours_logged_in = total_hours_logged_in +tota_hour_logged_local
         end
+
+
+        leave_count_by_date = Leave.all.where(:user_id => user[:id],start_date: options2[:start_date].to_date..options2[:end_date].to_date)
+        leave_count_by_date.each do |leave_count_by_date_individual|
+          if leave_count_by_date_individual.end_date.nil?
+            expected_time_to_spend_in_office  = (date_difference-1)*9
+            expected_productive_time_to_in_office  = (date_difference-1)*8
+          else
+            date_diff_db = (leave_count_by_date_individual.end_date.to_date - leave_count_by_date_individual.start_date.to_date).to_i
+            expected_time_to_spend_in_office  = (date_difference-date_diff_db)*9
+            expected_productive_time_to_in_office  = (date_difference-date_diff_db)*8
+          end
         if user[:projects].size >0
 
           user[:projects].each do |user_project|
 
-            leave_count_by_date = Leave.all.where(:user_id => user[:id],start_date: options2[:start_date].to_date..options2[:end_date].to_date)
-            leave_count_by_date.each do |leave_count_by_date_individual|
-              if leave_count_by_date_individual.end_date.nil?
-                expected_time_to_spend_in_office  = (date_difference-1)*9
-                expected_productive_time_to_in_office  = (date_difference-1)*8
-              else
-                date_diff_db = (leave_count_by_date_individual.end_date.to_date - leave_count_by_date_individual.start_date.to_date).to_i
-                expected_time_to_spend_in_office  = (date_difference-date_diff_db)*9
-                expected_productive_time_to_in_office  = (date_difference-date_diff_db)*8
-              end
             end
             if project_name_total.empty?
               project_name_total =  user_project[:object].project_name.to_s
