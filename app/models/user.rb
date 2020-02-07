@@ -219,21 +219,21 @@ class User < ActiveRecord::Base
             total_hours_spend_in_office = total_hours_spend_in_office+attendance_hour_count_by_date_individual.total_hours
           end
         end
+        hour_logged_in_timesheet = Timesheet.all.where(:user_id => user[:id],date: options2[:start_date].to_date..options2[:end_date].to_date)
+        hour_logged_in_timesheet.each do |hour_logged_in_timesheet_individual|
+          tota_hour_logged_local = (hour_logged_in_timesheet_individual.hours*60+hour_logged_in_timesheet_individual.minutes)/60;
+          total_hours_logged_in = total_hours_logged_in +tota_hour_logged_local
+        end
+
         if user[:projects].size >0
 
           user[:projects].each do |user_project|
-            hour_logged_in_timesheet = Timesheet.all.where(:user_id => user[:id],date: options2[:start_date].to_date..options2[:end_date].to_date)
-            hour_logged_in_timesheet.each do |hour_logged_in_timesheet_individual|
-              tota_hour_logged_local = (hour_logged_in_timesheet_individual.hours*60+hour_logged_in_timesheet_individual.minutes)/60;
-              total_hours_logged_in = total_hours_logged_in +tota_hour_logged_local
-            end
-
 
             leave_count_by_date = Leave.all.where(:user_id => user[:id],start_date: options2[:start_date].to_date..options2[:end_date].to_date)
             leave_count_by_date.each do |leave_count_by_date_individual|
               if leave_count_by_date_individual.end_date.nil?
-                expected_time_to_spend_in_office  = (date_difference-1)*9
-                expected_productive_time_to_in_office  = (date_difference-1)*8
+                expected_time_to_spend_in_office  = (date_difference)*9
+                expected_productive_time_to_in_office  = (date_difference)*8
               else
                 date_diff_db = (leave_count_by_date_individual.end_date.to_date - leave_count_by_date_individual.start_date.to_date).to_i
                 expected_time_to_spend_in_office  = (date_difference-date_diff_db)*9
