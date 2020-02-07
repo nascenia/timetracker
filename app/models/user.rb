@@ -250,7 +250,7 @@ class User < ActiveRecord::Base
           rescue Exception => exc
             hours_not_accounted_for_any_project = 0;
           end
-          csv <<[user[:ttf_name],project_name_total,user[:name],expected_time_to_spend_in_office,expected_productive_time_to_in_office,ActionController::Base.helpers.number_with_precision(total_hours_spend_in_office, precision: 2) ,ActionController::Base.helpers.number_with_precision(total_hours_logged_in, precision: 2) ,ActionController::Base.helpers.number_to_percentage(hours_not_accounted_for_any_project*100)]
+          csv <<[user[:ttf_name],project_name_total,user[:name],expected_time_to_spend_in_office,expected_productive_time_to_in_office,ActionController::Base.helpers.number_with_precision(total_hours_spend_in_office, precision: 2) ,ActionController::Base.helpers.number_with_precision(total_hours_logged_in, precision: 2) ,ActionController::Base.helpers.number_to_percentage(hours_not_accounted_for_any_project*100, precision: 2)]
         end
       end
     end
