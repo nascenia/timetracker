@@ -208,6 +208,7 @@ class User < ActiveRecord::Base
       csv << [ 'TTF', 'Projects', 'Name', 'Expected time to spend in office (work days - leave)*9', 'Expected productive hrs(weekly working days- Leave)*8(g)', 'Spent Hours in Office', 'Hours Logged In(i)', 'Hours not accounted for any project(g-i)/g']
       @users.each do |user|
         project_name_total = ''
+        date_difference = date_difference+1
         expected_time_to_spend_in_office  = date_difference*9
         expected_productive_time_to_in_office  = date_difference*8
         total_hours_spend_in_office = 0
