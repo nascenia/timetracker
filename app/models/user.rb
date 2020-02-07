@@ -205,13 +205,21 @@ class User < ActiveRecord::Base
     end
 
     CSV.generate(options) do |csv|
-      csv << ['STTF', 'TTF', 'Projects', 'Name', 'Expected time to spend in office (work days - leave)*9', 'Expected productive hrs(weekly working days- Leave)*8(g)', 'Spent Hours in Office', 'Hours Logged In(i)', 'Hours not accounted for any project(g-i)/g']
+      csv << [ 'TTF', 'Projects', 'Name', 'Expected time to spend in office (work days - leave)*9', 'Expected productive hrs(weekly working days- Leave)*8(g)', 'Spent Hours in Office', 'Hours Logged In(i)', 'Hours not accounted for any project(g-i)/g']
       @users.each do |user|
         project_name_total = ''
         expected_time_to_spend_in_office  = date_difference*9
         expected_productive_time_to_in_office  = date_difference*8
         total_hours_spend_in_office = 0
         total_hours_logged_in = 0
+
+        attendance_hour_count_by_date = Attendance.all.where(:user_id => user[:id],checkin_date: options2[:start_date].to_date..options2[:end_date].to_date)
+        attendance_hour_count_by_date.each do |attendance_hour_count_by_date_individual|
+          if !attendance_hour_count_by_date_individual.total_hours.nil?
+            total_hours_spend_in_office = attendance_hour_count_by_date_individual.total_hours
+          end
+        end
+
         if user[:projects].size >0
 
           user[:projects].each do |user_project|
@@ -220,12 +228,7 @@ class User < ActiveRecord::Base
               tota_hour_logged_local = (hour_logged_in_timesheet_individual.hours*60+hour_logged_in_timesheet_individual.minutes)/60;
               total_hours_logged_in = total_hours_logged_in +tota_hour_logged_local
             end
-            attendance_hour_count_by_date = Attendance.all.where(:user_id => user[:id],checkin_date: options2[:start_date].to_date..options2[:end_date].to_date)
-            attendance_hour_count_by_date.each do |attendance_hour_count_by_date_individual|
-              if !attendance_hour_count_by_date_individual.total_hours.nil?
-                total_hours_spend_in_office = attendance_hour_count_by_date_individual.total_hours
-              end
-            end
+
 
             leave_count_by_date = Leave.all.where(:user_id => user[:id],start_date: options2[:start_date].to_date..options2[:end_date].to_date)
             leave_count_by_date.each do |leave_count_by_date_individual|
@@ -249,7 +252,7 @@ class User < ActiveRecord::Base
           rescue Exception => exc
             hours_not_accounted_for_any_project = 0;
           end
-          csv <<[user[:sttf_name],user[:ttf_name],project_name_total,user[:name],expected_time_to_spend_in_office,expected_productive_time_to_in_office,ActionController::Base.helpers.number_with_precision(total_hours_spend_in_office, precision: 2) ,ActionController::Base.helpers.number_with_precision(total_hours_logged_in, precision: 2) ,ActionController::Base.helpers.number_to_percentage(hours_not_accounted_for_any_project*100, precision: 2)]
+          csv <<[user[:ttf_name],project_name_total,user[:name],expected_time_to_spend_in_office,expected_productive_time_to_in_office,ActionController::Base.helpers.number_with_precision(total_hours_spend_in_office, precision: 2) ,ActionController::Base.helpers.number_with_precision(total_hours_logged_in, precision: 2) ,ActionController::Base.helpers.number_to_percentage(hours_not_accounted_for_any_project*100, precision: 2)]
         end
       end
     end
