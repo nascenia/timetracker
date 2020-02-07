@@ -221,8 +221,8 @@ class User < ActiveRecord::Base
         end
         hour_logged_in_timesheet = Timesheet.all.where(:user_id => user[:id],date: options2[:start_date].to_date..options2[:end_date].to_date)
         hour_logged_in_timesheet.each do |hour_logged_in_timesheet_individual|
-          tota_hour_logged_local = ((hour_logged_in_timesheet_individual.hours*60+(hour_logged_in_timesheet_individual.minutes)/60).to_f).to_f
-          total_hours_logged_in = (total_hours_logged_in +tota_hour_logged_local).to_f
+          tota_hour_logged_local = (hour_logged_in_timesheet_individual.hours*60+(hour_logged_in_timesheet_individual.minutes)/60)
+          total_hours_logged_in =  total_hours_logged_in +" , "+tota_hour_logged_local
         end
 
         leave_count_by_date = Leave.all.where(:user_id => user[:id],start_date: options2[:start_date].to_date..options2[:end_date].to_date)
