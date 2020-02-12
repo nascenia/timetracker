@@ -203,7 +203,14 @@ class User < ActiveRecord::Base
       tmp[:total_sum_min]= total_sum_min
       @users << tmp
     end
-
+    total_holiday = 0
+    holiday_list = Holiday.all.where(date: options2[:start_date].to_date..options2[:end_date].to_date)
+    holiday_list.each do |holiday_list_ind|
+      if !holiday_list_ind.date.nil?
+        total_holiday = total_holiday+1;
+      end
+    end
+    date_difference = date_difference - total_holiday
     CSV.generate(options) do |csv|
       csv << [ 'TTF', 'Projects', 'Name', 'Expected time to spend in office (work days - leave)*9', 'Expected productive hrs(weekly working days- Leave)*8(g)', 'Spent Hours in Office', 'Hours Logged In(i)', 'Hours not accounted for any project(g-i)/g']
       @users.each do |user|
