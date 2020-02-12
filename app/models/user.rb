@@ -255,7 +255,7 @@ class User < ActiveRecord::Base
             end
           end
           begin
-          hours_not_accounted_for_any_project = ActionController::Base.helpers.number_with_precision((expected_productive_time_to_in_office - total_hours_logged_in).to_f/expected_productive_time_to_in_office).to_f
+          hours_not_accounted_for_any_project = ((expected_productive_time_to_in_office - total_hours_logged_in).to_f/expected_productive_time_to_in_office).to_f
           rescue Exception => exc
             hours_not_accounted_for_any_project = 0;
           end
