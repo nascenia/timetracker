@@ -169,7 +169,7 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def download
+  def weekly_report
     @users = User.all.order(:email)
 
     respond_to do |format|
