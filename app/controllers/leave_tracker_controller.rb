@@ -7,7 +7,7 @@ class LeaveTrackerController < ApplicationController
   end
 
   def show
-    if current_user.id == params[:id].to_i
+    if current_user.id == params[:id].to_i || current_user.has_admin_privilege?
       if session[:user_id].nil?
         @user = User.includes(:leaves).find params[:id]
       else
