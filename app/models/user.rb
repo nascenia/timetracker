@@ -232,15 +232,27 @@ class User < ActiveRecord::Base
           total_hours_logged_in = total_hours_logged_in +tota_hour_logged_local
         end
 
-        leave_count_by_date = Leave.all.where(:user_id => user[:id],start_date: options2[:start_date].to_date..options2[:end_date].to_date,:half_day =>Leave::FULL_DAY)
+        leave_count_by_date = Leave.all.where(:user_id => user[:id],start_date: options2[:start_date].to_date..options2[:end_date].to_date)
         leave_count_by_date.each do |leave_count_by_date_individual|
           if leave_count_by_date_individual.end_date.nil?
-            expected_time_to_spend_in_office  = (date_difference-1)*9
-            expected_productive_time_to_in_office  = (date_difference-1)*8
+              if leave_count_by_date_individual.half_day == Leave::FULL_DAY
+                    expected_time_to_spend_in_office  = (date_difference-1)*9
+                    expected_productive_time_to_in_office  = (date_difference-1)*8
+               if leave_count_by_date_individual.half_day == Leave::FIRST_HALF
+                    expected_time_to_spend_in_office  = (date_difference-1)*4.5
+                    expected_productive_time_to_in_office  = (date_difference-1)*4
+                end
+               if leave_count_by_date_individual.half_day == Leave::SECOND_HALF
+                    expected_time_to_spend_in_office  = (date_difference-1)*4.5
+                    expected_productive_time_to_in_office  = (date_difference-1)*4
+                end
+
+              end
           else
-            date_diff_db = (leave_count_by_date_individual.end_date.to_date - leave_count_by_date_individual.start_date.to_date).to_i
-            expected_time_to_spend_in_office  = (date_difference-date_diff_db)*9
-            expected_productive_time_to_in_office  = (date_difference-date_diff_db)*8
+                date_diff_db = (leave_count_by_date_individual.end_date.to_date - leave_count_by_date_individual.start_date.to_date).to_i
+                expected_time_to_spend_in_office  = (date_difference-date_diff_db)*9
+                expected_productive_time_to_in_office  = (date_difference-date_diff_db)*8
+
           end
         end
         if user[:projects].size >0
