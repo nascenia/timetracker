@@ -73,7 +73,7 @@ class TimesheetsController < ApplicationController
             p project
         end
         p '#####CU project'
-        @projects = Project.where.not(id: current_user.projects)
+        @projects = Project.where.not(id: current_user.projects).where(is_active: true)
         # @projects.each do |pr|
         #
         # end
