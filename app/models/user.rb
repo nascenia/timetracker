@@ -239,11 +239,11 @@ class User < ActiveRecord::Base
                     expected_time_to_spend_in_office  = (date_difference-1)*9
                     expected_productive_time_to_in_office  = (date_difference-1)*8
                if leave_count_by_date_individual.half_day == Leave::FIRST_HALF
-                    expected_time_to_spend_in_office  = (date_difference-1)*4.5
+                    expected_time_to_spend_in_office  = (date_difference-1)*4
                     expected_productive_time_to_in_office  = (date_difference-1)*4
                 end
                if leave_count_by_date_individual.half_day == Leave::SECOND_HALF
-                    expected_time_to_spend_in_office  = (date_difference-1)*4.5
+                    expected_time_to_spend_in_office  = (date_difference-1)*4
                     expected_productive_time_to_in_office  = (date_difference-1)*4
                 end
 
