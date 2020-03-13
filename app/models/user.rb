@@ -232,7 +232,7 @@ class User < ActiveRecord::Base
           total_hours_logged_in = total_hours_logged_in +tota_hour_logged_local
         end
 
-        leave_count_by_date = Leave.all.where(:user_id => user[:id],start_date: options2[:start_date].to_date..options2[:end_date].to_date)
+        leave_count_by_date = Leave.all.where(:user_id => user[:id],start_date: options2[:start_date].to_date..options2[:end_date].to_date,:half_day =>Leave::FULL_DAY)
         leave_count_by_date.each do |leave_count_by_date_individual|
           if leave_count_by_date_individual.end_date.nil?
             expected_time_to_spend_in_office  = (date_difference-1)*9
