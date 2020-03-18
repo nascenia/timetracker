@@ -7,77 +7,77 @@ class UserMailer < ActionMailer::Base
 
   def send_leave_application_notification(leave, email)
 
-    # @leave = leave
-    # @user = @leave.user
-    # @email = email
-    # approver_ids = @leave.approval_path.path_chains.where('priority > ?', @leave.pending_at).pluck(:user_id)
-    # @approvers = User.where(id: approver_ids).pluck(:name)
-    # if CONFIG['leave_admin'].include?(email)
-    #   subject = "Action required: #{@user.name} has applied for a leave."
-    # else
-    #   subject = "#{@user.name} has applied for a leave"
-    # end
-    #
-    # mail to: @email,
-    #      cc: CONFIG['leave_admin'],
-    #      subject: subject
+    @leave = leave
+    @user = @leave.user
+    @email = email
+    approver_ids = @leave.approval_path.path_chains.where('priority > ?', @leave.pending_at).pluck(:user_id)
+    @approvers = User.where(id: approver_ids).pluck(:name)
+    if CONFIG['leave_admin'].include?(email)
+      subject = "Action required: #{@user.name} has applied for a leave."
+    else
+      subject = "#{@user.name} has applied for a leave"
+    end
+
+    mail to: @email,
+         cc: CONFIG['leave_admin'],
+         subject: subject
     true
   end
 
   def send_approval_or_rejection_notification(leave)
-    # @leave = leave
-    # @user = @leave.user
-    # if @leave.is_accepted?
-    #   subject = 'Leave Approved'
-    #   @title = 'Your leave application has just been approved.'
-    #   @greetings = '- Enjoy your vacation!'
-    # elsif @leave.is_rejected?
-    #   subject = 'Leave Rejected'
-    #   @title = 'Your leave application has just been rejected.'
-    #   @greetings = '- Better luck next time!'
-    # end
-    # mail to: @user.email,
-    #      cc: CONFIG['leave_admin'],
-    #      subject: subject
-    # true
-    # rescue => e
-    # logger.error e.message
-    # false
+    @leave = leave
+    @user = @leave.user
+    if @leave.is_accepted?
+      subject = 'Leave Approved'
+      @title = 'Your leave application has just been approved.'
+      @greetings = '- Enjoy your vacation!'
+    elsif @leave.is_rejected?
+      subject = 'Leave Rejected'
+      @title = 'Your leave application has just been rejected.'
+      @greetings = '- Better luck next time!'
+    end
+    mail to: @user.email,
+         cc: CONFIG['leave_admin'],
+         subject: subject
+    true
+  rescue => e
+    logger.error e.message
+    false
     true
   end
 
   def send_rejection_notification_of_employee_registration_to_user(user, reason)
-    #   @user = user
-    #   @reason = reason
-    #   subject = 'Employee Registration Form Rejected'
-    #   @title = 'Your employee registration application has just been rejected.'
-    #   @greetings = '- Better luck next time!'
-    #   mail to: @user.email,
-    #        cc: CONFIG['leave_admin'],
-    #        subject: subject
-    #   true
-    # rescue => e
-    #   logger.error e.message
-    #   false
+    @user = user
+    @reason = reason
+    subject = 'Employee Registration Form Rejected'
+    @title = 'Your employee registration application has just been rejected.'
+    @greetings = '- Better luck next time!'
+    mail to: @user.email,
+         cc: CONFIG['leave_admin'],
+         subject: subject
+    true
+  rescue => e
+    logger.error e.message
+    false
     true
   end
 
   def send_approval_or_rejection_notification_to_hr(leave)
-    # @leave = leave
-    # @user = @leave.user
-    #
-    # if @leave.is_accepted?
-    #   subject = 'Leave Approved'
-    #   @title = 'A leave application has just been approved.'
-    # elsif @leave.is_rejected?
-    #   subject = 'Leave Rejected'
-    #   @title = 'A leave application has just been rejected.'
-    # end
-    # mail to: CONFIG['leave_admin'], subject: subject
-    # true
-    # rescue => e
-    # logger.error e.message
-    # false
+    @leave = leave
+    @user = @leave.user
+
+    if @leave.is_accepted?
+      subject = 'Leave Approved'
+      @title = 'A leave application has just been approved.'
+    elsif @leave.is_rejected?
+      subject = 'Leave Rejected'
+      @title = 'A leave application has just been rejected.'
+    end
+    mail to: CONFIG['leave_admin'], subject: subject
+    true
+  rescue => e
+    logger.error e.message
+    false
     true
   end
 
