@@ -251,10 +251,10 @@ class User < ActiveRecord::Base
                 expected_time_to_spend_in_office  = (date_difference*9)-4.5
                 expected_productive_time_to_in_office  = (date_difference*8)-4
               end
-          else
-            date_diff_db = (leave_count_by_date_individual.end_date - leave_count_by_date_individual.start_date).to_i
-            expected_time_to_spend_in_office  = (date_difference-date_diff_db)*9
-            expected_productive_time_to_in_office  = (date_difference-date_diff_db)*8
+          # else
+          #   date_diff_db = (leave_count_by_date_individual.end_date - leave_count_by_date_individual.start_date).to_i
+          #   expected_time_to_spend_in_office  = (date_difference-date_diff_db)*9
+          #   expected_productive_time_to_in_office  = (date_difference-date_diff_db)*8
 
           end
         end
