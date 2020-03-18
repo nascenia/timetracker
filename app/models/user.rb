@@ -239,10 +239,7 @@ class User < ActiveRecord::Base
         leave_count_by_date.each do |leave_count_by_date_individual|
           if !leave_count_by_date_individual.end_date.nil?
               if leave_count_by_date_individual.half_day == Leave::FULL_DAY
-                local_date_diff = leave_count_by_date_individual.end_date - leave_count_by_date_individual.end_date
-                if local_date_diff == 0
-                  local_date_diff = 1
-                end
+                local_date_diff = ((leave_count_by_date_individual.end_date - leave_count_by_date_individual.start_date)+1).to_i
                 expected_time_to_spend_in_office  = (date_difference-local_date_diff)*9
                     expected_productive_time_to_in_office  = (date_difference-local_date_diff)*8
               end
