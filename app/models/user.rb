@@ -232,9 +232,9 @@ class User < ActiveRecord::Base
           total_hours_logged_in = total_hours_logged_in +tota_hour_logged_local
         end
 
-        if user[:id]== 151
-          logger.debug "Break Points"
-        end
+        # if user[:id]== 151
+        #   logger.debug "Break Points"
+        # end
         leave_count_by_date = Leave.all.where(:user_id => user[:id],start_date: options2[:start_date].to_date..options2[:end_date].to_date)
         if leave_count_by_date.size >= 1
         leave_count_by_date.each do |leave_count_by_date_individual|
