@@ -271,6 +271,7 @@ class User < ActiveRecord::Base
           leave_count_by_date = Leave.all.where(:user_id => user[:id],end_date: options2[:start_date].to_date..options2[:end_date].to_date)
             leave_count_by_date.each do |leave_count_by_date_individual|
               if !leave_count_by_date_individual.start_date.nil?
+                logger.info   user[:name]+"     ***********SIZE****************     " +leave_count_by_date.size.to_s + "     ***************************"
                 if leave_count_by_date_individual.half_day == Leave::FULL_DAY
                   if leave_count_by_date_individual.start_date < options2[:start_date].to_date
                     local_date_diff = local_date_diff+((  leave_count_by_date_individual.end_date - options2[:start_date].to_date )+1 ).to_i
