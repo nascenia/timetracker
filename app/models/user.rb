@@ -272,7 +272,7 @@ class User < ActiveRecord::Base
             leave_count_by_date.each do |leave_count_by_date_individual|
               if !leave_count_by_date_individual.start_date.nil?
                 if leave_count_by_date_individual.half_day == Leave::FULL_DAY
-                  if leave_count_by_date_individual.start_date <= options2[:start_date].to_date
+                  if leave_count_by_date_individual.start_date < options2[:start_date].to_date
                     local_date_diff = local_date_diff+((  leave_count_by_date_individual.end_date - options2[:start_date].to_date )+1 ).to_i
                     logger.info user[:name]+"  END DATE : "+ leave_count_by_date_individual.end_date.to_s+" *******************************   277  "+"  START DATE : "+ leave_count_by_date_individual.start_date.to_s+" ****"+  local_date_diff.to_s
                     expected_time_to_spend_in_office  = (date_difference-local_date_diff)*9
