@@ -253,12 +253,12 @@ class User < ActiveRecord::Base
                 end
               end
               if leave_count_by_date_individual.half_day == Leave::FIRST_HALF
-                expected_time_to_spend_in_office  = expected_time_to_spend_in_office - (date_difference*9)-4.5
-                expected_productive_time_to_in_office  = (date_difference*8)-4
+                expected_time_to_spend_in_office  = expected_time_to_spend_in_office-4.5
+                expected_productive_time_to_in_office  = expected_productive_time_to_in_office-4
               end
               if leave_count_by_date_individual.half_day == Leave::SECOND_HALF
-                expected_time_to_spend_in_office  = expected_time_to_spend_in_office - (date_difference*9)-4.5
-                expected_productive_time_to_in_office  = expected_productive_time_to_in_office - (date_difference*8)-4
+                expected_time_to_spend_in_office  = expected_time_to_spend_in_office-4.5
+                expected_productive_time_to_in_office  = expected_productive_time_to_in_office-4
               end
           # else
           #   date_diff_db = (leave_count_by_date_individual.end_date - leave_count_by_date_individual.start_date).to_i
@@ -286,12 +286,12 @@ class User < ActiveRecord::Base
                   end
                 end
                 if leave_count_by_date_individual.half_day == Leave::FIRST_HALF
-                  expected_time_to_spend_in_office  = (date_difference*9)-4.5
-                  expected_productive_time_to_in_office  = (date_difference*8)-4
+                  expected_time_to_spend_in_office  = expected_time_to_spend_in_office-4.5
+                  expected_productive_time_to_in_office  = expected_productive_time_to_in_office-4
                 end
                 if leave_count_by_date_individual.half_day == Leave::SECOND_HALF
-                  expected_time_to_spend_in_office  = (date_difference*9)-4.5
-                  expected_productive_time_to_in_office  = (date_difference*8)-4
+                  expected_time_to_spend_in_office  = expected_time_to_spend_in_office-4.5
+                  expected_productive_time_to_in_office  = expected_productive_time_to_in_office-4
                 end
                 # else
                 #   date_diff_db = (leave_count_by_date_individual.end_date - leave_count_by_date_individual.start_date).to_i
