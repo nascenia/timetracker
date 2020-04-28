@@ -124,8 +124,9 @@ class User < ActiveRecord::Base
                          holiday_scheme_id: holiday_scheme_id,
                          password: Devise.friendly_token[0, 20])
 
-      # pre_registration2 = PreRegistration.find.id(preRegistration_individual_main[:id])
-      #   pre_registration2.step_no = 3
+      pre_registration2 = PreRegistration.find_by_id(preRegistration_individual_main[:id])
+        pre_registration2.step_no = 3
+        pre_registration2.save
       # pre_registration2.update
 
     end
