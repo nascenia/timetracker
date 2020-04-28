@@ -1,0 +1,39 @@
+
+<table style="width:100%">
+    <tr>
+        <th>Name</th>
+        <th>Email ID</th>
+        <th>Contact Number </th>
+        <th>Joining Date </th>
+        <th>Action Edit </th>
+    </tr>
+    <% last_date = ''%>
+    <% @pre_registration_all.each do |pre_registration_item| %>
+        <tr>
+            <td><%= pre_registration_item.name %></td>
+            <td><%= pre_registration_item.personalEmail %></td>
+            <td><%= pre_registration_item.contactNumber %></td>
+            <td><%= pre_registration_item.joiningDate%></td>
+            <td> <%= link_to 'Edit', edit_pre_registration_path(pre_registration_item) %> </td>
+        </tr>
+    <% end %>
+
+</table>
+
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #ffffff;
+    }
+</style>

@@ -1,0 +1,156 @@
+<table style="width:100%">
+    <tr>
+        <th>Name</th>
+        <th>Email ID</th>
+        <th>Contact Number </th>
+        <th>Joining Date </th>
+        <th>Action Edit </th>
+        <th>Action Delete  </th>
+    </tr>
+    <% last_date = ''%>
+    <% @pre_registration_all.each do |pre_registration_item| %>
+        <tr>
+            <td><%= pre_registration_item.name %></td>
+            <td><%= pre_registration_item.personalEmail %></td>
+            <td><%= pre_registration_item.contactNumber %></td>
+            <td><%= pre_registration_item.joiningDate%></td>
+            <td> <%= link_to 'Edit', edit_pre_registration_path(pre_registration_item,1) %> </td>
+            <td> <%= link_to 'Delete', pre_registration_path(pre_registration_item) , method: :delete%> </td>
+        </tr>
+    <% end %>
+
+</table>
+
+<h3>Add new Employee </h3><br>
+<%= form_for @pre_registration do |f| %>
+    <div class="row">
+        <div class="col-md-6">
+            <p>
+                <%= label :name, 'Name' %>
+                <%= label '', ' *', class: 'required-asterisk' %>
+            </p>
+            <p>
+                <%= f.text_field :name ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
+            </p>
+        </div>
+        <div class="col-md-6">
+            <p>
+                <%= label :joiningDate, 'Joining Date' %>
+                <%= label '', ' *', class: 'required-asterisk' %>
+            </p>
+            <p>
+                <%= f.text_field :joiningDate, :class => 'form-control timesheet-date-picker', value: Time.now.strftime("%Y/%m/%d"),:onkeydown=>"return false" %>
+            </p>
+        </div>
+
+        <div class="col-md-6">
+            <p>
+                <%= label :emailGroup, 'Email Group' %>
+            </p>
+            <p>
+                <%= f.text_field :emailGroup ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
+            </p>
+        </div>
+
+        <div class="col-md-6">
+            <p>
+                <%= label :contactNumber, 'Contact Number' %>
+                <%= label '', ' *', class: 'required-asterisk' %>
+            </p>
+            <p>
+                <%= f.text_field :contactNumber ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
+            </p>
+        </div>
+
+        <div class="col-md-6">
+            <p>
+                <%= label :personalEmail, 'Personal Email' %>
+                <%= label '', ' *', class: 'required-asterisk' %>
+            </p>
+            <p>
+                <%= f.text_field :personalEmail ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
+            </p>
+        </div>
+
+        <div class="col-md-6">
+            <p>
+                <%= label :holiday_scheme_id, 'Holiday Scheme' %>
+                <%= label '', ' *', class: 'required-asterisk' %>
+            </p>
+            <p>
+                <%= f.select :holiday_scheme_id, options_for_select(@holiday_scheme.collect { | holiday | [holiday.name,  holiday.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'}%>
+
+            </p>
+        </div>
+
+        <div class="col-md-6">
+            <p>
+                <%= label :user_id, 'Name of TTF' %>
+                <%= label '', ' *', class: 'required-asterisk' %>
+            </p>
+            <p>
+                <%= f.select :user_id, options_for_select(@ttf_list.collect { | ttf_list | [ttf_list.name,  ttf_list.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'}%>
+
+            </p>
+        </div>
+
+        <div class="col-md-6">
+            <p>
+                <%= label :weekend_id, 'WeekEnd' %>
+                <%= label '', ' *', class: 'required-asterisk' %>
+            </p>
+            <p>
+                <%= f.select :weekend_id, options_for_select(@weekend_scheme.collect { | weekend | [weekend.name,  weekend.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'}%>
+            </p>
+        </div>
+
+        <div class="col-md-6">
+            <p>
+                <%= label :NdaSigned, 'NDA Signed' %>
+            </p>
+            <p>
+                <%= f.check_box :NdaSigned, :checked => false %>
+            </p>
+        </div>
+
+        <div class="col-md-6">
+            <p>
+                <%= label :workstationReady, 'Workstation Ready' %>
+            </p>
+            <p>
+                <%= f.check_box :workstationReady, :checked => false %>
+            </p>
+        </div>
+
+        <div class="col-md-6">
+            <p>
+                <%= label :packReady, 'Pack Ready' %>
+            </p>
+            <p>
+                <%= f.check_box :packReady, :checked => false %>
+            </p>
+        </div>
+    </div>
+    <br/>
+    <br/>
+    <%= f.submit "Submit " %>
+<% end %>
+
+
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #ffffff;
+    }
+</style>

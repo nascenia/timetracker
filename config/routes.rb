@@ -61,6 +61,11 @@ Internal::Application.routes.draw do
 
 
   resources :salaats
+  resources :pre_registrations do
+    collection do
+      get :remove
+    end
+  end
 
   resources :weekends do
     member do

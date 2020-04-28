@@ -9,8 +9,19 @@
   - if current_user.has_admin_privilege?
     %li
       = link_to 'Admin', admin_dashboard_path, :target => '_blank'
-  %li{class: (params[:controller].eql?('employees') ? 'active' : '')}
-    = link_to 'Employee Info', employees_path
+  %li.dropdown
+    %a.dropdown-toggle{"data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false",:href => "#"}
+      = 'Employee'
+      %span.caret
+    %ul.dropdown-menu
+      %li
+        = link_to 'Employee Info', employees_path
+      - if current_user.has_admin_privilege?
+        %li
+          = link_to 'Add new Employee', new_pre_registration_path
+      - if current_user.has_admin_privilege?
+        %li
+          = link_to 'Employee Onbording', pre_registrations_path
   %li{class: (params[:controller].eql?('users/registrations')? 'dropdown active' : 'dropdown')}
     %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
       = current_user.name
@@ -23,7 +34,6 @@
   %li.dropdown
     %a.dropdown-toggle{"data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false",:href => "#"}
       = 'Work Log'
-
       %span.caret
     %ul.dropdown-menu
       %li

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190723103741) do
+ActiveRecord::Schema.define(version: 20200422054716) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -180,6 +180,25 @@ ActiveRecord::Schema.define(version: 20190723103741) do
   end
 
   add_index "path_chains", ["approval_path_id"], name: "index_path_chains_on_approval_path_id", using: :btree
+
+  create_table "pre_registrations", force: true do |t|
+    t.string   "name"
+    t.string   "joiningDate"
+    t.string   "datetime"
+    t.boolean  "NdaSigned"
+    t.integer  "user_id"
+    t.string   "emailGroup"
+    t.string   "contactNumber"
+    t.string   "personalEmail"
+    t.string   "companyEmail"
+    t.string   "holiday_scheme_id"
+    t.string   "weekend_id"
+    t.boolean  "workstationReady"
+    t.boolean  "packReady"
+    t.integer  "step_no"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "projects", force: true do |t|
     t.string   "project_name"

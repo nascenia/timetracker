@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
   belongs_to :weekend
   belongs_to :holiday_scheme
 
+  has_one :pre_registration, dependent: :destroy
   has_one :leave_tracker, dependent: :destroy
   has_many :attendances, dependent: :destroy
   has_many :leaves, dependent: :destroy
@@ -102,9 +103,32 @@ class User < ActiveRecord::Base
     user = User.where(:email => email).first
 
     unless user
+      preRegistration = PreRegistration.all.where(companyEmail: email ,step_no: 2)
+      is_user_found = false
+      weekend_id = 0
+      holiday_scheme_id = 0
+      preRegistration_individual_main = nil
+      preRegistration.each do |preRegistration_individual|
+        if !preRegistration_individual.name.nil?
+          is_user_found =true
+          preRegistration_individual_main  = preRegistration_individual
+          holiday_scheme_id = preRegistration_individual.holiday_scheme_id
+          weekend_id = preRegistration_individual.weekend_id
+          break
+        end
+      end
+      if is_user_found
       user = User.create(name: name,
                          email: email,
+                         weekend_id: weekend_id,
+                         holiday_scheme_id: holiday_scheme_id,
                          password: Devise.friendly_token[0, 20])
+
+      # pre_registration2 = PreRegistration.find.id(preRegistration_individual_main[:id])
+      #   pre_registration2.step_no = 3
+      # pre_registration2.update
+
+    end
     end
 
     user

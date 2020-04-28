@@ -1,4 +1,5 @@
 class HolidayScheme < ActiveRecord::Base
+  has_one :pre_registration, dependent: :destroy
   has_many :exclusion_dates, as: :excluded, dependent: :destroy
   has_many :holidays, dependent: :destroy
   has_many :users
