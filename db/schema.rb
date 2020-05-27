@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200422054716) do
+ActiveRecord::Schema.define(version: 20200527064637) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -198,6 +198,11 @@ ActiveRecord::Schema.define(version: 20200422054716) do
     t.integer  "step_no"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "salary_account_details_sent"
+    t.boolean  "employee_contract_sign"
+    t.boolean  "id_card_given"
+    t.boolean  "pic_and_other_relevant_info"
+    t.boolean  "has_sent_invitation_to_visit_internal_website"
   end
 
   create_table "projects", force: true do |t|

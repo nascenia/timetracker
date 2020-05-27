@@ -5,6 +5,7 @@ $(document).on('turbolinks:load', function () {
     limit_special_award_dates();
     all_leaves_filters_config();
     timesheet_datepicker_config();
+    timesheet_datepicker_config_new_join();
 
     var max_length = 300;
     $('p.help-block span').html(max_length);
@@ -33,6 +34,15 @@ function timesheet_datepicker_config(){
     var start=$('.timesheet-date-picker').datepicker({
         format: 'yyyy-mm-dd',
         endDate: date,
+    });
+}
+function timesheet_datepicker_config_new_join(){
+    var date= new Date();
+
+    var start=$('.timesheet-date-picker_new_join').datepicker({
+        format: 'yyyy-mm-dd',
+        startDate: date,
+        endDate: '+30d',
     });
 }
 

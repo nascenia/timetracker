@@ -21,7 +21,7 @@
 
 </table>
 
-<h3>Add new Employee </h3><br>
+<h3>Employee information fill by user </h3><br>
 <%= form_for @pre_registration do |f| %>
     <div class="row">
         <div class="col-md-6">
@@ -39,13 +39,13 @@
                 <%= label '', ' *', class: 'required-asterisk' %>
             </p>
             <p>
-                <%= f.text_field :joiningDate, :class => 'form-control timesheet-date-picker', value: Time.now.strftime("%Y/%m/%d"),:onkeydown=>"return false" %>
+                <%= f.text_field :joiningDate, :class => 'form-control timesheet-date-picker_new_join', value: Time.now.strftime("%Y/%m/%d"),:onkeydown=>"return false" %>
             </p>
         </div>
 
         <div class="col-md-6">
             <p>
-                <%= label :emailGroup, 'Email Group' %>
+                <%= label :emailGroup, 'Suggested Email Group' %>
             </p>
             <p>
                 <%= f.text_field :emailGroup ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
@@ -96,7 +96,7 @@
 
         <div class="col-md-6">
             <p>
-                <%= label :weekend_id, 'WeekEnd' %>
+                <%= label :weekend_id, 'WeekEnd Scheme' %>
                 <%= label '', ' *', class: 'required-asterisk' %>
             </p>
             <p>
@@ -115,7 +115,7 @@
 
         <div class="col-md-6">
             <p>
-                <%= label :workstationReady, 'Workstation Ready' %>
+                <%= label :workstationReady, 'Workstation prepared for new employee?' %>
             </p>
             <p>
                 <%= f.check_box :workstationReady, :checked => false %>
@@ -124,7 +124,7 @@
 
         <div class="col-md-6">
             <p>
-                <%= label :packReady, 'Pack Ready' %>
+                <%= label :packReady, 'Greeting pack prepared for new employee?' %>
             </p>
             <p>
                 <%= f.check_box :packReady, :checked => false %>
@@ -133,6 +133,20 @@
     </div>
     <br/>
     <br/>
+
+
+    <div class="row">
+            <div class="col-md-6">
+                <p>
+                    <%= label :companyEmail, 'Company Email' %>
+                    <%= label '', ' *', class: 'required-asterisk' %>
+                </p>
+                <p>
+                    <%= f.text_field :companyEmail ,:class => 'form-control', :maxlength=>"128"%>
+                </p>
+            </div>
+    </div>
+
     <%= f.submit "Submit " %>
 <% end %>
 

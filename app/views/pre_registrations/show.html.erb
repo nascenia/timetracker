@@ -2,130 +2,56 @@
 <h3>Add new Employee </h3><br>
 <%= form_for @pre_registration do |f| %>
 
+
     <div class="row">
-        <%if @is_for_admin =="23" %>
-            <div class="col-md-6">
-                <p>
-                    <%= label :companyEmail, 'Company Email' %>
-                    <%= label '', ' *', class: 'required-asterisk' %>
-                </p>
-                <p>
-                    <%= f.text_field :companyEmail ,:class => 'form-control', :maxlength=>"128"%>
-                </p>
-            </div>
-        <%end %>
+        <div class="col-md-6">
+            <p>
+                <%= label :salary_account_details_sent, 'Salary account details sent to CEO' %>
+            </p>
+            <p>
+                <%= f.check_box :salary_account_details_sent, :checked => @pre_registration.salary_account_details_sent %>
+            </p>
+        </div>
+
+        <div class="col-md-6">
+            <p>
+                <%= label :employee_contract_sign, 'Employee contract signed?' %>
+            </p>
+            <p>
+                <%= f.check_box :employee_contract_sign, :checked => @pre_registration.employee_contract_sign %>
+            </p>
+        </div>
+
+        <div class="col-md-6">
+            <p>
+                <%= label :id_card_given, 'Id card given?' %>
+            </p>
+            <p>
+                <%= f.check_box :id_card_given, :checked => @pre_registration.id_card_given %>
+            </p>
+        </div>
+
+        <div class="col-md-6">
+            <p>
+                <%= label :pic_and_other_relevant_info, 'picture and other relevant information about new employee updated on website?' %>
+            </p>
+            <p>
+                <%= f.check_box :pic_and_other_relevant_info, :checked => @pre_registration.pic_and_other_relevant_info %>
+            </p>
+        </div>
+
+        <div class="col-md-6">
+            <p>
+                <%= label :has_sent_invitation_to_visit_internal_website, 'Has sent an invitation to visit the internal website?' %>
+            </p>
+            <p>
+                <%= f.check_box :has_sent_invitation_to_visit_internal_website, :checked => @pre_registration.has_sent_invitation_to_visit_internal_website %>
+            </p>
+        </div>
     </div>
+    <br/>
+    <br/>
 
     <%= f.submit "Submit " %>
-    <div class="row">
-        <div class="col-md-6">
-            <p>
-                <%= label :name, 'Name' %>
-                <%= label '', ' *', class: 'required-asterisk' %>
-            </p>
-            <p>
-                <%= f.text_field :name ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
-            </p>
-        </div>
-        <div class="col-md-6">
-            <p>
-                <%= label :joiningDate, 'Joining Date' %>
-                <%= label '', ' *', class: 'required-asterisk' %>
-            </p>
-            <p>
-                <%= f.text_field :joiningDate, :class => 'form-control timesheet-date-picker', value: Time.now.strftime("%Y/%m/%d"),:onkeydown=>"return false" %>
-            </p>
-        </div>
-
-        <div class="col-md-6">
-            <p>
-                <%= label :emailGroup, 'Email Group' %>
-            </p>
-            <p>
-                <%= f.text_field :emailGroup ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
-            </p>
-        </div>
-
-        <div class="col-md-6">
-            <p>
-                <%= label :contactNumber, 'Contact Number' %>
-                <%= label '', ' *', class: 'required-asterisk' %>
-            </p>
-            <p>
-                <%= f.text_field :contactNumber ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
-            </p>
-        </div>
-
-        <div class="col-md-6">
-            <p>
-                <%= label :personalEmail, 'Personal Email' %>
-                <%= label '', ' *', class: 'required-asterisk' %>
-            </p>
-            <p>
-                <%= f.text_field :personalEmail ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
-            </p>
-        </div>
-
-        <div class="col-md-6">
-            <p>
-                <%= label :holiday_scheme_id, 'Holiday Scheme' %>
-                <%= label '', ' *', class: 'required-asterisk' %>
-            </p>
-            <p>
-                <%= f.select :holiday_scheme_id, options_for_select(@holiday_scheme.collect { | holiday | [holiday.name,  holiday.id] }, selected: @pre_registration.holiday_scheme_id), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'}%>
-
-            </p>
-        </div>
-
-        <div class="col-md-6">
-            <p>
-                <%= label :user_id, 'Name of TTF' %>
-                <%= label '', ' *', class: 'required-asterisk' %>
-            </p>
-            <p>
-                <%= f.select :user_id, options_for_select(@ttf_list.collect { | ttf_list | [ttf_list.name,  ttf_list.id] }, selected: @pre_registration.user_id), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'}%>
-
-            </p>
-        </div>
-
-        <div class="col-md-6">
-            <p>
-                <%= label :weekend_id, 'WeekEnd' %>
-                <%= label '', ' *', class: 'required-asterisk' %>
-            </p>
-            <p>
-                <%= f.select :weekend_id, options_for_select(@weekend_scheme.collect { | weekend | [weekend.name,  weekend.id] }, selected: @pre_registration.weekend_id), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'}%>
-            </p>
-        </div>
-
-        <div class="col-md-6">
-            <p>
-                <%= label :NdaSigned, 'NDA Signed' %>
-            </p>
-            <p>
-                <%= f.check_box :NdaSigned, :checked => @pre_registration.NdaSigned %>
-            </p>
-        </div>
-
-        <div class="col-md-6">
-            <p>
-                <%= label :workstationReady, 'Workstation Ready' %>
-            </p>
-            <p>
-                <%= f.check_box :workstationReady, :checked => @pre_registration.workstationReady %>
-            </p>
-        </div>
-
-        <div class="col-md-6">
-            <p>
-                <%= label :packReady, 'Pack Ready' %>
-            </p>
-            <p>
-                <%= f.check_box :packReady, :checked => @pre_registration.packReady %>
-            </p>
-        </div>
-    </div>
-    <br/>
-    <br/>
 <% end %>
 

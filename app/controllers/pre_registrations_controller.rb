@@ -2,14 +2,15 @@ class PreRegistrationsController < ApplicationController
     layout 'time_tracker'
 
     def index
-        @pre_registration_all = PreRegistration.all.where(step_no: 1)
+        # @pre_registration_all = PreRegistration.where(step_no: 2)
+        @pre_registration_all = PreRegistration.where('pre_registrations.step_no = ? OR pre_registrations.step_no = ?', 2, 3)
         @holiday_scheme = HolidayScheme.all
         @weekend_scheme = Weekend.all
         @ttf_list = User.active.where(role: 2)
     end
     def new
         @pre_registration = PreRegistration.new
-        @pre_registration_all = PreRegistration.all.where(step_no: 1)
+        @pre_registration_all = PreRegistration.all.where(step_no: 2)
         @holiday_scheme = HolidayScheme.all
         @weekend_scheme = Weekend.all
         @ttf_list = User.active.where(role: 2)
@@ -32,7 +33,7 @@ class PreRegistrationsController < ApplicationController
         else
             pre_registration_params[:workstationReady] = true
         end
-        pre_registration.step_no = 1
+        pre_registration.step_no = 2
         if pre_registration.save
             redirect_to root_path
         end
@@ -57,10 +58,24 @@ class PreRegistrationsController < ApplicationController
             @is_for_admin = "22"
         end
     end
+    def show
+        @pre_registration = PreRegistration.find(params[:id])
+        # @holiday_scheme = HolidayScheme.all
+        # @weekend_scheme = Weekend.all
+        # @ttf_list = User.active.where(role: 2)
+        # if params[:format] != "1"
+        #     @is_for_admin = "23"
+        # else
+        #     @is_for_admin = "22"
+        # end
+    end
     def update
         pre_registration = PreRegistration.find params[:id]
         if params[:selected] == "23"
             pre_registration.step_no = 2
+        end
+        if pre_registration_params[:salary_account_details_sent].to_s == "1" && pre_registration_params[:employee_contract_sign].to_s == "1" && pre_registration_params[:id_card_given].to_s == "1" && pre_registration_params[:pic_and_other_relevant_info].to_s == "1" && pre_registration_params[:has_sent_invitation_to_visit_internal_website].to_s == "1"
+            pre_registration.step_no = 4
         end
         if pre_registration.update(pre_registration_params)
             if params[:selected] == "23"
@@ -89,6 +104,11 @@ class PreRegistrationsController < ApplicationController
         :holiday_scheme_id,
         :weekend_id,
         :workstationReady,
-        :packReady )
+        :packReady,
+        :salary_account_details_sent,
+        :employee_contract_sign,
+        :id_card_given,
+        :pic_and_other_relevant_info,
+        :has_sent_invitation_to_visit_internal_website)
     end
 end
