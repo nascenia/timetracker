@@ -61,14 +61,6 @@ class PreRegistrationsController < ApplicationController
     end
     def show
         @pre_registration = PreRegistration.find(params[:id])
-        # @holiday_scheme = HolidayScheme.all
-        # @weekend_scheme = Weekend.all
-        # @ttf_list = User.active.where(role: 2)
-        # if params[:format] != "1"
-        #     @is_for_admin = "23"
-        # else
-        #     @is_for_admin = "22"
-        # end
     end
     def update
         pre_registration = PreRegistration.find params[:id]
@@ -80,7 +72,7 @@ class PreRegistrationsController < ApplicationController
         end
         if pre_registration.update(pre_registration_params)
             if params[:selected] == "23"
-                redirect_to root_path
+                redirect_to pre_registration
                 else
                 redirect_to new_pre_registration_path
             end
