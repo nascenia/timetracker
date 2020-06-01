@@ -35,7 +35,8 @@ class PreRegistrationsController < ApplicationController
         end
         pre_registration.step_no = 2
         if pre_registration.save
-            redirect_to root_path
+            UserMailer.send_new_employee_notification(current_user).deliver
+            redirect_to new_pre_registration_path
         end
     end
     def delete
