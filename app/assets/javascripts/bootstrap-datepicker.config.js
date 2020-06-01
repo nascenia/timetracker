@@ -41,7 +41,7 @@ function timesheet_datepicker_config_new_join(){
 
     var start=$('.timesheet-date-picker_new_join').datepicker({
         format: 'yyyy-mm-dd',
-        startDate: date,
+        // startDate: date,
         endDate: '+30d',
     });
 }
