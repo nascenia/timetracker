@@ -165,7 +165,7 @@ class UserMailer < ActionMailer::Base
 
   def send_new_employee_notification(user)
     @user = user
-    subject = "Unannounced leave Converted to #{Leave::LEAVE_TYPES.to_h.key(@leave.leave_type)}"
+    subject = "New EMployee has joined"
     @greetings = '- Have a nice day!'
 
     mail to: @user.email, subject: subject
