@@ -1,5 +1,5 @@
 
-<h3>Add new Employee </h3><br>
+<h3>On proces of joining </h3><br>
 <%= form_for @pre_registration do |f| %>
 
     <div class="row">
@@ -33,7 +33,7 @@
                 <%= label '', ' *', class: 'required-asterisk' %>
             </p>
             <p>
-                <%= f.text_field :joiningDate, :class => 'form-control timesheet-date-picker', value: Time.now.strftime("%Y/%m/%d"),:onkeydown=>"return false" %>
+                <%= f.text_field :joiningDate, :class => 'form-control timesheet-date-picker_new_join', value: Time.now.strftime("%Y/%m/%d"),:onkeydown=>"return false" %>
             </p>
         </div>
 

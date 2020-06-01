@@ -165,7 +165,7 @@ class UserMailer < ActionMailer::Base
 
   def send_new_employee_notification(user)
     @user = user
-    subject = "New EMployee has joined"
+    subject = "New Employee has joined"
     @greetings = '- Have a nice day!'
 
     mail to: @user.email, subject: subject
