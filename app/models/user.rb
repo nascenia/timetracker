@@ -30,6 +30,10 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
 
   mount_uploader :avatar, AvatarUploader
+  mount_uploader :resume, FileUploader
+  mount_uploader :national_id, FileUploader
+  mount_uploader :passport, FileUploader
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 

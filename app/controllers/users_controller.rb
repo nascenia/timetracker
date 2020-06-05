@@ -74,10 +74,15 @@ class UsersController < ApplicationController
 
   private
 
-    def user_params
-      params.require(:user).permit(:email, :name, :is_active, :personal_email, :present_address, :mobile_number, :alternate_contact,
-                                   :permanent_address, :date_of_birth, :last_degree, :last_university, :passing_year,
-                                   :emergency_contact_person_name, :emergency_contact_person_relation,
-                                   :emergency_contact_person_number, :blood_group, :joining_date,:name,:avatar)
-    end
+  def user_params
+    params.require(:user).permit(:email, :name, :is_active, :personal_email,
+                                 :present_address, :mobile_number,
+                                 :alternate_contact, :permanent_address,
+                                 :date_of_birth, :last_degree, :last_university,
+                                 :passing_year, :emergency_contact_person_name,
+                                 :emergency_contact_person_relation,
+                                 :emergency_contact_person_number, :blood_group,
+                                 :joining_date, :name, :avatar, :resume,
+                                 :national_id, :passport)
+  end
 end
