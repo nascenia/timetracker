@@ -86,78 +86,79 @@
       %strong Empty!
       No record found.
 / Modal
-#myModal.modal.fade{:role => "dialog"}
-  .modal-dialog
-    / Modal content
-    .modal-content
-      .modal-header
-        %button.close{"data-dismiss" => "modal", :type => "button"} ×
-        %h4.modal-title Award Leave
-      .modal-body
-        = form_for @leave, :url => {:controller => 'leaves', :action => 'award'},  method: 'POST', html: { class: 'form-horizontal' } do |f|
-          = f.hidden_field :approval_path_id, value: @user.approval_path_id
 
-          .form-group
-            = f.label :date, {:class => 'col-sm-2 control-label'}
-            .col-sm-10
-              = f.text_field :start_date, :class => 'form-control date-picker award', :placeholder => 'Enter date (ex: dd/mm/yyyy)', :autocomplete => :off, :required => 'true'
-          .form-group
-            =f.label :hour, {:class => 'col-sm-2 control-label'}
-            .col-sm-10
-              =f.text_field :hour, :class => 'form-control', :type => 'number', :autocomplete => 'off', :required => 'true'
-          .form-group
-            = f.label 'Note', {:class => 'col-sm-2 control-label'}
-            .col-sm-10
-              = f.text_area :reason, :maxlength => '300', :class => 'form-control', :rows => 7
-              %p.help-block
-                %span= 300
-                characters remaining.
-          .form-group
-            .col-sm-offset-2.col-sm-10
-              = f.submit '  Award', :class => 'btn btn-primary'
+- if current_user.has_edit_permission_for? @user
+  #myModal.modal.fade{:role => "dialog"}
+    .modal-dialog
+      / Modal content
+      .modal-content
+        .modal-header
+          %button.close{"data-dismiss" => "modal", :type => "button"} ×
+          %h4.modal-title Award Leave
+        .modal-body
+          = form_for @leave, :url => {:controller => 'leaves', :action => 'award'},  method: 'POST', html: { class: 'form-horizontal' } do |f|
+            = f.hidden_field :approval_path_id, value: @user.approval_path_id
 
+            .form-group
+              = f.label :date, {:class => 'col-sm-2 control-label'}
+              .col-sm-10
+                = f.text_field :start_date, :class => 'form-control date-picker award', :placeholder => 'Enter date (ex: dd/mm/yyyy)', :autocomplete => :off, :required => 'true'
+            .form-group
+              =f.label :hour, {:class => 'col-sm-2 control-label'}
+              .col-sm-10
+                =f.text_field :hour, :class => 'form-control', :type => 'number', :autocomplete => 'off', :required => 'true'
+            .form-group
+              = f.label 'Note', {:class => 'col-sm-2 control-label'}
+              .col-sm-10
+                = f.text_area :reason, :maxlength => '300', :class => 'form-control', :rows => 7
+                %p.help-block
+                  %span= 300
+                  characters remaining.
+            .form-group
+              .col-sm-offset-2.col-sm-10
+                = f.submit '  Award', :class => 'btn btn-primary'
 
-
-#sp-award-modal.modal.fade{:role => "dialog"}
-  .modal-dialog
-    / Modal content
-    .modal-content
-      .modal-header
-        %button.close{"data-dismiss" => "modal", :type => "button"} ×
-        %h4.modal-title Award Special Leave
-      .modal-body
-        = form_for @leave, :url => {:controller => 'leaves', :action => 'special_award'},  method: 'POST', html: { class: 'form-horizontal' } do |f|
-          = f.hidden_field :approval_path_id, value: @user.approval_path_id
-          .form-group
-            = f.label 'Type', {:class => 'col-sm-2 control-label'}
-            .col-sm-2
-              .radio
-                %label
-                  %input{name: "type", type: "radio", value: Leave::PATERNITY, checked: 'checked'}
-                  Paternity
-            .col-sm-2
-              .radio
-                %label
-                  %input{name: "type", type: "radio", value: Leave::MATERNITY}
-                  Maternity
-          .form-group
-            = f.label :start_date, {:class => 'col-sm-2 control-label'}
-            .col-sm-10
-              = f.text_field :start_date, :class => 'form-control date-picker sp-award', :placeholder => 'Enter start date (ex: dd/mm/yyyy)', :autocomplete => :off, :required => 'true'
-          .form-group
-            = f.label :end_date, {:class => 'col-sm-2 control-label'}
-            .col-sm-10
-              = f.text_field :end_date, :class => 'form-control date-picker sp-award', :placeholder => 'Enter end date (ex: dd/mm/yyyy)', :autocomplete => :off, :required => 'true'
-          .form-group
-            = f.label :note, {:class => 'col-sm-2 control-label'}
-            .col-sm-10
-              = f.text_area :reason, :maxlength => '300', :class => 'form-control', :rows => 7
-              %p.help-block
-                %span= 300
-                characters remaining.
-          .form-group
-            .col-sm-offset-2.col-sm-10
-              = f.submit 'Submit', :class => 'btn btn-primary'
+- if current_user.has_edit_permission_for? @user
+  #sp-award-modal.modal.fade{:role => "dialog"}
+    .modal-dialog
+      / Modal content
+      .modal-content
+        .modal-header
+          %button.close{"data-dismiss" => "modal", :type => "button"} ×
+          %h4.modal-title Award Special Leave
+        .modal-body
+          = form_for @leave, :url => {:controller => 'leaves', :action => 'special_award'},  method: 'POST', html: { class: 'form-horizontal' } do |f|
+            = f.hidden_field :approval_path_id, value: @user.approval_path_id
+            .form-group
+              = f.label 'Type', {:class => 'col-sm-2 control-label'}
+              .col-sm-2
+                .radio
+                  %label
+                    %input{name: "type", type: "radio", value: Leave::PATERNITY, checked: 'checked'}
+                    Paternity
+              .col-sm-2
+                .radio
+                  %label
+                    %input{name: "type", type: "radio", value: Leave::MATERNITY}
+                    Maternity
+            .form-group
+              = f.label :start_date, {:class => 'col-sm-2 control-label'}
+              .col-sm-10
+                = f.text_field :start_date, :class => 'form-control date-picker sp-award', :placeholder => 'Enter start date (ex: dd/mm/yyyy)', :autocomplete => :off, :required => 'true'
+            .form-group
+              = f.label :end_date, {:class => 'col-sm-2 control-label'}
+              .col-sm-10
+                = f.text_field :end_date, :class => 'form-control date-picker sp-award', :placeholder => 'Enter end date (ex: dd/mm/yyyy)', :autocomplete => :off, :required => 'true'
+            .form-group
+              = f.label :note, {:class => 'col-sm-2 control-label'}
+              .col-sm-10
+                = f.text_area :reason, :maxlength => '300', :class => 'form-control', :rows => 7
+                %p.help-block
+                  %span= 300
+                  characters remaining.
+            .form-group
+              .col-sm-offset-2.col-sm-10
+                = f.submit 'Submit', :class => 'btn btn-primary'
 
 
 
