@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200605110724) do
+ActiveRecord::Schema.define(version: 20200703084740) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -106,23 +106,6 @@ ActiveRecord::Schema.define(version: 20200605110724) do
 
   add_index "holidays", ["holiday_scheme_id"], name: "index_holidays_on_holiday_scheme_id", using: :btree
 
-  create_table "honor_board_categories", force: true do |t|
-    t.string   "category",   default: "", null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "honor_board_contents", force: true do |t|
-    t.string   "name"
-    t.text     "reason"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "honor_board_category_id"
-    t.string   "photo"
-  end
-
-  add_index "honor_board_contents", ["honor_board_category_id"], name: "index_honor_board_contents_on_honor_board_category_id", using: :btree
-
   create_table "leave_trackers", force: true do |t|
     t.integer  "user_id"
     t.integer  "yearly_casual_leave"
@@ -203,6 +186,7 @@ ActiveRecord::Schema.define(version: 20200605110724) do
     t.boolean  "id_card_given"
     t.boolean  "pic_and_other_relevant_info"
     t.boolean  "has_sent_invitation_to_visit_internal_website"
+    t.string   "designation"
   end
 
   create_table "projects", force: true do |t|
@@ -216,13 +200,6 @@ ActiveRecord::Schema.define(version: 20200605110724) do
   create_table "projects_users", id: false, force: true do |t|
     t.integer "user_id",    null: false
     t.integer "project_id", null: false
-  end
-
-  create_table "salaats", force: true do |t|
-    t.string   "waqt"
-    t.time     "time"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "timesheets", force: true do |t|

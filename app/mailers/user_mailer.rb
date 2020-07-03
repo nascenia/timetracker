@@ -162,6 +162,7 @@ class UserMailer < ActionMailer::Base
     #   false
     #   true
   end
+  
   def send_new_employee_notification(user)
     @user = user
     subject = "New Employee has joined"

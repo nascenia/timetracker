@@ -8,6 +8,11 @@
         <th>Action Delete  </th>
     </tr>
     <% last_date = ''%>
+    <% if @pre_registration_all.length() == 0 %>
+        <tr>
+            <td colspan="6", class = "text-center" >No Record</td>
+        </tr>
+    <% end %>
     <% @pre_registration_all.each do |pre_registration_item| %>
         <tr>
             <td><%= pre_registration_item.name %></td>
@@ -21,18 +26,19 @@
 
 </table>
 
-<h3>Employee information fill by user </h3><br>
+<h3><b>Employee information fill by HR </b></h3><br>
 <%= form_for @pre_registration do |f| %>
     <div class="row">
         <div class="col-md-6">
             <p>
-                <%= label :name, 'Name' %>
+                <%= label :name, 'Employee Name' %>
                 <%= label '', ' *', class: 'required-asterisk' %>
             </p>
             <p>
                 <%= f.text_field :name ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
             </p>
         </div>
+
         <div class="col-md-6">
             <p>
                 <%= label :joiningDate, 'Joining Date' %>
@@ -40,6 +46,27 @@
             </p>
             <p>
                 <%= f.text_field :joiningDate, :class => 'form-control timesheet-date-picker_new_join', value: Time.now.strftime("%Y/%m/%d"),:onkeydown=>"return false" %>
+            </p>
+        </div>
+
+        <div class="col-md-6">
+            <p>
+                <%= label :designation, 'Designation' %>
+                <%= label '', ' *', class: 'required-asterisk' %>
+            </p>
+            <p>
+                <%= f.text_field :designation ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
+            </p>
+        </div>
+
+        <div class="col-md-6">
+            <p>
+                <%= label :user_id, 'Name of TTF / Mentor' %>
+                <%= label '', ' *', class: 'required-asterisk' %>
+            </p>
+            <p>
+                <%= f.select :user_id, options_for_select(@ttf_list.collect { | ttf_list | [ttf_list.name,  ttf_list.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'}%>
+
             </p>
         </div>
 
@@ -85,17 +112,6 @@
 
         <div class="col-md-6">
             <p>
-                <%= label :user_id, 'Name of TTF' %>
-                <%= label '', ' *', class: 'required-asterisk' %>
-            </p>
-            <p>
-                <%= f.select :user_id, options_for_select(@ttf_list.collect { | ttf_list | [ttf_list.name,  ttf_list.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'}%>
-
-            </p>
-        </div>
-
-        <div class="col-md-6">
-            <p>
                 <%= label :weekend_id, 'WeekEnd Scheme' %>
                 <%= label '', ' *', class: 'required-asterisk' %>
             </p>
@@ -103,7 +119,10 @@
                 <%= f.select :weekend_id, options_for_select(@weekend_scheme.collect { | weekend | [weekend.name,  weekend.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'}%>
             </p>
         </div>
+    </div>
 
+    <div class="row">
+    
         <div class="col-md-6">
             <p>
                 <%= label :NdaSigned, 'NDA Signed' %>
@@ -112,7 +131,7 @@
                 <%= f.check_box :NdaSigned, :checked => false %>
             </p>
         </div>
-
+        
         <div class="col-md-6">
             <p>
                 <%= label :workstationReady, 'Workstation prepared for new employee?' %>
@@ -130,24 +149,11 @@
                 <%= f.check_box :packReady, :checked => false %>
             </p>
         </div>
+    
     </div>
-    <br/>
-    <br/>
-
-
-    <div class="row">
-            <div class="col-md-6">
-                <p>
-                    <%= label :companyEmail, 'Company Email' %>
-                    <%= label '', ' *', class: 'required-asterisk' %>
-                </p>
-                <p>
-                    <%= f.text_field :companyEmail ,:class => 'form-control', :maxlength=>"128"%>
-                </p>
-            </div>
-    </div>
-
-    <%= f.submit "Submit " %>
+    
+    <%= f.submit "Submit" %>
+    
 <% end %>
 
 
