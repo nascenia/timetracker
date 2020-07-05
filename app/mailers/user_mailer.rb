@@ -1,3 +1,4 @@
+# :nodoc:
 class UserMailer < ActionMailer::Base
   add_template_helper ApplicationHelper
 
@@ -6,7 +7,6 @@ class UserMailer < ActionMailer::Base
   layout 'notification'
 
   def send_leave_application_notification(leave, email)
-
     # @leave = leave
     # @user = @leave.user
     # @email = email
@@ -80,7 +80,6 @@ class UserMailer < ActionMailer::Base
     # false
     # true
   end
-
 
   def send_approval_or_rejection_notification_of_employee_registration_to_hr(user)
     #   @user = user
@@ -162,10 +161,10 @@ class UserMailer < ActionMailer::Base
     #   false
     #   true
   end
-  
+
   def send_new_employee_notification(user)
     @user = user
-    subject = "New Employee has joined"
+    subject = 'New Employee has joined'
     @greetings = '- Have a nice day!'
 
     mail to: @user.email, subject: subject
@@ -175,5 +174,4 @@ class UserMailer < ActionMailer::Base
     false
     true
   end
-
 end
