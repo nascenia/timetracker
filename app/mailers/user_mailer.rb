@@ -167,7 +167,7 @@ class UserMailer < ActionMailer::Base
     subject = 'New Employee has joined'
     @greetings = '- Have a nice day!'
 
-    mail to: @user.email, subject: subject
+    mail to: ENV['TT_CEO_EMAIL'], subject: subject
     true
   rescue => e
     logger.error e.message
