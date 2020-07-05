@@ -25,138 +25,142 @@
     <% end %>
 
 </table>
-
-<h3><b>Employee information fill by HR </b></h3><br>
-<%= form_for @pre_registration do |f| %>
-    <div class="row">
-        <div class="col-md-6">
-            <%= f.label :name, 'Employee Name' do %>
-                <%= 'Employee Name' %>
-                <span class='required-asterisk'>*</span>
-            <% end %>
-            <p>
-                <%= f.text_field :name ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
-            </p>
+<br/>
+<p>
+  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#addEmployee" aria-expanded="false" aria-controls="collapseExample">
+    Add New Employee
+  </button>
+</p>
+<div class="collapse" id="addEmployee">
+    <div class="card card-body">
+        <h3><b>Employee information fill by HR </b></h3><br>
+            <%= form_for @pre_registration do |f| %>
+            <div class="row">
+            <div class="col-md-6">
+                <%= f.label :name, 'Employee Name' do %>
+                    <%= 'Employee Name' %>
+                    <span class='required-asterisk'>*</span>
+                <% end %>
+                <p>
+                    <%= f.text_field :name ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
+                </p>
+            </div>
+  
+            <div class="col-md-6">
+                <%= f.label :joiningDate, 'Joining Date' do %>
+                    <%= 'Joining Date' %>
+                    <span class='required-asterisk'>*</span>
+                <% end %>
+                <p>
+                    <%= f.text_field :joiningDate, :class => 'form-control timesheet-date-picker_new_join', value: Time.now.strftime("%Y/%m/%d"),:onkeydown=>"return false" %>
+                </p>
+            </div>
+  
+            <div class="col-md-6">
+                <%= f.label :designation, 'Designation' do %>
+                    <%= 'Designation' %>
+                    <span class='required-asterisk'>*</span>
+                <% end %>
+                <p>
+                    <%= f.text_field :designation ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
+                </p>
+            </div>
+  
+            <div class="col-md-6">
+                <%= f.label :user_id, 'Name of TTF/Mentor' do %>
+                    <%= 'Name of TTF/Mentor' %>
+                    <span class='required-asterisk'>*</span>
+                <% end %>
+                <p>
+                    <%= f.select :user_id, options_for_select(@ttf_list.collect { | ttf_list | [ttf_list.name,  ttf_list.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'}%>
+                </p>
+            </div>
+  
+            <div class="col-md-6">
+                <%= f.label :emailGroup, 'Suggested Email Group' do %>
+                    <%= 'Suggested Email Group' %>
+                <% end %>
+                <p>
+                    <%= f.text_field :emailGroup ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
+                </p>
+            </div>
+  
+            <div class="col-md-6">
+                <%= f.label :contactNumber, 'Contact Number' do %>
+                    <%= 'Contact Number' %>
+                    <span class='required-asterisk'>*</span>
+                <% end %>
+                <p>
+                    <%= f.text_field :contactNumber ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
+                </p>
+            </div>
+  
+            <div class="col-md-6">
+                <%= f.label :personalEmail, 'Personal Email' do %>
+                    <%= 'Personal Email' %>
+                    <span class='required-asterisk'>*</span>
+                <% end %>
+                <p>
+                    <%= f.text_field :personalEmail ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
+                </p>
+            </div>
+  
+            <div class="col-md-6">
+                <%= f.label :holiday_scheme_id, 'Holiday Scheme' do %>
+                    <%= 'Holiday Scheme' %>
+                    <span class='required-asterisk'>*</span>
+                <% end %>
+                <p>
+                    <%= f.select :holiday_scheme_id, options_for_select(@holiday_scheme.collect { | holiday | [holiday.name,  holiday.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'}%>
+                </p>
+            </div>
+  
+            <div class="col-md-6">
+                <%= f.label :weekend_id, 'WeekEnd Scheme' do %>
+                    <%= 'WeekEnd Scheme' %>
+                    <span class='required-asterisk'>*</span>
+                <% end %>
+                <p>
+                    <%= f.select :weekend_id, options_for_select(@weekend_scheme.collect { | weekend | [weekend.name,  weekend.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'}%>
+                </p>
+            </div>
         </div>
-
-        <div class="col-md-6">
-            <%= f.label :joiningDate, 'Joining Date' do %>
-                <%= 'Joining Date' %>
-                <span class='required-asterisk'>*</span>
-            <% end %>
-            <p>
-                <%= f.text_field :joiningDate, :class => 'form-control timesheet-date-picker_new_join', value: Time.now.strftime("%Y/%m/%d"),:onkeydown=>"return false" %>
-            </p>
-        </div>
-
-        <div class="col-md-6">
-            <%= f.label :designation, 'Designation' do %>
-                <%= 'Designation' %>
-                <span class='required-asterisk'>*</span>
-            <% end %>
-            <p>
-                <%= f.text_field :designation ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
-            </p>
-        </div>
-
-        <div class="col-md-6">
-            <%= f.label :user_id, 'Name of TTF/Mentor' do %>
-                <%= 'Name of TTF/Mentor' %>
-                <span class='required-asterisk'>*</span>
-            <% end %>
-            <p>
-                <%= f.select :user_id, options_for_select(@ttf_list.collect { | ttf_list | [ttf_list.name,  ttf_list.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'}%>
-
-            </p>
-        </div>
-
-        <div class="col-md-6">
-            <%= f.label :emailGroup, 'Suggested Email Group' do %>
-                <%= 'Suggested Email Group' %>
-            <% end %>
-            <p>
-                <%= f.text_field :emailGroup ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
-            </p>
-        </div>
-
-        <div class="col-md-6">
-            <%= f.label :contactNumber, 'Contact Number' do %>
-                <%= 'Contact Number' %>
-                <span class='required-asterisk'>*</span>
-            <% end %>
-            <p>
-                <%= f.text_field :contactNumber ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
-            </p>
-        </div>
-
-        <div class="col-md-6">
-            <%= f.label :personalEmail, 'Personal Email' do %>
-                <%= 'Personal Email' %>
-                <span class='required-asterisk'>*</span>
-            <% end %>
-            <p>
-                <%= f.text_field :personalEmail ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
-            </p>
-        </div>
-
-        <div class="col-md-6">
-            <%= f.label :holiday_scheme_id, 'Holiday Scheme' do %>
-                <%= 'Holiday Scheme' %>
-                <span class='required-asterisk'>*</span>
-            <% end %>
-            <p>
-                <%= f.select :holiday_scheme_id, options_for_select(@holiday_scheme.collect { | holiday | [holiday.name,  holiday.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'}%>
-
-            </p>
-        </div>
-
-        <div class="col-md-6">
-            <%= f.label :weekend_id, 'WeekEnd Scheme' do %>
-                <%= 'WeekEnd Scheme' %>
-                <span class='required-asterisk'>*</span>
-            <% end %>
-            <p>
-                <%= f.select :weekend_id, options_for_select(@weekend_scheme.collect { | weekend | [weekend.name,  weekend.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'}%>
-            </p>
-        </div>
-    </div>
-
-    <div class="row">
-    
-        <div class="col-md-6">
-            <%= f.label :NdaSigned, 'NDA Signed' do %>
-                <%= 'NDA Signed' %>
-            <% end %>
-            <p>
-                <%= f.check_box :NdaSigned, :checked => false %>
-                <%= f.file_field :ndaDoc %>
-            </p>
-        </div>
+  
+        <div class="row">
         
-        <div class="col-md-6">
-            <%= f.label :workstationReady, 'Workstation prepared for new employee?' do %>
-                <%= 'Workstation prepared for new employee?' %>
-            <% end %>
-            <p>
-                <%= f.check_box :workstationReady, :checked => false %>
-            </p>
-        </div>
-
-        <div class="col-md-6">
-            <%= f.label :packReady, 'Greeting pack prepared for new employee?' do %>
-                <%= 'Greeting pack prepared for new employee?' %>
-            <% end %>
-            <p>
-                <%= f.check_box :packReady, :checked => false %>
-            </p>
-        </div>
+            <div class="col-md-6">
+                <%= f.label :NdaSigned, 'NDA Signed' do %>
+                    <%= 'NDA Signed' %>
+                <% end %>
+                <p>
+                    <%= f.check_box :NdaSigned, :checked => false %>
+                    <%= f.file_field :ndaDoc %>
+                </p>
+            </div>
+            
+            <div class="col-md-6">
+                <%= f.label :workstationReady, 'Workstation prepared for new employee?' do %>
+                    <%= 'Workstation prepared for new employee?' %>
+                <% end %>
+                <p>
+                    <%= f.check_box :workstationReady, :checked => false %>
+                </p>
+            </div>
     
-    </div>
-    
-    <%= f.submit "Submit" %>
-    
-<% end %>
-
+            <div class="col-md-6">
+                <%= f.label :packReady, 'Greeting pack prepared for new employee?' do %>
+                    <%= 'Greeting pack prepared for new employee?' %>
+                <% end %>
+                <p>
+                    <%= f.check_box :packReady, :checked => false %>
+                </p>
+            </div>
+        
+        </div>  
+        <%= f.submit "Submit" %>
+        <% end %>
+  </div>
+</div>    
 
 <style>
     table {
