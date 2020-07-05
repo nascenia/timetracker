@@ -88,6 +88,7 @@ class PreRegistrationsController < ApplicationController
         :companyEmail,
         :joiningDate,
         :datetime,
+        :designation,
         :NdaSigned,
         :user_id,
         :emailGroup,
