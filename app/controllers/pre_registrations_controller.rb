@@ -90,6 +90,7 @@ class PreRegistrationsController < ApplicationController
         :datetime,
         :designation,
         :NdaSigned,
+        :ndaDoc,
         :user_id,
         :emailGroup,
         :contactNumber,
