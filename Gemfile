@@ -13,6 +13,7 @@ gem 'haml'
 gem 'html2haml'
 gem 'httparty'
 gem 'jquery-rails'
+gem 'letter_opener', :group => :development
 gem 'mini_magick'
 gem 'mysql2'
 gem 'omniauth'

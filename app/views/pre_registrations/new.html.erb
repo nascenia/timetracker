@@ -42,7 +42,7 @@
                     <span class='required-asterisk'>*</span>
                 <% end %>
                 <p>
-                    <%= f.text_field :name ,:class => 'form-control', required: 'true', :maxlength=>"128"%>
+                    <%= f.text_field :name, :class => 'form-control', required: 'true', :maxlength=>"128"%>
                 </p>
             </div>
   
@@ -52,7 +52,7 @@
                     <span class='required-asterisk'>*</span>
                 <% end %>
                 <p>
-                    <%= f.text_field :joiningDate, :class => 'form-control timesheet-date-picker_new_join', value: Time.now.strftime("%Y/%m/%d"),:onkeydown=>"return false" %>
+                    <%= f.text_field :joiningDate, :class => 'form-control timesheet-date-picker_new_join', value: Time.now.strftime("%Y/%m/%d"), :onkeydown=>"return false" %>
                 </p>
             </div>
   
@@ -62,7 +62,7 @@
                     <span class='required-asterisk'>*</span>
                 <% end %>
                 <p>
-                    <%= f.text_field :designation ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
+                    <%= f.text_field :designation, :class => 'form-control', required: 'true', :maxlength=>"128"%>
                 </p>
             </div>
   
@@ -72,7 +72,7 @@
                     <span class='required-asterisk'>*</span>
                 <% end %>
                 <p>
-                    <%= f.select :user_id, options_for_select(@ttf_list.collect { | ttf_list | [ttf_list.name,  ttf_list.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'}%>
+                    <%= f.select :user_id, options_for_select( @ttf_list.collect { | ttf_list | [ttf_list.name,  ttf_list.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'} %>
                 </p>
             </div>
   

@@ -40,4 +40,6 @@ Internal::Application.configure do
   # number of complex assets.
   config.assets.debug = true
   config.serve_static_assets = true
+  config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.perform_deliveries = true
 end
