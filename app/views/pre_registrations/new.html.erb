@@ -42,7 +42,7 @@
                     <span class='required-asterisk'>*</span>
                 <% end %>
                 <p>
-                    <%= f.text_field :name ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
+                    <%= f.text_field :name ,:class => 'form-control', required: 'true', :maxlength=>"128"%>
                 </p>
             </div>
   
@@ -124,6 +124,7 @@
                     <%= f.select :weekend_id, options_for_select(@weekend_scheme.collect { | weekend | [weekend.name,  weekend.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'}%>
                 </p>
             </div>
+
         </div>
   
         <div class="row">
@@ -131,33 +132,31 @@
             <div class="col-md-6">
                 <%= f.label :NdaSigned, 'NDA Signed' do %>
                     <%= 'NDA Signed' %>
+                    <span class='required-asterisk'>*</span>
+                    <%= f.check_box :NdaSigned, :checked => false, :required => true %>
+                    <%= f.file_field :ndaDoc, :required => true %>
                 <% end %>
-                <p>
-                    <%= f.check_box :NdaSigned, :checked => false %>
-                    <%= f.file_field :ndaDoc %>
-                </p>
             </div>
             
             <div class="col-md-6">
                 <%= f.label :workstationReady, 'Workstation prepared for new employee?' do %>
-                    <%= 'Workstation prepared for new employee?' %>
+                    <%= 'Workstation prepared for new employee? ' %>
+                    <span class='required-asterisk'>*</span>
+                    <%= f.check_box :workstationReady, :checked => false, :required => true %>
                 <% end %>
-                <p>
-                    <%= f.check_box :workstationReady, :checked => false %>
-                </p>
             </div>
     
             <div class="col-md-6">
                 <%= f.label :packReady, 'Greeting pack prepared for new employee?' do %>
                     <%= 'Greeting pack prepared for new employee?' %>
+                    <span class='required-asterisk'>*</span>
+                    <%= f.check_box :packReady, :checked => false, :required => true %>
                 <% end %>
-                <p>
-                    <%= f.check_box :packReady, :checked => false %>
-                </p>
             </div>
         
-        </div>  
-        <%= f.submit "Submit" %>
+        </div>
+        <br/>  
+        <%= f.submit 'Submit', class: 'btn btn-success' %>
         <% end %>
   </div>
 </div>    
