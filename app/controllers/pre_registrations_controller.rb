@@ -35,7 +35,7 @@ class PreRegistrationsController < ApplicationController
         end
         pre_registration.step_no = 2
         if pre_registration.save
-            UserMailer.send_new_employee_notification(current_user).deliver
+            UserMailer.send_new_employee_notification(pre_registration).deliver
             redirect_to new_pre_registration_path
         end
     end
@@ -53,6 +53,8 @@ class PreRegistrationsController < ApplicationController
         @holiday_scheme = HolidayScheme.all
         @weekend_scheme = Weekend.all
         @ttf_list = User.active.where(role: 2)
+        @flag = false
+        @flag = params[:ceo_flag]
         if params[:format] != "1"
             @is_for_admin = "23"
         else
