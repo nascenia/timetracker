@@ -118,6 +118,9 @@ class User < ActiveRecord::Base
           preRegistration_individual_main  = preRegistration_individual
           holiday_scheme_id = preRegistration_individual.holiday_scheme_id
           weekend_id = preRegistration_individual.weekend_id
+          joiningDate = preRegistration.joiningDate
+          personalEmail = preRegistration.personalEmail
+          mobileNumber = preRegistration.contactNumber
           break
         end
       end
@@ -125,6 +128,9 @@ class User < ActiveRecord::Base
       user = User.create(name: name,
                          email: email,
                          weekend_id: weekend_id,
+                         joining_date: joiningDate,
+                         personal_email: personalEmail,
+                         mobile_number: mobileNumber,
                          holiday_scheme_id: holiday_scheme_id,
                          password: Devise.friendly_token[0, 20])
 

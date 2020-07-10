@@ -1,20 +1,16 @@
+
 %table{:bgcolor => "#fff", :cellpadding => "0", :cellspacing => "0", :style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; border-radius: 4px; background-color: #fff; margin: 20px 0; padding: 0; border: 1px solid #e9e9e9;", :width => "100%"}
   %tr{:style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0; padding: 0;"}
     %td{:style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 24px;", :valign => "top"}
       %table{:cellpadding => "0", :cellspacing => "0", :style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0; padding: 0;", :width => "100%"}
         %tr{:style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0; padding: 0;"}
           %td{:style => "text-align: center; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 14px;", :valign => "top"}
-            %strong
-              Hello A new employee has joined with following details:
-            %ol{:style => "text-align: left; list-style-position: inside;"}
-              %li= @pre_registration.name
-              %li= @pre_registration.personalEmail
-              %li= @pre_registration.contactNumber
-              %li= @pre_registration.emailGroup
-            %p{:style => "text-align: left;"}
-              I would like to request you to open an email ID for
-              %b= @pre_registration.name
-              and assign him/her to the relevant email group(s)
+            A new employee
+            %b=  @pre_registration.name
+            with email
+            %b=  @pre_registration.companyEmail
+            has joined on
+            %b= @pre_registration.joiningDate 
         %tr{:style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0; padding: 0;"}
           %td{:align => "center", :style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: center; margin: 0;", :valign => "top"}
-            = link_to 'New Employee approval', edit_pre_registration_url(@pre_registration.id, ceo_flag: true), target: "_blank", :only_path => true, :style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; color: #47becc; text-decoration: none; display: inline-block; line-height: 2; text-align: center; cursor: pointer; text-transform: capitalize; border-radius: 100px; background-image: none; margin: 0; padding: 7px 14px; border: 2px solid #47becc;"
+            = link_to 'New Employee approval', pre_registration_url(@pre_registration.id), target: "_blank", :only_path => true, :style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; color: #47becc; text-decoration: none; display: inline-block; line-height: 2; text-align: center; cursor: pointer; text-transform: capitalize; border-radius: 100px; background-image: none; margin: 0; padding: 7px 14px; border: 2px solid #47becc;"

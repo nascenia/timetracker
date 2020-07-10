@@ -66,6 +66,8 @@ class PreRegistrationsController < ApplicationController
     end
     def update
         pre_registration = PreRegistration.find params[:id]
+        @flag = false
+        @flag = params[:ceo_flag]
         if params[:selected] == "23"
             pre_registration.step_no = 2
         end
@@ -74,8 +76,10 @@ class PreRegistrationsController < ApplicationController
         end
         if pre_registration.update(pre_registration_params)
             if params[:selected] == "23"
-                redirect_to pre_registration
-                else
+                UserMailer.send_invitation_to_new_employee_about_timetracker(pre_registration).deliver
+                UserMailer.send_notification_to_HR_about_new_employee(pre_registration).deliver
+                redirect_to root_path       
+            else
                 redirect_to new_pre_registration_path
             end
         end

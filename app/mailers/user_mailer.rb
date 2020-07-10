@@ -174,4 +174,28 @@ class UserMailer < ActionMailer::Base
     false
     true
   end
+
+  def send_invitation_to_new_employee_about_timetracker(pre_registration)
+    @pre_registration = pre_registration
+    subject = 'Invitation to Time tracker with new email ID'
+  
+    mail to: @pre_registration.companyEmail, subject: subject
+    true
+  rescue => e
+    logger.error e.message
+    false
+    true
+  end
+  
+  def send_notification_to_HR_about_new_employee(pre_registration)
+    @pre_registration = pre_registration
+    subject = 'Action required to prepare documents and arrangements for new employee'
+  
+    mail to: 'hr@nascenia.com', subject: subject
+    true
+  rescue => e
+    logger.error e.message
+    false
+    true
+  end
 end

@@ -127,7 +127,7 @@
             </div>
 
         </div>
-        <button type="button" class="btn btn-lg btn-secondary">Secondary</button>
+        <button type='button' class= 'btn btn-lg btn-secondary' >Secondary</button>
     <br/>
     <hr>
     <%= hidden_field_tag 'selected', @is_for_admin  %>
@@ -143,6 +143,6 @@
             </div>
         <%end %>
         <br/>
-        <%= f.submit "Submit", :class =>'btn btn-lg btn-success' %>
+        <%= f.submit "Submit", :class =>'btn btn-lg btn-success', confirm: "Are you sure?" %>
     </div>
 <% end %>
