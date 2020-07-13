@@ -6,7 +6,7 @@
 <br>
 <%= form_for @pre_registration do |f| %>
         <div class="row">
-            
+    
             <div class="col-md-6">
                 <%= f.label :name, 'Employee Name' do %>
                     <%= 'Employee Name' %>
@@ -127,7 +127,7 @@
             </div>
 
         </div>
-        <button type='button' class= 'btn btn-lg btn-secondary' >Secondary</button>
+        <%= f.submit "Save", :class =>'btn btn-success' %>
     <br/>
     <hr>
     <%= hidden_field_tag 'selected', @is_for_admin  %>
@@ -141,8 +141,15 @@
                     <%= f.text_field :companyEmail, :class => 'form-control', :maxlength=>"128", :required => true %>
                 <% end %>
             </div>
-        <%end %>
-        <br/>
-        <%= f.submit "Submit", :class =>'btn btn-lg btn-success', confirm: "Are you sure?" %>
+            <div class="col-md-6">
+                <%= f.label :HR_email, 'Notify HR to follow the next step' do %>
+                    <%= 'Notify HR to follow the next step' %>
+                    <span class='required-asterisk'>*</span>
+                    <%= f.text_field :HR_email, :class => 'form-control', :maxlength=>"128", :required => true %>
+                <% end %>
+            </div>
+        <% end %>    
     </div>
+    <br/>
+    <%= f.submit "Submit", :class =>'btn btn-success', confirm: "Are you sure?" %>
 <% end %>

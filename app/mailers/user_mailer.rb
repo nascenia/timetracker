@@ -189,9 +189,10 @@ class UserMailer < ActionMailer::Base
   
   def send_notification_to_HR_about_new_employee(pre_registration)
     @pre_registration = pre_registration
+    @HR_email = pre_registration.HR_email
     subject = 'Action required to prepare documents and arrangements for new employee'
   
-    mail to: 'hr@nascenia.com', subject: subject
+    mail to: @HR_email, subject: subject
     true
   rescue => e
     logger.error e.message

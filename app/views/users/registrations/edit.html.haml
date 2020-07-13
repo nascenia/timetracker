@@ -92,6 +92,18 @@
       -else
         .col-sm-10
           =f.file_field :avatar, {:class => 'form-control', :required => true}
+    .form-group
+      = f.label :resume, 'Resume', {:class => 'col-sm-2 control-label'}
+      .col-sm-10
+        =f.file_field :resume, {:class => 'form-control', :required => true} 
+    .form-group
+      = f.label :national_id, 'National ID', {:class => 'col-sm-2 control-label'}
+      .col-sm-10
+        =f.file_field :national_id, {:class => 'form-control', :required => true} 
+    .form-group
+      = f.label :passport, 'Passport', {:class => 'col-sm-2 control-label'}
+      .col-sm-10
+        =f.file_field :passport, {:class => 'form-control', :required => true} 
   %br
   .form-group
     .col-sm-offset-2.col-sm-10

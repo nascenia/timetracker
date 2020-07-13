@@ -1,8 +1,16 @@
 class User < ActiveRecord::Base
   #
+  # File Uploaders
+  #
+  
+  mount_uploader :resume, FileUploader
+  mount_uploader :national_id, FileUploader
+  mount_uploader :passport, FileUploader
+
+  #
   # Relationships
   #
-
+  
   belongs_to :approval_path
   belongs_to :weekend
   belongs_to :holiday_scheme

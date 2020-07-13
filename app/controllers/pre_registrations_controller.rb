@@ -98,6 +98,7 @@ class PreRegistrationsController < ApplicationController
         :NdaSigned,
         :ndaDoc,
         :user_id,
+        :HR_email,
         :emailGroup,
         :contactNumber,
         :personalEmail,
