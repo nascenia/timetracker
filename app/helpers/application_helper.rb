@@ -71,4 +71,18 @@ module ApplicationHelper
     leave.leave_type == Leave::UNANNOUNCED
   end
 
+  def count_employee
+    PreRegistration.count
+  end
+  
+  def add_employee
+    @pre_registration_all = PreRegistration.where('pre_registrations.step_no = ? OR pre_registrations.step_no = ?', 2, 3)
+    return @pre_registration_all.length
+  end
+
+  def employee_onboard
+    @pre_registration_all = PreRegistration.where('pre_registrations.step_no = ?', 4)
+    return @pre_registration_all.length
+  end
+
 end

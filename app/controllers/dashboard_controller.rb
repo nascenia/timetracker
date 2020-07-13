@@ -15,7 +15,7 @@ class DashboardController < ApplicationController
       @attendance_summary = user.attendances.monthly_attendance_summary(Date.today.at_beginning_of_month,
                                                                         Date.today).includes(:children)
       @all_approved_leaves = Leave.get_users_on_leave_today
-
+      
       respond_to do |format|
         format.html
       end

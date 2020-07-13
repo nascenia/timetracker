@@ -60,10 +60,19 @@ legend
   text-align: left;
   vertical-align: middle;
 }
+
 .modal-title{
   font-size: 16px;
   font-weight: bold;
 }
+
 .modal-header{
   padding-bottom: 7px;
+}
+
+.badge-pill{
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  color: white;
 }
