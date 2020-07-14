@@ -51,9 +51,9 @@ class User < ActiveRecord::Base
   ADMIN_USERS = CONFIG['admins']
 
   REGISTRATION_STATUS = {
-      not_registered: 0,
-      not_approved: 1,
-      registered: 2,
+    not_registered: 0,
+    not_approved: 1,
+    registered: 2,
   }
 
   EMPLOYEE = 1
@@ -148,13 +148,13 @@ class User < ActiveRecord::Base
         sixth_month = user.attendances.monthly_attendance_summary(6.month.ago.at_beginning_of_month, 6.month.ago.end_of_month).includes(:children)
 
         csv << [
-            "#{user.email}",
-            "#{Attendance.monthly_total_hours(first_month)}", "#{Attendance.monthly_average_hours(first_month)}", "#{Attendance.monthly_average_check_in_time(first_month)}",
-            "#{Attendance.monthly_total_hours(second_month)}", "#{Attendance.monthly_average_hours(second_month)}", "#{Attendance.monthly_average_check_in_time(second_month)}",
-            "#{Attendance.monthly_total_hours(third_month)}", "#{Attendance.monthly_average_hours(third_month)}", "#{Attendance.monthly_average_check_in_time(third_month)}",
-            "#{Attendance.monthly_total_hours(fourth_month)}", "#{Attendance.monthly_average_hours(fourth_month)}", "#{Attendance.monthly_average_check_in_time(fourth_month)}",
-            "#{Attendance.monthly_total_hours(fifth_month)}", "#{Attendance.monthly_average_hours(fifth_month)}", "#{Attendance.monthly_average_check_in_time(fifth_month)}",
-            "#{Attendance.monthly_total_hours(sixth_month)}", "#{Attendance.monthly_average_hours(sixth_month)}", "#{Attendance.monthly_average_check_in_time(sixth_month)}"]
+          "#{user.email}",
+          "#{Attendance.monthly_total_hours(first_month)}", "#{Attendance.monthly_average_hours(first_month)}", "#{Attendance.monthly_average_check_in_time(first_month)}",
+          "#{Attendance.monthly_total_hours(second_month)}", "#{Attendance.monthly_average_hours(second_month)}", "#{Attendance.monthly_average_check_in_time(second_month)}",
+          "#{Attendance.monthly_total_hours(third_month)}", "#{Attendance.monthly_average_hours(third_month)}", "#{Attendance.monthly_average_check_in_time(third_month)}",
+          "#{Attendance.monthly_total_hours(fourth_month)}", "#{Attendance.monthly_average_hours(fourth_month)}", "#{Attendance.monthly_average_check_in_time(fourth_month)}",
+          "#{Attendance.monthly_total_hours(fifth_month)}", "#{Attendance.monthly_average_hours(fifth_month)}", "#{Attendance.monthly_average_check_in_time(fifth_month)}",
+          "#{Attendance.monthly_total_hours(sixth_month)}", "#{Attendance.monthly_average_hours(sixth_month)}", "#{Attendance.monthly_average_check_in_time(sixth_month)}"]
       end
     end
   end
@@ -178,7 +178,7 @@ class User < ActiveRecord::Base
 
     User.active.each do |user|
       begin
-      ttf_name = @all_user.find(user.ttf_id).name
+        ttf_name = @all_user.find(user.ttf_id).name
       rescue Exception => exc
         ttf_name = ''
       end
@@ -257,67 +257,67 @@ class User < ActiveRecord::Base
         # if leave_count_by_date.size >= 1
         leave_count_by_date.each do |leave_count_by_date_individual|
           if !leave_count_by_date_individual.end_date.nil?
-              if leave_count_by_date_individual.half_day == Leave::FULL_DAY
-                if leave_count_by_date_individual.end_date >= options2[:end_date].to_date
-                  local_date_diff = ((options2[:end_date].to_date - leave_count_by_date_individual.start_date)+1).to_i
-                  logger.info user[:name]+"  END DATE : "+ leave_count_by_date_individual.end_date.to_s+" *******************************   245  "+"  START DATE : "+ leave_count_by_date_individual.start_date.to_s+" ****"+  local_date_diff.to_s
-                  expected_time_to_spend_in_office  = expected_time_to_spend_in_office - (date_difference-local_date_diff)*9
-                  expected_productive_time_to_in_office  = expected_productive_time_to_in_office - (date_difference-local_date_diff)*8
-                else
-                  local_date_diff = ((leave_count_by_date_individual.end_date - leave_count_by_date_individual.start_date)+1).to_i
-                  logger.info user[:name]+"  END DATE : "+ leave_count_by_date_individual.end_date.to_s+" *******************************   250  "+"  START DATE : "+ leave_count_by_date_individual.start_date.to_s+" ****"+  local_date_diff.to_s
-                  expected_time_to_spend_in_office  = (date_difference-local_date_diff)*9
-                  expected_productive_time_to_in_office  = (date_difference-local_date_diff)*8
-                end
+            if leave_count_by_date_individual.half_day == Leave::FULL_DAY
+              if leave_count_by_date_individual.end_date >= options2[:end_date].to_date
+                local_date_diff = ((options2[:end_date].to_date - leave_count_by_date_individual.start_date)+1).to_i
+                logger.info user[:name]+"  END DATE : "+ leave_count_by_date_individual.end_date.to_s+" *******************************   245  "+"  START DATE : "+ leave_count_by_date_individual.start_date.to_s+" ****"+  local_date_diff.to_s
+                expected_time_to_spend_in_office  = expected_time_to_spend_in_office - (date_difference-local_date_diff)*9
+                expected_productive_time_to_in_office  = expected_productive_time_to_in_office - (date_difference-local_date_diff)*8
+              else
+                local_date_diff = ((leave_count_by_date_individual.end_date - leave_count_by_date_individual.start_date)+1).to_i
+                logger.info user[:name]+"  END DATE : "+ leave_count_by_date_individual.end_date.to_s+" *******************************   250  "+"  START DATE : "+ leave_count_by_date_individual.start_date.to_s+" ****"+  local_date_diff.to_s
+                expected_time_to_spend_in_office  = (date_difference-local_date_diff)*9
+                expected_productive_time_to_in_office  = (date_difference-local_date_diff)*8
               end
-              if leave_count_by_date_individual.half_day == Leave::FIRST_HALF
-                expected_time_to_spend_in_office  = expected_time_to_spend_in_office-4.5
-                expected_productive_time_to_in_office  = expected_productive_time_to_in_office-4
-              end
-              if leave_count_by_date_individual.half_day == Leave::SECOND_HALF
-                expected_time_to_spend_in_office  = expected_time_to_spend_in_office-4.5
-                expected_productive_time_to_in_office  = expected_productive_time_to_in_office-4
-              end
-          # else
-          #   date_diff_db = (leave_count_by_date_individual.end_date - leave_count_by_date_individual.start_date).to_i
-          #   expected_time_to_spend_in_office  = (date_difference-date_diff_db)*9
-          #   expected_productive_time_to_in_office  = (date_difference-date_diff_db)*8
+            end
+            if leave_count_by_date_individual.half_day == Leave::FIRST_HALF
+              expected_time_to_spend_in_office  = expected_time_to_spend_in_office-4.5
+              expected_productive_time_to_in_office  = expected_productive_time_to_in_office-4
+            end
+            if leave_count_by_date_individual.half_day == Leave::SECOND_HALF
+              expected_time_to_spend_in_office  = expected_time_to_spend_in_office-4.5
+              expected_productive_time_to_in_office  = expected_productive_time_to_in_office-4
+            end
+            # else
+            #   date_diff_db = (leave_count_by_date_individual.end_date - leave_count_by_date_individual.start_date).to_i
+            #   expected_time_to_spend_in_office  = (date_difference-date_diff_db)*9
+            #   expected_productive_time_to_in_office  = (date_difference-date_diff_db)*8
 
           end
         end
         # end
-          leave_count_by_date = Leave.all.where(:user_id => user[:id],end_date: options2[:start_date].to_date..options2[:end_date].to_date)
-            leave_count_by_date.each do |leave_count_by_date_individual|
-              if !leave_count_by_date_individual.start_date.nil?
-                logger.info   user[:name]+"     ***********SIZE****************     " +leave_count_by_date.size.to_s + "     ***************************"
-                if leave_count_by_date_individual.half_day == Leave::FULL_DAY
-                  if leave_count_by_date_individual.start_date < options2[:start_date].to_date
-                    local_date_diff = ((  leave_count_by_date_individual.end_date - options2[:start_date].to_date )+1 ).to_i
-                    logger.info user[:name]+"  END DATE : "+ leave_count_by_date_individual.end_date.to_s+" *******************************   277  "+"  START DATE : "+ leave_count_by_date_individual.start_date.to_s+" ****"+  local_date_diff.to_s
-                    expected_time_to_spend_in_office  = expected_time_to_spend_in_office - (date_difference-local_date_diff)*9
-                    expected_productive_time_to_in_office  = expected_productive_time_to_in_office - (date_difference-local_date_diff)*8
-                  # else
-                  #   local_date_diff = local_date_diff+((leave_count_by_date_individual.end_date - leave_count_by_date_individual.start_date)+1).to_i
-                  #   logger.info  user[:name]+"*******************************   282  "+  local_date_diff.to_s
-                  #   expected_time_to_spend_in_office  = (date_difference-local_date_diff)*9
-                  #   expected_productive_time_to_in_office  = (date_difference-local_date_diff)*8
-                  end
-                end
-                if leave_count_by_date_individual.half_day == Leave::FIRST_HALF
-                  expected_time_to_spend_in_office  = expected_time_to_spend_in_office-4.5
-                  expected_productive_time_to_in_office  = expected_productive_time_to_in_office-4
-                end
-                if leave_count_by_date_individual.half_day == Leave::SECOND_HALF
-                  expected_time_to_spend_in_office  = expected_time_to_spend_in_office-4.5
-                  expected_productive_time_to_in_office  = expected_productive_time_to_in_office-4
-                end
+        leave_count_by_date = Leave.all.where(:user_id => user[:id],end_date: options2[:start_date].to_date..options2[:end_date].to_date)
+        leave_count_by_date.each do |leave_count_by_date_individual|
+          if !leave_count_by_date_individual.start_date.nil?
+            logger.info   user[:name]+"     ***********SIZE****************     " +leave_count_by_date.size.to_s + "     ***************************"
+            if leave_count_by_date_individual.half_day == Leave::FULL_DAY
+              if leave_count_by_date_individual.start_date < options2[:start_date].to_date
+                local_date_diff = ((  leave_count_by_date_individual.end_date - options2[:start_date].to_date )+1 ).to_i
+                logger.info user[:name]+"  END DATE : "+ leave_count_by_date_individual.end_date.to_s+" *******************************   277  "+"  START DATE : "+ leave_count_by_date_individual.start_date.to_s+" ****"+  local_date_diff.to_s
+                expected_time_to_spend_in_office  = expected_time_to_spend_in_office - (date_difference-local_date_diff)*9
+                expected_productive_time_to_in_office  = expected_productive_time_to_in_office - (date_difference-local_date_diff)*8
                 # else
-                #   date_diff_db = (leave_count_by_date_individual.end_date - leave_count_by_date_individual.start_date).to_i
-                #   expected_time_to_spend_in_office  = (date_difference-date_diff_db)*9
-                #   expected_productive_time_to_in_office  = (date_difference-date_diff_db)*8
-
+                #   local_date_diff = local_date_diff+((leave_count_by_date_individual.end_date - leave_count_by_date_individual.start_date)+1).to_i
+                #   logger.info  user[:name]+"*******************************   282  "+  local_date_diff.to_s
+                #   expected_time_to_spend_in_office  = (date_difference-local_date_diff)*9
+                #   expected_productive_time_to_in_office  = (date_difference-local_date_diff)*8
               end
             end
+            if leave_count_by_date_individual.half_day == Leave::FIRST_HALF
+              expected_time_to_spend_in_office  = expected_time_to_spend_in_office-4.5
+              expected_productive_time_to_in_office  = expected_productive_time_to_in_office-4
+            end
+            if leave_count_by_date_individual.half_day == Leave::SECOND_HALF
+              expected_time_to_spend_in_office  = expected_time_to_spend_in_office-4.5
+              expected_productive_time_to_in_office  = expected_productive_time_to_in_office-4
+            end
+            # else
+            #   date_diff_db = (leave_count_by_date_individual.end_date - leave_count_by_date_individual.start_date).to_i
+            #   expected_time_to_spend_in_office  = (date_difference-date_diff_db)*9
+            #   expected_productive_time_to_in_office  = (date_difference-date_diff_db)*8
+
+          end
+        end
         # end
         if user[:projects].size >0
           user[:projects].each do |user_project|
@@ -328,7 +328,7 @@ class User < ActiveRecord::Base
             end
           end
           begin
-          hours_not_accounted_for_any_project = ((expected_productive_time_to_in_office - total_hours_logged_in).to_f/expected_productive_time_to_in_office).to_f
+            hours_not_accounted_for_any_project = ((expected_productive_time_to_in_office - total_hours_logged_in).to_f/expected_productive_time_to_in_office).to_f
           rescue Exception => exc
             hours_not_accounted_for_any_project = 0;
           end
@@ -357,7 +357,7 @@ class User < ActiveRecord::Base
 
     User.active.each do |user|
       begin
-      ttf_name = @all_user.find(user.ttf_id).name
+        ttf_name = @all_user.find(user.ttf_id).name
       rescue Exception => exc
         ttf_name = ''
       end
@@ -418,25 +418,25 @@ class User < ActiveRecord::Base
   def self.award_leave
     @robi_weekend = Weekend.where("name like ?", "%robi%").select(:id, :name).take
     User.active.each do |u|
-        if u.weekend != @robi_weekend
-            leaves = u.leaves.where("leave_type =? AND start_date =? ", 3, "2018-02-21")
+      if u.weekend != @robi_weekend
+        leaves = u.leaves.where("leave_type =? AND start_date =? ", 3, "2018-02-21")
 
-            if leaves.count == 1
-                hours = 4
-            elsif leaves.count == 2
-                hours = 8
-            else
-                hours = 0
-            end
-
-            u.leave_tracker.update_attributes!(
-              :awarded_leave => u.leave_tracker.awarded_leave.present? ? u.leave_tracker.awarded_leave : 0 + hours
-            )
-            if hours != 0
-                UserMailer.send_award_leave_notification_to_user(u, hours).deliver
-                leaves.destroy_all
-            end
+        if leaves.count == 1
+          hours = 4
+        elsif leaves.count == 2
+          hours = 8
+        else
+          hours = 0
         end
+
+        u.leave_tracker.update_attributes!(
+          :awarded_leave => u.leave_tracker.awarded_leave.present? ? u.leave_tracker.awarded_leave : 0 + hours
+        )
+        if hours != 0
+          UserMailer.send_award_leave_notification_to_user(u, hours).deliver
+          leaves.destroy_all
+        end
+      end
     end
   end
 
@@ -485,8 +485,8 @@ class User < ActiveRecord::Base
 
   def get_co_workers
     users = User.list_of_ttfs(id) +
-            User.list_of_employees(id) +
-            User.where(approval_path_id: ApprovalPath.where(id: owned_paths.pluck(:approval_path_id)).pluck(:id))
+      User.list_of_employees(id) +
+      User.where(approval_path_id: ApprovalPath.where(id: owned_paths.pluck(:approval_path_id)).pluck(:id))
     users.to_set
   end
 
@@ -496,13 +496,13 @@ class User < ActiveRecord::Base
 
   def create_half_day_unannounced_leave(half_of_the_day)
     leave = leaves.new(
-        leave_type: Leave::UNANNOUNCED,
-        start_date: Time.now,
-        status: Leave::ACCEPTED,
-        approval_path: approval_path,
-        half_day: half_of_the_day,
-        # pending_at: u.approval_path.try(:path_chains).try(:count))
-        pending_at: 0
+      leave_type: Leave::UNANNOUNCED,
+      start_date: Time.now,
+      status: Leave::ACCEPTED,
+      approval_path: approval_path,
+      half_day: half_of_the_day,
+      # pending_at: u.approval_path.try(:path_chains).try(:count))
+      pending_at: 0
     )
     if leave_tracker.present? && leave.save
       leave_tracker.update_leave_tracker(leave)
