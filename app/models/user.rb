@@ -110,46 +110,26 @@ class User < ActiveRecord::Base
   end
 
   def self.find_for_google_oauth2(access_token, signed_in_resource=nil)
-    email=access_token.extra.id_info['email']
-    name=access_token.info['name']
-    user = User.where(:email => email).first
-
+    # if an user is found in the User table then return that user information
+    # else create a new user by fetching information form the PreRegistration database
+    companyEmail = access_token.extra.id_info['email']
+    user = User.where(email: companyEmail).first
     unless user
-      preRegistration = PreRegistration.all.where(companyEmail: email ,step_no: 2)
-      is_user_found = false
-      weekend_id = 0
-      holiday_scheme_id = 0
-      preRegistration_individual_main = nil
-      preRegistration.each do |preRegistration_individual|
-        if !preRegistration_individual.name.nil?
-          is_user_found =true
-          preRegistration_individual_main  = preRegistration_individual
-          holiday_scheme_id = preRegistration_individual.holiday_scheme_id
-          weekend_id = preRegistration_individual.weekend_id
-          
-          break
+        preRegistration = PreRegistration.where(companyEmail: companyEmail, step_no: 2).first    
+        if preRegistration.present?
+            user = User.create(name: preRegistration.name,
+                            email: preRegistration.companyEmail,
+                            weekend_id: preRegistration.weekend_id,
+                            holiday_scheme_id: preRegistration.holiday_scheme_id,
+                            personal_email: preRegistration.personalEmail,
+                            mobile_number: preRegistration.contactNumber,
+                            joining_date: preRegistration.joiningDate,
+                            password: Devise.friendly_token[0, 20])
+            preRegistration.step_no = 3
+            preRegistration.save
         end
-      end
-      if is_user_found
-      user = User.create(name: name,
-                         email: email,
-                         weekend_id: weekend_id,
-                         holiday_scheme_id: holiday_scheme_id,
-                         password: Devise.friendly_token[0, 20])
-
-      pre_registration2 = PreRegistration.find_by_id(preRegistration_individual_main[:id])
-        pre_registration2.step_no = 3
-        pre_registration2.save
-      # pre_registration2.update
-
     end
-    end
-
-    user
-  end
-
-  def remember_me
-    true
+    return user
   end
 
   def self.to_csv(options = {})
