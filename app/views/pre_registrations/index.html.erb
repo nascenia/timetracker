@@ -1,4 +1,4 @@
-
+<%= stylesheet_link_tag 'pre_registrations', :media => 'all', 'data-turbolinks-track' => true %>
 <table style="width:100%">
     <tr>
         <th>Name</th>
@@ -8,6 +8,11 @@
         <th>Action Edit </th>
     </tr>
     <% last_date = ''%>
+    <% if @pre_registration_all.empty? %>
+        <tr>
+            <td colspan="5" class = "text-center" >No Record</td>
+        </tr>
+    <% end %>
     <% @pre_registration_all.each do |pre_registration_item| %>
         <tr>
             <td><%= pre_registration_item.name %></td>
@@ -19,21 +24,3 @@
     <% end %>
 
 </table>
-
-<style>
-    table {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-    }
-
-    td, th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-    }
-
-    tr:nth-child(even) {
-        background-color: #ffffff;
-    }
-</style>
