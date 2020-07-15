@@ -2,8 +2,7 @@ class PreRegistrationsController < ApplicationController
     layout 'time_tracker'
 
     def index
-        # @pre_registration_all = PreRegistration.where(step_no: 2)
-        @pre_registration_all = PreRegistration.where('pre_registrations.step_no = ? OR pre_registrations.step_no = ?', 2, 3)
+        @pre_registration_all = PreRegistration.where(step_no: 2..3)
         @holiday_scheme = HolidayScheme.all
         @weekend_scheme = Weekend.all
         @ttf_list = User.active.where(role: 2)

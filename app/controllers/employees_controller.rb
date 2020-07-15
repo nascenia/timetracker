@@ -3,11 +3,16 @@ class EmployeesController < ApplicationController
   layout 'time_tracker'
 
   def index
+
+    @pending_employees = PreRegistration.all.where(step_no: 0..3)
+    @pending_employees_names = []
+
+    @pending_employees.each do |item|
+      @pending_employees_names.append(item.name)
+    end
+
     @employees =  User.all.order(name: :asc)
 
-    # @employees.each do |employee|
-    #   logger.info employee
-    # end
     @employees = @employees.where('lower(name) LIKE ?', "%#{params[:name].strip.downcase}%") if params[:name].present?
     @employees = @employees.where('lower(email) LIKE ?', "%#{params[:email].strip.downcase}%") if params[:email].present?
     logger.info "------------------------------------"
