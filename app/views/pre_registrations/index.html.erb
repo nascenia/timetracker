@@ -1,4 +1,5 @@
 <%= stylesheet_link_tag 'pre_registrations', :media => 'all', 'data-turbolinks-track' => true %>
+<h3><b>Employee Onboarding</b></h3><br/>
 <table style="width:100%">
     <tr>
         <th>Name</th>
@@ -8,19 +9,18 @@
         <th>Action Edit </th>
     </tr>
     <% last_date = ''%>
-    <% if @pre_registration_all.empty? %>
+    <% if @onboarding_employees.empty? %>
         <tr>
             <td colspan="5" class = "text-center" >No Record</td>
         </tr>
     <% end %>
-    <% @pre_registration_all.each do |pre_registration_item| %>
+    <% @onboarding_employees.each do |employee| %>
         <tr>
-            <td><%= pre_registration_item.name %></td>
-            <td><%= pre_registration_item.personalEmail %></td>
-            <td><%= pre_registration_item.contactNumber %></td>
-            <td><%= pre_registration_item.joiningDate%></td>
-            <td> <%= link_to 'Edit', pre_registration_path(pre_registration_item) %> </td>
+            <td><%= employee.name %></td>
+            <td><%= employee.personalEmail %></td>
+            <td><%= employee.contactNumber %></td>
+            <td><%= employee.joiningDate%></td>
+            <td> <%= link_to 'Edit', pre_registration_path(employee) %> </td>
         </tr>
     <% end %>
-
 </table>

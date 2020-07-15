@@ -2,14 +2,14 @@ class PreRegistrationsController < ApplicationController
     layout 'time_tracker'
 
     def index
-        @pre_registration_all = PreRegistration.where(step_no: 2..3)
+        @onboarding_employees = PreRegistration.where(step_no: 3)
         @holiday_scheme = HolidayScheme.all
         @weekend_scheme = Weekend.all
         @ttf_list = User.active.where(role: 2)
     end
     def new
         @pre_registration = PreRegistration.new
-        @pre_registration_all = PreRegistration.all.where(step_no: 2)
+        @on_process_of_joining_employees = PreRegistration.all.where(step_no: 2)
         @holiday_scheme = HolidayScheme.all
         @weekend_scheme = Weekend.all
         @ttf_list = User.active.where(role: 2)

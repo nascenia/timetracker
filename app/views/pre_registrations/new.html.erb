@@ -1,27 +1,28 @@
 <%= stylesheet_link_tag 'pre_registrations', :media => 'all', 'data-turbolinks-track' => true %>
+<h3><b>On Process of Joining</b></h3><br/>
 <table style="width:100%">
     <tr>
         <th>Name</th>
         <th>Email ID</th>
-        <th>Contact Number </th>
-        <th>Joining Date </th>
-        <th>Action Edit </th>
-        <th>Action Delete  </th>
+        <th>Contact Number</th>
+        <th>Joining Date</th>
+        <th>Action Edit</th>
+        <th>Action Delete</th>
     </tr>
     <% last_date = ''%>
-    <% if @pre_registration_all.empty? %>
+    <% if @on_process_of_joining_employees.empty? %>
         <tr>
             <td colspan="6" class = "text-center" >No Record</td>
         </tr>
     <% end %>
-    <% @pre_registration_all.each do |pre_registration_item| %>
+    <% @on_process_of_joining_employees.each do |employee| %>
         <tr>
-            <td><%= pre_registration_item.name %></td>
-            <td><%= pre_registration_item.personalEmail %></td>
-            <td><%= pre_registration_item.contactNumber %></td>
-            <td><%= pre_registration_item.joiningDate%></td>
-            <td> <%= link_to 'Edit', edit_pre_registration_path(pre_registration_item,1) %> </td>
-            <td> <%= link_to 'Delete', pre_registration_path(pre_registration_item) , method: :delete%> </td>
+            <td><%= employee.name %></td>
+            <td><%= employee.personalEmail %></td>
+            <td><%= employee.contactNumber %></td>
+            <td><%= employee.joiningDate%></td>
+            <td> <%= link_to 'Edit', edit_pre_registration_path(employee,1) %> </td>
+            <td> <%= link_to 'Delete', pre_registration_path(employee) , method: :delete%> </td>
         </tr>
     <% end %>
 
