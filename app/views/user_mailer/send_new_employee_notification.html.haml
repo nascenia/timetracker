@@ -7,10 +7,18 @@
             %strong
               Hello A new employee has joined with following details:
             %ol{:style => "text-align: left; list-style-position: inside;"}
-              %li= @pre_registration.name
-              %li= @pre_registration.personalEmail
-              %li= @pre_registration.contactNumber
-              %li= @pre_registration.emailGroup
+              %li
+                Name:
+                %b= @pre_registration.name
+              %li
+                Email:
+                %b= @pre_registration.personalEmail
+              %li
+                Phone Number:
+                %b= @pre_registration.contactNumber
+              %li
+                Suggested Email Group:
+                %b= @pre_registration.emailGroup
             %p{:style => "text-align: left;"}
               I would like to request you to open an email ID for
               %b= @pre_registration.name
