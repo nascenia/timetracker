@@ -72,17 +72,15 @@ module ApplicationHelper
   end
 
   def count_employee
-    PreRegistration.count
+    return PreRegistration.where(step_no: 2..3).count
   end
   
   def add_employee
-    @pre_registration_all = PreRegistration.where('pre_registrations.step_no = ? OR pre_registrations.step_no = ?', 2, 3)
-    return @pre_registration_all.length
+    return PreRegistration.where(step_no: 2).count
   end
 
   def employee_onboard
-    @pre_registration_all = PreRegistration.where('pre_registrations.step_no = ?', 4)
-    return @pre_registration_all.length
+    return PreRegistration.where(step_no: 3).count
   end
 
 end

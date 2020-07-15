@@ -14,13 +14,11 @@ h = count_employee
     %a.dropdown-toggle{"data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false",:href => "#"}
       = 'Employee'
       %span{:class => "badge"}
-        = add_employee
-
+        = count_employee
       %span.caret
     %ul.dropdown-menu
       %li
         = link_to 'Employee Info', employees_path
-        
       - if current_user.has_admin_privilege?
         %li
           = link_to 'Add new Employee', new_pre_registration_path
@@ -31,7 +29,6 @@ h = count_employee
           = link_to 'Employee Onbording', pre_registrations_path
           %span{:class => "badge"}
             = employee_onboard
-
   %li{class: (params[:controller].eql?('users/registrations')? 'dropdown active' : 'dropdown')}
     %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
       = current_user.name
