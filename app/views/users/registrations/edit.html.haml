@@ -2,12 +2,15 @@
   .alert.alert-danger
     = flash[:warning]
 %h2
-  Employee details
+  %b
+    Employee Details
 %br
 = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: 'form-horizontal', method: :put }) do |f|
   = devise_error_messages!
   %fieldset
-    %legend Basic
+    %legend
+      Basic
+      %span.required-asterisk *
     .form-group
       = f.label :name, {:class => 'col-sm-2 control-label'}
       .col-sm-10
@@ -26,7 +29,9 @@
         = f.text_field :joining_date, {:class => 'form-control date-picker' , :required => true}
   %br
   %fieldset
-    %legend Contact Information
+    %legend
+      Contact Information
+      %span.required-asterisk *
     .form-group
       = f.label :personal_email, {:class => 'col-sm-2 control-label'}
       .col-sm-10
@@ -49,7 +54,9 @@
         =f.text_area :permanent_address, {:class => 'form-control', :required => true}
   %br
   %fieldset
-    %legend Last Degree
+    %legend
+      Last Degree
+      %span.required-asterisk *
     .form-group
       = f.label :last_degree, 'Name', {:class => 'col-sm-2 control-label'}
       .col-sm-10
@@ -64,7 +71,9 @@
         =f.text_field :passing_year, {:class => 'form-control', :required => true, :pattern => '[1-2][0-9]{3}', :title => 'Enter a valid year!'}
   %br
   %fieldset
-    %legend Emergency Contact Person
+    %legend
+      Emergency Contact Person
+      %span.required-asterisk *
     .form-group
       = f.label :emergency_contact_person_name, 'Name', {:class => 'col-sm-2 control-label'}
       .col-sm-10
@@ -79,32 +88,47 @@
         =f.text_field :emergency_contact_person_number, {:class => 'form-control', :required => true, :pattern => '[0][1][56789][0-9]{8}', :title => 'Enter a valid mobile number!'}
   %br
   %fieldset
-    %legend Photo
+    %legend DBBL Bank Information (if exists)
     .form-group
-      = f.label :avatar, 'Image', {:class => 'col-sm-2 control-label'}
-      -if f.object.avatar.url.present?
+      = f.label :bank_account_no, 'Account Number', {:class => 'col-sm-2 control-label'}
+      .col-sm-10
+        =f.text_field :bank_account_no, {:class => 'form-control'}
+  %br
+  %fieldset
+    %legend Upload Photo and Document
+    .form-group
+      = f.label :avatar, 'Image' , {:class => 'col-sm-2 control-label'} do
+        = 'Image'
+        %span.required-asterisk *
+      - if f.object.avatar.url.present?
         .col-sm-6
-          =f.file_field :avatar, {:class => 'form-control', :required => false}
-          %br
+          = f.file_field :avatar, {:class => 'form-control', :required => false}
+          %br/
         .col-sm-4
           .img-responsive.profile_image
-            =image_tag f.object.avatar.url(:medium)
-      -else
+            = image_tag f.object.avatar.url(:medium)
+      - else
         .col-sm-10
-          =f.file_field :avatar, {:class => 'form-control', :required => true}
+          = f.file_field :avatar, {:class => 'form-control', :required => true}
     .form-group
-      = f.label :resume, 'Resume', {:class => 'col-sm-2 control-label'}
+      = f.label :resume, 'CV' , {:class => 'col-sm-2 control-label'} do
+        = 'CV'
+        %span.required-asterisk *
       .col-sm-10
-        =f.file_field :resume, {:class => 'form-control', :required => true} 
+        = f.file_field :resume, {:class => 'form-control', :required => true}
     .form-group
-      = f.label :national_id, 'National ID', {:class => 'col-sm-2 control-label'}
+      = f.label :national_id, 'National ID / Birth Certificate' , {:class => 'col-sm-2 control-label'} do
+        = 'National ID / Birth Certificate'
+        %span.required-asterisk *
       .col-sm-10
-        =f.file_field :national_id, {:class => 'form-control', :required => true} 
+        = f.file_field :national_id, {:class => 'form-control', :required => true}
     .form-group
-      = f.label :passport, 'Passport', {:class => 'col-sm-2 control-label'}
+      = f.label :passport, 'Passport' , {:class => 'col-sm-2 control-label'} do
+        = 'Passport'
       .col-sm-10
-        =f.file_field :passport, {:class => 'form-control', :required => true} 
+        = f.file_field :passport, {:class => 'form-control'}
+
   %br
   .form-group
-    .col-sm-offset-2.col-sm-10
-      = f.submit 'Update', :class => 'btn btn-primary'
+    .col-sm-2.col-sm-10
+      = f.submit 'Submit', :class => 'btn btn-success'
