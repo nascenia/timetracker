@@ -26,7 +26,7 @@ h = count_employee
       - if current_user.has_admin_privilege?
         %li
           = link_to pre_registrations_path do
-            Employee Onbording
+            Employee Onboarding
             %span.badge= employee_onboard
   %li{class: (params[:controller].eql?('users/registrations')? 'dropdown active' : 'dropdown')}
     %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
