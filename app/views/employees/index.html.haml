@@ -14,7 +14,7 @@
         %th{:width => '15%'} TTF
     %tbody.word-break
       - @employees.each do |employee|
-        - if @pending_employees_names.include? employee.name and current_user.has_admin_privilege?
+        - if @pending_employees_companyEmails.include?(employee.email) and current_user.has_admin_privilege?
           %tr
             %td{class: "bg-danger"}
               = link_to employee.name, employee_path(employee)

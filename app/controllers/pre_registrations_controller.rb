@@ -101,7 +101,6 @@ class PreRegistrationsController < ApplicationController
         :emailGroup,
         :contactNumber,
         :personalEmail,
-        :companyEmail,
         :holiday_scheme_id,
         :weekend_id,
         :workstationReady,
