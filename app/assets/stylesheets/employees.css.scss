@@ -6,18 +6,21 @@
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
+
 .container_accept_or_reject{
   margin-top: 20px;
   .btn.btn-block {
     margin: 10px 0px;
   }
 }
+
 .img-responsive.profile_image{
   img {
     width: 100%;
     height: auto;
   }
 }
+
 .dt-top-left{
   padding: 10px;
 }
@@ -26,9 +29,8 @@
   float: left;
   display: inline-block;
   margin-top: 0 !important;
-
-
 }
+
 .dataTables_filter input{
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -38,6 +40,7 @@
   font-weight: normal;
   margin-right: 20px;
 }
+
 .employee-info-filter{
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -49,9 +52,11 @@
   font-weight: normal;
   margin-right: 10px;
 }
+
 .employee-filter-form{
     float: left;
 }
+
 .DTTT_button{
   float: right;
 }

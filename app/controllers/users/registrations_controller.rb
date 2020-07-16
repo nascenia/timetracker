@@ -5,10 +5,26 @@ class Users::RegistrationsController < Devise::RegistrationsController
     protected
 
     def account_update_params
-      params.require(:user).permit(:personal_email, :present_address, :mobile_number, :alternate_contact,
-                                   :permanent_address, :date_of_birth, :last_degree, :last_university, :passing_year,
-                                   :emergency_contact_person_name, :emergency_contact_person_relation,
-                                   :emergency_contact_person_number, :blood_group, :joining_date,:name,:avatar)
+      params.require(:user).permit(:personal_email,
+                                   :present_address,
+                                   :mobile_number,
+                                   :alternate_contact,
+                                   :permanent_address,
+                                   :date_of_birth,
+                                   :last_degree,
+                                   :last_university,
+                                   :passing_year,
+                                   :emergency_contact_person_name,
+                                   :emergency_contact_person_relation,
+                                   :emergency_contact_person_number,
+                                   :blood_group,
+                                   :joining_date,
+                                   :name,
+                                   :avatar,
+                                   :resume,
+                                   :national_id,
+                                   :passport,
+                                   :bank_account_no)
     end
 
     def update_resource(resource, params)

@@ -3,10 +3,11 @@ class User < ActiveRecord::Base
   # File Uploaders
   #
   
+  mount_uploader :avatar, AvatarUploader
   mount_uploader :resume, FileUploader
   mount_uploader :national_id, FileUploader
   mount_uploader :passport, FileUploader
-
+  
   #
   # Relationships
   #
@@ -37,10 +38,6 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
 
-  mount_uploader :avatar, AvatarUploader
-  mount_uploader :resume, FileUploader
-  mount_uploader :national_id, FileUploader
-  mount_uploader :passport, FileUploader
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
