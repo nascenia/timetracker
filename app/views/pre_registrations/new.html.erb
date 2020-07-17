@@ -2,27 +2,25 @@
 <h3><b>On Process of Joining</b></h3><br/>
 <table style="width:100%">
     <tr>
-        <th>Name</th>
+        <th style="border-left: 1px solid #808080;">Name</th>
         <th>Email ID</th>
         <th>Contact Number</th>
-        <th>Joining Date</th>
-        <th></th>
-        <th></th>
+        <th colspan="3" style="border-right: 1px solid #808080;">Joining Date</th>
     </tr>
     <% last_date = ''%>
     <% if @on_process_of_joining_employees.empty? %>
         <tr>
-            <td colspan="6" class = "text-center" >No Record</td>
+            <td style="border-left: 1px solid #808080; border-right: 1px solid #808080;", colspan="6" class = "text-center" >No Record</td>
         </tr>
     <% end %>
     <% @on_process_of_joining_employees.each do |employee| %>
         <tr>
-            <td><%= employee.name %></td>
+            <td style="border-left: 1px solid #808080;"><%= employee.name %></td>
             <td><%= employee.personalEmail %></td>
             <td><%= employee.contactNumber %></td>
             <td><%= employee.joiningDate%></td>
             <td> <%= link_to 'Edit', edit_pre_registration_path(employee,1) %> </td>
-            <td> <%= link_to 'Delete', pre_registration_path(employee) , method: :delete%> </td>
+            <td style="border-right: 1px solid #808080;" > <%= link_to 'Delete', pre_registration_path(employee) , method: :delete%> </td>
         </tr>
     <% end %>
 

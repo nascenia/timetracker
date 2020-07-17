@@ -14,7 +14,6 @@
                 <% end %>    
                 <p>
                     <%= f.text_field :name, :class => 'form-control', required: 'true', :maxlength=>"128", readonly: @flag ? true : false %>
-
                 </p>
             </div>
             
@@ -108,7 +107,7 @@
                     <span class='required-asterisk'>*</span>
                     <%= f.check_box :NdaSigned, :checked => @pre_registration.NdaSigned, :required => true %>
                     <% if !@pre_registration.ndaDoc.present? %>    
-                        <%= f.file_field :ndaDoc%>
+                        <%= f.file_field :ndaDoc %>
                     <% end %>
                 <% end %>
             </div>
