@@ -1,4 +1,5 @@
 class PreRegistrationsController < ApplicationController
+
     layout 'time_tracker'
 
     def index
@@ -7,6 +8,7 @@ class PreRegistrationsController < ApplicationController
         @weekend_scheme = Weekend.all
         @ttf_list = User.active.where(role: 2)
     end
+    
     def new
         @pre_registration = PreRegistration.new
         @on_process_of_joining_employees = PreRegistration.all.where(step_no: 2)
@@ -38,8 +40,10 @@ class PreRegistrationsController < ApplicationController
             redirect_to new_pre_registration_path
         end
     end
+    
     def delete
     end
+    
     def destroy
         @pre_registration = PreRegistration.find(params[:id])
         if @pre_registration.present?
@@ -47,6 +51,7 @@ class PreRegistrationsController < ApplicationController
         end
         redirect_to new_pre_registration_path
     end
+    
     def edit
         @pre_registration = PreRegistration.find(params[:id])
         @holiday_scheme = HolidayScheme.all
@@ -60,9 +65,11 @@ class PreRegistrationsController < ApplicationController
             @is_for_admin = "22"
         end
     end
+    
     def show
         @pre_registration = PreRegistration.find(params[:id])
     end
+    
     def update
         pre_registration = PreRegistration.find params[:id]
         @flag = false
@@ -77,19 +84,21 @@ class PreRegistrationsController < ApplicationController
             if params[:selected] == "23"
                 UserMailer.send_invitation_to_new_employee_about_timetracker(pre_registration).deliver
                 UserMailer.send_notification_to_HR_about_new_employee(pre_registration).deliver
-                redirect_to root_path       
+                redirect_to root_path
             else
                 redirect_to new_pre_registration_path
             end
         end
     end
+    
     private
     # Using a private method to encapsulate the permissible parameters is
     # a good pattern since you'll be able to reuse the same permit
     # list between create and update. Also, you can specialize this method
     # with per-user checking of permissible attributes.
     def pre_registration_params
-        params.require(:pre_registration).permit(:name,
+        params.require(:pre_registration).permit(
+        :name,
         :companyEmail,
         :joiningDate,
         :datetime,
@@ -111,4 +120,5 @@ class PreRegistrationsController < ApplicationController
         :pic_and_other_relevant_info,
         :has_sent_invitation_to_visit_internal_website)
     end
+
 end
