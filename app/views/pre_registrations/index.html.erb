@@ -5,13 +5,12 @@
         <th>Name</th>
         <th>Email ID</th>
         <th>Contact Number </th>
-        <th>Joining Date </th>
-        <th>Action Edit </th>
+        <th></th>
     </tr>
     <% last_date = ''%>
     <% if @onboarding_employees.empty? %>
         <tr>
-            <td colspan="5" class = "text-center" >No Record</td>
+            <td colspan="4" class = "text-center" >No Record</td>
         </tr>
     <% end %>
     <% @onboarding_employees.each do |employee| %>
@@ -19,7 +18,6 @@
             <td><%= employee.name %></td>
             <td><%= employee.personalEmail %></td>
             <td><%= employee.contactNumber %></td>
-            <td><%= employee.joiningDate%></td>
             <td> <%= link_to 'Edit', pre_registration_path(employee) %> </td>
         </tr>
     <% end %>
