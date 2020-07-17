@@ -4,8 +4,15 @@ table {
     width: 100%;
 }
 
-td, th {
-    border: 1px solid #dddddd;
+th {
+    background-color: #E0E0E0;
+    border: 1px solid #808080;
+    text-align: left;
+    padding: 8px;
+}
+
+td {
+    border: 1px solid #808080;
     text-align: left;
     padding: 8px;
 }
