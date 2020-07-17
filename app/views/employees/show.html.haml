@@ -32,7 +32,7 @@
                 %h5 University
               .col-md-8
                 %h5
-                  #{@user.last_university}
+                  =@user.last_university
           .row
             .item-last_degree
               .col-md-4
@@ -96,7 +96,7 @@
                     Relation
                 .col-md-8
                   %h5
-                    =@user.emergency_contact_person_relation
+                    = @user.emergency_contact_person_relation
             .row
               .item-emergency_contact_person_number
                 .col-md-4
@@ -111,7 +111,7 @@
                   %h5 Present Address
                 .col-md-8
                   %h5
-                    #{@user.present_address}
+                    = @user.present_address
             .row
               .item-permanent_address
                 .col-md-4
@@ -119,14 +119,14 @@
                     Permanent Address
                 .col-md-8
                   %h5
-                    =@user.permanent_address
+                    = @user.permanent_address
             .row
               .item-date_of_birth
                 .col-md-4
                   %h5 Date of Birth
                 .col-md-8
                   %h5
-                    #{@user.date_of_birth}
+                    = @user.date_of_birth
 
             .row
               .item-passing_year
@@ -139,6 +139,17 @@
           %h3
             %b Document
             .content-info
+              .row
+                .item-bank_account_no
+                  .col-md-4
+                    %h5
+                      Bank Account No
+                  .col-md-8
+                    %h5
+                      - if @user.bank_account_no.present?
+                        #{@user.bank_account_no}
+                      - else
+                        N/A
               .row
                 .item-cv
                   .col-md-4
