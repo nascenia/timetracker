@@ -1,8 +1,8 @@
 <h3>New Time Entry </h3><br>
 <%= form_for @timesheet do |f| %>
     <% current_user_projects = current_user.projects %>
-    <div class="row">
-        <div class="col-md-6">
+    <div class = 'row' >
+        <div class = 'col-md-6' >
             <p>
                 <%= label :date, 'Date' %>
             </p>
@@ -10,7 +10,7 @@
                 <%= f.text_field :date, :class => 'form-control timesheet-date-picker', value: Time.now.strftime("%Y/%m/%d"),:onkeydown=>"return false" %>
             </p>
         </div>
-        <div class="col-md-6">
+        <div class = 'col-md-6' >
             <p>
                 <%= label :project, 'Project Name' %>
                 <%= label '', ' *', class: 'required-asterisk' %>
@@ -25,7 +25,7 @@
 
 
         </div>
-        <div class="col-md-6">
+        <div class = 'col-md-6' >
             <p>
                 <%= label :project, 'Task' %>
                 <%= label '', ' *', class: 'required-asterisk' %>
@@ -34,7 +34,7 @@
                 <%= f.text_field :task ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
             </p>
         </div>
-        <div class="col-md-6">
+        <div class = 'col-md-6' >
             <p>
                 <%= label :project, 'Ticket Number' %>
             </p>
@@ -42,16 +42,16 @@
                 <%= f.text_field :ticket_number,:class => 'form-control' ,:maxlength=>"128"%>
             </p>
         </div>
-        <div class="col-md-6">
+        <div class = 'col-md-6' >
             <p>
                 <%= label :project, 'Ticket Link' %>
             <p>
                 <%= f.text_field :ticket_link,:class => 'form-control' ,:maxlength=>"128"%>
             </p>
         </div>
-        <div class="col-md-6" >
-            <div class="row">
-                <div class="col-md-6">
+        <div class = 'col-md-6'  >
+            <div class = 'row' >
+                <div class = 'col-md-6' >
                     <p>
                     <%= label :project, 'Hours spent' %>
                         <%= label '', ' *', class: 'required-asterisk' %>
@@ -60,7 +60,7 @@
                         <%= f.select :hours, options_for_select(0..@total_hours) , {}, {required: 'true', autofocus: 'true', class: 'form-control',:maxlength=>"128"}%>
                     </p>
                 </div>
-                <div class="col-md-6">
+                <div class = 'col-md-6' >
                     <p>
                         <%= label :project, 'Minutes spent' %>
                         <%= label '', ' *', class: 'required-asterisk' %>
@@ -76,7 +76,7 @@
 
         </div>
 
-        <div class="col-md-6" style="clear: left;">
+        <div class = 'col-md-6'  style="clear: left;">
             <p>
                 <%= label :description, 'Description / ' %>
                 <%= label :description, 'Comments' %>
@@ -87,10 +87,10 @@
         </div>
     </div>
 
-    <div class="col-md-6" style="clear: left;">
+    <div class = 'col-md-6'  style="clear: left;">
 
-        <div class="row">
-            <div class="col-md-6">
+        <div class = 'row' >
+            <div class = 'col-md-6' >
         <p>
     <%if @total_hours != 0 && @total_mins !=0 %>
         <% if @is_from_attent == 1 %>
@@ -104,7 +104,7 @@
 
         </p>
             </div>
-            <div class="col-md-6">
+            <div class = 'col-md-6' >
             <p>
     <%= f.submit "Submit and Add New" %>
         </p>
