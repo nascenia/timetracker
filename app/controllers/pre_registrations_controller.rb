@@ -81,8 +81,8 @@ class PreRegistrationsController < ApplicationController
     end
     if pre_registration.update(pre_registration_params)
       if params[:selected] == '23'
-        UserMailer.send_invitation_to_new_employee_about_timetracker(pre_registration).deliver
-        UserMailer.send_notification_to_HR_about_new_employee(pre_registration).deliver
+        UserMailer.send_mail_to_new_employee_about_tt(pre_registration).deliver
+        UserMailer.send_mail_to_hr_about_new_employee(pre_registration).deliver
         redirect_to root_path
       else
         redirect_to new_pre_registration_path
