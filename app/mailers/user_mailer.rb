@@ -166,7 +166,7 @@ class UserMailer < ActionMailer::Base
     @pre_registration = pre_registration
     subject = 'Action required to open new email account for a new employee'
     @greetings = '- Have a nice day!'
-    
+
     mail to: ENV['TT_CEO_EMAIL'], subject: subject
     true
   rescue => e
