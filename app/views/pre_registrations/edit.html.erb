@@ -13,7 +13,7 @@
                     <span class = 'required-asterisk' >*</span>
                 <% end %>    
                 <p>
-                    <%= f.text_field :name, { class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false } %>
+                    <%= f.text_field :name, class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false %>
                 </p>
             </div>
             
@@ -23,7 +23,7 @@
                     <span class = 'required-asterisk' >*</span>
                 <% end %> 
                 <p>
-                    <%= f.text_field :joiningDate, { class: 'form-control timesheet-date-picker_new_join', required: 'true', value: Time.now.strftime('%Y/%m/%d'), onkeydown: 'return false' } %>
+                    <%= f.text_field :joiningDate, class: 'form-control timesheet-date-picker_new_join', required: 'true', value: Time.now.strftime('%Y/%m/%d'), onkeydown: 'return false' %>
                 </p>
             </div>
 
@@ -33,7 +33,7 @@
                     <span class = 'required-asterisk' >*</span>
                 <% end %>
                 <p>
-                    <%= f.text_field :designation, { class: 'form-control', required: 'true', maxlength: '128' } %>
+                    <%= f.text_field :designation, class: 'form-control', required: 'true', maxlength: '128' %>
                 </p>
             </div>
 
@@ -43,7 +43,7 @@
                     <span class = 'required-asterisk' >*</span>
                 <% end %>
                 <p>
-                    <%= f.select :user_id, options_for_select(@ttf_list.collect { | ttf_list | [ttf_list.name,  ttf_list.id] }, selected: @pre_registration.user_id), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'}%>
+                    <%= f.select :user_id, options_for_select(@ttf_list.collect { | ttf_list | [ttf_list.name,  ttf_list.id] }, selected: @pre_registration.user_id), {}, required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects' %>
                 </p>
             </div>
                     
@@ -53,7 +53,7 @@
                     <span class = 'required-asterisk' >*</span>
                 <% end %>
                 <p>
-                    <%= f.text_field :emailGroup, { class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false } %>
+                    <%= f.text_field :emailGroup, class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false %>
                 </p>
             </div>
 
@@ -63,7 +63,7 @@
                     <span class = 'required-asterisk' >*</span> 
                 <% end %>
                 <p>
-                    <%= f.text_field :contactNumber, { class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false } %>
+                    <%= f.text_field :contactNumber, class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false %>
                 </p>
             </div>
 
@@ -73,7 +73,7 @@
                     <span class = 'required-asterisk' >*</span>
                 <% end %>
                 <p>
-                    <%= f.text_field :personalEmail, { class: 'form-control', required: 'true', :maxlength: '128', readonly: @flag ? true : false } %>
+                    <%= f.text_field :personalEmail, class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false %>
                 </p>
             </div>
 
@@ -83,7 +83,7 @@
                     <span class = 'required-asterisk' >*</span>
                 <% end %>
                 <p>
-                    <%= f.select :holiday_scheme_id, options_for_select(@holiday_scheme.collect { | holiday | [holiday.name,  holiday.id] }, selected: @pre_registration.holiday_scheme_id), {}, { required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects' } %>
+                    <%= f.select :holiday_scheme_id, options_for_select(@holiday_scheme.collect { | holiday | [holiday.name,  holiday.id] }, selected: @pre_registration.holiday_scheme_id), {}, required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects' %>
                 </p>
             </div>
 
@@ -93,7 +93,7 @@
                     <span class = 'required-asterisk' >*</span>
                 <% end %>
                 <p>
-                    <%= f.select :weekend_id, options_for_select(@weekend_scheme.collect { | weekend | [weekend.name,  weekend.id] }, selected: @pre_registration.weekend_id), {}, { required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects' } %>
+                    <%= f.select :weekend_id, options_for_select(@weekend_scheme.collect { | weekend | [weekend.name,  weekend.id] }, selected: @pre_registration.weekend_id), {}, required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects' %>
                 </p>
             </div>
         </div>
@@ -104,7 +104,7 @@
                 <%= f.label :NdaSigned, 'NDA Signed' do %>
                     <%= 'NDA Signed' %>
                     <span class = 'required-asterisk' >*</span>
-                    <%= f.check_box :NdaSigned, { checked: @pre_registration.NdaSigned, required: true } %>
+                    <%= f.check_box :NdaSigned, checked: @pre_registration.NdaSigned, required: true %>
                     <% if !@pre_registration.ndaDoc.present? %>    
                         <%= f.file_field :ndaDoc %>
                     <% end %>
@@ -115,7 +115,7 @@
                 <%= f.label :workstationReady, 'Workstation prepared for new employee?' do %>
                     <%= 'Workstation prepared for new employee? ' %>
                     <span class = 'required-asterisk' >*</span>
-                    <%= f.check_box :workstationReady, { checked: @pre_registration.workstationReady, required: true } %>
+                    <%= f.check_box :workstationReady, checked: @pre_registration.workstationReady, required: true %>
                 <% end %>
             </div>
 
@@ -123,7 +123,7 @@
                 <%= f.label :packReady, 'Greeting pack prepared for new employee?' do %>
                     <%= 'Greeting pack prepared for new employee?' %>
                     <span class = 'required-asterisk' >*</span>
-                    <%= f.check_box :packReady, { checked: @pre_registration.packReady, required: true } %>
+                    <%= f.check_box :packReady, checked: @pre_registration.packReady, required: true %>
                 <% end %>
             </div>
 
@@ -138,18 +138,18 @@
                 <%= f.label :companyEmail, 'Company Email' do %>
                     <%= 'Company Email' %>
                     <span class = 'required-asterisk' >*</span>
-                    <%= f.text_field :companyEmail, { class: 'form-control', maxlength: '128', required: true } %>
+                    <%= f.text_field :companyEmail, class: 'form-control', maxlength: '128', required: true %>
                 <% end %>
             </div>
             <div class = 'col-md-6' >
                 <%= f.label :HR_email, 'Notify HR to follow the next step' do %>
                     <%= 'Notify HR to follow the next step' %>
                     <span class = 'required-asterisk' >*</span>
-                    <%= f.text_field :HR_email, { class: 'form-control', maxlength: '128', required: true } %>
+                    <%= f.text_field :HR_email, class: 'form-control', maxlength: '128', required: true %>
                 <% end %>
             </div>
         <% end %>    
     </div>
     <br/>
-    <%= f.submit 'Submit', { class: 'btn btn-success', confirm: 'Are you sure?' } %>
+    <%= f.submit 'Submit', class: 'btn btn-success', confirm: 'Are you sure?' %>
 <% end %>
