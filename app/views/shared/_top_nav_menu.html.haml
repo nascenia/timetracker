@@ -50,6 +50,6 @@ h = count_employee
       %li
         = link_to 'Projects', projects_path(is_active: true)
       %li
-        = link_to 'Projects Summary', show_all_projects_path(selected_index: 1,start_date: (Time.now-0.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
+        = link_to 'Projects Summary', show_all_projects_path(selected_index: 1,start_date: (Time.now-0.days).strftime('%Y/%m/%d') ,end_date: Time.now.strftime('%Y/%m/%d'))
       %li
-        = link_to 'Individual Log', timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
+        = link_to 'Individual Log', timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime('%Y/%m/%d') ,end_date: Time.now.strftime('%Y/%m/%d'))

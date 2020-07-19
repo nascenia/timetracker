@@ -141,13 +141,13 @@ class TimesheetsController < ApplicationController
                             if  params[:commit] == 'Submit and Add New'
                                 redirect_to new_timesheet_path
                             else
-                                redirect_to timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
+                                redirect_to timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime('%Y/%m/%d') ,end_date: Time.now.strftime('%Y/%m/%d'))
 
                             end
                             end
                     else
                         flash[:notice] = 'You cant logged out from outside network'
-                        redirect_to timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
+                        redirect_to timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime('%Y/%m/%d') ,end_date: Time.now.strftime('%Y/%m/%d'))
                     end
                 else
                     flash[:alert] = 'failed'
@@ -184,7 +184,7 @@ class TimesheetsController < ApplicationController
              session[:is_from_timesheet_edit] = @timesheets.date.to_date
         else
             flash[:alert] = 'You cannot edit before 35 days'
-            redirect_to timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
+            redirect_to timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime('%Y/%m/%d') ,end_date: Time.now.strftime('%Y/%m/%d'))
         end
     end
 
@@ -214,15 +214,15 @@ class TimesheetsController < ApplicationController
         if timesheet_params[:date].to_date>=Time.now.to_date-35
             if @timesheets.save && @timesheets.update(timesheet_params)
                 flash[:notice] = 'Data updated sccessfully'
-                redirect_to timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
+                redirect_to timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime('%Y/%m/%d') ,end_date: Time.now.strftime('%Y/%m/%d'))
             else
                 flash[:alert] = 'failed'
-                redirect_to timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
+                redirect_to timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime('%Y/%m/%d') ,end_date: Time.now.strftime('%Y/%m/%d'))
             end
         else
             session[:is_from_checkout] = 0
             flash[:alert] = 'You cannot update before 35 days'
-            redirect_to timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
+            redirect_to timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime('%Y/%m/%d') ,end_date: Time.now.strftime('%Y/%m/%d'))
         end
 
     end

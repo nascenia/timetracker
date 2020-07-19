@@ -17,7 +17,7 @@
                   Email
               .col-md-8
                 %h5
-                  =@user.email
+                  = @user.email
           .row
             .item-mobile
               .col-md-4
@@ -25,14 +25,14 @@
                   Mobile
               .col-md-8
                 %h5
-                  %a{:href =>"Tel:#{@user.mobile_number}"}=@user.mobile_number
+                  = link_to @user.mobile_number, @user.mobile_number
           .row
             .item-university
               .col-md-4
                 %h5 University
               .col-md-8
                 %h5
-                  =@user.last_university
+                  = @user.last_university
           .row
             .item-last_degree
               .col-md-4
@@ -40,7 +40,7 @@
                   Last Degree
               .col-md-8
                 %h5
-                  =@user.last_degree
+                  = @user.last_degree
           .row
             .item-passing_year
               .col-md-4
@@ -48,7 +48,7 @@
                   Passing Year
               .col-md-8
                 %h5
-                  =@user.passing_year
+                  = @user.passing_year
           .row
             .item-blood_group
               .col-md-4
@@ -56,7 +56,7 @@
                   Blood Group
               .col-md-8
                 %h5
-                  =@user.blood_group
+                  = @user.blood_group
 
           .clearfix
       - if current_user.has_admin_privilege?
@@ -72,7 +72,7 @@
                       Alternate Contact
                   .col-md-8
                     %h5
-                      %a{:href =>"Tel:#{@user.alternate_contact}"}=@user.alternate_contact
+                      = link_to @user.alternate_contact, @user.alternate_contact
             .row
               .item-personal_email
                 .col-md-4
@@ -80,7 +80,7 @@
                     Personal Mail
                 .col-md-8
                   %h5
-                    =@user.personal_email
+                    = @user.personal_email
             .row
               .item-emergency_contact_person_name
                 .col-md-4
@@ -88,7 +88,7 @@
                     Emergency Contact
                 .col-md-8
                   %h5
-                    =@user.emergency_contact_person_name
+                    = @user.emergency_contact_person_name
             .row
               .item-emergency_contact_person_relation
                 .col-md-4
@@ -104,7 +104,7 @@
                     Mobile
                 .col-md-8
                   %h5
-                    %a{:href =>"Tel:#{@user.emergency_contact_person_number}"}=@user.emergency_contact_person_number
+                    = link_to @user.emergency_contact_person_number, @user.emergency_contact_person_number
             .row
               .item-present_address
                 .col-md-4
@@ -186,8 +186,9 @@
             .clearfix
   .col-md-4
     .img-responsive.profile_image
-      =image_tag @user.avatar.url(:large)
+      = image_tag @user.avatar.url(:large)
 - if @show_actions_to_admin
   .container_accept_or_reject
     .row
       = render partial: 'actions'
+      

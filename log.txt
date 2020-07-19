@@ -1,0 +1,64 @@
+Inspecting 1 file
+C
+
+Offenses:
+
+app/controllers/pre_registrations_controller.rb:2:1: C: Metrics/ClassLength: Class has too many lines. [105/100]
+class PreRegistrationsController < ApplicationController ...
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/controllers/pre_registrations_controller.rb:20:3: C: Metrics/AbcSize: Assignment Branch Condition size for create is too high. [26.55/15]
+  def create ...
+  ^^^^^^^^^^
+app/controllers/pre_registrations_controller.rb:20:3: C: Metrics/MethodLength: Method has too many lines. [21/10]
+  def create ...
+  ^^^^^^^^^^
+app/controllers/pre_registrations_controller.rb:20:3: C: Metrics/PerceivedComplexity: Perceived complexity for create is too high. [8/7]
+  def create ...
+  ^^^^^^^^^^
+app/controllers/pre_registrations_controller.rb:38:5: C: Style/GuardClause: Use a guard clause instead of wrapping the code inside a conditional expression.
+    if pre_registration.save
+    ^^
+app/controllers/pre_registrations_controller.rb:48:5: C: Style/IfUnlessModifier: Favor modifier if usage when having a single-line body. Another good alternative is the usage of control flow &&/||.
+    if @pre_registration.present?
+    ^^
+app/controllers/pre_registrations_controller.rb:54:3: C: Metrics/MethodLength: Method has too many lines. [11/10]
+  def edit ...
+  ^^^^^^^^
+app/controllers/pre_registrations_controller.rb:61:5: C: Style/ConditionalAssignment: Use the return of the conditional for variable assignment and comparison.
+    if params[:format] != '1' ...
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+app/controllers/pre_registrations_controller.rb:72:3: C: Metrics/AbcSize: Assignment Branch Condition size for update is too high. [42.07/15]
+  def update ...
+  ^^^^^^^^^^
+app/controllers/pre_registrations_controller.rb:72:3: C: Metrics/CyclomaticComplexity: Cyclomatic complexity for update is too high. [9/6]
+  def update ...
+  ^^^^^^^^^^
+app/controllers/pre_registrations_controller.rb:72:3: C: Metrics/MethodLength: Method has too many lines. [18/10]
+  def update ...
+  ^^^^^^^^^^
+app/controllers/pre_registrations_controller.rb:72:3: C: Metrics/PerceivedComplexity: Perceived complexity for update is too high. [10/7]
+  def update ...
+  ^^^^^^^^^^
+app/controllers/pre_registrations_controller.rb:76:5: C: Style/IfUnlessModifier: Favor modifier if usage when having a single-line body. Another good alternative is the usage of control flow &&/||.
+    if params[:selected] == '23'
+    ^^
+app/controllers/pre_registrations_controller.rb:79:81: C: Metrics/LineLength: Line is too long. [347/80]
+    if pre_registration_params[:salary_account_details_sent].to_s == '1' && pre_registration_params[:employee_contract_sign].to_s == '1' && pre_registration_params[:id_card_given].to_s == '1' && pre_registration_params[:pic_and_other_relevant_info].to_s == '1' && pre_registration_params[:has_sent_invitation_to_visit_internal_website].to_s == '1'
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/controllers/pre_registrations_controller.rb:82:5: C: Style/GuardClause: Use a guard clause instead of wrapping the code inside a conditional expression.
+    if pre_registration.update(pre_registration_params)
+    ^^
+app/controllers/pre_registrations_controller.rb:84:81: C: Metrics/LineLength: Line is too long. [94/80]
+        UserMailer.send_invitation_to_new_employee_about_timetracker(pre_registration).deliver
+                                                                                ^^^^^^^^^^^^^^
+app/controllers/pre_registrations_controller.rb:85:81: C: Metrics/LineLength: Line is too long. [87/80]
+        UserMailer.send_notification_to_HR_about_new_employee(pre_registration).deliver
+                                                                                ^^^^^^^
+app/controllers/pre_registrations_controller.rb:99:3: C: Metrics/MethodLength: Method has too many lines. [21/10]
+  def pre_registration_params ...
+  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/controllers/pre_registrations_controller.rb:120:81: C: Metrics/LineLength: Line is too long. [92/80]
+                                             :has_sent_invitation_to_visit_internal_website)
+                                                                                ^^^^^^^^^^^^
+
+1 file inspected, 19 offenses detected

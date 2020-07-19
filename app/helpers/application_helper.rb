@@ -72,15 +72,14 @@ module ApplicationHelper
   end
 
   def count_employee
-    return PreRegistration.where(step_no: 2..3).count
+    PreRegistration.where(step_no: 2..3).count
   end
   
   def add_employee
-    return PreRegistration.where(step_no: 2).count
+    PreRegistration.where(step_no: 2).count
   end
 
   def employee_onboard
-    return PreRegistration.where(step_no: 3).count
+    PreRegistration.where(step_no: 3).count
   end
-
 end
