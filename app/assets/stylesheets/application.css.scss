@@ -10,9 +10,10 @@
  *= require salaat_times
  *= require employees
  *= require multi-select.css.erb
-
  *= require shared
+ *= require pre_registrations.css.scss
  */
+
 @import "bootstrap-sprockets";
 @import "bootstrap";
 @import "font-awesome-sprockets";
@@ -24,9 +25,11 @@
   font-size: 16px;
   font-weight: bold;
 }
+
 .required-asterisk{
   color: red;
 }
+
 .lebel-nonbold{
   color: black !important;
   font-size: small;
