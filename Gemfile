@@ -52,8 +52,5 @@ group :test, :development do
   gem 'factory_girl_rails', '~> 4.7.0'
   gem 'rspec-rails', '~> 3.5.1'
   gem 'simplecov'
-end
-
-group :test, :development do
   gem 'letter_opener'
 end
