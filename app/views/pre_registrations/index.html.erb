@@ -2,22 +2,22 @@
 <h3><b>Employee Onboarding</b></h3><br/>
 <table style = 'width:100%' >
     <tr>
-        <th id = 'left' >Name</th>
+        <th class = 'left' >Name</th>
         <th>Email ID</th>
-        <th id = 'right' colspan = '2' >Contact Number</th>
+        <th class = 'right' colspan = '2' >Contact Number</th>
     </tr>
     <% last_date = ''%>
     <% if @onboarding_employees.empty? %>
         <tr>
-            <td id = 'both_side' , colspan = '6' class = 'text-center' >No Record</td>
+            <td colspan = '6' class = 'text-center both_side' >No Record</td>
         </tr>
     <% end %>
     <% @onboarding_employees.each do |employee| %>
         <tr>
-            <td id = 'left' ><%= employee.name %></td>
+            <td class = 'left' ><%= employee.name %></td>
             <td><%= employee.personalEmail %></td>
             <td><%= employee.contactNumber %></td>
-            <td id = 'right' ><%= link_to 'Edit', pre_registration_path(employee) %></td>
+            <td class = 'right' ><%= link_to 'Edit', pre_registration_path(employee) %></td>
         </tr>
     <% end %>
 </table>
