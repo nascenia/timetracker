@@ -13,7 +13,6 @@ gem 'haml'
 gem 'html2haml'
 gem 'httparty'
 gem 'jquery-rails'
-gem 'letter_opener', :group => :development
 gem 'mini_magick'
 gem 'mysql2'
 gem 'omniauth'
@@ -47,4 +46,14 @@ group :test, :development do
   gem 'factory_girl_rails', '~> 4.7.0'
   gem 'rspec-rails', '~> 3.5.1'
   gem 'simplecov'
+end
+
+group :test, :development do
+  gem 'factory_girl_rails', '~> 4.7.0'
+  gem 'rspec-rails', '~> 3.5.1'
+  gem 'simplecov'
+end
+
+group :test, :development do
+  gem 'letter_opener'
 end
