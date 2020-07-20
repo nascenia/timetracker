@@ -19,7 +19,7 @@ class UsersController < ApplicationController
     if user.has_admin_privilege?
       @team = User.includes(:leave_tracker, :approval_path, :holiday_scheme, :weekend).order(name: :asc)
       @team = params[:status].present? ? @team.inactive : @team.active
-    elsif user.role == User::SUPER_TTF || user.role == User::TTF || !user.owned_paths.empty? > 0
+    elsif user.role == User::SUPER_TTF || user.role == User::TTF || !user.owned_paths.empty?
       @team = user.get_co_workers
     else
       flash[:notice] = 'Sorry! This page is only for TTF / Super TTF!'

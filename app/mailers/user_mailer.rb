@@ -178,7 +178,7 @@ class UserMailer < ActionMailer::Base
   def send_mail_to_new_employee_about_tt(pre_registration)
     @pre_registration = pre_registration
     subject = 'Invitation to Time tracker with new email ID'
-  
+
     mail to: @pre_registration.companyEmail, subject: subject
     true
   rescue => e
