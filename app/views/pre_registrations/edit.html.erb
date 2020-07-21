@@ -106,7 +106,7 @@
                     <span class = 'required-asterisk' >*</span>
                     <%= f.check_box :NdaSigned, checked: @pre_registration.NdaSigned, required: true %>
                     <% if !@pre_registration.ndaDoc.present? %>    
-                        <%= f.file_field :ndaDoc %>
+                        <%= f.file_field :ndaDoc, onchange: 'validateFiles(this);', data: { max_file_size: 50.megabytes }  %>
                     <% end %>
                 <% end %>
             </div>

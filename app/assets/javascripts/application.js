@@ -10,3 +10,5 @@
 //= require jquery.multi-select.js
 //= require bootstrap-sprockets
 //= require bootstrap-datepicker.config.js
+//= require pre_registrations.js
+//= require users.js
