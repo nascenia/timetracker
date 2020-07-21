@@ -13,7 +13,8 @@ h = count_employee
   %li.dropdown
     %a.dropdown-toggle{"data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false",:href => "#"}
       = 'Employee'
-      %span.badge= count_employee
+      - if current_user.has_admin_privilege?
+        %span.badge= count_employee
       %span.caret
     %ul.dropdown-menu
       %li
