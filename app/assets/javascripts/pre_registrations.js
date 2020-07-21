@@ -1,7 +1,7 @@
 function validateFiles(inputFile) {
   var maxExceededMessage = "This file exceeds the maximum allowed file size (50 MB)";
-  var extErrorMessage = "Only image file with extension: .docx, .pdf is allowed";
-  var allowedExtension = ["docx", "pdf"];
+  var extErrorMessage = "Only image file with extension: .pdf is allowed";
+  var allowedExtension = ["pdf"];
 
   var extName;
   var maxFileSize = $(inputFile).data('max-file-size');
