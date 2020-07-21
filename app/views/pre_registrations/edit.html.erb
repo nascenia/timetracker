@@ -23,7 +23,7 @@
                     <span class = 'required-asterisk' >*</span>
                 <% end %> 
                 <p>
-                    <%= f.text_field :joiningDate, class: 'form-control timesheet-date-picker_new_join', required: 'true', value: Time.now.strftime('%Y/%m/%d'), onkeydown: 'return false' %>
+                    <%= f.text_field :joiningDate, class: 'form-control timesheet-date-picker_new_join', required: 'true', value: @pre_registration.joiningDate, onkeydown: 'return false' %>
                 </p>
             </div>
 
