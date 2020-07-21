@@ -105,20 +105,24 @@
                     <%= 'NDA Signed' %>
                     <span class = 'required-asterisk' >*</span>
                     <%= f.check_box :NdaSigned, checked: @pre_registration.NdaSigned, required: true %>
-                    <% if !@pre_registration.ndaDoc.present? %>    
-                        <%= f.file_field :ndaDoc, onchange: 'validateFiles(this);', data: { max_file_size: 50.megabytes }  %>
+                    <br/><br/>
+                    <%= f.file_field :ndaDoc, onchange: 'validateFiles(this);', data: { max_file_size: 50.megabytes }  %>
+                    <br/>
+                    <% if @pre_registration.ndaDoc.present? %>
+                        <%= link_to 'Current NDA', @pre_registration.ndaDoc.url, {class: 'link', target: :_blank} %>
                     <% end %>
                 <% end %>
             </div>
 
             <div class = 'col-md-6' >
                 <%= f.label :workstationReady do %>
-                    <%= 'Workstation prepared for new employee? ' %>
+                    <%= 'Workstation prepared for new employee?' %>
                     <span class = 'required-asterisk' >*</span>
+                    &nbsp;&nbsp;
                     <%= f.check_box :workstationReady, checked: @pre_registration.workstationReady, required: true %>
                 <% end %>
             </div>
-
+            <br/><br/>
             <div class = 'col-md-6' >
                 <%= f.label :packReady do %>
                     <%= 'Greeting pack prepared for new employee?' %>
@@ -150,6 +154,5 @@
             </div>
         <% end %>    
     </div>
-    <br/>
     <%= f.submit 'Submit', class: 'btn btn-success', confirm: 'Are you sure?' %>
 <% end %>
