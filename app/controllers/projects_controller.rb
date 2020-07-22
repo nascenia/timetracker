@@ -9,11 +9,11 @@ class ProjectsController < ApplicationController
       @start_date = params[:start_date]
       @end_date = params[:end_date]
       @selected_index = params[:selected_index]
-      timesheets = user.timesheets.where(project: @project,date: params[:start_date].params[:end_date]).group(:user_id)
+      timesheets = user.timesheets.where(project: @project, date: params[:start_date]..params[:end_date]).group(:user_id)
       total_hours_hash = timesheets.sum(:hours)
       total_minute_hash = timesheets.sum(:minutes)
 
-      if !total_hours_hash.empty? || !total_minute_hash.empty?
+      if total_hours_hash.present? || total_minute_hash.present?
         total_hours = total_hours_hash.values[0]
         total_minute = total_minute_hash.values[0]
         if total_minute >= 60
@@ -85,7 +85,7 @@ class ProjectsController < ApplicationController
       total_sum = 0
       total_sum_min = 0
       projects.each do |project|
-        t = user.timesheets.where(project: project, date: params[:start_date].params[:end_date])
+        t = user.timesheets.where(project: project, date: params[:start_date]..params[:end_date])
         hours = t.sum(:hours)
         minutes = t.sum(:minutes)
 

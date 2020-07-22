@@ -1,0 +1,8 @@
+                           timesheets GET        /timesheets(.:format)          timesheets#index
+                                      POST       /timesheets(.:format)          timesheets#create
+                        new_timesheet GET        /timesheets/new(.:format)      timesheets#new
+                       edit_timesheet GET        /timesheets/:id/edit(.:format) timesheets#edit
+                            timesheet GET        /timesheets/:id(.:format)      timesheets#show
+                                      PATCH      /timesheets/:id(.:format)      timesheets#update
+                                      PUT        /timesheets/:id(.:format)      timesheets#update
+                                      DELETE     /timesheets/:id(.:format)      timesheets#destroy
