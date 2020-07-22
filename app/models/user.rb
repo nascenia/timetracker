@@ -50,7 +50,7 @@ class User < ActiveRecord::Base
   REGISTRATION_STATUS = {
     not_registered: 0,
     not_approved: 1,
-    registered: 2,
+    registered: 2
   }
 
   EMPLOYEE = 1
@@ -62,21 +62,22 @@ class User < ActiveRecord::Base
     ['TTF', TTF],
     ['Super TTF', SUPER_TTF]
   ]
-  BLOOD_GROUPS = %w(O+ O- A+ A- B+ B- AB+ AB-)
 
-  scope :inactive, -> {where('is_active = ?', false)}
-  scope :active, -> {where('is_active = ?', true)}
+  BLOOD_GROUPS = %w[O+ O- A+ A- B+ B- AB+ AB-]
+
+  scope :inactive, -> { where('is_active = ?', false) }
+  scope :active, -> { where('is_active = ?', true) }
   scope :published, -> { where(registration_status: 2) }
   scope :not_published, -> { where(registration_status: 1) }
   scope :not_register, -> { where(registration_status: 0) }
-  scope :ttf, -> {where('role = ?', User::TTF)}
-  scope :super_ttf, -> {where('role = ?', User::SUPER_TTF)}
-  scope :employees, -> {where('role = ?', User::EMPLOYEE)}
-  scope :list_of_ttfs, -> (super_ttf) {where('role = ? AND sttf_id = ? ', User::TTF, super_ttf)}
-  scope :list_of_employees, -> (ttf) {where('role =? AND ttf_id = ? ', User::EMPLOYEE, ttf)}
-  scope :has_no_weekend, -> { where( 'weekend_id IS ?', nil) }
-  scope :has_weekend, -> (weekend_id) { where( 'weekend_id IS not ? and weekend_id = ?', nil, weekend_id) }
-  scope :has_no_holiday_scheme, -> { where( 'holiday_scheme_id IS ?', nil) }
+  scope :ttf, -> { where('role = ?', User::TTF ) }
+  scope :super_ttf, -> { where('role = ?', User::SUPER_TTF) }
+  scope :employees, -> { where('role = ?', User::EMPLOYEE) }
+  scope :list_of_ttfs, ->(super_ttf) { where('role = ? AND sttf_id = ? ', User::TTF, super_ttf) }
+  scope :list_of_employees, ->(ttf) { where('role =? AND ttf_id = ? ', User::EMPLOYEE, ttf) }
+  scope :has_no_weekend, -> { where('weekend_id IS ?', nil) }
+  scope :has_weekend, ->(weekend_id) { where( 'weekend_id IS not ? and weekend_id = ?', nil, weekend_id) }
+  scope :has_no_holiday_scheme, -> { where('holiday_scheme_id IS ?', nil) }
 
   def admin?
     email && ADMIN_USERS.to_s.include?(email)
@@ -109,10 +110,10 @@ class User < ActiveRecord::Base
   def self.find_for_google_oauth2(access_token, signed_in_resource=nil)
     # if an user is found in the User table then return that user information
     # else create a new user by fetching information form the PreRegistration database
-    companyEmail = access_token.extra.id_info['email']
-    user = User.where(email: companyEmail).first
+    company_email = access_token.extra.id_info['email']
+    user = User.where(email: company_email).first
     unless user
-      pre_registration = PreRegistration.where(companyEmail: companyEmail, step_no: 2).first
+      pre_registration = PreRegistration.where(companyEmail: company_email, step_no: 2).first
       if pre_registration.present?
         user = User.create(name: pre_registration.name,
                            email: pre_registration.companyEmail,
@@ -127,7 +128,7 @@ class User < ActiveRecord::Base
         pre_registration.save
       end
     end
-    return user
+    user
   end
 
   def self.to_csv(options = {})
