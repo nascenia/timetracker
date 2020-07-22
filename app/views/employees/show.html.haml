@@ -151,6 +151,17 @@
                       - else
                         N/A
               .row
+                .item-ndaDoc
+                  .col-md-4
+                    %h5
+                      NDA
+                  .col-md-8
+                    %h5
+                      - if @ndaDoc.present?
+                        = link_to 'View', @ndaDoc.url, {class: 'link', target: :_blank}
+                      - else
+                        N/A
+              .row
                 .item-cv
                   .col-md-4
                     %h5
