@@ -112,19 +112,20 @@ class User < ActiveRecord::Base
     companyEmail = access_token.extra.id_info['email']
     user = User.where(email: companyEmail).first
     unless user
-        preRegistration = PreRegistration.where(companyEmail: companyEmail, step_no: 2).first    
-        if preRegistration.present?
-            user = User.create(name: preRegistration.name,
-                            email: preRegistration.companyEmail,
-                            weekend_id: preRegistration.weekend_id,
-                            holiday_scheme_id: preRegistration.holiday_scheme_id,
-                            personal_email: preRegistration.personalEmail,
-                            mobile_number: preRegistration.contactNumber,
-                            joining_date: preRegistration.joiningDate,
-                            password: Devise.friendly_token[0, 20])
-            preRegistration.step_no = 3
-            preRegistration.save
-        end
+      pre_registration = PreRegistration.where(companyEmail: companyEmail, step_no: 2).first
+      if pre_registration.present?
+        user = User.create(name: pre_registration.name,
+                           email: pre_registration.companyEmail,
+                           weekend_id: pre_registration.weekend_id,
+                           holiday_scheme_id: pre_registration.holiday_scheme_id,
+                           personal_email: pre_registration.personalEmail,
+                           mobile_number: pre_registration.contactNumber,
+                           joining_date: pre_registration.joiningDate,
+                           ttf_id: pre_registration.user_id,
+                           password: Devise.friendly_token[0, 20])
+        pre_registration.step_no = 3
+        pre_registration.save
+      end
     end
     return user
   end
