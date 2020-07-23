@@ -12,3 +12,4 @@
 //= require bootstrap-datepicker.config.js
 //= require pre_registrations.js
 //= require users.js
+//= require employees.js
