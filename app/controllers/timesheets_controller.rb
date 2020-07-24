@@ -147,7 +147,7 @@ class TimesheetsController < ApplicationController
               end
             end
           else
-            flash[:notice] = 'You cant logged out from outside network'
+            #flash[:notice] = 'You cant logged out from outside network'
             redirect_to new_timesheet_path
             puts "########################################################################################################################"
             #redirect_to timesheets_path(selected_index: 1, start_date: (Time.now-0.days).strftime('%Y/%m/%d'), end_date: Time.now.strftime('%Y/%m/%d'))
@@ -238,7 +238,7 @@ class TimesheetsController < ApplicationController
     def restrict_access?
       if request.remote_ip.present?
         unless Attendance::IP_WHITELIST.include? request.remote_ip
-          flash[:alert] = 'Check in or out is restricted from outside office.'
+          #flash[:alert] = 'Check in or out is restricted from outside office.'
           false
         else
           true
