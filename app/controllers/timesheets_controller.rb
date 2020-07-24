@@ -89,11 +89,6 @@ class TimesheetsController < ApplicationController
   end
 
   def create
-    #if restrict_access?
-    #  puts 'YESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS'
-    #else
-    #  puts 'Noooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo'
-    #end
     begin
       sumhours = Timesheet.where(user_id: current_user.id, date: timesheet_params[:date].tr('/', '-')).sum(:hours).to_i
       total_sum = sumhours + timesheet_params[:hours].to_i
