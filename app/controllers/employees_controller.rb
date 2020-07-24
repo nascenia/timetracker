@@ -24,7 +24,13 @@ class EmployeesController < ApplicationController
     end
   end
   def show
-    @user = User.find params[:id]
+    @user = User.find(params[:id])
+    @pre_registration = PreRegistration.where(companyEmail: @user.email).first
+    if @pre_registration.present?
+      @ndaDoc = @pre_registration.ndaDoc
+    else
+      @ndaDoc = nil
+    end
     @show_actions_to_admin = current_user.try(:has_admin_privilege?) && @user.registration_status == User::REGISTRATION_STATUS[:not_approved] ? true : false
   end
 end
