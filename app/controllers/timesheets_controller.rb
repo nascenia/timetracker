@@ -89,11 +89,11 @@ class TimesheetsController < ApplicationController
   end
 
   def create
-    if restrict_access?
-      puts 'YESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS'
-    else
-      puts 'Noooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo'
-    end
+    #if restrict_access?
+    #  puts 'YESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS'
+    #else
+    #  puts 'Noooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo'
+    #end
     begin
       sumhours = Timesheet.where(user_id: current_user.id, date: timesheet_params[:date].tr('/', '-')).sum(:hours).to_i
       total_sum = sumhours + timesheet_params[:hours].to_i
@@ -147,10 +147,11 @@ class TimesheetsController < ApplicationController
               end
             end
           else
-            #flash[:notice] = 'You cant logged out from outside network'
-            redirect_to new_timesheet_path
-            puts "########################################################################################################################"
-            #redirect_to timesheets_path(selected_index: 1, start_date: (Time.now-0.days).strftime('%Y/%m/%d'), end_date: Time.now.strftime('%Y/%m/%d'))
+            if params[:commit] == 'Submit and Add New'
+              redirect_to new_timesheet_path
+            else
+              redirect_to timesheets_path(selected_index: 1, start_date: (Time.now-0.days).strftime('%Y/%m/%d'), end_date: Time.now.strftime('%Y/%m/%d'))
+            end
           end
         else
           flash[:alert] = 'failed'
