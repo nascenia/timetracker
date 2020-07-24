@@ -118,7 +118,7 @@ class TimesheetsController < ApplicationController
     if @timesheet.date.to_date >= Time.now.to_date - 35
       if @timesheet.date.to_date <= Time.now.to_date
         if @timesheet.save
-          if restrict_access?
+          if restrict_access?(true)
             if session[:should_force_check_out] == 1
               @attendance = session[:attendence_id].present? ? Attendance.find(session[:attendence_id]) : Attendance.new
               @today_entry = Attendance.find_first_entry(current_user.id, Date.today)
@@ -236,10 +236,12 @@ class TimesheetsController < ApplicationController
                                         :description)
     end
 
-    def restrict_access?
+    def restrict_access?(flag = false)
       if request.remote_ip.present?
         unless Attendance::IP_WHITELIST.include? request.remote_ip
-          #flash[:alert] = 'Check in or out is restricted from outside office.'
+          if flag == false
+            flash[:alert] = 'Check in or out is restricted from outside office.'
+          end
           false
         else
           true
