@@ -82,7 +82,7 @@
                 <%= label :description, 'Comments' %>
             </p>
             <p>
-                <%= f.text_area :description,:class => 'form-control' , cols: "30", rows: "10",:maxlength=>"512"%>
+                <%= f.text_area :description, :class => 'form-control' , cols: "30", rows: "10",:maxlength=>"512"%>
             </p>
         </div>
     </div>
@@ -107,31 +107,9 @@
             <div class = 'col-md-6' >
             <p>
     <%= f.submit "Submit and Add New" %>
-        </p>
+    </p>
 
     </div>
     </div>
     </div>
-<!--    <input type="button" value="Submit and Add new" >-->
 <% end %>
-<script type="text/javascript">
-    $('#select-other-projects').hide();
-    $('#select-other-projects').prop('disabled',true);
-
-    $('#other-projects-cb').on('click',function () {
-        if(this.checked)
-        {
-            $('#select-current-user-projects').hide();
-            $('#select-current-user-projects').prop('disabled',true);
-            $('#select-other-projects').show();
-            $('#select-other-projects').prop('disabled',false);
-        } else{
-            $('#select-other-projects').hide();
-            $('#select-other-projects').prop('disabled',true);
-            $('#select-current-user-projects').show();
-            $('#select-current-user-projects').prop('disabled',false);
-
-        }
-       return true;
-    });
-</script>

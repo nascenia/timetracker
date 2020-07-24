@@ -84,25 +84,3 @@
 
     <%= f.submit "Update" %>
 <% end %>
-
-<script type="text/javascript">
-    $('#select-other-projects').hide();
-    $('#select-other-projects').prop('disabled',true);
-
-    $('#other-projects-cb').on('click',function () {
-        if(this.checked)
-        {
-            $('#select-current-user-projects').hide();
-            $('#select-current-user-projects').prop('disabled',true);
-            $('#select-other-projects').show();
-            $('#select-other-projects').prop('disabled',false);
-        } else{
-            $('#select-other-projects').hide();
-            $('#select-other-projects').prop('disabled',true);
-            $('#select-current-user-projects').show();
-            $('#select-current-user-projects').prop('disabled',false);
-
-        }
-        return true;
-    });
-</script>

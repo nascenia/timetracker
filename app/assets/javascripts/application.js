@@ -13,3 +13,4 @@
 //= require pre_registrations.js
 //= require users.js
 //= require employees.js
+//= require timesheets.js
