@@ -7,7 +7,7 @@
                 <%= label :date, 'Date' %>
             </p>
             <p>
-                <%= f.text_field :date, :class => 'form-control timesheet-date-picker', value: Time.now.strftime("%Y/%m/%d"),:onkeydown=>"return false" %>
+                <%= f.text_field :date, class: 'form-control timesheet-date-picker', value: Time.now.strftime("%Y/%m/%d"),:onkeydown=>"return false" %>
             </p>
         </div>
         <div class = 'col-md-6' >
