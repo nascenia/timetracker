@@ -84,7 +84,7 @@ class PreRegistrationsController < ApplicationController
         UserMailer.send_mail_to_new_employee_about_tt(pre_registration).deliver
         UserMailer.send_mail_to_hr_about_new_employee(pre_registration).deliver
         redirect_to root_path
-      elsif pre_registration_params[:salary_account_details_sent].to_s == '1' || pre_registration_params[:employee_contract_sign].to_s == '1' || pre_registration_params[:id_card_given].to_s == '1' || pre_registration_params[:pic_and_other_relevant_info].to_s == '1' || pre_registration_params[:has_sent_invitation_to_visit_internal_website].to_s == '1'
+      elsif pre_registration_params[:redirection_flag] == 'true'
         redirect_to pre_registrations_path
       else
         redirect_to new_pre_registration_path
@@ -119,6 +119,7 @@ class PreRegistrationsController < ApplicationController
                                              :employee_contract_sign,
                                              :id_card_given,
                                              :pic_and_other_relevant_info,
-                                             :has_sent_invitation_to_visit_internal_website)
+                                             :has_sent_invitation_to_visit_internal_website,
+                                             :redirection_flag)
   end
 end

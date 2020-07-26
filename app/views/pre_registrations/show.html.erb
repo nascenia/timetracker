@@ -1,6 +1,8 @@
 <h3><b><%= @pre_registration.name %>'s Information</b></h3><br>
 
 <%= form_for @pre_registration do |f| %>
+    
+    <%= f.hidden_field :redirection_flag, value: true %>
 
     <div class = 'row' >
         <div class = 'col-md-12' >
