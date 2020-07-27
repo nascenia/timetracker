@@ -119,7 +119,6 @@ class PreRegistrationsController < ApplicationController
                                              :employee_contract_sign,
                                              :id_card_given,
                                              :pic_and_other_relevant_info,
-                                             :has_sent_invitation_to_visit_internal_website,
-                                             :redirection_flag)
+                                             :has_sent_invitation_to_visit_internal_website)
   end
 end
