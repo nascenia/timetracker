@@ -67,12 +67,12 @@
             </div>
   
             <div class = 'col-md-6' >
-                <%= f.label :user_id do %>
+                <%= f.label :ttf_id do %>
                     <%= 'Name of TTF/Mentor' %>
                     <span class = 'required-asterisk' >*</span>
                 <% end %>
                 <p>
-                    <%= f.select :user_id, options_for_select( @ttf_list.collect { | ttf_list | [ttf_list.name,  ttf_list.id] }), {}, required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects' %>
+                    <%= f.select :ttf_id, options_for_select( @ttf_list.collect { | ttf_list | [ttf_list.name,  ttf_list.id] }), {}, required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects' %>
                 </p>
             </div>
   
