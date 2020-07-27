@@ -24,13 +24,13 @@ function redirectToNewTimeSHeet() {
 function fixedTimeSelect() {
 
   var date_interval = document.getElementById("time_select").value;
-  let current_datetime = new Date();
-  let formatted_date = current_datetime.getFullYear()+"-"+appendLeadingZeroes((current_datetime.getMonth()+ 1)) + "-"
+  var current_datetime = new Date();
+  var formatted_date = current_datetime.getFullYear()+"-"+appendLeadingZeroes((current_datetime.getMonth()+ 1)) + "-"
       +appendLeadingZeroes (current_datetime.getDate());
   document.getElementById("dt2").value = formatted_date;
-  let previous_datetime = new Date();
+  var previous_datetime = new Date();
   previous_datetime.setDate( previous_datetime.getDate() - date_interval );
-  let formatted_date2 = previous_datetime.getFullYear()+"-"+appendLeadingZeroes((previous_datetime.getMonth()+ 1)) + "-"
+  var formatted_date2 = previous_datetime.getFullYear()+"-"+appendLeadingZeroes((previous_datetime.getMonth()+ 1)) + "-"
       +appendLeadingZeroes (previous_datetime.getDate());
   document.getElementById("dt1").value = formatted_date2;
   var x = document.getElementById("time_select").selectedIndex;
