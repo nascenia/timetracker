@@ -20,7 +20,7 @@
             <td><%= employee.contactNumber %></td>
             <td><%= employee.joiningDate%></td>
             <td><%= link_to 'Edit', edit_pre_registration_path(employee,1) %></td>
-            <td class = 'right' ><%= link_to 'Delete', pre_registration_path(employee) , method: :delete %></td>
+            <td class = 'right' ><%= link_to 'Delete', pre_registration_path(employee), method: :delete, data: { confirm: 'Are you sure you want to delete this?' } %></td>
         </tr>
     <% end %>
 
