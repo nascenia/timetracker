@@ -84,7 +84,7 @@ class PreRegistrationsController < ApplicationController
         UserMailer.send_mail_to_new_employee_about_tt(pre_registration).deliver
         UserMailer.send_mail_to_hr_about_new_employee(pre_registration).deliver
         redirect_to root_path
-      elsif pre_registration_params[:redirection_flag] == 'true'
+      elsif params[:hidden_flag] == 'true'
         redirect_to pre_registrations_path
       else
         redirect_to new_pre_registration_path
