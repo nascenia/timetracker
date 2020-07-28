@@ -63,7 +63,7 @@
                     <span class = 'required-asterisk' >*</span> 
                 <% end %>
                 <p>
-                    <%= f.text_field :contactNumber, class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false %>
+                    <%= f.text_field :contactNumber, pattern: '[0][1][56789][0-9]{8}', title: 'Enter a valid mobile number!', class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false %>
                 </p>
             </div>
 

@@ -26,6 +26,7 @@ function validateFiles(inputFile) {
 }
 
 function validateAvatar(inputFile) {
+  
   var maxExceededMessage = "This file exceeds the maximum allowed file size (50 MB)";
   var extErrorMessage = "Only image file with extension: .jpg, .jpeg, .gif or .png is allowed";
   var allowedExtension = ["jpg", "jpeg", "gif", "png"];
@@ -40,6 +41,7 @@ function validateAvatar(inputFile) {
     extName = this.name.split('.').pop();
     if ($.inArray(extName, allowedExtension) == -1) {extError=true;};
   });
+
   if (sizeExceeded) {
     window.alert(maxExceededMessage);
     $(inputFile).val('');
