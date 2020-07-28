@@ -2,8 +2,8 @@
 <h3>Edit Timesheet </h3><br>
 <%= form_for @timesheets do |f| %>
     <% current_user_projects = current_user.projects %>
-    <div class = 'row' >
-        <div class = 'col-md-6' >
+    <div class="row">
+        <div class="col-md-6">
             <p>
                 <%= label :date, 'Date' %>
                 <%= label '', ' *', class: 'required-asterisk' %>
@@ -12,7 +12,7 @@
                 <%= f.text_field :date, :class => 'form-control timesheet-date-picker', value: @timesheets.date ,:onkeydown=>"return false"%>
             </p>
         </div>
-        <div class = 'col-md-6' >
+        <div class="col-md-6">
             <p>
                 <%= label :project, 'Project Name' %>
                 <%= label '', ' *', class: 'required-asterisk' %>
@@ -21,7 +21,7 @@
                 <%= f.select :project_id, options_for_select(@projects.collect { | project | [project.project_name,  project.id] }, selected: @timesheets.project_id), {}, {required: 'true', autofocus: 'true', class: 'form-control',:maxlength=>"128"}%>
             </p>
         </div>
-        <div class = 'col-md-6' >
+        <div class="col-md-6">
             <p>
                 <%= label :project, 'Task' %>
                 <%= label '', ' *', class: 'required-asterisk' %>
@@ -30,7 +30,7 @@
                 <%= f.text_field :task ,:class => 'form-control',required: 'true',:maxlength=>"128"%>
             </p>
         </div>
-        <div class = 'col-md-6' >
+        <div class="col-md-6">
             <p>
                 <%= label :project, 'Ticket Number' %>
             </p>
@@ -38,16 +38,16 @@
                 <%= f.text_field :ticket_number,:class => 'form-control',:maxlength=>"128" %>
             </p>
         </div>
-        <div class = 'col-md-6' >
+        <div class="col-md-6">
             <p>
                 <%= label :project, 'Ticket Link' %>
             <p>
                 <%= f.text_field :ticket_link,:class => 'form-control' ,:maxlength=>"128"%>
             </p>
         </div>
-        <div class = 'col-md-6'  >
-            <div class = 'row' >
-                <div class = 'col-md-6' >
+        <div class="col-md-6" >
+            <div class="row">
+                <div class="col-md-6">
                     <p>
                         <%= label :project, 'Hours spent' %>
                         <%= label '', ' *', class: 'required-asterisk' %>
@@ -56,7 +56,7 @@
                         <%= f.select :hours, options_for_select(0..@total_hours, selected: @timesheets.hours) , {}, {required: 'true', autofocus: 'true', class: 'form-control'}%>
                     </p>
                 </div>
-                <div class = 'col-md-6' >
+                <div class="col-md-6">
                     <p>
                         <%= label :project, 'Minutes spent' %>
                         <%= label '', ' *', class: 'required-asterisk' %>
@@ -72,7 +72,7 @@
 
         </div>
 
-        <div class = 'col-md-6'  style="clear: left;">
+        <div class="col-md-6" style="clear: left;">
             <p>
                 <%= label :description, 'Description/Comments' %>
             </p>
@@ -82,5 +82,27 @@
         </div>
     </div>
 
-    <%= f.submit 'Update' %>
+    <%= f.submit "Update" %>
 <% end %>
+
+<script type="text/javascript">
+    $('#select-other-projects').hide();
+    $('#select-other-projects').prop('disabled',true);
+
+    $('#other-projects-cb').on('click',function () {
+        if(this.checked)
+        {
+            $('#select-current-user-projects').hide();
+            $('#select-current-user-projects').prop('disabled',true);
+            $('#select-other-projects').show();
+            $('#select-other-projects').prop('disabled',false);
+        } else{
+            $('#select-other-projects').hide();
+            $('#select-other-projects').prop('disabled',true);
+            $('#select-current-user-projects').show();
+            $('#select-current-user-projects').prop('disabled',false);
+
+        }
+        return true;
+    });
+</script>
