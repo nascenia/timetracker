@@ -73,7 +73,7 @@
                     <span class = 'required-asterisk' >*</span>
                 <% end %>
                 <p>
-                    <%= f.text_field :personalEmail, class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false %>
+                    <%= f.email_field :personalEmail, class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false %>
                 </p>
             </div>
 
@@ -142,14 +142,14 @@
                 <%= f.label :companyEmail do %>
                     <%= 'Company Email' %>
                     <span class = 'required-asterisk' >*</span>
-                    <%= f.text_field :companyEmail, class: 'form-control', maxlength: '128', required: true %>
+                    <%= f.email_field :companyEmail, class: 'form-control', maxlength: '128', required: true %>
                 <% end %>
             </div>
             <div class = 'col-md-6' >
                 <%= f.label :HR_email do %>
                     <%= 'Notify HR to follow the next step' %>
                     <span class = 'required-asterisk' >*</span>
-                    <%= f.text_field :HR_email, class: 'form-control', maxlength: '128', required: true %>
+                    <%= f.email_field :HR_email, class: 'form-control', maxlength: '128', required: true %>
                 <% end %>
             </div>
         <% end %>    
