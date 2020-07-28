@@ -139,7 +139,12 @@ class Attendance < ActiveRecord::Base
   end
 
   def self.humanized_average_hours avg_hour
-    (avg_hour.to_i).to_s + ':' + (((avg_hour % 1)* 60).round(0)).to_s
+    hour = avg_hour.to_i
+    min = ((avg_hour % 1)*60).round(0)
+    if min == 60
+      min = 0
+      hour = hour + 1
+    hour.to_s + ':' + min.to_s
   end
 
   #
