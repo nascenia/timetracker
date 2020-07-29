@@ -137,7 +137,7 @@
     <%= hidden_field_tag 'selected', @is_for_admin  %>
     <br/>
     <div class = 'row' >
-        <%if @is_for_admin == '23' %>
+        <% if @is_for_admin == '23' %>
             <div class = 'col-md-6' >
                 <%= f.label :companyEmail do %>
                     <%= 'Company Email' %>
