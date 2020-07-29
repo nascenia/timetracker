@@ -54,9 +54,11 @@ function validateAvatar(inputFile) {
 }
 
 function validateEmails() {
-  var company_email = document.getElementById('company_email').value;
-  var hr_email = document.getElementById('hr_email').value;
-  if (company_email == hr_email) {
+  var company_email = document.getElementById('company_email');
+  var hr_email = document.getElementById('hr_email');
+  if (company_email.value == hr_email.value) {
     window.alert('Company email and HR email needs to be different');
+    company_email.value = "";
+    hr_email.value = "";
   }
 }
