@@ -206,7 +206,7 @@ class UserMailer < ActionMailer::Base
 
     # mail to: 'hr@nascenia.com', subject: subject
     # mail to: ENV['TT_CEO_EMAIL'], subject: subject
-    mail to: 'nasceniatest2@gmail.com', subject: subject
+    mail to: 'istiad@bdipo.com', subject: subject
     mail to: 'nasceniatest2@gmail.com', subject: subject
 
     true
