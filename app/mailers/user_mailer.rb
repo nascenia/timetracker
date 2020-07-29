@@ -204,8 +204,11 @@ class UserMailer < ActionMailer::Base
     @user = user
     subject = 'Action required: Change(s) detected in employee information and approval needed'
 
-    mail to: 'hr@nascenia.com', subject: subject
-    mail to: ENV['TT_CEO_EMAIL'], subject: subject
+    # mail to: 'hr@nascenia.com', subject: subject
+    # mail to: ENV['TT_CEO_EMAIL'], subject: subject
+    mail to: 'nasceniatest2@gmail.com', subject: subject
+    mail to: 'nasceniatest2@gmail.com', subject: subject
+
     true
   rescue => e
     logger.error e.message

@@ -142,17 +142,17 @@
                 <%= f.label :companyEmail do %>
                     <%= 'Company Email' %>
                     <span class = 'required-asterisk' >*</span>
-                    <%= f.email_field :companyEmail, class: 'form-control', maxlength: '128', required: true %>
+                    <%= f.email_field :companyEmail, id: 'company_email', class: 'form-control', maxlength: '128', required: true %>
                 <% end %>
             </div>
             <div class = 'col-md-6' >
                 <%= f.label :HR_email do %>
                     <%= 'Notify HR to follow the next step' %>
                     <span class = 'required-asterisk' >*</span>
-                    <%= f.email_field :HR_email, class: 'form-control', maxlength: '128', required: true %>
+                    <%= f.email_field :HR_email, id: 'hr_email', class: 'form-control', maxlength: '128', required: true %>
                 <% end %>
             </div>
         <% end %>    
     </div>
-    <%= f.submit 'Submit', class: 'btn btn-success', confirm: 'Are you sure?' %>
+    <%= f.submit 'Submit', class: 'btn btn-success', onclick: 'validateEmails();', confirm: 'Are you sure?' %>
 <% end %>
