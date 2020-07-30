@@ -89,6 +89,9 @@ class PreRegistrationsController < ApplicationController
       else
         redirect_to new_pre_registration_path
       end
+    else
+      flash[:alert] = 'Company Email already exists please enter new email.'
+      redirect_to edit_pre_registration_path(pre_registration, ceo_flag: true)
     end
   end
 
@@ -107,6 +110,7 @@ class PreRegistrationsController < ApplicationController
                                              :NdaSigned,
                                              :ndaDoc,
                                              :user_id,
+                                             :ttf_id,
                                              :HR_email,
                                              :emailGroup,
                                              :contactNumber,

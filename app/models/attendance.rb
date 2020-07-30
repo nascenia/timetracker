@@ -139,7 +139,7 @@ class Attendance < ActiveRecord::Base
   end
 
   def self.humanized_average_hours avg_hour
-    (avg_hour.to_i).to_s + ':' + (((avg_hour % 1)* 60).round(0)).to_s
+    (avg_hour.to_i).to_s + ':' + (((avg_hour % 1) * 60).round(0)).to_s
   end
 
   #

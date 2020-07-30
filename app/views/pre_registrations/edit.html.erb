@@ -38,12 +38,12 @@
             </div>
 
             <div class = 'col-md-6' >
-                <%= f.label :user_id do %>
+                <%= f.label :ttf_id do %>
                     <%= 'Name of TTF' %>
                     <span class = 'required-asterisk' >*</span>
                 <% end %>
                 <p>
-                    <%= f.select :user_id, options_for_select(@ttf_list.collect { | ttf_list | [ttf_list.name,  ttf_list.id] }, selected: @pre_registration.user_id), {}, required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects' %>
+                    <%= f.select :ttf_id, options_for_select(@ttf_list.collect { | ttf_list | [ttf_list.name,  ttf_list.id] }, selected: @pre_registration.ttf_id), {}, required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects' %>
                 </p>
             </div>
                     
@@ -63,7 +63,7 @@
                     <span class = 'required-asterisk' >*</span> 
                 <% end %>
                 <p>
-                    <%= f.text_field :contactNumber, class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false %>
+                    <%= f.text_field :contactNumber, pattern: '[0][1][56789][0-9]{8}', title: 'Enter a valid mobile number!', class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false %>
                 </p>
             </div>
 
@@ -73,7 +73,7 @@
                     <span class = 'required-asterisk' >*</span>
                 <% end %>
                 <p>
-                    <%= f.text_field :personalEmail, class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false %>
+                    <%= f.email_field :personalEmail, class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false %>
                 </p>
             </div>
 
@@ -137,19 +137,19 @@
     <%= hidden_field_tag 'selected', @is_for_admin  %>
     <br/>
     <div class = 'row' >
-        <%if @is_for_admin == '23' %>
+        <% if @is_for_admin == '23' %>
             <div class = 'col-md-6' >
                 <%= f.label :companyEmail do %>
                     <%= 'Company Email' %>
                     <span class = 'required-asterisk' >*</span>
-                    <%= f.text_field :companyEmail, class: 'form-control', maxlength: '128', required: true %>
+                    <%= f.email_field :companyEmail, id: 'company_email', onchange: 'validateEmails();', class: 'form-control', maxlength: '128', required: true %>
                 <% end %>
             </div>
             <div class = 'col-md-6' >
                 <%= f.label :HR_email do %>
                     <%= 'Notify HR to follow the next step' %>
                     <span class = 'required-asterisk' >*</span>
-                    <%= f.text_field :HR_email, class: 'form-control', maxlength: '128', required: true %>
+                    <%= f.email_field :HR_email, id: 'hr_email', onchange: 'validateEmails();', class: 'form-control', maxlength: '128', required: true %>
                 <% end %>
             </div>
         <% end %>    

@@ -122,9 +122,10 @@ class User < ActiveRecord::Base
                            personal_email: pre_registration.personalEmail,
                            mobile_number: pre_registration.contactNumber,
                            joining_date: pre_registration.joiningDate,
-                           ttf_id: pre_registration.user_id,
+                           ttf_id: pre_registration.ttf_id,
                            password: Devise.friendly_token[0, 20])
         pre_registration.step_no = 3
+        pre_registration.user_id = user.id
         pre_registration.save
       end
     end

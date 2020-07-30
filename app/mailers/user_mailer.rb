@@ -199,4 +199,32 @@ class UserMailer < ActionMailer::Base
     false
     true
   end
+
+  def send_approval_or_rejection_notification_of_employee_registration_to_hr(user)
+    @user = user
+    subject = 'Action required: Change(s) detected in employee information and approval needed'
+
+    # mail to: 'hr@nascenia.com', subject: subject
+    # mail to: ENV['TT_CEO_EMAIL'], subject: subject
+    mail to: 'nasceniatest2@gmail.com', subject: subject
+
+    true
+  rescue => e
+    logger.error e.message
+    false
+    true
+  end
+
+  def send_approval_or_rejection_notification_of_employee_registration_to_ceo(user)
+    @user = user
+    subject = 'Action required: Change(s) detected in employee information and approval needed'
+
+    mail to: 'nasceniatest2@gmail.com', subject: subject
+
+    true
+  rescue => e
+    logger.error e.message
+    false
+    true
+  end
 end

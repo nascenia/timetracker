@@ -20,7 +20,7 @@
             <td><%= employee.contactNumber %></td>
             <td><%= employee.joiningDate%></td>
             <td><%= link_to 'Edit', edit_pre_registration_path(employee,1) %></td>
-            <td class = 'right' ><%= link_to 'Delete', pre_registration_path(employee) , method: :delete %></td>
+            <td class = 'right' ><%= link_to 'Delete', pre_registration_path(employee), method: :delete, data: { confirm: 'Are you sure you want to delete this?' } %></td>
         </tr>
     <% end %>
 
@@ -67,12 +67,12 @@
             </div>
   
             <div class = 'col-md-6' >
-                <%= f.label :user_id do %>
+                <%= f.label :ttf_id do %>
                     <%= 'Name of TTF/Mentor' %>
                     <span class = 'required-asterisk' >*</span>
                 <% end %>
                 <p>
-                    <%= f.select :user_id, options_for_select( @ttf_list.collect { | ttf_list | [ttf_list.name,  ttf_list.id] }), {}, required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects' %>
+                    <%= f.select :ttf_id, options_for_select( @ttf_list.collect { | ttf_list | [ttf_list.name,  ttf_list.id] }), {}, required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects' %>
                 </p>
             </div>
   
@@ -91,7 +91,7 @@
                     <span class = 'required-asterisk' >*</span>
                 <% end %>
                 <p>
-                    <%= f.text_field :contactNumber, class: 'form-control', required: 'true', maxlength: '128' %>
+                    <%= f.text_field :contactNumber, pattern: '[0][1][56789][0-9]{8}', title: 'Enter a valid mobile number!', class: 'form-control', required: 'true', maxlength: '128' %>
                 </p>
             </div>
   
@@ -101,7 +101,7 @@
                     <span class = 'required-asterisk' >*</span>
                 <% end %>
                 <p>
-                    <%= f.text_field :personalEmail , class: 'form-control', required: 'true', maxlength: '128' %>
+                    <%= f.email_field :personalEmail , class: 'form-control', required: 'true', maxlength: '128' %>
                 </p>
             </div>
   
@@ -155,7 +155,6 @@
                     <%= f.check_box :packReady, checked: false, required: true %>
                 <% end %>
             </div>
-        
         </div>
         <br/>  
         <%= f.submit 'Submit', class: 'btn btn-success' %>
