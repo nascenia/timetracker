@@ -35,7 +35,7 @@
     .form-group
       = f.label :personal_email, { class: 'col-sm-2 control-label'}
       .col-sm-10
-        =f.email_field :personal_email, { class: 'form-control' , required: true}
+        = f.email_field :personal_email, { class: 'form-control' , required: true,  pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$', title: 'Enter a valid email address!' }
     .form-group
       = f.label :present_address, { class: 'col-sm-2 control-label'}
       .col-sm-10

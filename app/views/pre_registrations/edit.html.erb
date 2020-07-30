@@ -142,14 +142,14 @@
                 <%= f.label :companyEmail do %>
                     <%= 'Company Email' %>
                     <span class = 'required-asterisk' >*</span>
-                    <%= f.email_field :companyEmail, id: 'company_email', onchange: 'validateEmails();', class: 'form-control', maxlength: '128', required: true %>
+                    <%= f.email_field :companyEmail,  pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$', title: 'Enter a valid email address!', id: 'company_email', onchange: 'validateEmails();', class: 'form-control', maxlength: '128', required: true %>
                 <% end %>
             </div>
             <div class = 'col-md-6' >
                 <%= f.label :HR_email do %>
                     <%= 'Notify HR to follow the next step' %>
                     <span class = 'required-asterisk' >*</span>
-                    <%= f.email_field :HR_email, id: 'hr_email', onchange: 'validateEmails();', class: 'form-control', maxlength: '128', required: true %>
+                    <%= f.email_field :HR_email,  pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$', title: 'Enter a valid email address!', id: 'hr_email', onchange: 'validateEmails();', class: 'form-control', maxlength: '128', required: true %>
                 <% end %>
             </div>
         <% end %>    
