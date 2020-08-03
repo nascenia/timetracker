@@ -73,7 +73,7 @@
                     <span class = 'required-asterisk' >*</span>
                 <% end %>
                 <p>
-                    <%= f.email_field :personalEmail, class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false %>
+                    <%= f.email_field :personalEmail, pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$', title: 'Enter a valid email address!', class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false %>
                 </p>
             </div>
 
