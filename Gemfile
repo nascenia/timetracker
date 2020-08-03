@@ -43,13 +43,8 @@ gem 'rvm-capistrano', '1.2.7', require: false
 gem 'activeadmin', github: 'activeadmin'
 
 group :test, :development do
-  gem 'rspec-rails', '~> 3.5.1'
-  gem 'simplecov'
-end
-
-group :test, :development do
   gem 'factory_girl_rails', '~> 4.7.0'
+  gem 'letter_opener'
   gem 'rspec-rails', '~> 3.5.1'
   gem 'simplecov'
-  gem 'letter_opener'
 end

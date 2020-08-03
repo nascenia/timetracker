@@ -10,6 +10,6 @@
 //= require jquery.multi-select.js
 //= require bootstrap-sprockets
 //= require bootstrap-datepicker.config.js
-//= require pre_registrations.js
+//= require pre_registrations.js.erb
 //= require users.js
 //= require employees.js
