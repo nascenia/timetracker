@@ -90,7 +90,7 @@ class PreRegistrationsController < ApplicationController
         redirect_to new_pre_registration_path
       end
     else
-      flash[:alert] = 'Company Email already exists please enter new email.'
+      flash[:alert] = 'Company email already used please enter a new email.'
       redirect_to edit_pre_registration_path(pre_registration, ceo_flag: true)
     end
   end
