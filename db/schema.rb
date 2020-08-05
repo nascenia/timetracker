@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200727091348) do
+ActiveRecord::Schema.define(version: 20200804120257) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -271,6 +271,17 @@ ActiveRecord::Schema.define(version: 20200727091348) do
   add_index "users", ["holiday_scheme_id"], name: "index_users_on_holiday_scheme_id", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["weekend_id"], name: "index_users_on_weekend_id", using: :btree
+
+  create_table "versions", force: true do |t|
+    t.string   "item_type",  limit: 191,        null: false
+    t.integer  "item_id",                       null: false
+    t.string   "event",                         null: false
+    t.string   "whodunnit"
+    t.text     "object",     limit: 2147483647
+    t.datetime "created_at"
+  end
+
+  add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
 
   create_table "weekends", force: true do |t|
     t.string   "name"

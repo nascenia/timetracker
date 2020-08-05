@@ -16,6 +16,7 @@ class User < ActiveRecord::Base
   belongs_to :weekend
   belongs_to :holiday_scheme
 
+  has_paper_trail
   has_one :pre_registration, dependent: :destroy
   has_one :leave_tracker, dependent: :destroy
   has_many :attendances, dependent: :destroy
