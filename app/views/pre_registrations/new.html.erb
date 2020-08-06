@@ -2,25 +2,25 @@
 <h3><b>On Process of Joining</b></h3><br/>
 <table style = 'width:100%' >
     <tr>
-        <th class = 'left' >Name</th>
-        <th>Email ID</th>
-        <th>Contact Number</th>
-        <th colspan = '3' class = 'right' >Joining Date</th>
+        <th class = 'pre_reg_th left' >Name</th>
+        <th class='pre_reg_th'>Email ID</th>
+        <th class='pre_reg_th'>Contact Number</th>
+        <th colspan = '3' class = 'pre_reg_th right' >Joining Date</th>
     </tr>
     <% last_date = '' %>
     <% if @on_process_of_joining_employees.empty? %>
         <tr>
-            <td class = 'both_side text-center', colspan = '6' >No Record</td>
+            <td class = 'pre_reg_td both_side text-center', colspan = '6' >No Record</td>
         </tr>
     <% end %>
     <% @on_process_of_joining_employees.each do |employee| %>
         <tr>
-            <td class = 'left' ><%= employee.name %></td>
-            <td><%= employee.personalEmail %></td>
-            <td><%= employee.contactNumber %></td>
-            <td><%= employee.joiningDate%></td>
-            <td><%= link_to 'Edit', edit_pre_registration_path(employee,1) %></td>
-            <td class = 'right' ><%= link_to 'Delete', pre_registration_path(employee), method: :delete, data: { confirm: 'Are you sure you want to delete this?' } %></td>
+            <td class = 'pre_reg_td left' ><%= employee.name %></td>
+            <td class='pre_reg_td'><%= employee.personalEmail %></td>
+            <td class='pre_reg_td'><%= employee.contactNumber %></td>
+            <td class='pre_reg_td'><%= employee.joiningDate%></td>
+            <td class='pre_reg_td'><%= link_to 'Edit', edit_pre_registration_path(employee,1) %></td>
+            <td class = 'pre_reg_td right' ><%= link_to 'Delete', pre_registration_path(employee), method: :delete, data: { confirm: 'Are you sure you want to delete this?' } %></td>
         </tr>
     <% end %>
 
