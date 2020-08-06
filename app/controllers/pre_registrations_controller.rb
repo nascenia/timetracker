@@ -1,5 +1,6 @@
 # :nodoc:
 class PreRegistrationsController < ApplicationController
+  before_action :authenticate_admin_user!
   layout 'time_tracker'
 
   def index
