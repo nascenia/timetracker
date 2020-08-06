@@ -1,10 +1,10 @@
-table {
+.pre_reg_table {
     font-family: arial, sans-serif;
     border-collapse: collapse;
     width: 100%;
 }
 
-th {
+.pre_reg_th {
     background-color: #E0E0E0;
     border-bottom: 1px solid #808080;
     border-top: 1px solid #808080;
@@ -12,7 +12,7 @@ th {
     padding: 8px;
 }
 
-td {
+.pre_reg_td {
     border-bottom: 1px solid #808080;
     border-top: 1px solid #808080;
     text-align: left;
