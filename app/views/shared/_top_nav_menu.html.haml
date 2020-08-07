@@ -13,7 +13,8 @@
     %a.dropdown-toggle{"data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false",:href => "#"}
       = 'Employee'
       - if current_user.has_admin_privilege?
-        %span.badge= count_employee
+        - if count_employee != 0
+          %span.badge= count_employee
       %span.caret
     %ul.dropdown-menu
       %li
@@ -22,12 +23,14 @@
         %li
           = link_to new_pre_registration_path do
             Add new Employee
-            %span.badge= add_employee
+            - if add_employee != 0
+              %span.badge= add_employee
       - if current_user.has_admin_privilege?
         %li
           = link_to pre_registrations_path do
             Employee Onboarding
-            %span.badge= employee_onboard
+            - if employee_onboard != 0
+              %span.badge= employee_onboard
   %li{class: (params[:controller].eql?('users/registrations')? 'dropdown active' : 'dropdown')}
     %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
       = current_user.name
