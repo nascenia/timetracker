@@ -22,7 +22,7 @@
               = employee.email
             - if employee.mobile_number.present?
               %td.bg-danger
-                = link_to employee.mobile_number, employee.mobile_number
+                %a{:href =>"Tel:#{employee.mobile_number}"}= employee.mobile_number
             - else
               %td.bg-danger
                 = 'N/A'
