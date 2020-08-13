@@ -43,7 +43,8 @@
               = link_to employee.name, employee_path(employee)
             %td= employee.email
             - if employee.mobile_number.present?
-              %td= link_to employee.mobile_number, employee.mobile_number
+              %td
+                %a{:href =>"Tel:#{employee.mobile_number}"}= employee.mobile_number
             - else
               %td= 'N/A'
             %td= employee.blood_group
