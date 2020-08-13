@@ -72,7 +72,7 @@
                       Alternate Contact
                   .col-md-8
                     %h5
-                      = link_to @user.alternate_contact, @user.alternate_contact
+                      %a{:href =>"Tel:#{@user.alternate_contact}"}= @user.alternate_contact
             .row
               .item-personal_email
                 .col-md-4
@@ -104,7 +104,7 @@
                     Mobile
                 .col-md-8
                   %h5
-                    = link_to @user.emergency_contact_person_number, @user.emergency_contact_person_number
+                    %a{:href =>"Tel:#{@user.emergency_contact_person_number}"}= @user.emergency_contact_person_number
             .row
               .item-present_address
                 .col-md-4
