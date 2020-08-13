@@ -25,7 +25,7 @@
                   Mobile
               .col-md-8
                 %h5
-                  = link_to @user.mobile_number, @user.mobile_number
+                  %a{:href =>"Tel:#{@user.mobile_number}"}= @user.mobile_number
           .row
             .item-university
               .col-md-4
