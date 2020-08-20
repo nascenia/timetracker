@@ -1,0 +1,11 @@
+--2020-08-18 18:23:42--  https://www.google.com/url?q=https://dev.mysql.com/downloads/repo/apt/
+Resolving www.google.com (www.google.com)... 172.217.194.99, 172.217.194.105, 172.217.194.147, ...
+Connecting to www.google.com (www.google.com)|172.217.194.99|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/html]
+Saving to: ‘url?q=https:%2F%2Fdev.mysql.com%2Fdownloads%2Frepo%2Fapt%2F’
+
+          url?q=htt     [<=>                 ]       0  --.-KB/s               url?q=https:%2F%2Fd     [ <=>                ]   2.35K  --.-KB/s    in 0s      
+
+2020-08-18 18:23:43 (18.9 MB/s) - ‘url?q=https:%2F%2Fdev.mysql.com%2Fdownloads%2Frepo%2Fapt%2F’ saved [2410]
+
