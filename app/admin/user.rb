@@ -1,27 +1,26 @@
 ActiveAdmin.register User do
-
   permit_params :email, :name, :is_active, :role, :ttf_id, :sttf_id, :personal_email, :present_address, :mobile_number,
                 :alternate_contact, :permanent_address, :date_of_birth, :last_degree, :last_university, :passing_year,
                 :emergency_contact_person_name, :emergency_contact_person_relation, :emergency_contact_person_number,
-                :blood_group, :joining_date, :resignation_date, :is_published
+                :blood_group, :joining_date, :resignation_date, :is_published, :bank_account_no, :passport, :national_id, :resume
 
   remove_filter :attendances, :leaves, :leave_tracker
   controller do
     def update
-      if current_user.has_edit_permission_for?(User.find(id=params[:id]))
+      if current_user.has_edit_permission_for?(User.find((id = params[:id])))
         update!
       else
         flash[:error] = "You don't have permission to edit. Contact the Super Admin."
-        redirect_to :edit_admin_user and return
+        redirect_to(:edit_admin_user) && return
       end
     end
 
     def create
-      if current_user.has_edit_permission_for?(User.find(id=params[:id]))
+      if current_user.has_edit_permission_for?(User.find((id = params[:id])))
         create!
       else
         flash[:error] = "You don't have permission to create. Contact the Super Admin."
-        redirect_to :new_admin_user and return
+        redirect_to(:new_admin_user) && return
       end
     end
   end
@@ -74,6 +73,10 @@ ActiveAdmin.register User do
       row :emergency_contact_person_name
       row :emergency_contact_person_relation
       row :emergency_contact_person_number
+      row :bank_account_no
+      row :resume
+      row :national_id
+      row :passport
     end
   end
 
@@ -99,6 +102,10 @@ ActiveAdmin.register User do
       f.input :emergency_contact_person_name
       f.input :emergency_contact_person_relation
       f.input :emergency_contact_person_number
+      f.input :bank_account_no
+      f.input :resume
+      f.input :national_id, label: 'National ID / Birth Certificate'
+      f.input :passport
       f.input :is_published, input_html: { value: true }, as: :hidden
     end
     f.actions

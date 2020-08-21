@@ -94,6 +94,10 @@ Internal::Application.routes.draw do
   end
 
   get 'salaat_times', to: 'salaat_times#index'
-  resources :employees
+  resources :employees do
+    collection do
+      post :update_nda
+    end
+  end
   root :to => 'dashboard#index'
 end

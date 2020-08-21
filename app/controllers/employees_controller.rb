@@ -23,6 +23,7 @@ class EmployeesController < ApplicationController
       @employees = @employees.active
     end
   end
+
   def show
     @user = User.find(params[:id])
     @pre_registration = PreRegistration.where(companyEmail: @user.email).first
@@ -33,4 +34,11 @@ class EmployeesController < ApplicationController
     end
     @show_actions_to_admin = current_user.try(:has_admin_privilege?) && @user.registration_status == User::REGISTRATION_STATUS[:not_approved] ? true : false
   end
+
+  def update_nda
+    pre_registration = PreRegistration.find params[:id]
+    pre_registration.update(params.require(:pre_registration).permit(:ndaDoc))
+    redirect_to employee_path(params[:id])
+  end
+
 end
