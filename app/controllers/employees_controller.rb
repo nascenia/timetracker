@@ -27,10 +27,9 @@ class EmployeesController < ApplicationController
   def show
     @user = User.find(params[:id])
     @pre_registration = PreRegistration.where(companyEmail: @user.email).first
+    @nda = nil
     if @pre_registration.present?
-      @ndaDoc = @pre_registration.ndaDoc
-    else
-      @ndaDoc = nil
+      @nda = @pre_registration.ndaDoc
     end
     @show_actions_to_admin = current_user.try(:has_admin_privilege?) && @user.registration_status == User::REGISTRATION_STATUS[:not_approved] ? true : false
   end
@@ -40,5 +39,4 @@ class EmployeesController < ApplicationController
     pre_registration.update(params.require(:pre_registration).permit(:ndaDoc))
     redirect_to employee_path(params[:id])
   end
-
 end

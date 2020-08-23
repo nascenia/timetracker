@@ -156,8 +156,8 @@
                       NDA
                   .col-md-8
                     %h5
-                      - if @ndaDoc.present?
-                        = link_to 'View', @ndaDoc.url, {class: 'link', target: :_blank}
+                      - if @nda.present?
+                        = link_to 'View', @nda.url, {class: 'link', target: :_blank}
                       - else
                         N/A
               .row
