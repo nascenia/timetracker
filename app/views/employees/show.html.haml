@@ -60,7 +60,6 @@
 
           .clearfix
       - if current_user.has_admin_privilege?
-        
         %h3
           %b Detail Information
           .content-info
@@ -199,25 +198,19 @@
     .img-responsive.profile_image
       = image_tag @user.avatar.url(:large)
 
-- if @pre_registration.present?
+- if @pre_registration.present? && current_user.has_admin_privilege?
   %p
     %button.btn.btn-primary{"aria-controls" => "collapseExample", "aria-expanded" => "false", "data-target" => "#addEmployee", "data-toggle" => "collapse", :type => "button"}
       Update NDA
   #addEmployee.collapse
     = form_for @pre_registration, url: update_nda_employees_path, method: :post do |f|
-      = hidden_field_tag 'id', @user.id
+      = hidden_field_tag 'id', @pre_registration.user_id
       %fieldset
-        %legend Upload new NDA
-        .form-group
-          = f.label :ndaDoc, 'NDA' , { class: 'col-sm-2 control-label'} do
-            = 'NDA'
-            %span.required-asterisk *
-        .col-sm-10
+        .col-sm-12
           = f.file_field :ndaDoc, onchange: 'validateFiles(this);', data: { max_file_size: 50.megabytes },  class: 'form-control', required: true
       %br
-        .form-group
-          .col-sm-2.col-sm-10
-            = f.submit 'Submit', class: 'btn btn-success'
+      .form-group
+        = f.submit 'Submit', class: 'btn btn-success'
 
 - if @show_actions_to_admin
   .container_accept_or_reject

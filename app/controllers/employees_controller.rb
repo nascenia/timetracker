@@ -36,7 +36,7 @@ class EmployeesController < ApplicationController
   end
 
   def update_nda
-    pre_registration = PreRegistration.find params[:id]
+    pre_registration = PreRegistration.where(user_id: params[:id]).first
     pre_registration.update(params.require(:pre_registration).permit(:ndaDoc))
     redirect_to employee_path(params[:id])
   end
