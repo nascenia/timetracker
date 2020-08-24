@@ -168,7 +168,7 @@
                   .col-md-8
                     %h5
                       - if @user.resume.present?
-                        = link_to 'View', @user.paper_trail.previous_version.resume.url, {class: 'link', target: :_blank}
+                        = link_to 'View', @user.resume.url, {class: 'link', target: :_blank}
                       - else
                         N/A
               .row
