@@ -3,7 +3,6 @@
     = flash[:warning]
 %h1
   %b= @user.name
-
 .row
   .col-md-8
     .content-show-item
@@ -57,7 +56,6 @@
               .col-md-8
                 %h5
                   = @user.blood_group
-
           .clearfix
       - if current_user.has_admin_privilege?
         %h3
@@ -126,7 +124,6 @@
                 .col-md-8
                   %h5
                     = @user.date_of_birth
-
             .row
               .item-passing_year
                 .col-md-4
@@ -168,7 +165,8 @@
                   .col-md-8
                     %h5
                       - if @user.resume.present?
-                        = link_to 'View', @user.paper_trail.previous_version.resume.url, {class: 'link', target: :_blank}
+                        = link_to 'Current Version', @user.resume.url, {class: 'link', target: :_blank}
+                        = link_to 'Previous Version', @user.paper_trail.previous_version.resume.url, {class: 'link', target: :_blank}
                       - else
                         N/A
               .row
