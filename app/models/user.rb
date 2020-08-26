@@ -3,11 +3,11 @@ class User < ActiveRecord::Base
   # File Uploaders
   #
   
-  mount_uploader :avatar, AvatarUploader
-  mount_uploader :resume, FileUploader
-  mount_uploader :national_id, FileUploader
-  mount_uploader :passport, FileUploader
-  
+  mount_uploader :avatar, ImageUploader, mount_on: :avatar_filename
+  mount_uploader :resume, FileUploader, mount_on: :resume_filename
+  mount_uploader :national_id, FileUploader, mount_on: :national_id_filename
+  mount_uploader :passport, FileUploader, mount_on: :passport_filename
+
   #
   # Relationships
   #
@@ -546,5 +546,4 @@ class User < ActiveRecord::Base
   def has_admin_privilege?
     super_admin? || admin?
   end
-
 end

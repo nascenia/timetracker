@@ -191,6 +191,7 @@
                     %h5
                       - if @user.passport.present?
                         = link_to 'View', @user.passport.url, {class: 'link', target: :_blank}
+                        = @user.paper_trail.previous_version.passport.url
                       - else
                         N/A
             .clearfix
