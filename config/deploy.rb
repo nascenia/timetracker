@@ -39,7 +39,7 @@ task :staging do
 end
 
 task :prod do
-  set :branch, "new_employee_reg_production"
+  set :branch, "new_emp_prod"
   web_server = "timetracker.nascenia.com"
   role :web, web_server # Your HTTP server, Apache/etc
   role :app, web_server # This may be the same as your `Web` server
