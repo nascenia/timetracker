@@ -191,7 +191,6 @@
                     %h5
                       - if @user.passport.present?
                         = link_to 'View', @user.passport.url, {class: 'link', target: :_blank}
-                        = @user.paper_trail.previous_version.passport.url
                       - else
                         N/A
             .clearfix
@@ -199,19 +198,19 @@
     .img-responsive.profile_image
       = image_tag @user.avatar.url(:large)
 
-- if @pre_registration.present? && current_user.has_admin_privilege?
-  %p
-    %button.btn.btn-primary{"aria-controls" => "collapseExample", "aria-expanded" => "false", "data-target" => "#addEmployee", "data-toggle" => "collapse", :type => "button"}
-      Update NDA
-  #addEmployee.collapse
-    = form_for @pre_registration, url: update_nda_employees_path, method: :post do |f|
-      = hidden_field_tag 'id', @pre_registration.user_id
-      %fieldset
-        .col-sm-12
-          = f.file_field :ndaDoc, onchange: 'validateFiles(this);', data: { max_file_size: 50.megabytes },  class: 'form-control', required: true
-      %br
-      .form-group
-        = f.submit 'Submit', class: 'btn btn-success'
+-# - if @pre_registration.present? && current_user.has_admin_privilege?
+-#   %p
+-#     %button.btn.btn-primary{"aria-controls" => "collapseExample", "aria-expanded" => "false", "data-target" => "#addEmployee", "data-toggle" => "collapse", :type => "button"}
+-#       Update NDA
+-#   #addEmployee.collapse
+-#     = form_for @pre_registration, url: update_nda_employees_path, method: :post do |f|
+-#       = hidden_field_tag 'id', @pre_registration.user_id
+-#       %fieldset
+-#         .col-sm-12
+-#           = f.file_field :ndaDoc, onchange: 'validateFiles(this);', data: { max_file_size: 50.megabytes },  class: 'form-control', required: true
+-#       %br
+-#       .form-group
+-#         = f.submit 'Submit', class: 'btn btn-success'
 
 - if @show_actions_to_admin
   .container_accept_or_reject
