@@ -217,7 +217,7 @@
                         = link_to 'View', @user.resume.url, {class: 'link', target: :_blank}
                       - else
                         N/A
-                      - if @show_actions_to_admin && @user.paper_trail.previous_version.resume != @user.resume && @user.paper_trail.previous_version.resume.present?
+                      - if @show_actions_to_admin && @user.paper_trail.previous_version.resume.url != @user.resume.url && @user.paper_trail.previous_version.resume.present?
                         = '['
                         = link_to 'Previous Version', @user.paper_trail.previous_version.resume.url, {class: 'link', target: :_blank}
                         = ']'
@@ -232,7 +232,7 @@
                         = link_to 'View', @user.national_id.url, {class: 'link', target: :_blank}
                       - else
                         N/A
-                      - if @show_actions_to_admin && @user.paper_trail.previous_version.national_id != @user.national_id && @user.paper_trail.previous_version.national_id.present?
+                      - if @show_actions_to_admin && @user.paper_trail.previous_version.national_id.url != @user.national_id.url && @user.paper_trail.previous_version.national_id.present?
                         = '['
                         = link_to 'Previous Version', @user.paper_trail.previous_version.national_id.url, {class: 'link', target: :_blank}
                         = ']'
@@ -247,7 +247,7 @@
                         = link_to 'View', @user.passport.url, {class: 'link', target: :_blank}
                       - else
                         N/A
-                      - if @show_actions_to_admin && @user.paper_trail.previous_version.passport != @user.passport && @user.paper_trail.previous_version.passport.present?
+                      - if @show_actions_to_admin && @user.paper_trail.previous_version.passport.url != @user.passport.url && @user.paper_trail.previous_version.passport.present?
                         = '['
                         = link_to 'Previous Version', @user.paper_trail.previous_version.passport.url, {class: 'link', target: :_blank}
                         = ']'

@@ -1,7 +1,6 @@
 - if current_user.has_admin_privilege?
   = render partial: 'admin_filter'
 .panel.panel-default
-
   %table.table.table-bordered.table-hover#employee-info-table
     %thead
       %tr
@@ -14,7 +13,7 @@
         %th{:width => '15%'} TTF
     %tbody.word-break
       - @employees.each do |employee|
-        - if @pending_employees_company_emails.include?(employee.email) and current_user.has_admin_privilege?
+        - if current_user.has_admin_privilege? && ( @pending_employees_company_emails.include?(employee.email) || employee.registration_status == User::REGISTRATION_STATUS[:not_approved] ? true : false )
           %tr
             %td.bg-danger
               = link_to employee.name, employee_path(employee)

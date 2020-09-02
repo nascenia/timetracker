@@ -5,7 +5,6 @@ class EmployeesController < ApplicationController
   def index
     @pending_employees_company_emails = PreRegistration.all.where(step_no: 0..3).pluck(:companyEmail)
     @employees = User.all.order(name: :asc)
-
     @employees = @employees.where('lower(name) LIKE ?', "%#{params[:name].strip.downcase}%") if params[:name].present?
     @employees = @employees.where('lower(email) LIKE ?', "%#{params[:email].strip.downcase}%") if params[:email].present?
     logger.info "------------------------------------"
