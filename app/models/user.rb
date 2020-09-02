@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   # File Uploaders
   #
   
-  mount_uploader :avatar, ImageUploader, mount_on: :avatar_filename
+  mount_uploader :avatar, AvatarUploader, mount_on: :avatar_filename
   mount_uploader :resume, FileUploader, mount_on: :resume_filename
   mount_uploader :national_id, FileUploader, mount_on: :national_id_filename
   mount_uploader :passport, FileUploader, mount_on: :passport_filename
@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
   belongs_to :weekend
   belongs_to :holiday_scheme
 
-  has_paper_trail
+  has_paper_trail skip: %i[avatar avatar_filename]
   has_one :pre_registration, dependent: :destroy
   has_one :leave_tracker, dependent: :destroy
   has_many :attendances, dependent: :destroy

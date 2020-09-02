@@ -26,6 +26,9 @@
               .col-md-8
                 %h5
                   %a{:href =>"Tel:#{@user.mobile_number}"}= @user.mobile_number
+                  - if current_user.has_admin_privilege? && @show_actions_to_admin && @user.paper_trail.previous_version.mobile_number != @user.mobile_number && @user.paper_trail.previous_version.mobile_number.present?
+                    .text-danger
+                      = @user.paper_trail.previous_version.mobile_number
           .row
             .item-university
               .col-md-4
@@ -33,6 +36,9 @@
               .col-md-8
                 %h5
                   = @user.last_university
+                  - if current_user.has_admin_privilege? && @show_actions_to_admin && @user.paper_trail.previous_version.last_university != @user.last_university && @user.paper_trail.previous_version.last_university.present?
+                    .text-danger
+                      = @user.paper_trail.previous_version.last_university
           .row
             .item-last_degree
               .col-md-4
@@ -41,6 +47,9 @@
               .col-md-8
                 %h5
                   = @user.last_degree
+                  - if current_user.has_admin_privilege? && @show_actions_to_admin && @user.paper_trail.previous_version.last_degree != @user.last_degree && @user.paper_trail.previous_version.last_degree.present?
+                    .text-danger
+                      = @user.paper_trail.previous_version.last_degree
           .row
             .item-passing_year
               .col-md-4
@@ -49,6 +58,9 @@
               .col-md-8
                 %h5
                   = @user.passing_year
+                  - if current_user.has_admin_privilege? && @show_actions_to_admin && @user.paper_trail.previous_version.passing_year != @user.passing_year && @user.paper_trail.previous_version.passing_year.present?
+                    .text-danger
+                      = @user.paper_trail.previous_version.passing_year
           .row
             .item-blood_group
               .col-md-4
@@ -57,6 +69,9 @@
               .col-md-8
                 %h5
                   = @user.blood_group
+                  - if current_user.has_admin_privilege? && @show_actions_to_admin && @user.paper_trail.previous_version.blood_group != @user.blood_group && @user.paper_trail.previous_version.blood_group.present?
+                    .text-danger
+                      = @user.paper_trail.previous_version.blood_group
 
           .clearfix
       - if current_user.has_admin_privilege?
@@ -72,6 +87,9 @@
                   .col-md-8
                     %h5
                       %a{:href =>"Tel:#{@user.alternate_contact}"}= @user.alternate_contact
+                      - if @show_actions_to_admin && @user.paper_trail.previous_version.alternate_contact != @user.alternate_contact && @user.paper_trail.previous_version.alternate_contact.present?
+                        .text-danger
+                          = @user.paper_trail.previous_version.alternate_contact
             .row
               .item-personal_email
                 .col-md-4
@@ -80,6 +98,10 @@
                 .col-md-8
                   %h5
                     = @user.personal_email
+                    - if @show_actions_to_admin && @user.paper_trail.previous_version.personal_email != @user.personal_email && @user.paper_trail.previous_version.personal_email.present?
+                      .text-danger
+                        = @user.paper_trail.previous_version.personal_email
+
             .row
               .item-emergency_contact_person_name
                 .col-md-4
@@ -88,6 +110,9 @@
                 .col-md-8
                   %h5
                     = @user.emergency_contact_person_name
+                    - if @show_actions_to_admin && @user.paper_trail.previous_version.emergency_contact_person_name != @user.emergency_contact_person_name && @user.paper_trail.previous_version.emergency_contact_person_name.present?
+                      .text-danger
+                        = @user.paper_trail.previous_version.emergency_contact_person_name
             .row
               .item-emergency_contact_person_relation
                 .col-md-4
@@ -96,6 +121,9 @@
                 .col-md-8
                   %h5
                     = @user.emergency_contact_person_relation
+                    - if @show_actions_to_admin && @user.paper_trail.previous_version.emergency_contact_person_relation != @user.emergency_contact_person_relation && @user.paper_trail.previous_version.emergency_contact_person_relation.present?
+                      .text-danger
+                        = @user.paper_trail.previous_version.emergency_contact_person_relation
             .row
               .item-emergency_contact_person_number
                 .col-md-4
@@ -104,6 +132,9 @@
                 .col-md-8
                   %h5
                     %a{:href =>"Tel:#{@user.emergency_contact_person_number}"}= @user.emergency_contact_person_number
+                    - if @show_actions_to_admin && @user.paper_trail.previous_version.emergency_contact_person_number != @user.emergency_contact_person_number && @user.paper_trail.previous_version.emergency_contact_person_number.present?
+                      .text-danger
+                        = @user.paper_trail.previous_version.emergency_contact_person_number
             .row
               .item-present_address
                 .col-md-4
@@ -111,6 +142,9 @@
                 .col-md-8
                   %h5
                     = @user.present_address
+                    - if @show_actions_to_admin && @user.paper_trail.previous_version.present_address != @user.present_address && @user.paper_trail.previous_version.present_address.present?
+                      .text-danger
+                        = @user.paper_trail.previous_version.present_address
             .row
               .item-permanent_address
                 .col-md-4
@@ -119,6 +153,9 @@
                 .col-md-8
                   %h5
                     = @user.permanent_address
+                    - if @show_actions_to_admin && @user.paper_trail.previous_version.permanent_address != @user.permanent_address && @user.paper_trail.previous_version.permanent_address.present?
+                      .text-danger
+                        = @user.paper_trail.previous_version.permanent_address
             .row
               .item-date_of_birth
                 .col-md-4
@@ -126,6 +163,9 @@
                 .col-md-8
                   %h5
                     = @user.date_of_birth
+                    - if @show_actions_to_admin && @user.paper_trail.previous_version.date_of_birth != @user.date_of_birth && @user.paper_trail.previous_version.date_of_birth.present?
+                      .text-danger
+                        = @user.paper_trail.previous_version.date_of_birth
 
             .row
               .item-passing_year
@@ -135,6 +175,9 @@
                 .col-md-8
                   %h5
                     = @user.joining_date
+                    - if @show_actions_to_admin && @user.paper_trail.previous_version.joining_date != @user.joining_date && @user.paper_trail.previous_version.joining_date.present?
+                      .text-danger
+                        = @user.paper_trail.previous_version.joining_date
           %h3
             %b Document
             .content-info
@@ -149,6 +192,9 @@
                         = @user.bank_account_no
                       - else
                         N/A
+                      - if @show_actions_to_admin && @user.paper_trail.previous_version.bank_account_no != @user.bank_account_no && @user.paper_trail.previous_version.bank_account_no.present?
+                        .text-danger
+                          = @user.paper_trail.previous_version.bank_account_no
               .row
                 .item-ndaDoc
                   .col-md-4
@@ -171,6 +217,10 @@
                         = link_to 'View', @user.resume.url, {class: 'link', target: :_blank}
                       - else
                         N/A
+                      - if @show_actions_to_admin && @user.paper_trail.previous_version.resume != @user.resume && @user.paper_trail.previous_version.resume.present?
+                        = '['
+                        = link_to 'Previous Version', @user.paper_trail.previous_version.resume.url, {class: 'link', target: :_blank}
+                        = ']'
               .row
                 .item-national_id
                   .col-md-4
@@ -182,6 +232,10 @@
                         = link_to 'View', @user.national_id.url, {class: 'link', target: :_blank}
                       - else
                         N/A
+                      - if @show_actions_to_admin && @user.paper_trail.previous_version.national_id != @user.national_id && @user.paper_trail.previous_version.national_id.present?
+                        = '['
+                        = link_to 'Previous Version', @user.paper_trail.previous_version.national_id.url, {class: 'link', target: :_blank}
+                        = ']'
               .row
                 .item-passport
                   .col-md-4
@@ -193,24 +247,28 @@
                         = link_to 'View', @user.passport.url, {class: 'link', target: :_blank}
                       - else
                         N/A
+                      - if @show_actions_to_admin && @user.paper_trail.previous_version.passport != @user.passport && @user.paper_trail.previous_version.passport.present?
+                        = '['
+                        = link_to 'Previous Version', @user.paper_trail.previous_version.passport.url, {class: 'link', target: :_blank}
+                        = ']'
             .clearfix
   .col-md-4
     .img-responsive.profile_image
       = image_tag @user.avatar.url(:large)
 
--# - if @pre_registration.present? && current_user.has_admin_privilege?
--#   %p
--#     %button.btn.btn-primary{"aria-controls" => "collapseExample", "aria-expanded" => "false", "data-target" => "#addEmployee", "data-toggle" => "collapse", :type => "button"}
--#       Update NDA
--#   #addEmployee.collapse
--#     = form_for @pre_registration, url: update_nda_employees_path, method: :post do |f|
--#       = hidden_field_tag 'id', @pre_registration.user_id
--#       %fieldset
--#         .col-sm-12
--#           = f.file_field :ndaDoc, onchange: 'validateFiles(this);', data: { max_file_size: 50.megabytes },  class: 'form-control', required: true
--#       %br
--#       .form-group
--#         = f.submit 'Submit', class: 'btn btn-success'
+- if @pre_registration.present? && current_user.has_admin_privilege?
+  %p
+    %button.btn.btn-primary{"aria-controls" => "collapseExample", "aria-expanded" => "false", "data-target" => "#addEmployee", "data-toggle" => "collapse", :type => "button"}
+      Update NDA
+  #addEmployee.collapse
+    = form_for @pre_registration, url: update_nda_employees_path, method: :post do |f|
+      = hidden_field_tag 'id', @pre_registration.user_id
+      %fieldset
+        .col-sm-12
+          = f.file_field :ndaDoc, onchange: 'validateFiles(this);', data: { max_file_size: 50.megabytes },  class: 'form-control', required: true
+      %br
+      .form-group
+        = f.submit 'Submit', class: 'btn btn-success'
 
 - if @show_actions_to_admin
   .container_accept_or_reject

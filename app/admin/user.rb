@@ -74,9 +74,15 @@ ActiveAdmin.register User do
       row :emergency_contact_person_relation
       row :emergency_contact_person_number
       row :bank_account_no
-      row :resume
-      row :national_id
-      row :passport
+      row :resume do |file|
+        link_to 'View', file.resume.url, target: '_blank'
+      end
+      row 'National ID / Birth Certificate' do |file|
+        link_to 'View', file.national_id.url, target: '_blank'
+      end
+      row :passport do |file|
+        link_to 'View', file.passport.url, target: '_blank'
+      end
     end
   end
 
@@ -102,10 +108,10 @@ ActiveAdmin.register User do
       f.input :emergency_contact_person_name
       f.input :emergency_contact_person_relation
       f.input :emergency_contact_person_number
-      # f.input :bank_account_no
-      # f.input :resume
-      # f.input :national_id, label: 'National ID / Birth Certificate'
-      # f.input :passport
+      f.input :bank_account_no
+      f.input :resume
+      f.input :national_id, label: 'National ID / Birth Certificate'
+      f.input :passport
       f.input :is_published, input_html: { value: true }, as: :hidden
     end
     f.actions
