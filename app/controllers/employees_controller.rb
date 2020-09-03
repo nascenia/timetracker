@@ -25,6 +25,7 @@ class EmployeesController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    @previous_version = @user.paper_trail.previous_version
     @pre_registration = PreRegistration.where(companyEmail: @user.email).first
     @nda = nil
     if @pre_registration.present?
