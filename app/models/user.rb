@@ -469,6 +469,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def self.check_crontasks
+    Rails.logger.info "#{Time.now}: Attempting Crontasks"
+  end
+
   def has_applied_for_leave
     one_day_leave = self.leaves.where('start_date = ? AND status = ? AND half_day = ?', Time.now.to_date, Leave::ACCEPTED, Leave::FULL_DAY).first
     multiple_days_leave = self.leaves.where('start_date <= ? AND end_date >= ? AND status =?', Time.now.to_date, Time.now.to_date, Leave::ACCEPTED).first
