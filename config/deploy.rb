@@ -27,7 +27,7 @@ set :rake, 'bundle exec rake'
 after('deploy:update_code', 'deploy:symlink_shared', 'deploy:migrate')
 
 task :staging do
-  set :branch, "new_employee_reg_production"
+  set :branch, "new_emp_prod"
   web_server = "timetracker.test.nascenia.com"
   role :web, web_server # Your HTTP server, Apache/etc
   role :app, web_server # This may be the same as your `Web` server
