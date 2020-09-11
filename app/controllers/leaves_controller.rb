@@ -75,7 +75,7 @@ class LeavesController < ApplicationController
         rejecter_id = false
       end
 
-      @approvers = User.where(id: approver_ids).pluck(:name)
+      @approvers = User.where(id: approver_ids, is_active: true).pluck(:name)
       @rejector = User.find_by(id: rejecter_id) if rejecter_id
 
       current_user_priority = @leave.approval_path.path_chains.find_by(user: current_user).try(:priority)
