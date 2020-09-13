@@ -13,7 +13,7 @@ class UserMailer < ActionMailer::Base
     approver_ids = @leave.approval_path.path_chains.where('priority > ?', @leave.pending_at).pluck(:user_id)
     @approvers = User.where(id: approver_ids).pluck(:name)
     if CONFIG['leave_admin'].include?(email)
-      subject = "Action required:{@user.name} has applied for a leave."
+      subject = "Action required: #{@user.name} has applied for a leave."
     else
       subject = "#{@user.name} has applied for a leave"
     end
@@ -130,13 +130,13 @@ class UserMailer < ActionMailer::Base
       @leave = leave
       @user = @leave.user
       if @leave.half_day == Leave::FIRST_QUARTER
-        subject = "2 hours of unannounced leave by{@user.name}"
+        subject = "2 hours of unannounced leave by #{@user.name}"
         @leave_hour = '2'
       elsif @leave.half_day == Leave::FIRST_HALF
-        subject = "Half day of unannounced leave by{@user.name}"
+        subject = "Half day of unannounced leave by #{@user.name}"
         @leave_hour = '4'
       else
-        subject = "Full day of unannounced leave by{@user.name}"
+        subject = "Full day of unannounced leave by #{@user.name}"
         @leave_hour = '8'
       end
       @greetings = ''
