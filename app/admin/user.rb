@@ -9,6 +9,11 @@ ActiveAdmin.register User do
   controller do
     def update
       if current_user.has_edit_permission_for?(User.find(id=params[:id]))
+        @pre_registration = PreRegistration.where(user_id: params[:id]).first
+        if @pre_registration.present? && params[:user][:is_active] == '0'
+          @pre_registration.step_no = -1
+          @pre_registration.save
+        end
         update!
       else
         flash[:error] = "You don't have permission to edit. Contact the Super Admin."
