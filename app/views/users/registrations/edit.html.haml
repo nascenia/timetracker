@@ -43,11 +43,11 @@
     .form-group
       = f.label :mobile_number, { class: 'col-sm-2 control-label'}
       .col-sm-10
-        = f.text_field :mobile_number, { class: 'form-control', required: true, :pattern => '[0][1][56789][0-9]{8}', :title => 'Enter a valid mobile number!'}
+        = f.text_field :mobile_number, { class: 'form-control', required: true, :pattern => '[0][1][3-9][0-9]{8}', :title => 'Enter a valid mobile number!'}
     .form-group
       = f.label :alternate_contact, { class: 'col-sm-2 control-label'}
       .col-sm-10
-        = f.text_field :alternate_contact, { class: 'form-control', required: false, :pattern => '[0][1][56789][0-9]{8}', :title => 'Enter a valid mobile number!'}
+        = f.text_field :alternate_contact, { class: 'form-control', required: false, :pattern => '[0][1][3-9][0-9]{8}', :title => 'Enter a valid mobile number!'}
     .form-group
       = f.label :permanent_address, { class: 'col-sm-2 control-label'}
       .col-sm-10
@@ -85,7 +85,7 @@
     .form-group
       = f.label :emergency_contact_person_number, 'Number', { class: 'col-sm-2 control-label'}
       .col-sm-10
-        = f.text_field :emergency_contact_person_number, { class: 'form-control', required: true, :pattern => '[0][1][56789][0-9]{8}', :title => 'Enter a valid mobile number!'}
+        = f.text_field :emergency_contact_person_number, { class: 'form-control', required: true, :pattern => '[0][1][3-9][0-9]{8}', :title => 'Enter a valid mobile number!'}
   %br
   %fieldset
     %legend DBBL Bank Information (if exists)
