@@ -46,3 +46,7 @@ config/mailer_conf.yml
 
 # Ignore mysql 5.7 adapter initializer
 config/initializers/abstract_mysql2_adapter.rb
+
+# Ignore release version files
+VERSION
+release.sh
