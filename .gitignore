@@ -23,7 +23,7 @@ vendor/bundle
 vendor/ruby
 
 # Ignore ruby version and gemset
-.ruby-version
+ruby-version
 .ruby-gemset
 .rvmrc
 vendor/ruby
