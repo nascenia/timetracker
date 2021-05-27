@@ -12,16 +12,25 @@
   %li.dropdown
     %a.dropdown-toggle{"data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false",:href => "#"}
       = 'Employee'
+      - if current_user.has_admin_privilege?
+        - if count_employee != 0
+          %span.badge= count_employee
       %span.caret
     %ul.dropdown-menu
       %li
         = link_to 'Employee Info', employees_path
       - if current_user.has_admin_privilege?
         %li
-          = link_to 'Add new Employee', new_pre_registration_path
+          = link_to new_pre_registration_path do
+            Add new Employee
+            - if add_employee != 0
+              %span.badge= add_employee
       - if current_user.has_admin_privilege?
         %li
-          = link_to 'Employee Onbording', pre_registrations_path
+          = link_to pre_registrations_path do
+            Employee Onboarding
+            - if employee_onboard != 0
+              %span.badge= employee_onboard
   %li{class: (params[:controller].eql?('users/registrations')? 'dropdown active' : 'dropdown')}
     %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
       = current_user.name
@@ -44,6 +53,6 @@
       %li
         = link_to 'Projects', projects_path(is_active: true)
       %li
-        = link_to 'Projects Summary', show_all_projects_path(selected_index: 1,start_date: (Time.now-0.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
+        = link_to 'Projects Summary', show_all_projects_path(selected_index: 1,start_date: (Time.now-0.days).strftime('%Y/%m/%d') ,end_date: Time.now.strftime('%Y/%m/%d'))
       %li
-        = link_to 'Individual Log', timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime("%Y/%m/%d") ,end_date: Time.now.strftime("%Y/%m/%d"))
+        = link_to 'Individual Log', timesheets_path(selected_index: 1,start_date: (Time.now-0.days).strftime('%Y/%m/%d') ,end_date: Time.now.strftime('%Y/%m/%d'))

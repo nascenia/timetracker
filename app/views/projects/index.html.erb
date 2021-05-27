@@ -35,7 +35,7 @@
             <% $isActive = 'No' %>
         <% end %>
         <tr>
-            <td><%= link_to project.project_name, project_path(project,:start_date => Time.now.strftime("%Y/%m/%d"), :end_date => Time.now.strftime("%Y/%m/%d"), :selected_index => 1) %></td>
+            <td><%= link_to project.project_name, project_path(project,:start_date => Time.now.strftime('%Y/%m/%d'), :end_date => Time.now.strftime('%Y/%m/%d'), :selected_index => 1) %></td>
             <td><%= project.description %></td>
             <td>
                 <% project.users.each do |user| %>

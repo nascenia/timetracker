@@ -1,57 +1,47 @@
+<h3><b><%= @pre_registration.name %>'s Information</b></h3><br>
 
-<h3>On Process of Joining  </h3><br>
 <%= form_for @pre_registration do |f| %>
+    
+    <%= hidden_field_tag 'hidden_flag' %>
 
-
-    <div class="row">
-        <div class="col-md-6">
-            <p>
-                <%= label :salary_account_details_sent, 'Salary account details sent to CEO' %>
-            </p>
-            <p>
-                <%= f.check_box :salary_account_details_sent, :checked => @pre_registration.salary_account_details_sent %>
-            </p>
+    <div class = 'row' >
+        <div class = 'col-md-12' >
+            <%= f.label :salary_account_details_sent do %>
+                <%= f.check_box :salary_account_details_sent, checked: @pre_registration.salary_account_details_sent %>
+                <%= 'Salary account details sent to CEO?' %>
+            <% end %>
         </div>
 
-        <div class="col-md-6">
-            <p>
-                <%= label :employee_contract_sign, 'Employee contract signed?' %>
-            </p>
-            <p>
-                <%= f.check_box :employee_contract_sign, :checked => @pre_registration.employee_contract_sign %>
-            </p>
+        <div class = 'col-md-12' >
+            <%= f.label :employee_contract_sign do %>
+                <%= f.check_box :employee_contract_sign, checked: @pre_registration.employee_contract_sign %>
+                <%= 'Employee contract signed?' %>
+            <% end %>
+        </div>
+        
+        <div class = 'col-md-12' >
+            <%= f.label :id_card_given do %>
+                <%= f.check_box :id_card_given, checked: @pre_registration.id_card_given %>
+                <%= 'ID card given?' %>
+            <% end %>
         </div>
 
-        <div class="col-md-6">
-            <p>
-                <%= label :id_card_given, 'Id card given?' %>
-            </p>
-            <p>
-                <%= f.check_box :id_card_given, :checked => @pre_registration.id_card_given %>
-            </p>
+        <div class = 'col-md-12' >
+            <%= f.label :pic_and_other_relevant_info do %>
+                <%= f.check_box :pic_and_other_relevant_info, checked: @pre_registration.pic_and_other_relevant_info %>
+                <%= 'Picture and other relevant information about new employee updated on website?' %>
+            <% end %>
         </div>
 
-        <div class="col-md-6">
-            <p>
-                <%= label :pic_and_other_relevant_info, 'picture and other relevant information about new employee updated on website?' %>
-            </p>
-            <p>
-                <%= f.check_box :pic_and_other_relevant_info, :checked => @pre_registration.pic_and_other_relevant_info %>
-            </p>
+        <div class = 'col-md-12' >
+            <%= f.label :has_sent_invitation_to_visit_internal_website do %>
+                <%= f.check_box :has_sent_invitation_to_visit_internal_website, checked: @pre_registration.has_sent_invitation_to_visit_internal_website %>
+                <%= 'Has sent an invitation to visit the internal website?' %>
+            <% end %>
         </div>
-
-        <div class="col-md-6">
-            <p>
-                <%= label :has_sent_invitation_to_visit_internal_website, 'Has sent an invitation to visit the internal website?' %>
-            </p>
-            <p>
-                <%= f.check_box :has_sent_invitation_to_visit_internal_website, :checked => @pre_registration.has_sent_invitation_to_visit_internal_website %>
-            </p>
-        </div>
+        
     </div>
-    <br/>
-    <br/>
 
-    <%= f.submit "Submit " %>
+    <br/>
+    <%= f.submit 'Submit', class: 'btn btn-success' %>
 <% end %>
-

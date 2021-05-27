@@ -14,26 +14,49 @@
         %th{:width => '15%'} TTF
     %tbody.word-break
       - @employees.each do |employee|
-        %tr
-          %td
-            = link_to employee.name, employee_path(employee)
-          %td= employee.email
-          - if employee.mobile_number.present?
+        - if @pending_employees_company_emails.include?(employee.email) and current_user.has_admin_privilege?
+          %tr
+            %td.bg-danger
+              = link_to employee.name, employee_path(employee)
+            %td.bg-danger
+              = employee.email
+            - if employee.mobile_number.present?
+              %td.bg-danger
+                %a{:href =>"Tel:#{employee.mobile_number}"}= employee.mobile_number
+            - else
+              %td.bg-danger
+                = 'N/A'
+            %td.bg-danger
+              = employee.blood_group
+            - if current_user.has_admin_privilege?
+              %td.bg-danger
+                = employee.joining_date
+            -if employee.ttf_id?
+              %td.bg-danger
+                = User.find(employee.ttf_id).name
+            -else
+              %td.bg-danger
+                = "N/A"
+        - else
+          %tr
             %td
-              %a{:href =>"Tel:#{employee.mobile_number}"}= employee.mobile_number
-          - else
-            %td= 'N/A'
-          %td= employee.blood_group
-          - if current_user.has_admin_privilege?
-            %td= employee.joining_date
-          -if employee.ttf_id?
-            %td= User.find(employee.ttf_id).name
-          -else
-            %td= "N/A"
+              = link_to employee.name, employee_path(employee)
+            %td= employee.email
+            - if employee.mobile_number.present?
+              %td
+                %a{:href =>"Tel:#{employee.mobile_number}"}= employee.mobile_number
+            - else
+              %td= 'N/A'
+            %td= employee.blood_group
+            - if current_user.has_admin_privilege?
+              %td= employee.joining_date
+            -if employee.ttf_id?
+              %td= User.find(employee.ttf_id).name
+            -else
+              %td= "N/A"
 
 :javascript
   $(document).ready(function() {
-
     var dataTable = $('#employee-info-table').DataTable({
         lengthChange: false,
         pageLength: 100,

@@ -71,4 +71,19 @@ module ApplicationHelper
     leave.leave_type == Leave::UNANNOUNCED
   end
 
+  def count_employee
+    PreRegistration.where(step_no: 2..3).count
+  end
+
+  def add_employee
+    PreRegistration.where(step_no: 2).count
+  end
+
+  def employee_onboard
+    PreRegistration.where(step_no: 3).count
+  end
+
+  def hidden_field_tag(name, value = true, options = {})
+    text_field_tag(name, value, options.merge(type: :hidden))
+  end
 end

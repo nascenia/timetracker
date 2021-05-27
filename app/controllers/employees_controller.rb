@@ -3,11 +3,9 @@ class EmployeesController < ApplicationController
   layout 'time_tracker'
 
   def index
-    @employees =  User.all.order(name: :asc)
+    @pending_employees_company_emails = PreRegistration.all.where(step_no: 0..3).pluck(:companyEmail)
+    @employees = User.all.order(name: :asc)
 
-    # @employees.each do |employee|
-    #   logger.info employee
-    # end
     @employees = @employees.where('lower(name) LIKE ?', "%#{params[:name].strip.downcase}%") if params[:name].present?
     @employees = @employees.where('lower(email) LIKE ?', "%#{params[:email].strip.downcase}%") if params[:email].present?
     logger.info "------------------------------------"
@@ -26,7 +24,13 @@ class EmployeesController < ApplicationController
     end
   end
   def show
-    @user = User.find params[:id];
+    @user = User.find(params[:id])
+    @pre_registration = PreRegistration.where(companyEmail: @user.email).first
+    if @pre_registration.present?
+      @ndaDoc = @pre_registration.ndaDoc
+    else
+      @ndaDoc = nil
+    end
     @show_actions_to_admin = current_user.try(:has_admin_privilege?) && @user.registration_status == User::REGISTRATION_STATUS[:not_approved] ? true : false
   end
 end
