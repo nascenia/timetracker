@@ -1,0 +1,137 @@
+<h3>New Time Entry </h3><br>
+<%= form_for @timesheet do |f| %>
+    <% current_user_projects = current_user.projects %>
+    <div class="row">
+        <div class="col-md-6">
+            <p>
+                <%= label :date, 'Date' %>
+            </p>
+            <p>
+                <%= f.text_field :date, :class => 'form-control timesheet-date-picker', value: Time.now.strftime("%Y/%m/%d"),:onkeydown=>"return false" %>
+            </p>
+        </div>
+        <div class="col-md-6">
+            <p>
+                <%= label :project, 'Project Name' %>
+                <%= label '', ' *', class: 'required-asterisk' %>
+            </p>
+            <p>
+                <%= f.select :project_id, options_for_select(current_user_projects.collect { | project | [project.project_name,  project.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-current-user-projects'}%>
+                <%= f.select :project_id, options_for_select(@projects.collect { | project | [project.project_name,  project.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'}%>
+                <%#= label :show_other_projects, 'Show other projects'  %>
+                <label class="lebel-nonbold" ><%= 'Show other projects' %></label>
+                <input id="other-projects-cb" type="checkbox" />
+            </p>
+
+
+        </div>
+        <div class="col-md-6">
+            <p>
+                <%= label :project, 'Task' %>
+                <%= label '', ' *', class: 'required-asterisk' %>
+            </p>
+            <p>
+                <%= f.text_field :task ,:class => 'form-control', required: 'true',:maxlength=>"128"%>
+            </p>
+        </div>
+        <div class="col-md-6">
+            <p>
+                <%= label :project, 'Ticket Number' %>
+            </p>
+            <p>
+                <%= f.text_field :ticket_number,:class => 'form-control' ,:maxlength=>"128"%>
+            </p>
+        </div>
+        <div class="col-md-6">
+            <p>
+                <%= label :project, 'Ticket Link' %>
+            <p>
+                <%= f.text_field :ticket_link,:class => 'form-control' ,:maxlength=>"128"%>
+            </p>
+        </div>
+        <div class="col-md-6" >
+            <div class="row">
+                <div class="col-md-6">
+                    <p>
+                    <%= label :project, 'Hours spent' %>
+                        <%= label '', ' *', class: 'required-asterisk' %>
+                </p>
+                    <p>
+                        <%= f.select :hours, options_for_select(0..@total_hours) , {}, {required: 'true', autofocus: 'true', class: 'form-control',:maxlength=>"128"}%>
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <p>
+                        <%= label :project, 'Minutes spent' %>
+                        <%= label '', ' *', class: 'required-asterisk' %>
+                    </p>
+                    <p>
+                        <%= f.select :minutes, options_for_select((0..@total_mins).map {|n| n*15 }) , {}, {required: 'true', autofocus: 'true', class: 'form-control',:maxlength=>"128"}%>
+                    </p>
+                </div>
+
+            </div>
+
+
+
+        </div>
+
+        <div class="col-md-6" style="clear: left;">
+            <p>
+                <%= label :description, 'Description / ' %>
+                <%= label :description, 'Comments' %>
+            </p>
+            <p>
+                <%= f.text_area :description,:class => 'form-control' , cols: "30", rows: "10",:maxlength=>"512"%>
+            </p>
+        </div>
+    </div>
+
+    <div class="col-md-6" style="clear: left;">
+
+        <div class="row">
+            <div class="col-md-6">
+        <p>
+    <%if @total_hours != 0 && @total_mins !=0 %>
+        <% if @is_from_attent == 1 %>
+            <%= f.submit "Submit and Checkout" %>
+<!--            &nbsp;&nbsp;&nbsp;&nbsp;-->
+            <%#= f.submit "Create" %>
+        <%else %>
+            <%= f.submit "Submit" %>
+        <%end %>
+    <%end %>
+
+        </p>
+            </div>
+            <div class="col-md-6">
+            <p>
+    <%= f.submit "Submit and Add New" %>
+        </p>
+
+    </div>
+    </div>
+    </div>
+<!--    <input type="button" value="Submit and Add new" >-->
+<% end %>
+<script type="text/javascript">
+    $('#select-other-projects').hide();
+    $('#select-other-projects').prop('disabled',true);
+
+    $('#other-projects-cb').on('click',function () {
+        if(this.checked)
+        {
+            $('#select-current-user-projects').hide();
+            $('#select-current-user-projects').prop('disabled',true);
+            $('#select-other-projects').show();
+            $('#select-other-projects').prop('disabled',false);
+        } else{
+            $('#select-other-projects').hide();
+            $('#select-other-projects').prop('disabled',true);
+            $('#select-current-user-projects').show();
+            $('#select-current-user-projects').prop('disabled',false);
+
+        }
+       return true;
+    });
+</script>

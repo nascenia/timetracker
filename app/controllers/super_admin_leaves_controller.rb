@@ -5,9 +5,20 @@ class SuperAdminLeavesController < ApplicationController
   layout 'leave'
 
   def index
-    @leaves = Leave.all
+    # @leaves = Leave.page(params[:page]).includes(:user)
+    @leaves = Leave.not_rollbacked_leaves.includes(:user)
     @leaves = @leaves.leaves_by_status(params[:status]) if params[:status].present?
     @leaves = @leaves.leaves_by_type(params[:type]) if params[:type].present?
+
+    if params[:time].present?
+      @leaves = @leaves.leaves_by_month(Date.current.strftime('%m')).leaves_by_year(Date.current.strftime('%Y')) if params[:time] == '1'
+      @leaves = @leaves.leaves_by_year(Date.current.strftime('%Y')) if params[:time] == '2'
+      @leaves = @leaves.leaves_by_month((Date.current-1.month).strftime('%m')).leaves_by_year((Date.current-1.month).strftime('%Y')) if params[:time] == '3'
+      @leaves = @leaves.leaves_by_year((Date.current-1.year).strftime('%Y')) if params[:time] == '4'
+    end
+    if params[:start_date].present? && params[:end_date].present?
+      @leaves = @leaves.leaves_in_between(params[:start_date], params[:end_date])
+    end
     @leaves = @leaves.order(start_date: :desc)
   end
 
@@ -37,6 +48,12 @@ class SuperAdminLeavesController < ApplicationController
       Leave::CASUAL
     when 'Medical'
       Leave::MEDICAL
+    when 'Awarded'
+      Leave::AWARDED
+    when 'Paternity'
+      Leave::PATERNITY
+    when 'Maternity'
+      Leave::MATERNITY
     else
       Leave::UNANNOUNCED
     end

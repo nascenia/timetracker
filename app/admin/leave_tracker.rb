@@ -4,6 +4,21 @@ ActiveAdmin.register LeaveTracker do
                 :consumed_medical, :commenced_date, :rewarded_leave, :note, :accrued_vacation_this_year,
                 :accrued_medical_this_year, :accrued_vacation_total, :accrued_medical_total, :awarded_leave
 
+  preserve_default_filters!
+  remove_filter :leave
+  filter :user, label: 'User', collection: proc { User.order(:name)}
+
+  controller do
+    def update
+      if current_user.has_edit_permission_for?(LeaveTracker.find(id=params[:id]).user)
+        update!
+      else
+        flash[:error] = "You don't have permission to edit. Contact the Super Admin."
+        redirect_to :edit_admin_leave_tracker and return
+      end
+    end
+  end
+
   index do
     selectable_column
     id_column

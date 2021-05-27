@@ -7,10 +7,22 @@ class HolidaySchemesController < ApplicationController
 
   def index
     @holiday_schemes = HolidayScheme.all
-    @heading = "Holiday Schemes for #{LeaveYear.find_present_year.year}"
+    @heading = "Holiday Schemes"
   end
 
   def show
+    @holidays = @holiday_scheme.holidays
+    @assigned_users = @holiday_scheme.users
+    if params[:employee_status].present?
+      @assigned_users = @assigned_users.active if params[:employee_status] == '1'
+      @assigned_users = @assigned_users.inactive if params[:employee_status] == '2'
+    else
+      @assigned_users = @assigned_users.active
+    end
+
+    @holidays = @holiday_scheme.holidays.by_year(params[:year]) if params[:year].present?
+
+
   end
 
   def new

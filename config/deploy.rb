@@ -27,17 +27,19 @@ set :rake, 'bundle exec rake'
 after('deploy:update_code', 'deploy:symlink_shared', 'deploy:migrate')
 
 task :staging do
+  set :branch, "new_emp_prod"
   web_server = "timetracker.test.nascenia.com"
   role :web, web_server # Your HTTP server, Apache/etc
   role :app, web_server # This may be the same as your `Web` server
   role :db, web_server, :primary => true # This is where Rails migrations will run
   set :deploy_to, "/www/apps/#{application}/"
   set :delayed_job_id, 2
+  set :whenever_identifier, defer { "#{application}-staging" }
   set :whenever_command, 'bundle exec whenever'
 end
 
 task :prod do
-  set :branch, "development"
+  set :branch, "new_emp_prod"
   web_server = "timetracker.nascenia.com"
   role :web, web_server # Your HTTP server, Apache/etc
   role :app, web_server # This may be the same as your `Web` server
@@ -45,6 +47,7 @@ task :prod do
   set :deploy_to, "/www/apps/#{application}-staging/"
   set :rails_env, "staging"
   set :delayed_job_id, 2
+  set :whenever_identifier, defer { "#{application}-prod" }
   set :whenever_command, 'bundle exec whenever'
 end
 
@@ -61,6 +64,7 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/config/application.yml #{release_path}/config/application.yml"
     run "ln -nfs #{shared_path}/config/mailer_conf.yml #{release_path}/config/mailer_conf.yml"
     run "ln -nfs #{shared_path}/system #{release_path}/public/system"
+    run "ln -nfs #{shared_path}/public/uploads  #{release_path}/public/uploads"
   end
 
   task :create_shared_files_and_directories, :role => :app do
@@ -68,7 +72,7 @@ namespace :deploy do
     run "mkdir -p #{shared_path}/config/.bundle"
     #run "mkdir -p #{shared_path}/bundle"
     #run "touch #{shared_path}/config/.bundle/config"
-    
+
     #run "echo '---' >> #{shared_path}/config/.bundle/config"
     #run "echo 'BUNDLE_PATH: vendor/bundle' >> #{shared_path}/config/.bundle/config"
     #run "echo \"BUNDLE_DISABLE_SHARED_GEMS: '1'\" >> #{shared_path}/config/.bundle/config"

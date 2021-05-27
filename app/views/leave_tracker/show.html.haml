@@ -1,9 +1,12 @@
 .panel.panel-default
   .panel-heading
     %h4.panel-title.clearfix
-      Leave Balance
-      - if current_user.is_admin?
+      %b
+        = @user.name + "'s"
+        Leave Balance
+      - if current_user.has_edit_permission_for? @user
         %span.pull-right
+          %button.btn.btn-primary{"data-target" => "#sp-award-modal", "data-toggle" => "modal", :type => "button", "data-turbolinks" => false} Award Special Leave
           %button.btn.btn-primary{"data-target" => "#myModal", "data-toggle" => "modal", :type => "button", "data-turbolinks" => false} Award Leave
   %table.table.table-bordered.table-hover
     %thead
@@ -50,21 +53,19 @@
       Leave History
       %span.pull-right
         = form_tag leave_tracker_path(@user), method: :get, class: 'form-inline' do
-          = select_tag :month, options_for_select([['January', 1], ['February', 2], ['March', 3], ['April', 4],
-           ['May', 5], ['June', 6], ['July', 7], ['August', 8], ['September', 9], ['October', 10], ['November', 11],
-           ['December', 12],], params[:month]), class: 'form-control', prompt: 'All months'
+          = select_tag :year, options_for_select(Time.current.year.downto(2017).to_a, params[:year]), class: 'form-control', prompt: 'All years'
           = submit_tag 'Submit', class: 'btn btn-success'
   - if @leaves.present? && @leaves.count > 0
-    %table.table.table-bordered
+    %table.table.table-bordered#leave-table
       %thead
         %tr
           %th{:width => '15%'} Start Date
           %th{:width => '15%'} End Date
           %th{:width => '10%'} Type
           %th{:width => '25%'} Description
-          %th{:width => '10%'} Status
-          %th{:width => '10%'} Hours
-          %th{:width => '15%'} Action
+          %th{:width => '15%'} Status
+          %th{:width => '5%'} Hours
+          %th{:width => '22%'} Action
       %tbody
         - @leaves.each do |leave|
           %tr
@@ -73,10 +74,11 @@
             %td= type_of(leave)
             %td= leave.reason
             %td= get_status(leave.status)
-            %td= @month.present? ? leave.total_leave_hour_of(@month) : leave.total_leave_hour
+            %td= leave.total_leave_hour
             %td
-              = link_to 'show', leave_path(leave)
-              - unless leave.start_date < Time.now
+              - unless unannounced?(leave)
+                = link_to 'show', leave_path(leave)
+              - if leave.start_date >= Time.now or leave.is_awarded?
                 |
                 = link_to 'Cancel', leave_path(leave), method: :delete, data: { confirm: 'Are you sure' }
   - else
@@ -84,25 +86,99 @@
       %strong Empty!
       No record found.
 / Modal
-#myModal.modal.fade{:role => "dialog"}
-  .modal-dialog
-    / Modal content
-    .modal-content
-      .modal-header
-        %button.close{"data-dismiss" => "modal", :type => "button"} ×
-        %h4.modal-title Award Leave
-      .modal-body
-        = form_for @leave_tracker,  method: 'PATCH', html: { class: 'form-horizontal' } do |f|
-          .form-group
-            = f.label :award_leave, {:class => 'col-sm-3 control-label'}
-            .col-sm-9
-              = f.text_field :award_leave, :class => 'form-control'
-          .form-group
-            = f.label :note, {:class => 'col-sm-3 control-label'}
-            .col-sm-9
-              = f.text_area :note, :class => 'form-control'
-          .form-group
-            .col-sm-offset-3.col-sm-10
-              = f.submit '  Award', :class => 'btn btn-primary'
-      .modal-footer
-        %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"} Close
+
+- if current_user.has_edit_permission_for? @user
+  #myModal.modal.fade{:role => "dialog"}
+    .modal-dialog
+      / Modal content
+      .modal-content
+        .modal-header
+          %button.close{"data-dismiss" => "modal", :type => "button"} ×
+          %h4.modal-title Award Leave
+        .modal-body
+          = form_for @leave, :url => {:controller => 'leaves', :action => 'award'},  method: 'POST', html: { class: 'form-horizontal' } do |f|
+            = f.hidden_field :approval_path_id, value: @user.approval_path_id
+
+            .form-group
+              = f.label :date, {:class => 'col-sm-2 control-label'}
+              .col-sm-10
+                = f.text_field :start_date, :class => 'form-control date-picker award', :placeholder => 'Enter date (ex: dd/mm/yyyy)', :autocomplete => :off, :required => 'true'
+            .form-group
+              =f.label :hour, {:class => 'col-sm-2 control-label'}
+              .col-sm-10
+                =f.text_field :hour, :class => 'form-control', :type => 'number', :autocomplete => 'off', :required => 'true'
+            .form-group
+              = f.label 'Note', {:class => 'col-sm-2 control-label'}
+              .col-sm-10
+                = f.text_area :reason, :maxlength => '300', :class => 'form-control', :rows => 7
+                %p.help-block
+                  %span= 300
+                  characters remaining.
+            .form-group
+              .col-sm-offset-2.col-sm-10
+                = f.submit '  Award', :class => 'btn btn-primary'
+
+- if current_user.has_edit_permission_for? @user
+  #sp-award-modal.modal.fade{:role => "dialog"}
+    .modal-dialog
+      / Modal content
+      .modal-content
+        .modal-header
+          %button.close{"data-dismiss" => "modal", :type => "button"} ×
+          %h4.modal-title Award Special Leave
+        .modal-body
+          = form_for @leave, :url => {:controller => 'leaves', :action => 'special_award'},  method: 'POST', html: { class: 'form-horizontal' } do |f|
+            = f.hidden_field :approval_path_id, value: @user.approval_path_id
+            .form-group
+              = f.label 'Type', {:class => 'col-sm-2 control-label'}
+              .col-sm-2
+                .radio
+                  %label
+                    %input{name: "type", type: "radio", value: Leave::PATERNITY, checked: 'checked'}
+                    Paternity
+              .col-sm-2
+                .radio
+                  %label
+                    %input{name: "type", type: "radio", value: Leave::MATERNITY}
+                    Maternity
+            .form-group
+              = f.label :start_date, {:class => 'col-sm-2 control-label'}
+              .col-sm-10
+                = f.text_field :start_date, :class => 'form-control date-picker sp-award', :placeholder => 'Enter start date (ex: dd/mm/yyyy)', :autocomplete => :off, :required => 'true'
+            .form-group
+              = f.label :end_date, {:class => 'col-sm-2 control-label'}
+              .col-sm-10
+                = f.text_field :end_date, :class => 'form-control date-picker sp-award', :placeholder => 'Enter end date (ex: dd/mm/yyyy)', :autocomplete => :off, :required => 'true'
+            .form-group
+              = f.label :note, {:class => 'col-sm-2 control-label'}
+              .col-sm-10
+                = f.text_area :reason, :maxlength => '300', :class => 'form-control', :rows => 7
+                %p.help-block
+                  %span= 300
+                  characters remaining.
+            .form-group
+              .col-sm-offset-2.col-sm-10
+                = f.submit 'Submit', :class => 'btn btn-primary'
+
+
+
+-if @resignation_error_msg
+  = render 'shared/error_popup_modal', locals: {title: 'Warning', msg: @resignation_error_msg}
+  :javascript
+    $('#error-modal').modal('show');
+
+:javascript
+  $(document).ready(function() {
+      var dataTable = $('#leave-table').DataTable({
+        lengthChange: false,
+        pageLength: 10000,
+        order: ( [ 0, 'desc' ] ),
+        dom: '',
+      });
+      $(document).on("turbolinks:before-cache", function() {
+        if (dataTable !== null) {
+          dataTable.destroy();
+          dataTable = null;
+        }
+      });
+  });

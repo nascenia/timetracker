@@ -1,6 +1,7 @@
 module LeavesHelper
 
   def get_duration(leave)
+    return leave.hour if leave.leave_type == Leave::AWARDED
     case leave.half_day
       when 0
         'Full Day'
@@ -13,7 +14,12 @@ module LeavesHelper
 
   def get_status(leave_id)
     status = Leave::LEAVE_STATUSES.select { |status| status.last == leave_id }
-    status[0].try(:first)
+
+    if status[0].try(:first) == 'Rollbacked'
+      'Rolled back due to resignation'
+    else
+      status[0].try(:first)
+    end
   end
 
   def get_type(leave)
@@ -22,6 +28,12 @@ module LeavesHelper
       'Casual'
     when Leave::MEDICAL
       'Medical'
+    when Leave::AWARDED
+      'Awarded'
+    when Leave::PATERNITY
+      'Paternity'
+    when Leave::MATERNITY
+      'Maternity'
     else
       'Unannounced'
     end
@@ -41,5 +53,14 @@ module LeavesHelper
 
   def has_co_worker?
     has_owned_paths? || current_user.role == User::SUPER_TTF || current_user.role == User::TTF
+  end
+
+  def show_pending_leave?(leave)
+    if leave.approval_path.present?
+      current_user_priority = leave.approval_path.path_chains.find_by(user: current_user).try(:priority)
+      leave.pending_at == current_user_priority ? true : false
+    else
+      false
+    end
   end
 end

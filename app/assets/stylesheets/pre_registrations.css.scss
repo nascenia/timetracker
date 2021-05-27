@@ -1,0 +1,38 @@
+.pre_reg_table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.pre_reg_th {
+    background-color: #E0E0E0;
+    border-bottom: 1px solid #808080;
+    border-top: 1px solid #808080;
+    text-align: left;
+    padding: 8px;
+}
+
+.pre_reg_td {
+    border-bottom: 1px solid #808080;
+    border-top: 1px solid #808080;
+    text-align: left;
+    padding: 8px;
+}
+
+.left {
+    border-left: 1px solid #808080;
+}
+
+.right {
+    border-right: 1px solid #808080;
+}
+
+.both_side
+{
+    border-left: 1px solid #808080;
+    border-right: 1px solid #808080;
+}
+
+tr:nth-child(even) {
+    background-color: #ffffff;
+}

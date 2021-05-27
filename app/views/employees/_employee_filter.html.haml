@@ -1,0 +1,16 @@
+.panel.panel-default
+  .panel-body
+    = form_tag employees_path, method: :get do
+      .row
+        .col-sm-5
+          .form-group
+            = text_field_tag :name, params[:name], class: 'form-control', placeholder: 'Name'
+        .col-sm-5
+          .form-group
+            = text_field_tag :email, params[:email], class: 'form-control', placeholder: 'Email'
+        .col-sm-2
+          .form-group
+            .col-sm-6
+              = submit_tag 'Search', class: 'btn btn-primary'
+            .col-sm-6
+              =link_to 'Clear', employees_path, class: 'btn btn-default'

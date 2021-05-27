@@ -14,7 +14,7 @@ class AttendancesController < ApplicationController
       format.html
     end
   end
-  
+
   def show
     @attendance = Attendance.includes(:children).includes(:user).find params[:id]
 
@@ -41,15 +41,19 @@ class AttendancesController < ApplicationController
 
       flash[:notice] = 'Successfully checked in.'
 
-      if attendance.present?
-        if attendance.out_time.present?
-          Attendance.create_attendance(@user.id, attendance)
+      if @user.all_information_provided?
+        if attendance.present?
+          if attendance.out_time.present?
+            Attendance.create_attendance(@user.id, attendance)
+          else
+            flash[:notice] = 'You are already checked in.'
+          end
         else
-          flash[:notice] = 'You are already checked in.'
+          Attendance.create_attendance(@user.id, nil)
+          Attendance.add_missing_checkout_hours(@user)
         end
       else
-        Attendance.create_attendance(@user.id, nil)
-        Attendance.add_missing_checkout_hours(@user)
+        flash[:notice] = 'Please fill up all your details before checking in.'
       end
     end
 
@@ -61,6 +65,7 @@ class AttendancesController < ApplicationController
   end
 
   def update
+    #/users/auth/google_oauth2/callback?state=0fda7623dc84dd38452620d0adcca9b9bd89b31c90e2a4d3&code=4/fAHucfKWCPp3vS0CjsKOuTanU4T3F9NTAyM410e6VLfk15dLL7DtBskWO6xkoxgDvihoo0os3Uj5BWGKoPJz0s0&scope=email%20profile%20https://www.googleapis.com/auth/userinfo.profile%20https://www.googleapis.com/auth/userinfo.email&authuser=0&hd=nascenia.com&session_state=95aa078cf0b927a4a9bf5dd3f2f2ad4730fc1e55..ee49&prompt=none
     unless !restrict_access?
       if params[:id] == 'invalid'
         flash[:notice] = 'You did not log in today! Please log in first!'
@@ -68,21 +73,28 @@ class AttendancesController < ApplicationController
       end
 
       @today_entry = Attendance.find_first_entry(current_user.id, Date.today)
-
-      if @attendance.user_id == current_user.id
-        if @today_entry
-          @attendance.out_time = Time.now.to_s(:time)
-          @attendance.save!
-          total_hours = ((@attendance.out_time.to_time - @attendance.in_time.to_time) / 1.hour).round(2)
-          @attendance.total_hours = total_hours
-          @attendance.save!
-          flash[:notice] = 'Successfully checked out.'
-        else
-          flash[:notice] = 'You did not log in today.'
+      @timesheets = Timesheet.all.where(user_id: current_user.id, date: Date.today)
+      if @timesheets.size<=0
+        session[:is_from_checkout] = 1
+        session[:attendence_id] = @attendance.id
+        # session[:all_attendence_info] = @attendance
+        flash[:alert] = 'Please fill the timesheet first'
+        redirect_to new_timesheet_path and return
+      else
+        if @attendance.user_id == current_user.id
+          if @today_entry
+            @attendance.out_time = Time.now.to_s(:time)
+            @attendance.save!
+            total_hours = ((@attendance.out_time.to_time - @attendance.in_time.to_time) / 1.hour).round(2)
+            @attendance.total_hours = total_hours
+            @attendance.save!
+            flash[:notice] = 'Successfully checked out.'
+          else
+            flash[:notice] = 'You did not log in today.'
+          end
         end
       end
     end
-
     respond_to do |format|
       format.html { redirect_to :back }
     end

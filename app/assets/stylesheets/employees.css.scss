@@ -1,0 +1,62 @@
+.content-info{
+  margin-top: 10px;
+  padding: 5px;
+  padding-left: 25px;
+  background-color: #ecede8;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.container_accept_or_reject{
+  margin-top: 20px;
+  .btn.btn-block {
+    margin: 10px 0px;
+  }
+}
+
+.img-responsive.profile_image{
+  img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+.dt-top-left{
+  padding: 10px;
+}
+
+.dataTables_filter{
+  float: left;
+  display: inline-block;
+  margin-top: 0 !important;
+}
+
+.dataTables_filter input{
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 6px 12px;
+  height: 32px;
+  box-sizing: border-box;
+  font-weight: normal;
+  margin-right: 20px;
+}
+
+.employee-info-filter{
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 6px 12px;
+  height: 32px;
+  width: 254px;
+  background: white;
+  box-sizing: border-box;
+  font-weight: normal;
+  margin-right: 10px;
+}
+
+.employee-filter-form{
+    float: left;
+}
+
+.DTTT_button{
+  float: right;
+}

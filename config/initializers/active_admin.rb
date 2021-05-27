@@ -26,7 +26,7 @@ ActiveAdmin.setup do |config|
   # eg:
   #   config.default_namespace = :hello_world
   #
-  # This will create resources in the HelloWorld module and
+  # This will create projects in the HelloWorld module and
   # will namespace routes to /hello_world/*
   #
   # To set no namespace by default, use:
@@ -136,7 +136,7 @@ ActiveAdmin.setup do |config|
   # == Controller Filters
   #
   # You can add before, after and around filters to all of your
-  # Active Admin resources and pages from here.
+  # Active Admin projects and pages from here.
   #
   # config.before_filter :do_something_awesome
 
@@ -147,7 +147,7 @@ ActiveAdmin.setup do |config|
   # == Removing Breadcrumbs
   #
   # Breadcrumbs are enabled by default. You can customize them for individual
-  # resources or you can disable them globally from here.
+  # projects or you can disable them globally from here.
   #
   # config.breadcrumb = false
 
@@ -218,8 +218,8 @@ ActiveAdmin.setup do |config|
 
   # == Pagination
   #
-  # Pagination is enabled by default for all resources.
-  # You can control the default per page count for all resources here.
+  # Pagination is enabled by default for all projects.
+  # You can control the default per page count for all projects here.
   #
   # config.default_per_page = 30
 
@@ -227,7 +227,7 @@ ActiveAdmin.setup do |config|
   #
   # By default the index screen includes a "Filters" sidebar on the right
   # hand side with a filter for each attribute of the registered model.
-  # You can enable or disable them for all resources here.
+  # You can enable or disable them for all projects here.
   #
   # config.filters = true
   config.localize_format = :short

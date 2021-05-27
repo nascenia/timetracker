@@ -1,27 +1,8 @@
 development:
   adapter: mysql2
   encoding: utf8
-  database: office_timetracker
-  pool: 5
+  database: tmp
   username: root
   password: root
-#  socket: /tmp/mysql.sock
-#  socket: /Applications/MAMP/tmp/mysql/mysql.sock
-
-test:
-  adapter: mysql2
-  encoding: utf8
-  database: office_timetracker_test
-  pool: 5
-  username: root
-  password: root
-#  socket: /var/run/mysqld/mysqld.sock
-
-production:
-  adapter: mysql2
-  encoding: utf8
-  database: office_timetracker_production
-  pool: 5
-  username: root
-  password:
-#  socket: /var/run/mysqld/mysqld.sock
+  host: 127.0.0.1
+  port: 3306

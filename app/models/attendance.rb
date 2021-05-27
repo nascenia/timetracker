@@ -125,7 +125,6 @@ class Attendance < ActiveRecord::Base
   # Calculate monthly average attendance of a user
   #
   def self.monthly_average_hours monthly_attendances
-
     total_hours = self.monthly_total_hours(monthly_attendances)
     total_attendance = 1
 
@@ -134,9 +133,13 @@ class Attendance < ActiveRecord::Base
       total_attendance = today_attendance.out_time.nil? ? monthly_attendances.size - 1 : monthly_attendances.size
       half_day_count = Leave.get_half_day_leaves_count(monthly_attendances.first.user_id)
       total_attendance = total_attendance - ( half_day_count * 0.5 )
+
     end
     average_hours = total_attendance > 0 ? total_hours / total_attendance : 0
-    (average_hours.to_i).to_s + ':' + (((average_hours % 1)* 60).round(0)).to_s
+  end
+
+  def self.humanized_average_hours avg_hour
+    (avg_hour.to_i).to_s + ':' + (((avg_hour % 1) * 60).round(0)).to_s
   end
 
   #

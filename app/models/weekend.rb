@@ -1,4 +1,6 @@
 class Weekend < ActiveRecord::Base
+
+  has_one :pre_registration, dependent: :destroy
   has_many :users, dependent: :nullify
   has_many :exclusion_dates, as: :excluded, dependent: :destroy
 

@@ -1,0 +1,81 @@
+- if current_user.has_admin_privilege?
+  = render partial: 'admin_filter'
+.panel.panel-default
+
+  %table.table.table-bordered.table-hover#employee-info-table
+    %thead
+      %tr
+        %th{:width => '25%'} Name
+        %th{:width => '30%'} Email
+        %th{:width => '15%'} Contact Number
+        %th{:width => '5%'} Blood Group
+        - if current_user.has_admin_privilege?
+          %th{:width => '10%'} Joining Date
+        %th{:width => '15%'} TTF
+    %tbody.word-break
+      - @employees.each do |employee|
+        - if @pending_employees_company_emails.include?(employee.email) and current_user.has_admin_privilege?
+          %tr
+            %td.bg-danger
+              = link_to employee.name, employee_path(employee)
+            %td.bg-danger
+              = employee.email
+            - if employee.mobile_number.present?
+              %td.bg-danger
+                %a{:href =>"Tel:#{employee.mobile_number}"}= employee.mobile_number
+            - else
+              %td.bg-danger
+                = 'N/A'
+            %td.bg-danger
+              = employee.blood_group
+            - if current_user.has_admin_privilege?
+              %td.bg-danger
+                = employee.joining_date
+            -if employee.ttf_id?
+              %td.bg-danger
+                = User.find(employee.ttf_id).name
+            -else
+              %td.bg-danger
+                = "N/A"
+        - else
+          %tr
+            %td
+              = link_to employee.name, employee_path(employee)
+            %td= employee.email
+            - if employee.mobile_number.present?
+              %td
+                %a{:href =>"Tel:#{employee.mobile_number}"}= employee.mobile_number
+            - else
+              %td= 'N/A'
+            %td= employee.blood_group
+            - if current_user.has_admin_privilege?
+              %td= employee.joining_date
+            -if employee.ttf_id?
+              %td= User.find(employee.ttf_id).name
+            -else
+              %td= "N/A"
+
+:javascript
+  $(document).ready(function() {
+    var dataTable = $('#employee-info-table').DataTable({
+        lengthChange: false,
+        pageLength: 100,
+        dom: '<"dt-top-left"Tf>lrtip',
+        buttons: ['print']
+    });
+    $(document).on("turbolinks:before-cache", function() {
+        if (dataTable !== null) {
+            dataTable.destroy();
+            dataTable = null;
+        }
+    });
+    $('.dt-top-left').append($('.employee-filter-form').clone());
+    if($('.employee-filter-form').length>1)
+    {
+      $('.employee-filter-form').hide();
+      $('.employee-filter-form').eq(1).show();
+    }
+    $('select[name="employee_status"]').change(function(){
+        $(".employee-filter-form").submit();
+    });
+  });

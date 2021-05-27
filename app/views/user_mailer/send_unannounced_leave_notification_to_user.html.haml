@@ -5,9 +5,9 @@
         %tr{:style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0; padding: 0;"}
           %td{:style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 14px;", :valign => "top"}
             %strong
-              Hi
+              Hello
               = @user.name
-            = "#{@leave_type} has been issued as you did not attend last working day without any notice. We have deducted #{@leave_hour} paid leave from your LEAVE."
+            = "You didn't attend office today (#{@leave.start_date}) yet. We've deducted #{@leave_hour} hours of your paid leave."
 
         %tr{:style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0; padding: 0;"}
           %td{:style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 14px;", :valign => "top"}
@@ -15,4 +15,4 @@
               = @greetings
         %tr{:style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0; padding: 0;"}
           %td{:align => "center", :style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: center; margin: 0;", :valign => "top"}
-            = link_to 'Go to Leave Tracker', leave_url(@leave), :only_path => true, :style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; color: #47becc; text-decoration: none; display: inline-block; line-height: 2; text-align: center; cursor: pointer; text-transform: capitalize; border-radius: 100px; background-image: none; margin: 0; padding: 7px 14px; border: 2px solid #47becc;"
+            = link_to 'Go to Leave Tracker', leave_tracker_url(@user.id), :only_path => true, :style => "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; color: #47becc; text-decoration: none; display: inline-block; line-height: 2; text-align: center; cursor: pointer; text-transform: capitalize; border-radius: 100px; background-image: none; margin: 0; padding: 7px 14px; border: 2px solid #47becc;"

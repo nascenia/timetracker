@@ -1,4 +1,5 @@
 module ApplicationHelper
+  include ActionView::Helpers::NumberHelper
   def copyright_year
     Time.zone.now.year
   end
@@ -58,5 +59,31 @@ module ApplicationHelper
     else
       name
     end
+  end
+
+  def phone_number_link(text)
+    sets_of_numbers = text.scan(/[0-9]+/)
+    number = "+1-#{sets_of_numbers.join('-')}"
+    link_to text, "tel:#{number}"
+  end
+
+  def unannounced?(leave)
+    leave.leave_type == Leave::UNANNOUNCED
+  end
+
+  def count_employee
+    PreRegistration.where(step_no: 2..3).count
+  end
+
+  def add_employee
+    PreRegistration.where(step_no: 2).count
+  end
+
+  def employee_onboard
+    PreRegistration.where(step_no: 3).count
+  end
+
+  def hidden_field_tag(name, value = true, options = {})
+    text_field_tag(name, value, options.merge(type: :hidden))
   end
 end

@@ -7,3 +7,17 @@
   = link_to  'Reject', reject_leave_path(@leave), method: :post, remote: true, id: 'reject_leave',
              class: "btn btn-block btn-danger #{@leave.is_rejected? ? 'disabled' : ''}",
              data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>&nbsp;Rejecting..." }
+
+:javascript
+  $(document).ready( function() {
+      $('#accept_leave').on('click', function() {
+          $(this).addClass('disabled');
+          $('#reject_leave').removeClass('disabled');
+          return true;
+        });
+      $('#reject_leave').on('click', function() {
+          $(this).addClass('disabled');
+          $('#accept_leave').removeClass('disabled');
+          return true;
+        });
+    } );
