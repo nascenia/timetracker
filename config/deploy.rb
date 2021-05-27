@@ -26,8 +26,9 @@ set :rake, 'bundle exec rake'
 
 after('deploy:update_code', 'deploy:symlink_shared', 'deploy:migrate')
 
+# Broken and it's not working
 task :staging do
-  set :branch, "new_emp_prod"
+  set :branch, "development" # ca be used feature branches for temporary testing as well
   web_server = "timetracker.test.nascenia.com"
   role :web, web_server # Your HTTP server, Apache/etc
   role :app, web_server # This may be the same as your `Web` server
@@ -39,7 +40,7 @@ task :staging do
 end
 
 task :prod do
-  set :branch, "new_emp_prod"
+  set :branch, "master"
   web_server = "timetracker.nascenia.com"
   role :web, web_server # Your HTTP server, Apache/etc
   role :app, web_server # This may be the same as your `Web` server
