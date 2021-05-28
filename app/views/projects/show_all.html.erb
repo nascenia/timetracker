@@ -75,14 +75,13 @@
     <% @users.each do |user| %>
         <tr>
             <td><%= user[:user] %></td>
-            <td><%= user[:total_sum].to_s + ':'+ user[:total_sum_min].to_s  %></td>
+            <td><%= number_with_precision(calculate_hours(user[:total_sum], user[:total_sum_min]), precision: 2) %></td>
             <% user[:projects].each do |project| %>
                 <td>
-                    <%= project[:hours].to_s +  ':'+ project[:minutes].to_s   %>
+                    <%= number_with_precision(calculate_hours(project[:hours], project[:minutes]), precision: 2) %>
                 </td>
             <% end %>
         </tr>
-
     <% end %>
 </tbody>
 </table>
