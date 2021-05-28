@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 gem 'bitmask_attributes', '~> 1.0'
 gem 'bootstrap-sass', '~> 3.3.4.1'
-gem 'carrierwave', '~> 1.0'
+gem 'carrierwave', '~> 1.3'
 gem 'coffee-rails', '~> 4.0.0'
 gem 'devise'
 gem 'fog'
