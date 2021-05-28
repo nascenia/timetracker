@@ -16,8 +16,8 @@
                 <%= label '', ' *', class: 'required-asterisk' %>
             </p>
             <p>
-                <%= f.select :project_id, options_for_select(current_user_projects.collect { | project | [project.project_name,  project.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-current-user-projects'}%>
-                <%= f.select :project_id, options_for_select(@projects.collect { | project | [project.project_name,  project.id] }), {}, {required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'}%>
+                <%= f.select :project_id, options_for_select(current_user_projects.collect { | project | [project.project_name,  project.id] }), { include_blank: 'select' }, { required: 'true', autofocus: 'true', class: 'form-control', id:'select-current-user-projects' } %>
+                <%= f.select :project_id, options_for_select(@projects.collect { | project | [project.project_name,  project.id] }), { include_blank: 'select' }, { required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects' } %>
                 <%#= label :show_other_projects, 'Show other projects'  %>
                 <label class="lebel-nonbold" ><%= 'Show other projects' %></label>
                 <input id="other-projects-cb" type="checkbox" />
@@ -57,7 +57,8 @@
                         <%= label '', ' *', class: 'required-asterisk' %>
                 </p>
                     <p>
-                        <%= f.select :hours, options_for_select(0..@total_hours) , {}, {required: 'true', autofocus: 'true', class: 'form-control',:maxlength=>"128"}%>
+                        <% hours = 0..@total_hours %>
+                        <%= f.select :hours, options_for_select(hours), { include_blank: 'select' }, { required: 'true', autofocus: 'true', class: 'form-control', :maxlength => "128" } %>
                     </p>
                 </div>
                 <div class="col-md-6">
@@ -66,7 +67,8 @@
                         <%= label '', ' *', class: 'required-asterisk' %>
                     </p>
                     <p>
-                        <%= f.select :minutes, options_for_select((0..@total_mins).map {|n| n*15 }) , {}, {required: 'true', autofocus: 'true', class: 'form-control',:maxlength=>"128"}%>
+                        <% minutes = (0..@total_mins).map { |n| n*15 } %>
+                        <%= f.select :minutes, options_for_select(minutes, 0) , {}, { required: 'true', autofocus: 'true', class: 'form-control', :maxlength => "128" } %>
                     </p>
                 </div>
 
