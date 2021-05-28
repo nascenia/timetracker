@@ -22,6 +22,8 @@ vendor/bundle
 #ignore bundle ruby
 vendor/ruby
 
+.byebug_history
+
 # Ignore ruby version and gemset
 .ruby-gemset
 .rvmrc

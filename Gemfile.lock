@@ -63,6 +63,7 @@ GEM
       sass (~> 3.2)
       thor
     builder (3.1.4)
+    byebug (9.0.6)
     capistrano (2.14.2)
       highline
       net-scp (>= 1.0.0)
@@ -464,6 +465,7 @@ DEPENDENCIES
   activeadmin!
   bitmask_attributes (~> 1.0)
   bootstrap-sass (~> 3.3.4.1)
+  byebug
   capistrano (= 2.14.2)
   carrierwave (~> 1.0)
   coffee-rails (~> 4.0.0)
