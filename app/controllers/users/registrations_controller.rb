@@ -43,12 +43,17 @@ class Users::RegistrationsController < Devise::RegistrationsController
       emergency_contact_person_number: params[:emergency_contact_person_number], 
       blood_group: params[:blood_group], 
       joining_date: params[:joining_date].to_date, 
-      name: params[:name], 
-      resume: params[:resume].original_filename, 
-      national_id: params[:national_id].original_filename, 
+      name: params[:name],
       bank_account_no: params[:bank_account_no]
     }
 
+    file_data = {
+      avatar: params[:avatar],
+      resume: params[:resume],
+      national_id: params[:national_id],
+      passport: params[:passport]
+    }
+    resource.update_without_password(file_data)
     resource.update_attributes(profile_update_json: hash.to_json, registration_status: User::REGISTRATION_STATUS[:not_approved])
 
     UserMailer.send_approval_or_rejection_notification_of_employee_registration_to_hr(resource).deliver
