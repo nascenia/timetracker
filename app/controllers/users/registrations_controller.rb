@@ -28,12 +28,32 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def update_resource(resource, params)
-    params[:date_of_birth] = params[:date_of_birth].to_date
-    params[:joining_date] = params[:joining_date].to_date
-    resource.update_without_password(params)
-    resource.update_attribute(:registration_status, User::REGISTRATION_STATUS[:not_approved]);
+    hash = {
+      personal_email: params[:personal_email],
+      present_address: params[:present_address], 
+      mobile_number: params[:mobile_number], 
+      alternate_contact: params[:alternate_contact], 
+      permanent_address: params[:permanent_address], 
+      date_of_birth: params[:date_of_birth].to_date, 
+      last_degree: params[:last_degree],
+      last_university: params[:last_university], 
+      passing_year: params[:passing_year], 
+      emergency_contact_person_name: params[:emergency_contact_person_name], 
+      emergency_contact_person_relation: params[:emergency_contact_person_relation], 
+      emergency_contact_person_number: params[:emergency_contact_person_number], 
+      blood_group: params[:blood_group], 
+      joining_date: params[:joining_date].to_date, 
+      name: params[:name], 
+      resume: params[:resume].original_filename, 
+      national_id: params[:national_id].original_filename, 
+      bank_account_no: params[:bank_account_no]
+    }
+
+    resource.update_attributes(profile_update_json: hash.to_json, registration_status: User::REGISTRATION_STATUS[:not_approved])
+
     UserMailer.send_approval_or_rejection_notification_of_employee_registration_to_hr(resource).deliver
     UserMailer.send_approval_or_rejection_notification_of_employee_registration_to_ceo(resource).deliver
+
     after_update_path_for(resource)
   end
 
