@@ -76,19 +76,18 @@
         %h3
           %b Detail Information
           .content-info
-            - if @user.alternate_contact.present?
-              .row
-                .item-alternate_contact
-                  .col-md-4
-                    %h5
-                      Alternate Contact
-                  .col-md-8
-                    %h5
-                      %a{:href =>"Tel:#{@user.alternate_contact}"}
-                      - unless @user.alternate_contact.eql?(pu_json['alternate_contact'])
-                        = "#{@user.alternate_contact} -> #{pu_json['alternate_contact']}"
-                      - else
-                        = @user.alternate_contact
+            .row
+              .item-alternate_contact
+                .col-md-4
+                  %h5
+                    Alternate Contact
+                .col-md-8
+                  %h5
+                    %a{:href =>"Tel:#{@user.alternate_contact}"}
+                    - unless @user.alternate_contact.eql?(pu_json['alternate_contact'])
+                      = "#{@user.alternate_contact} -> #{pu_json['alternate_contact']}"
+                    - else
+                      = @user.alternate_contact
             .row
               .item-personal_email
                 .col-md-4
