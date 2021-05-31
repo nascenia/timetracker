@@ -47,13 +47,18 @@ class UsersController < ApplicationController
 
   def review_registration
     @user = User.find(params[:id])
+    
     if params[:status] == 'Accept'
+      hash_data = JSON.parse(@user.profile_update_json)
+      hash_data[:profile_update_json] = nil
+
+      @user.update_attributes(hash_data) unless @user.profile_update_json.blank?
       @user.update_attribute(:registration_status, User::REGISTRATION_STATUS[:registered])
-      flash[:warning] = 'User registration Accepted'
+      flash[:warning] = 'User registration or profile data update request accepted'
       redirect_to employee_path(@user)
     else
       @user.update_attribute(:registration_status, User::REGISTRATION_STATUS[:not_registered])
-      flash[:warning] = 'User registration has been Rejected.'
+      flash[:warning] = 'User registration or profile data update request has been rejected.'
       redirect_to new_review_registration_comment_user_path(@user), turbolinks: false
     end
   end
