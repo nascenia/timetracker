@@ -11,13 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200804120257) do
+ActiveRecord::Schema.define(version: 20210531062710) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
-    t.text     "body"
-    t.string   "resource_id",   null: false
-    t.string   "resource_type", null: false
+    t.text     "body",          limit: 16777215
+    t.string   "resource_id",                    null: false
+    t.string   "resource_type",                  null: false
     t.integer  "author_id"
     t.string   "author_type"
     t.datetime "created_at"
@@ -66,7 +66,7 @@ ActiveRecord::Schema.define(version: 20200804120257) do
   add_index "attendances", ["user_id"], name: "index_attendances_on_user_id", using: :btree
 
   create_table "comments", force: true do |t|
-    t.text     "body"
+    t.text     "body",       limit: 16777215
     t.integer  "leave_id"
     t.integer  "user_id"
     t.datetime "created_at"
@@ -106,6 +106,23 @@ ActiveRecord::Schema.define(version: 20200804120257) do
 
   add_index "holidays", ["holiday_scheme_id"], name: "index_holidays_on_holiday_scheme_id", using: :btree
 
+  create_table "honor_board_categories", force: true do |t|
+    t.string   "category",   default: "", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "honor_board_contents", force: true do |t|
+    t.string   "name"
+    t.text     "reason",                  limit: 16777215
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "honor_board_category_id"
+    t.string   "photo"
+  end
+
+  add_index "honor_board_contents", ["honor_board_category_id"], name: "index_honor_board_contents_on_honor_board_category_id", using: :btree
+
   create_table "leave_trackers", force: true do |t|
     t.integer  "user_id"
     t.integer  "yearly_casual_leave"
@@ -118,13 +135,13 @@ ActiveRecord::Schema.define(version: 20200804120257) do
     t.integer  "consumed_vacation"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "accrued_vacation_this_year", default: 0
-    t.integer  "accrued_medical_this_year",  default: 0
-    t.integer  "accrued_vacation_total",     default: 0
-    t.integer  "accrued_medical_total",      default: 0
+    t.integer  "accrued_vacation_this_year",                  default: 0
+    t.integer  "accrued_medical_this_year",                   default: 0
+    t.integer  "accrued_vacation_total",                      default: 0
+    t.integer  "accrued_medical_total",                       default: 0
     t.datetime "commenced_date"
-    t.integer  "awarded_leave",              default: 0
-    t.text     "note"
+    t.integer  "awarded_leave",                               default: 0
+    t.text     "note",                       limit: 16777215
   end
 
   add_index "leave_trackers", ["user_id"], name: "index_leave_trackers_on_user_id", using: :btree
@@ -138,15 +155,15 @@ ActiveRecord::Schema.define(version: 20200804120257) do
 
   create_table "leaves", force: true do |t|
     t.integer  "user_id"
-    t.text     "reason"
+    t.text     "reason",           limit: 16777215
     t.integer  "leave_type"
     t.integer  "status"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date     "start_date"
     t.date     "end_date"
-    t.integer  "half_day",         default: 0, null: false
-    t.integer  "pending_at",                   null: false
+    t.integer  "half_day",                          default: 0, null: false
+    t.integer  "pending_at",                                    null: false
     t.integer  "approval_path_id"
     t.integer  "hour"
   end
@@ -205,16 +222,23 @@ ActiveRecord::Schema.define(version: 20200804120257) do
     t.integer "project_id", null: false
   end
 
+  create_table "salaats", force: true do |t|
+    t.string   "waqt"
+    t.time     "time"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "timesheets", force: true do |t|
     t.date     "date"
-    t.text     "description"
+    t.text     "description",   limit: 16777215
     t.integer  "project_id"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "task"
+    t.text     "task",          limit: 16777215
     t.string   "ticket_number"
-    t.text     "ticket_link"
+    t.text     "ticket_link",   limit: 16777215
     t.integer  "hours"
     t.integer  "minutes"
   end
@@ -222,63 +246,17 @@ ActiveRecord::Schema.define(version: 20200804120257) do
   add_index "timesheets", ["project_id"], name: "index_timesheets_on_project_id", using: :btree
   add_index "timesheets", ["user_id"], name: "index_timesheets_on_user_id", using: :btree
 
-  create_table "users", force: true do |t|
-    t.string   "email",                             default: "",    null: false
-    t.string   "encrypted_password",                default: "",    null: false
-    t.string   "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                     default: 0,     null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip"
-    t.string   "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "name"
-    t.boolean  "is_active",                         default: true
-    t.integer  "role"
-    t.integer  "ttf_id"
-    t.integer  "sttf_id"
-    t.integer  "approval_path_id"
-    t.integer  "weekend_id"
-    t.integer  "holiday_scheme_id"
-    t.string   "personal_email"
-    t.text     "present_address"
-    t.string   "mobile_number"
-    t.string   "alternate_contact"
-    t.text     "permanent_address"
-    t.date     "date_of_birth"
-    t.string   "last_degree"
-    t.string   "last_university"
-    t.string   "passing_year"
-    t.string   "emergency_contact_person_name"
-    t.string   "emergency_contact_person_relation"
-    t.string   "emergency_contact_person_number"
-    t.string   "blood_group"
-    t.date     "joining_date"
-    t.date     "resignation_date"
-    t.boolean  "is_published",                      default: false
-    t.string   "avatar"
-    t.integer  "registration_status",               default: 0
-    t.string   "resume"
-    t.string   "national_id"
-    t.string   "passport"
-    t.string   "bank_account_no"
-  end
-
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["holiday_scheme_id"], name: "index_users_on_holiday_scheme_id", using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-  add_index "users", ["weekend_id"], name: "index_users_on_weekend_id", using: :btree
+# Could not dump table "users" because of following StandardError
+#   Unknown type 'json' for column 'profile_update_json'
 
   create_table "versions", force: true do |t|
-    t.string   "item_type",  limit: 191,        null: false
-    t.integer  "item_id",                       null: false
-    t.string   "event",                         null: false
+    t.string   "item_type",      limit: 191,        null: false
+    t.integer  "item_id",                           null: false
+    t.string   "event",                             null: false
     t.string   "whodunnit"
-    t.text     "object",     limit: 2147483647
+    t.text     "object",         limit: 2147483647
     t.datetime "created_at"
+    t.text     "object_changes"
   end
 
   add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
