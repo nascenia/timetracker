@@ -91,26 +91,33 @@
 
 
     function fixedProjectsSelect() {
-        var ttf_id = document.getElementById("ttf_select").value;
-        var project_id = document.getElementById("project_select").value;
-        var date_interval = document.getElementById("time_select").value;
-        let current_datetime = new Date();
-        let formatted_date = current_datetime.getFullYear()+"-"+appendLeadingZeroes((current_datetime.getMonth()+ 1)) + "-"
-            +appendLeadingZeroes (current_datetime.getDate());
-        document.getElementById("dt2").value = formatted_date;
-        let previous_datetime = new Date();
-        previous_datetime.setDate( previous_datetime.getDate() - date_interval );
-        let formatted_date2 = previous_datetime.getFullYear()+"-"+appendLeadingZeroes((previous_datetime.getMonth()+ 1)) + "-"
-            +appendLeadingZeroes (previous_datetime.getDate());
-        document.getElementById("dt1").value = formatted_date2;
-        var x = document.getElementById("time_select").selectedIndex;
-        var y = document.getElementById("time_select").options;
+      var params  = new URLSearchParams(window.location.search);
+      console.log('params', params.get('start_date'));
+      var selected_project_id = document.getElementById("project_select").value;
+      console.log('project id', selected_project_id);
 
-        window.location = "/projects/show_all"+'?end_date='
-            +document.getElementById("dt2").value
-            +'&selected_index='+ y[x].index
-            +'&start_date='+document.getElementById("dt1").value
-        +'&ttf_id='+ttf_id+'&projects_id='+project_id
+        //var ttf_id = document.getElementById("ttf_select").value;
+        //var project_id = document.getElementById("project_select").value;
+        //var date_interval = document.getElementById("time_select").value;
+        //let current_datetime = new Date();
+        //let formatted_date = current_datetime.getFullYear()+"-"+appendLeadingZeroes((current_datetime.getMonth()+ 1)) + "-"
+        //    +appendLeadingZeroes (current_datetime.getDate());
+        //document.getElementById("dt2").value = formatted_date;
+        //let previous_datetime = new Date();
+        //previous_datetime.setDate( previous_datetime.getDate() - date_interval );
+        //let formatted_date2 = previous_datetime.getFullYear()+"-"+appendLeadingZeroes((previous_datetime.getMonth()+ 1)) + "-"
+        //    +appendLeadingZeroes (previous_datetime.getDate());
+        //document.getElementById("dt1").value = formatted_date2;
+        //var x = document.getElementById("time_select").selectedIndex;
+        //var y = document.getElementById("time_select").options;
+
+        //window.location = "/projects/show_all"+'?end_date='
+        //    +document.getElementById("dt2").value
+        //    +'&selected_index='+ y[x].index
+        //    +'&start_date='+document.getElementById("dt1").value
+        //+'&ttf_id='+ttf_id+'&projects_id='+project_id
+
+      window.location = '/projects/show_all?start_date='+params.get('start_date')+'&end_date='+params.get('end_date')+'&selected_index='+params.get('selected_index')+'&ttf_id='+params.get('ttf_id')+'&projects_id='+selected_project_id;
     }
 
 
@@ -129,26 +136,30 @@
     }
 
     function fixedTTFSelect() {
-        var ttf_id = document.getElementById("ttf_select").value;
-        var project_id = document.getElementById("project_select").value;
-        var date_interval = document.getElementById("time_select").value;
-        let current_datetime = new Date();
-        let formatted_date = current_datetime.getFullYear()+"-"+appendLeadingZeroes((current_datetime.getMonth()+ 1)) + "-"
-            +appendLeadingZeroes (current_datetime.getDate());
-        document.getElementById("dt2").value = formatted_date;
-        let previous_datetime = new Date();
-        previous_datetime.setDate( previous_datetime.getDate() - date_interval );
-        let formatted_date2 = previous_datetime.getFullYear()+"-"+appendLeadingZeroes((previous_datetime.getMonth()+ 1)) + "-"
-            +appendLeadingZeroes (previous_datetime.getDate());
-        document.getElementById("dt1").value = formatted_date2;
-        var x = document.getElementById("time_select").selectedIndex;
-        var y = document.getElementById("time_select").options;
+      var params  = new URLSearchParams(window.location.search);
+      console.log('params', params.get('start_date'));
+      var selected_ttf_id = document.getElementById("ttf_select").value;
+      console.log(selected_ttf_id);
+      //var project_id = document.getElementById("project_select").value;
+      //var date_interval = document.getElementById("time_select").value;
+      //let current_datetime = new Date();
+      //let formatted_date = current_datetime.getFullYear()+"-"+appendLeadingZeroes((current_datetime.getMonth()+ 1)) + "-"
+      //    +appendLeadingZeroes (current_datetime.getDate());
+      //document.getElementById("dt2").value = formatted_date;
+      //let previous_datetime = new Date();
+      //previous_datetime.setDate( previous_datetime.getDate() - date_interval );
+      //let formatted_date2 = previous_datetime.getFullYear()+"-"+appendLeadingZeroes((previous_datetime.getMonth()+ 1)) + "-"
+      //    +appendLeadingZeroes (previous_datetime.getDate());
+      //document.getElementById("dt1").value = formatted_date2;
+      //var x = document.getElementById("time_select").selectedIndex;
+      //var y = document.getElementById("time_select").options;
 
-        window.location = "/projects/show_all"+'?end_date='
-            +document.getElementById("dt2").value
-            +'&selected_index='+ y[x].index
-            +'&start_date='+document.getElementById("dt1").value
-            +'&ttf_id='+ttf_id+'&projects_id='+project_id
+      //window.location = "/projects/show_all"+'?end_date='
+      //    +document.getElementById("dt2").value
+      //    +'&selected_index='+ y[x].index
+      //    +'&start_date='+document.getElementById("dt1").value
+      //    +'&ttf_id='+ttf_id+'&projects_id='+project_id
+      window.location = '/projects/show_all?start_date='+params.get('start_date')+'&end_date='+params.get('end_date')+'&selected_index='+params.get('selected_index')+'&ttf_id='+selected_ttf_id+'&projects_id='+params.get('projects_id');
     }
 
     function fixedTimeSelect() {
