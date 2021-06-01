@@ -25,7 +25,7 @@
                     - unless @user.mobile_number.eql?(pu_json['mobile_number'])
                       %span= @user.mobile_number
                       %span= "->"
-                      %span= pu_json['mobile_number']
+                      %span.text-danger= pu_json['mobile_number']
                     - else
                       = @user.mobile_number
           .row
@@ -37,7 +37,7 @@
                   - unless @user.last_university.eql?(pu_json['last_university'])
                     %span= @user.last_university
                     %span= "->"
-                    %span= pu_json['last_university']
+                    %span.text-danger= pu_json['last_university']
                   - else
                     = @user.last_university
           .row
@@ -50,7 +50,7 @@
                   - unless @user.last_degree.eql?(pu_json['last_degree'])
                     %span= @user.last_degree
                     %span= "->"
-                    %span= pu_json['last_degree']
+                    %span.text-danger= pu_json['last_degree']
                   - else
                     = @user.last_degree
           .row
@@ -63,7 +63,7 @@
                   - unless @user.passing_year.eql?(pu_json['passing_year'])
                     %span= @user.passing_year
                     %span= "->"
-                    %span= pu_json['passing_year']
+                    %span.text-danger= pu_json['passing_year']
                   - else
                     = @user.passing_year
           .row
@@ -76,7 +76,7 @@
                   - unless @user.blood_group.eql?(pu_json['blood_group'])
                     %span= @user.blood_group
                     %span= "->"
-                    %span= pu_json['blood_group']
+                    %span.text-danger= pu_json['blood_group']
                   - else
                     = @user.blood_group
 
@@ -97,7 +97,7 @@
                     - unless @user.alternate_contact.eql?(pu_json['alternate_contact'])
                       %span= @user.alternate_contact
                       %span= "->"
-                      %span= pu_json['alternate_contact']
+                      %span.text-danger= pu_json['alternate_contact']
                     - else
                       = @user.alternate_contact
             .row
@@ -110,7 +110,7 @@
                     - unless @user.personal_email.eql?(pu_json['personal_email'])
                       %span= @user.personal_email
                       %span= "->"
-                      %span= pu_json['personal_email']
+                      %span.text-danger= pu_json['personal_email']
                     - else
                       = @user.personal_email
             .row
@@ -123,7 +123,7 @@
                   - unless @user.emergency_contact_person_name.eql?(pu_json['emergency_contact_person_name'])
                     %span= @user.emergency_contact_person_name
                     %span= "->"
-                    %span= pu_json['emergency_contact_person_name']
+                    %span.text-danger= pu_json['emergency_contact_person_name']
                   - else
                     = @user.emergency_contact_person_name
             .row
@@ -136,7 +136,7 @@
                     - unless @user.emergency_contact_person_relation.eql?(pu_json['emergency_contact_person_relation'])
                       %span= @user.emergency_contact_person_relation
                       %span= "->"
-                      %span= pu_json['emergency_contact_person_relation']
+                      %span.text-danger= pu_json['emergency_contact_person_relation']
                     - else
                       = @user.emergency_contact_person_relation
             .row
@@ -150,7 +150,7 @@
                     - unless @user.emergency_contact_person_number.eql?(pu_json['emergency_contact_person_number'])
                       %span= @user.emergency_contact_person_number
                       %span= "->"
-                      %span= pu_json['emergency_contact_person_number']
+                      %span.text-danger= pu_json['emergency_contact_person_number']
                     - else
                       = @user.emergency_contact_person_number
             .row
@@ -162,7 +162,7 @@
                     - unless @user.present_address.eql?(pu_json['present_address'])
                       %span= @user.present_address
                       %span= "->"
-                      %span= pu_json['present_address']
+                      %span.text-danger= pu_json['present_address']
                     - else
                       = @user.present_address
             .row
@@ -175,7 +175,7 @@
                     - unless @user.permanent_address.eql?(pu_json['permanent_address'])
                       %span= @user.permanent_address
                       %span= "->"
-                      %span= pu_json['permanent_address']
+                      %span.text-danger= pu_json['permanent_address']
                     - else
                       = @user.permanent_address
             .row
@@ -187,7 +187,7 @@
                     - unless @user.date_of_birth.strftime("%Y-%m-%d").eql?(pu_json['date_of_birth'])
                       %span= @user.date_of_birth
                       %span= "->"
-                      %span= pu_json['date_of_birth']
+                      %span.text-danger= pu_json['date_of_birth']
                     - else
                       = @user.date_of_birth
 

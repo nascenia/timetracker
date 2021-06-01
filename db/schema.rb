@@ -246,8 +246,60 @@ ActiveRecord::Schema.define(version: 20210531062710) do
   add_index "timesheets", ["project_id"], name: "index_timesheets_on_project_id", using: :btree
   add_index "timesheets", ["user_id"], name: "index_timesheets_on_user_id", using: :btree
 
-# Could not dump table "users" because of following StandardError
-#   Unknown type 'json' for column 'profile_update_json'
+  create_table "users", force: true do |t|
+    t.string   "email",                                              default: "",    null: false
+    t.string   "encrypted_password",                                 default: "",    null: false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",                                      default: 0,     null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "name"
+    t.boolean  "is_active",                                          default: true
+    t.integer  "role"
+    t.integer  "ttf_id"
+    t.integer  "sttf_id"
+    t.integer  "approval_path_id"
+    t.integer  "weekend_id"
+    t.integer  "holiday_scheme_id"
+    t.string   "personal_email"
+    t.text     "present_address",                   limit: 16777215
+    t.string   "mobile_number"
+    t.string   "alternate_contact"
+    t.text     "permanent_address",                 limit: 16777215
+    t.date     "date_of_birth"
+    t.string   "last_degree"
+    t.string   "last_university"
+    t.string   "passing_year"
+    t.string   "emergency_contact_person_name"
+    t.string   "emergency_contact_person_relation"
+    t.string   "emergency_contact_person_number"
+    t.string   "blood_group"
+    t.date     "joining_date"
+    t.date     "resignation_date"
+    t.boolean  "is_published",                                       default: false
+    t.string   "avatar"
+    t.integer  "registration_status",                                default: 0
+    t.string   "resume"
+    t.string   "national_id"
+    t.string   "passport"
+    t.string   "bank_account_no"
+    t.string   "resume_filename"
+    t.string   "national_id_filename"
+    t.string   "passport_filename"
+    t.string   "avatar_filename"
+    t.text     "profile_update_json"
+  end
+
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["holiday_scheme_id"], name: "index_users_on_holiday_scheme_id", using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  add_index "users", ["weekend_id"], name: "index_users_on_weekend_id", using: :btree
 
   create_table "versions", force: true do |t|
     t.string   "item_type",      limit: 191,        null: false
