@@ -14,7 +14,7 @@
                     Designation
                 .col-md-8
                   %h5
-                    = ""
+                    = "-"
           .row
             .item-email
               .col-md-4
@@ -22,7 +22,12 @@
                   Supervisor/TTF
               .col-md-8
                 %h5
-                  = @user.ttf.name
+                  - unless @user.ttf_id.eql?(pu_json['ttf_id'])
+                    %span= @user.ttf.name
+                    %span= "->"
+                    %span.text-danger= User.find(pu_json['ttf_id'].to_i).name
+                  - else
+                    = @user.ttf.name
           .row
             .item-email
               .col-md-4
