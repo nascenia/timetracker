@@ -4,6 +4,23 @@
       %h3
         %b Basic Information
         .content-info
+          - if current_user.has_admin_privilege?
+            .row
+              .item-email
+                .col-md-4
+                  %h5
+                    Designation
+                .col-md-8
+                  %h5
+                    = ""
+          .row
+            .item-email
+              .col-md-4
+                %h5
+                  Supervisor/TTF
+              .col-md-8
+                %h5
+                  = @user.ttf.name
           .row
             .item-email
               .col-md-4
@@ -51,10 +68,17 @@
               .col-md-8
                 %h5
                   = @user.blood_group
-
+          .row
+            .item-passing_year
+              .col-md-4
+                %h5
+                  Joining Date
+              .col-md-8
+                %h5
+                  = @user.joining_date
           .clearfix
+
       - if current_user.has_admin_privilege?
-        
         %h3
           %b Detail Information
           .content-info
@@ -121,15 +145,6 @@
                 .col-md-8
                   %h5
                     = @user.date_of_birth
-
-            .row
-              .item-passing_year
-                .col-md-4
-                  %h5
-                    Joining Date
-                .col-md-8
-                  %h5
-                    = @user.joining_date
           %h3
             %b Document
             .content-info
