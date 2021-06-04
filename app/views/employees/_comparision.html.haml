@@ -6,6 +6,23 @@
       %h3
         %b Basic Information
         .content-info
+          - if current_user.has_admin_privilege?
+            .row
+              .item-email
+                .col-md-4
+                  %h5
+                    Designation
+                .col-md-8
+                  %h5
+                    = ""
+          .row
+            .item-email
+              .col-md-4
+                %h5
+                  Supervisor/TTF
+              .col-md-8
+                %h5
+                  = @user.ttf.name
           .row
             .item-email
               .col-md-4
@@ -79,10 +96,22 @@
                     %span.text-danger= pu_json['blood_group']
                   - else
                     = @user.blood_group
-
+          .row
+            .item-passing_year
+              .col-md-4
+                %h5
+                  Joining Date
+              .col-md-8
+                %h5
+                  - unless @user.joining_date.strftime("%Y-%m-%d").eql?(pu_json['joining_date'])
+                    %span= @user.joining_date
+                    %span= "->"
+                    %span.text-danger= pu_json['joining_date']
+                  - else
+                    = @user.joining_date
           .clearfix
+
       - if current_user.has_admin_privilege?
-        
         %h3
           %b Detail Information
           .content-info
@@ -190,20 +219,6 @@
                       %span.text-danger= pu_json['date_of_birth']
                     - else
                       = @user.date_of_birth
-
-            .row
-              .item-passing_year
-                .col-md-4
-                  %h5
-                    Joining Date
-                .col-md-8
-                  %h5
-                    - unless @user.joining_date.strftime("%Y-%m-%d").eql?(pu_json['joining_date'])
-                      %span= @user.joining_date
-                      %span= "->"
-                      %span.text-danger= pu_json['joining_date']
-                    - else
-                      = @user.joining_date
           %h3
             %b Document
             .content-info

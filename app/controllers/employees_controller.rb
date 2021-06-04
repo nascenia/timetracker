@@ -25,7 +25,7 @@ class EmployeesController < ApplicationController
   end
   
   def show
-    @user = User.find(params[:id])
+    @user = User.includes(:ttf).find(params[:id])
     @pre_registration = PreRegistration.where(companyEmail: @user.email).first
 
     if @pre_registration.present?
