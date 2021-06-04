@@ -15,6 +15,8 @@ class User < ActiveRecord::Base
   belongs_to :approval_path
   belongs_to :weekend
   belongs_to :holiday_scheme
+  belongs_to :ttf, :class_name => 'User'
+  has_one  :team, :class_name => 'User', :foreign_key => 'ttf_id'
 
   has_paper_trail
   has_one :pre_registration, dependent: :destroy
