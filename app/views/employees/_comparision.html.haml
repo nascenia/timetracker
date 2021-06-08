@@ -22,7 +22,7 @@
                   Supervisor/TTF
               .col-md-8
                 %h5
-                  - unless @user.ttf_id.eql?(pu_json['ttf_id'])
+                  - if pu_json['ttf_id'].present? && !@user.ttf_id.eql?(pu_json['ttf_id'].to_i)
                     %span= @user.ttf.name
                     %span= "->"
                     %span.text-danger= User.find(pu_json['ttf_id'].to_i).name
@@ -44,7 +44,7 @@
               .col-md-8
                 %h5
                   %a{:href =>"Tel:#{@user.mobile_number}"}
-                    - unless @user.mobile_number.eql?(pu_json['mobile_number'])
+                    - if pu_json['mobile_number'].present? && !@user.mobile_number.eql?(pu_json['mobile_number'])
                       %span= @user.mobile_number
                       %span= "->"
                       %span.text-danger= pu_json['mobile_number']
@@ -56,7 +56,7 @@
                 %h5 University
               .col-md-8
                 %h5
-                  - unless @user.last_university.eql?(pu_json['last_university'])
+                  - if pu_json['last_university'].present? && !@user.last_university.eql?(pu_json['last_university'])
                     %span= @user.last_university
                     %span= "->"
                     %span.text-danger= pu_json['last_university']
@@ -69,7 +69,7 @@
                   Last Degree
               .col-md-8
                 %h5
-                  - unless @user.last_degree.eql?(pu_json['last_degree'])
+                  - if pu_json['last_degree'].present? && !@user.last_degree.eql?(pu_json['last_degree'])
                     %span= @user.last_degree
                     %span= "->"
                     %span.text-danger= pu_json['last_degree']
@@ -82,7 +82,7 @@
                   Passing Year
               .col-md-8
                 %h5
-                  - unless @user.passing_year.eql?(pu_json['passing_year'])
+                  - if pu_json['passing_year'].present? && !@user.passing_year.eql?(pu_json['passing_year'])
                     %span= @user.passing_year
                     %span= "->"
                     %span.text-danger= pu_json['passing_year']
@@ -95,7 +95,7 @@
                   Blood Group
               .col-md-8
                 %h5
-                  - unless @user.blood_group.eql?(pu_json['blood_group'])
+                  - if pu_json['blood_group'].present? && !@user.blood_group.eql?(pu_json['blood_group'])
                     %span= @user.blood_group
                     %span= "->"
                     %span.text-danger= pu_json['blood_group']
@@ -108,7 +108,7 @@
                   Joining Date
               .col-md-8
                 %h5
-                  - unless @user.joining_date.strftime("%Y-%m-%d").eql?(pu_json['joining_date'])
+                  - if pu_json['joining_date'].present? && !@user.joining_date.strftime("%Y-%m-%d").eql?(pu_json['joining_date'])
                     %span= @user.joining_date
                     %span= "->"
                     %span.text-danger= pu_json['joining_date']
@@ -128,7 +128,7 @@
                 .col-md-8
                   %h5
                     %a{:href =>"Tel:#{@user.alternate_contact}"}
-                    - unless @user.alternate_contact.eql?(pu_json['alternate_contact'])
+                    - if pu_json['alternate_contact'].present? && !@user.alternate_contact.eql?(pu_json['alternate_contact'])
                       %span= @user.alternate_contact
                       %span= "->"
                       %span.text-danger= pu_json['alternate_contact']
@@ -141,7 +141,7 @@
                     Personal Mail
                 .col-md-8
                   %h5
-                    - unless @user.personal_email.eql?(pu_json['personal_email'])
+                    - if pu_json['personal_email'].present? && !@user.personal_email.eql?(pu_json['personal_email'])
                       %span= @user.personal_email
                       %span= "->"
                       %span.text-danger= pu_json['personal_email']
@@ -154,7 +154,7 @@
                     Emergency Contact
                 .col-md-8
                   %h5
-                  - unless @user.emergency_contact_person_name.eql?(pu_json['emergency_contact_person_name'])
+                  - if pu_json['emergency_contact_person_name'].present? && !@user.emergency_contact_person_name.eql?(pu_json['emergency_contact_person_name'])
                     %span= @user.emergency_contact_person_name
                     %span= "->"
                     %span.text-danger= pu_json['emergency_contact_person_name']
@@ -167,7 +167,7 @@
                     Relation
                 .col-md-8
                   %h5
-                    - unless @user.emergency_contact_person_relation.eql?(pu_json['emergency_contact_person_relation'])
+                    - if pu_json['emergency_contact_person_relation'].present? && !@user.emergency_contact_person_relation.eql?(pu_json['emergency_contact_person_relation'])
                       %span= @user.emergency_contact_person_relation
                       %span= "->"
                       %span.text-danger= pu_json['emergency_contact_person_relation']
@@ -181,7 +181,7 @@
                 .col-md-8
                   %h5
                     %a{:href =>"Tel:#{@user.emergency_contact_person_number}"}
-                    - unless @user.emergency_contact_person_number.eql?(pu_json['emergency_contact_person_number'])
+                    - if pu_json['emergency_contact_person_number'].present? && !@user.emergency_contact_person_number.eql?(pu_json['emergency_contact_person_number'])
                       %span= @user.emergency_contact_person_number
                       %span= "->"
                       %span.text-danger= pu_json['emergency_contact_person_number']
@@ -193,7 +193,7 @@
                   %h5 Present Address
                 .col-md-8
                   %h5
-                    - unless @user.present_address.eql?(pu_json['present_address'])
+                    - if pu_json['present_address'].present? && !@user.present_address.eql?(pu_json['present_address'])
                       %span= @user.present_address
                       %span= "->"
                       %span.text-danger= pu_json['present_address']
@@ -206,7 +206,7 @@
                     Permanent Address
                 .col-md-8
                   %h5
-                    - unless @user.permanent_address.eql?(pu_json['permanent_address'])
+                    - if pu_json['permanent_address'].present? && !@user.permanent_address.eql?(pu_json['permanent_address'])
                       %span= @user.permanent_address
                       %span= "->"
                       %span.text-danger= pu_json['permanent_address']
@@ -218,7 +218,7 @@
                   %h5 Date of Birth
                 .col-md-8
                   %h5
-                    - unless @user.date_of_birth.strftime("%Y-%m-%d").eql?(pu_json['date_of_birth'])
+                    - if pu_json['date_of_birth'].present? && !@user.date_of_birth.strftime("%Y-%m-%d").eql?(pu_json['date_of_birth'])
                       %span= @user.date_of_birth
                       %span= "->"
                       %span.text-danger= pu_json['date_of_birth']
@@ -235,7 +235,7 @@
                   .col-md-8
                     %h5
                       - if @user.bank_account_no.present?
-                        - unless @user.bank_account_no.eql?(pu_json['bank_account_no'])
+                        - if pu_json['bank_account_no'].present? && !@user.bank_account_no.eql?(pu_json['bank_account_no'])
                           %span= @user.bank_account_no
                           %span= "->"
                           %span.text-danger= pu_json['bank_account_no']
