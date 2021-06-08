@@ -22,7 +22,7 @@
                 %h5
                   = @user.ttf.name
               .col-md-4
-                %h5= link_to 'Change supervisor/ttf', edit_user_registration_path
+                %h5= link_to 'Change supervisor/ttf', edit_user_registration_path(change_ttf: true)
           .row
             .item-email
               .col-md-4
