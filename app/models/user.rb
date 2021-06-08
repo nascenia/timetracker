@@ -16,6 +16,8 @@ class User < ActiveRecord::Base
   belongs_to :weekend
   belongs_to :holiday_scheme
   belongs_to :ttf, :class_name => 'User'
+
+  has_many  :promotions
   has_one  :team, :class_name => 'User', :foreign_key => 'ttf_id'
 
   has_paper_trail
