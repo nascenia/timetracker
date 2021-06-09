@@ -1,4 +1,5 @@
 Internal::Application.routes.draw do
+  get "promotions/new"
   get "projects/index"
   devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks", :registrations => 'users/registrations' }
 
@@ -94,6 +95,9 @@ Internal::Application.routes.draw do
   end
 
   get 'salaat_times', to: 'salaat_times#index'
-  resources :employees
+  resources :employees do
+    resources :promotions, only: [:new, :create]
+  end
+
   root :to => 'dashboard#index'
 end
