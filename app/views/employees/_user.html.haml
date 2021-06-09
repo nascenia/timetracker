@@ -149,6 +149,15 @@
                 .col-md-8
                   %h5
                     = @user.date_of_birth
+            .row
+              .col-md-4
+                %h5 Designation History
+              .col-md-8
+                - @user.promotions.each_with_index do |promotion, i|
+                  - designation_history = "#{promotion.designation} on #{promotion.start_date}"
+                  - if i.eql?(0)
+                    - designation_history = "Joined As: #{promotion.designation} on #{promotion.start_date}"
+                  %p.designation-history= designation_history
           %h3
             %b Document
             .content-info
