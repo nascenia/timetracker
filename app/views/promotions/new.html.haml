@@ -9,7 +9,7 @@
     .col-md-3
       = f.label :designation
     .col-md-9
-      = f.select :designation, Designation.published.map{ |d| [d.title, d.title] }, { include_blank: true }, class: 'form-control'
+      = f.select :designation, Designation.published.map{ |d| [d.title, d.title] }, { include_blank: 'select' }, class: 'form-control'
   %br
   .row
     .col-md-3
