@@ -1,4 +1,4 @@
-%h2 Add new promotion to 
+%h2= "Add new promotion to #{@promotion.user.name}"
 %hr
 
 = form_for(@promotion, url: employee_promotions_path(params[:employee_id])) do |f|
@@ -10,11 +10,13 @@
       = f.label :designation
     .col-md-9
       = f.select :designation, Designation.published.map{ |d| [d.title, d.title] }, { include_blank: true }, class: 'form-control'
+  %br
   .row
     .col-md-3
       = f.label :start_date
     .col-md-9
       = f.text_field :start_date, class: 'form-control', placeholder: 'example- YYYY-MM-DD'
+  %br
   .row
     .col-md-3
       = ""
