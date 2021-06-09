@@ -19,9 +19,9 @@ end
 if Designation.count.zero?
   p 'Creating employee designations...'
   Designation.create([
-    { title: 'Intern', description: 'Internship', published: true },
-    { title: 'Junior Software Engineer', description: 'Junior software engineer', published: true },
-    { title: 'Software Engineer', description: 'Software engineer', published: true },
-    { title: 'Senior Software Engineer', description: 'Senior software engineer', published: true }
+    { team: 'Developer', title: 'Intern', description: 'Internship', published: true },
+    { team: 'Developer', title: 'Junior Software Engineer', description: 'Junior software engineer', published: true },
+    { team: 'Developer', title: 'Software Engineer', description: 'Software engineer', published: true },
+    { team: 'Developer', title: 'Senior Software Engineer', description: 'Senior software engineer', published: true }
   ])
 end
