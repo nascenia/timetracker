@@ -51,3 +51,4 @@ config/initializers/abstract_mysql2_adapter.rb
 # Ignore release version files
 VERSION
 release.sh
+staging.sh
