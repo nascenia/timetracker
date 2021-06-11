@@ -8,14 +8,16 @@
   .row
     .col-md-3
       = f.label :designation
+      = f.label '', ' *', class: 'required-asterisk'
     .col-md-9
       = f.select :designation, Designation.published.map{ |d| [d.title, d.title] }, { include_blank: 'select' }, class: 'form-control'
   %br
   .row
     .col-md-3
       = f.label :start_date
+      = f.label '', ' *', class: 'required-asterisk'
     .col-md-9
-      = f.text_field :start_date, class: 'form-control', placeholder: 'example- YYYY-MM-DD'
+      = f.text_field :start_date, class: 'form-control timesheet-date-picker', placeholder: 'example- YYYY-MM-DD'
   %br
   .row
     .col-md-3
