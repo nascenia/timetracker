@@ -1,6 +1,7 @@
 class PromotionsController < ApplicationController
   before_action :authenticate_user!
-
+  layout 'time_tracker'
+  
   def new
     unless current_user.has_admin_privilege?
       flash[:notice]  = 'Sorry, You have no permission.'
