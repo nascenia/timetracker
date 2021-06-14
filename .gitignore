@@ -52,3 +52,4 @@ config/initializers/abstract_mysql2_adapter.rb
 VERSION
 release.sh
 staging.sh
+ssh.sh
