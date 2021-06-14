@@ -2,11 +2,6 @@
   .alert.alert-danger
     = flash[:warning]
 
-%h2
-  %b
-    Employee Details
-%br
-
 - unless params[:change_ttf].blank?
   = render partial: 'change_ttf'
 - else

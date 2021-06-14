@@ -1,13 +1,14 @@
+%h2
+  %b= "Change TTF of #{current_user.name}" 
+%br
+
 = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: 'form-horizontal', method: :put }) do |f|
   = devise_error_messages!
   %fieldset
-    %legend
-      Change Supervisor/TTF
-      %span.required-asterisk *
     .form-group
-      = f.label 'Supervisor/TTF', { class: 'col-sm-2 control-label'}
+      = f.label 'New Supervisor/TTF', { class: 'col-sm-2 control-label'}
       .col-sm-10
-        = f.select :ttf_id, User.active.map{|u| [u.name, u.id]}, {}, { class: 'form-control' , required: true }
+        = f.select :ttf_id, User.active.ttf.map{|u| [u.name, u.id]}, {}, { class: 'form-control' , required: true }
   %br
   .form-group
     = f.submit 'Submit',  class: 'btn btn-success'
