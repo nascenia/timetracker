@@ -6,6 +6,8 @@ class UserMailer < ActionMailer::Base
 
   layout 'notification'
 
+  PRE_FIX  = '[Test]:' unless Rails.env.production?
+
   def send_leave_application_notification(leave, email)
     @leave = leave
     @user = @leave.user
@@ -17,6 +19,8 @@ class UserMailer < ActionMailer::Base
     else
       subject = "#{@user.name} has applied for a leave"
     end
+
+    subject = PRE_FIX + " " + subject
    
     mail to: @email,
          cc: CONFIG['leave_admin'],
@@ -36,6 +40,9 @@ class UserMailer < ActionMailer::Base
       @title = 'Your leave application has just been rejected.'
       @greetings = '- Better luck next time!'
     end
+
+    subject = PRE_FIX + " " + subject
+
     mail to: @user.email,
          cc: CONFIG['leave_admin'],
          subject: subject
@@ -52,6 +59,8 @@ class UserMailer < ActionMailer::Base
     subject = 'Employee Registration Form Rejected'
     @title = 'Your employee registration application has just been rejected.'
     @greetings = '- Better luck next time!'
+    subject = PRE_FIX + " " + subject
+
     mail to: @user.email,
          cc: CONFIG['leave_admin'],
          subject: subject
@@ -72,6 +81,9 @@ class UserMailer < ActionMailer::Base
       subject = 'Leave Rejected'
       @title = 'A leave application has just been rejected.'
     end
+
+    subject = PRE_FIX + " " + subject
+
     mail to: CONFIG['leave_admin'],
          subject: subject
     true
@@ -85,6 +97,8 @@ class UserMailer < ActionMailer::Base
     @user = user
     @hours = hours
     subject = 'Leave Awarded'
+    subject = PRE_FIX + " " + subject
+
     mail to: @user.email, subject: subject
     true
   end
@@ -103,6 +117,8 @@ class UserMailer < ActionMailer::Base
       @leave_hour = '8'
     end
     @greetings = ''
+    subject = PRE_FIX + " " + subject
+
     mail to: @user.email,
          subject: subject
     true
@@ -126,6 +142,8 @@ class UserMailer < ActionMailer::Base
       @leave_hour = '8'
     end
     @greetings = ''
+    subject = PRE_FIX + " " + subject
+
     mail to: email,
          subject: subject
     true
@@ -140,6 +158,8 @@ class UserMailer < ActionMailer::Base
     @user = @leave.user
     subject = "Unannounced leave Converted to #{Leave::LEAVE_TYPES.to_h.key(@leave.leave_type)}"
     @greetings = '- Have a nice day!'
+    subject = PRE_FIX + " " + subject
+
     mail to: @user.email, subject: subject
     true
     rescue => e
@@ -152,6 +172,8 @@ class UserMailer < ActionMailer::Base
     @pre_registration = pre_registration
     subject = 'Action required to open new email account for a new employee'
     @greetings = '- Have a nice day!'
+    subject = PRE_FIX + " " + subject
+
     mail to: ENV['TT_CEO_EMAIL'],
          subject: subject
     true
@@ -164,6 +186,8 @@ class UserMailer < ActionMailer::Base
   def send_mail_to_new_employee_about_tt(pre_registration)
     @pre_registration = pre_registration
     subject = 'Invitation to Time tracker with new email ID'
+    subject = PRE_FIX + " " + subject
+
     mail to: @pre_registration.companyEmail,
          subject: subject
     true
@@ -177,6 +201,8 @@ class UserMailer < ActionMailer::Base
     @pre_registration = pre_registration
     @HR_email = pre_registration.HR_email
     subject = 'Action required to prepare documents and arrangements for new employee'
+    subject = PRE_FIX + " " + subject
+
     mail to: @HR_email,
          subject: subject
     true
@@ -189,6 +215,7 @@ class UserMailer < ActionMailer::Base
   def send_approval_or_rejection_notification_of_employee_registration_to_hr(user)
     @user = user
     subject = 'Action required: Change(s) detected in employee information and approval needed'
+    subject = PRE_FIX + " " + subject
 
     mail to: 'hr@nascenia.com', subject: subject
     true
@@ -201,6 +228,7 @@ class UserMailer < ActionMailer::Base
   def send_approval_or_rejection_notification_of_employee_registration_to_ceo(user)
   #  @user = user
   #  subject = 'Action required: Change(s) detected in employee information and approval needed'
+  #  subject = PRE_FIX + " " + subject
 
   #  mail to: 'nasceniatest2@gmail.com', subject: subject
 
