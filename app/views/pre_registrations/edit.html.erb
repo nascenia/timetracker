@@ -33,7 +33,7 @@
                     <span class = 'required-asterisk' >*</span>
                 <% end %>
                 <p>
-                    <%= f.text_field :designation, class: 'form-control', required: 'true', maxlength: '128' %>
+                    <%= f.select :designation, Designation.published.map{ |d| [d.title, d.title] }, { include_blank: 'select' }, class: 'form-control' %>
                 </p>
             </div>
 
