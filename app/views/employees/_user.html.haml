@@ -157,7 +157,7 @@
                 - @user.promotions.each_with_index do |promotion, i|
                   - designation_history = "#{promotion.designation} on #{promotion.start_date}"
                   - if i.eql?(0)
-                    - designation_history = "Joined As: #{promotion.designation} on #{promotion.start_date}"
+                    - designation_history = "Joined As: #{promotion.designation} on #{promotion.start_date.split('T').first}"
                   %p.designation-history= designation_history
           %h3
             %b Document
