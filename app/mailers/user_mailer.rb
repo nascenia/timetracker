@@ -6,7 +6,7 @@ class UserMailer < ActionMailer::Base
 
   layout 'notification'
 
-  PRE_FIX  = '[Test]:' unless Rails.env.production?
+  PRE_FIX  = '[Test]:' unless Rails.env.staging? # as staging is using as production application
 
   def send_leave_application_notification(leave, email)
     @leave = leave
