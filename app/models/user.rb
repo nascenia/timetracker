@@ -120,15 +120,19 @@ class User < ActiveRecord::Base
     unless user
       pre_registration = PreRegistration.where(companyEmail: company_email, step_no: 2).first
       if pre_registration.present?
-        user = User.create(name: pre_registration.name,
-                           email: pre_registration.companyEmail,
-                           weekend_id: pre_registration.weekend_id,
-                           holiday_scheme_id: pre_registration.holiday_scheme_id,
-                           personal_email: pre_registration.personalEmail,
-                           mobile_number: pre_registration.contactNumber,
-                           joining_date: pre_registration.joiningDate,
-                           ttf_id: pre_registration.ttf_id,
-                           password: Devise.friendly_token[0, 20])
+        user = User.create(
+          name: pre_registration.name,
+          email: pre_registration.companyEmail,
+          weekend_id: pre_registration.weekend_id,
+          holiday_scheme_id: pre_registration.holiday_scheme_id,
+          personal_email: pre_registration.personalEmail,
+          mobile_number: pre_registration.contactNumber,
+          joining_date: pre_registration.joiningDate,
+          ttf_id: pre_registration.ttf_id,
+          password: Devise.friendly_token[0, 20]
+        )
+        Promotion.create(user: user, designation: pre_registration.designation, start_date: user.joining_date)
+        
         pre_registration.step_no = 3
         pre_registration.user_id = user.id
         pre_registration.save
