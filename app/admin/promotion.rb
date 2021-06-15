@@ -22,9 +22,21 @@ permit_params [:user_id, :designation, :start_date, :end_date], :of, :attributes
       "#{promotion.user.email}"
     end
     column  :designation
+    column  :start_date do |promotion|
+      promotion.start_date.split('T').first
+    end
     column  :created_at
     column  :updated_at
     actions
   end
 
+  form do |f|
+    f.inputs do
+      f.input :user_id, :as => :select, :collection => User.active.map{ |u| [u.name, u.id] }
+      f.input :designation, :as => :select, :collection => Designation.published.map{ |d| [d.title, d.title] }
+      f.input :start_date, as: :datetime_picker
+      f.input :end_date, as: :datetime_picker
+    end
+    f.actions
+  end
 end
