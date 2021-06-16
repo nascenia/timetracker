@@ -20,7 +20,7 @@
               .col-md-4
                 %h5
                   Supervisor/TTF
-              .col-md-8
+              .col-md-5
                 %h5
                   - if pu_json['ttf_id'].present? && !@user.ttf_id.eql?(pu_json['ttf_id'].to_i)
                     %span= @user.ttf.name
@@ -28,6 +28,9 @@
                     %span.text-danger= User.find(pu_json['ttf_id'].to_i).name
                   - else
                     = @user.ttf.name
+              - if current_user.id.eql?(@user.id)
+                .col-md-3
+                  %h5= link_to 'Change supervisor/ttf', edit_user_registration_path(change_ttf: true)
           .row
             .item-email
               .col-md-4
