@@ -34,8 +34,8 @@ permit_params [:user_id, :designation, :start_date, :end_date], :of, :attributes
     f.inputs do
       f.input :user_id, :as => :select, :collection => User.active.map{ |u| [u.name, u.id] }
       f.input :designation, :as => :select, :collection => Designation.published.map{ |d| [d.title, d.title] }
-      f.input :start_date, as: :datetime_picker
-      f.input :end_date, as: :datetime_picker
+      f.input :start_date, as: :date_picker
+      f.input :end_date, as: :date_picker
     end
     f.actions
   end
