@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210609054121) do
+ActiveRecord::Schema.define(version: 20210618044910) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -216,6 +216,7 @@ ActiveRecord::Schema.define(version: 20210609054121) do
     t.string   "ndaDoc"
     t.string   "HR_email"
     t.integer  "ttf_id"
+    t.string   "employee_id",                                   limit: 16
   end
 
   create_table "projects", force: true do |t|
@@ -314,6 +315,7 @@ ActiveRecord::Schema.define(version: 20210609054121) do
     t.string   "passport_filename"
     t.string   "avatar_filename"
     t.text     "profile_update_json"
+    t.string   "employee_id",                       limit: 16
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
