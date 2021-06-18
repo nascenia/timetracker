@@ -81,6 +81,14 @@
               .col-md-8
                 %h5
                   = @user.joining_date
+          .row
+            .item-passing_year
+              .col-md-4
+                %h5
+                  Employee ID
+              .col-md-8
+                %h5
+                  = @user.employee_id.nil? ? 'N/A' : @user.employee_id
           .clearfix
 
       - if current_user.has_admin_privilege?

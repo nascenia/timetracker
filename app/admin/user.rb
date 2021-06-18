@@ -55,11 +55,13 @@ ActiveAdmin.register User do
       (User.find obj.sttf_id).name if obj.sttf_id.present?
     end
 
-    column :is_active if actions
+    column :is_active
+    actions
   end
 
   show do
     attributes_table do
+      row :employee_id
       row :email
       row :name
       row :is_active
