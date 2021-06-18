@@ -3,7 +3,7 @@ ActiveAdmin.register User do
   permit_params :email, :name, :is_active, :role, :ttf_id, :sttf_id, :personal_email, :present_address, :mobile_number,
                 :alternate_contact, :permanent_address, :date_of_birth, :last_degree, :last_university, :passing_year,
                 :emergency_contact_person_name, :emergency_contact_person_relation, :emergency_contact_person_number,
-                :blood_group, :joining_date, :resignation_date, :is_published
+                :blood_group, :joining_date, :resignation_date, :is_published, :employee_id
 
   remove_filter :attendances, :leaves, :leave_tracker
   controller do
@@ -34,6 +34,7 @@ ActiveAdmin.register User do
   index do
     selectable_column
     id_column
+    column :employee_id
     column :name
     column :role do |id|
       if id.role == User::EMPLOYEE
@@ -84,6 +85,7 @@ ActiveAdmin.register User do
 
   form do |f|
     f.inputs 'User Details' do
+      f.input :employee_id
       f.input :email
       f.input :name
       f.input :is_active

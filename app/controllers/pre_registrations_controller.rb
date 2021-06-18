@@ -103,27 +103,30 @@ class PreRegistrationsController < ApplicationController
   # list between create and update. Also, you can specialize this method
   # with per-user checking of permissible attributes.
   def pre_registration_params
-    params.require(:pre_registration).permit(:name,
-                                             :companyEmail,
-                                             :joiningDate,
-                                             :datetime,
-                                             :designation,
-                                             :NdaSigned,
-                                             :ndaDoc,
-                                             :user_id,
-                                             :ttf_id,
-                                             :HR_email,
-                                             :emailGroup,
-                                             :contactNumber,
-                                             :personalEmail,
-                                             :holiday_scheme_id,
-                                             :weekend_id,
-                                             :workstationReady,
-                                             :packReady,
-                                             :salary_account_details_sent,
-                                             :employee_contract_sign,
-                                             :id_card_given,
-                                             :pic_and_other_relevant_info,
-                                             :has_sent_invitation_to_visit_internal_website)
+    params.require(:pre_registration).permit(
+      :name,
+      :companyEmail,
+      :joiningDate,
+      :datetime,
+      :designation,
+      :NdaSigned,
+      :ndaDoc,
+      :user_id,
+      :ttf_id,
+      :HR_email,
+      :emailGroup,
+      :contactNumber,
+      :personalEmail,
+      :holiday_scheme_id,
+      :weekend_id,
+      :workstationReady,
+      :packReady,
+      :salary_account_details_sent,
+      :employee_contract_sign,
+      :id_card_given,
+      :pic_and_other_relevant_info,
+      :has_sent_invitation_to_visit_internal_website,
+      :employee_id
+    )
   end
 end
