@@ -11,9 +11,10 @@ class ApprovalChainsController < ApplicationController
   end
 
   def show
-    @path_owners = PathChain.find_path_chain_users(@path.id)
-    @users = @path.users
+    @path_owners     = PathChain.find_path_chain_users(@path.id)
+    @users           = @path.users
     @available_users = User.active.where.not(id: @users | @path_owners ).order(name: :asc)
+    @inactive_users  = User.inactive.where.not(id: @users | @path_owners).order(name: :asc)
   end
 
   def new

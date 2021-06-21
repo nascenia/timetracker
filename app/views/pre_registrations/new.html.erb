@@ -124,7 +124,14 @@
                     <%= f.select :weekend_id, options_for_select(@weekend_scheme.collect{ | weekend | [weekend.name, weekend.id] }), {}, required: 'true', autofocus: 'true', class: 'form-control', id: 'select-other-projects' %>
                 </p>
             </div>
-
+            <div class = 'col-md-6' >
+                <%= f.label :employee_id do %>
+                    <%= 'Employee ID' %>
+                <% end %>
+                <p>
+                    <%= f.text_field :employee_id, autofocus: 'true', class: 'form-control' %>
+                </p>
+            </div>
         </div>
   
         <div class = 'row' >
