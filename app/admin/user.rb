@@ -87,7 +87,7 @@ ActiveAdmin.register User do
 
   form do |f|
     f.inputs 'User Details' do
-      f.input :employee_id
+      f.input :employee_id, label: 'Employee ID'
       f.input :email
       f.input :name
       f.input :is_active
