@@ -26,6 +26,21 @@
               - if current_user.id.eql?(@user.id)
                 .col-md-4
                   %h5= link_to 'Change supervisor/ttf', edit_user_registration_path(change_ttf: true)
+          
+          .row
+            .item-email
+              .col-md-4
+                %h5
+                  Leave Approval Path
+              .col-md-8
+                %h5
+                  - unless @user.approval_path.nil? || @user.approval_path.path_chains.empty?
+                    - count = @user.approval_path.path_chains.count
+                    - @user.approval_path.path_chains.order(priority: :desc).each do |chain|
+                      = chain.user.name
+                      - if count > 1
+                        %span.fa.fa-chevron-circle-right
+                      - count = count - 1
           .row
             .item-email
               .col-md-4
