@@ -19,7 +19,7 @@
             <td class='pre_reg_td'><%= employee.personalEmail %></td>
             <td class='pre_reg_td'><%= employee.contactNumber %></td>
             <td class='pre_reg_td'><%= employee.joiningDate%></td>
-            <td class='pre_reg_td'><%= link_to 'Edit', edit_pre_registration_path(employee,1) %></td>
+            <td class='pre_reg_td'><%= link_to 'Edit', edit_pre_registration_path(employee) %></td>
             <td class = 'pre_reg_td right' ><%= link_to 'Delete', pre_registration_path(employee), method: :delete, data: { confirm: 'Are you sure you want to delete this?' } %></td>
         </tr>
     <% end %>
@@ -130,7 +130,7 @@
                     <span class = 'required-asterisk' >*</span>
                 <% end %>
                 <p>
-                    <%= f.text_field :employee_id, autofocus: 'true', class: 'form-control', pattern: '[A-Za-z0-9]+$', required: 'true', maxlength: '6' %>
+                    <%= f.text_field :employee_id, autofocus: 'true', class: 'form-control', pattern: '[A-Za-z0-9]+$', required: 'true', maxlength: '5' %>
                 </p>
             </div>
         </div>

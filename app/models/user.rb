@@ -49,7 +49,7 @@ class User < ActiveRecord::Base
 
   devise :omniauthable, :omniauth_providers => [:google_oauth2]
 
-  validates :employee_id, presence: true, uniqueness: true, length: { is: 6 }
+  validates :employee_id, presence: true, uniqueness: true, length: { is: 5 }
   validates :employee_id, format: { with: /^A[A-Za-z0-9]+\z/, message: 'Only letter and number are allowed', multiline: true }
 
   SUPER_ADMIN_USERS = CONFIG['super_admins']

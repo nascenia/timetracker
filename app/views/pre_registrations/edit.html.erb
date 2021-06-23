@@ -102,7 +102,7 @@
                     <%= 'Employee ID' %>
                 <% end %>
                 <p>
-                    <%= f.text_field :employee_id, autofocus: 'true', class: 'form-control' %>
+                    <%= f.text_field :employee_id, autofocus: 'true', class: 'form-control', pattern: '[A-Za-z0-9]+$', required: 'true', maxlength: '5' %>
                 </p>
             </div>
         </div>

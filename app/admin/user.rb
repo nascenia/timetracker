@@ -34,7 +34,9 @@ ActiveAdmin.register User do
   index do
     selectable_column
     id_column
-    column :employee_id
+    column 'Employee ID' do |user|
+      user.employee_id
+    end
     column :name
     column :role do |id|
       if id.role == User::EMPLOYEE
@@ -61,7 +63,7 @@ ActiveAdmin.register User do
 
   show do
     attributes_table do
-      row :employee_id
+      row 'Employee ID', &:employee_id
       row :email
       row :name
       row :is_active
