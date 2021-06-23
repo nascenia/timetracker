@@ -49,6 +49,9 @@ class User < ActiveRecord::Base
 
   devise :omniauthable, :omniauth_providers => [:google_oauth2]
 
+  validates :employee_id, presence: true, uniqueness: true, length: { is: 6 }
+  validates :employee_id, format: { with: /^A[A-Za-z0-9]+\z/, message: 'Only letter and number are allowed', multiline: true }
+
   SUPER_ADMIN_USERS = CONFIG['super_admins']
   ADMIN_USERS = CONFIG['admins']
 
@@ -129,6 +132,7 @@ class User < ActiveRecord::Base
           mobile_number: pre_registration.contactNumber,
           joining_date: pre_registration.joiningDate,
           ttf_id: pre_registration.ttf_id,
+          employee_id: pre_registration.employee_id,
           password: Devise.friendly_token[0, 20]
         )
         Promotion.create(user: user, designation: pre_registration.designation, start_date: user.joining_date)
