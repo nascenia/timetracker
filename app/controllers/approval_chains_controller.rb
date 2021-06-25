@@ -11,10 +11,12 @@ class ApprovalChainsController < ApplicationController
   end
 
   def show
-    @path_owners     = PathChain.find_path_chain_users(@path.id)
-    @users           = @path.users
-    @available_users = User.active.where.not(id: @users | @path_owners ).order(name: :asc)
-    @inactive_users  = User.inactive.where.not(id: @users | @path_owners).order(name: :asc)
+    ignore_list       = User.where.not(approval_path_id: nil).map{ |u| u.id }
+    ignore_list       = ignore_list + User.where(email: 'shaer@nascenia.com').map{ |u| u.id }
+    @path_owners      = PathChain.find_path_chain_users(@path.id)
+    @users            = @path.users
+    @available_users  = User.active.where.not(id: ignore_list ).order(name: :asc)
+    @inactive_users   = User.inactive.where.not(id: ignore_list).order(name: :asc)
   end
 
   def new

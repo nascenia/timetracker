@@ -57,6 +57,20 @@
                 </p>
             </div>
 
+            <div class="col-md-6">
+                <%= f.label :leave_approval_path_id do %>
+                    <%= 'Leave Approval Path' %>
+                    <span class = 'required-asterisk' >*</span>
+                <% end %>
+                <p>
+                  <%= f.select :leave_approval_path_id, options_for_select(ApprovalPath.all.collect { | ap | [ap.name,  ap.id] }, selected: @pre_registration.leave_approval_path_id), {}, required: 'true', autofocus: 'true', class: 'form-control', id: '' %>
+                </p>
+                <p>
+                  <%= link_to 'Click here', new_approval_chain_path %>
+                  to create a leave approval path with this TTF first if not found.
+                </p>
+            </div>
+
             <div class = 'col-md-6' >
                 <%= f.label :contactNumber do %>
                     <%= 'Contact Number' %>
@@ -102,13 +116,12 @@
                     <%= 'Employee ID' %>
                 <% end %>
                 <p>
-                    <%= f.text_field :employee_id, autofocus: 'true', class: 'form-control' %>
+                    <%= f.text_field :employee_id, autofocus: 'true', class: 'form-control', pattern: '[A-Za-z0-9]+$', required: 'true', maxlength: '5' %>
                 </p>
             </div>
         </div>
 
         <div class = 'row' >
-
             <div class = 'col-md-6' >
                 <%= f.label :NdaSigned do %>
                     <%= f.check_box :NdaSigned, checked: @pre_registration.NdaSigned, required: true %>
