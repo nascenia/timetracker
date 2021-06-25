@@ -133,6 +133,7 @@ class User < ActiveRecord::Base
           joining_date: pre_registration.joiningDate,
           ttf_id: pre_registration.ttf_id,
           employee_id: pre_registration.employee_id,
+          approval_path_id: pre_registration.leave_approval_path_id,
           password: Devise.friendly_token[0, 20]
         )
         Promotion.create(user: user, designation: pre_registration.designation, start_date: user.joining_date)
