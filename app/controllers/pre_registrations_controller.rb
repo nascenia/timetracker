@@ -126,7 +126,8 @@ class PreRegistrationsController < ApplicationController
       :id_card_given,
       :pic_and_other_relevant_info,
       :has_sent_invitation_to_visit_internal_website,
-      :employee_id
+      :employee_id,
+      :leave_approval_path_id
     )
   end
 end

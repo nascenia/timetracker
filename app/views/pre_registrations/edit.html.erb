@@ -57,6 +57,16 @@
                 </p>
             </div>
 
+            <div class="col-md-6">
+                <%= f.label :leave_approval_path_id do %>
+                    <%= 'Leave Approval Path' %>
+                    <span class = 'required-asterisk' >*</span>
+                <% end %>
+                <p>
+                  <%= f.select :leave_approval_path_id, options_for_select(ApprovalPath.all.collect { | ap | [ap.name,  ap.id] }, selected: @pre_registration.leave_approval_path_id), {}, required: 'true', autofocus: 'true', class: 'form-control', id: '' %>
+                </p>
+            </div>
+
             <div class = 'col-md-6' >
                 <%= f.label :contactNumber do %>
                     <%= 'Contact Number' %>
@@ -108,7 +118,6 @@
         </div>
 
         <div class = 'row' >
-
             <div class = 'col-md-6' >
                 <%= f.label :NdaSigned do %>
                     <%= f.check_box :NdaSigned, checked: @pre_registration.NdaSigned, required: true %>
