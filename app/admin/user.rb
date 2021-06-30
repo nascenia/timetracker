@@ -94,8 +94,8 @@ ActiveAdmin.register User do
       f.input :name
       f.input :is_active
       f.input :role, as: :select, collection: User::ROLES
-      f.input :ttf_id, as: :select, collection: User.ttf
-      f.input :sttf_id, as: :select, collection: User.super_ttf
+      f.input :ttf_id, as: :select, collection: User.active.ttf
+      #f.input :sttf_id, as: :select, collection: User.super_ttf
       f.input :date_of_birth, start_year: 1970
       f.input :joining_date
       f.input :resignation_date, label: 'Date of Last Working Day'
