@@ -73,6 +73,13 @@ class ApprovalChainsController < ApplicationController
     redirect_to :back
   end
 
+  def ttf_own
+    path_chains     = PathChain.where(user_id: params[:user_id])
+    approval_paths  = ApprovalPath.where(id: path_chains.map{ |path_chain| path_chain.approval_path_id })
+
+    render json: { status: :ok, approval_paths: approval_paths }
+  end
+
   private
 
   def approval_path_params
