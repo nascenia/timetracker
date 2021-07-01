@@ -50,11 +50,18 @@ class UsersController < ApplicationController
     
     if params[:status] == 'Accept'
       hash_data = JSON.parse(@user.profile_update_json)
-      hash_data[:profile_update_json] = nil
 
+      unless @user.ttf_id.eql?(hash_data['ttf_id'].to_i)
+        change_now     = "<a href='/approval_chains'>Change Now</a>"
+        flash[:notice] = "TTF of this employee is changed successfully. However, you need to change the Leave Approval Path of this employee manually. #{change_now}.".html_safe
+      end
+
+      hash_data[:profile_update_json] = nil
       @user.update_attributes(hash_data) unless @user.profile_update_json.blank?
       @user.update_attribute(:registration_status, User::REGISTRATION_STATUS[:registered])
+
       flash[:warning] = 'User registration or profile data update request accepted'
+      
       redirect_to employee_path(@user)
     else
       @user.update_attribute(:registration_status, User::REGISTRATION_STATUS[:not_registered])
