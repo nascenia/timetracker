@@ -7,10 +7,13 @@ Internal::Application.routes.draw do
   ActiveAdmin.routes(self)
 
   resources :approval_chains do
-    member { post :assign }
-    collection { post :create_chain }
     member do
-      get :remove
+      get   :remove
+      post  :assign
+    end
+    collection do 
+      get   :ttf_own
+      post  :create_chain
     end
   end
 

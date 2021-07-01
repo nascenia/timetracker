@@ -72,7 +72,7 @@
                     <span class = 'required-asterisk' >*</span>
                 <% end %>
                 <p>
-                    <%= f.select :ttf_id, options_for_select( @ttf_list.collect { | ttf_list | [ttf_list.name,  ttf_list.id] }), {}, required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects' %>
+                    <%= f.select :ttf_id, options_for_select(@ttf_list.collect { | ttf_list | [ttf_list.name,  ttf_list.id] }), { include_blank: 'select' }, required: 'true', autofocus: 'true', class: 'form-control', id:'select-ttf' %>
                 </p>
             </div>
   
@@ -88,14 +88,14 @@
             <div class="col-md-6">
                 <%= f.label :leave_approval_path_id do %>
                     <%= 'Leave Approval Path' %>
-                    <span class = 'required-asterisk' >*</span>
+                    <span class = 'required-asterisk'>*</span>
                 <% end %>
                 <p>
-                  <%= f.select :leave_approval_path_id, options_for_select(ApprovalPath.all.collect { | ap | [ap.name,  ap.id] }), {}, required: 'true', autofocus: 'true', class: 'form-control', id: '' %>
+                  <%= f.select :leave_approval_path_id, options_for_select(ApprovalPath.all.collect { | ap | [ap.name,  ap.id] }), { include_blank: 'select' }, required: 'true', autofocus: 'true', class: 'form-control', id: 'leave-approval-path' %>
                 </p>
                 <p>
                   <%= link_to 'Click here', new_approval_chain_path %>
-                  to create a leave approval path with this TTF first if not found.
+                  to create a leave approval path with this TTF first, if not there is one already.
                 </p>
             </div>
 
@@ -181,4 +181,28 @@
         <%= f.submit 'Submit', class: 'btn btn-success' %>
         <% end %>
   </div>
-</div>    
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    //console.log('Loaded...');
+    $(document).on('change', 'select#select-ttf', function(event) {
+      //console.log('clicked!', event, $(this).children("option:selected").val());
+      $.ajax({
+        url: "/approval_chains/ttf_own",
+        type: "GET",
+        data:  { user_id: $(this).children("option:selected").val() },
+        beforeSend: function() {
+        },
+        success: function(response) {
+          var $el = $("select#leave-approval-path");
+          $el.empty();
+          $el.append($("<option></option>").attr('value', '').text('select'));
+          response.approval_paths.forEach(function(approval_path) {
+            $el.append($("<option></option>").attr("value", approval_path.id).text(approval_path.name));
+          });
+        }
+      });
+    });
+  });
+</script>
