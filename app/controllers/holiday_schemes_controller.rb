@@ -54,7 +54,8 @@ class HolidaySchemesController < ApplicationController
   end
 
   def assign_form
-    @available_users = User.has_no_holiday_scheme.order(name: :asc)
+    @available_users = User.active.has_no_holiday_scheme.order(name: :asc)
+    @inactive_users = User.inactive.has_no_holiday_scheme.order(name: :asc)
     @assigned_users = @holiday_scheme.users.order(name: :asc)
     @holidays = @holiday_scheme.holidays
   end

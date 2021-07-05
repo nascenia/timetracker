@@ -4,10 +4,15 @@
       .panel.panel-default
         .panel-heading
           %h4 Assign Users
+          %button#active-button.btn.btn-primary Active
+          %button#inactive-button.btn Inctive
         .panel-body
           = select_tag :employees,
                        options_from_collection_for_select(@available_users, :id, :name),
-                       multiple: true
+                       multiple: true, id: 'active-employees', style: 'width: 220px; height: 250px'
+          = select_tag :employees,
+                      options_from_collection_for_select(@inactive_users, :id, :name),
+                      multiple: true, id: 'inactive-employees', style: 'width: 220px; height: 250px'
         .panel-footer
           = submit_tag 'Assign Holiday Scheme',
                         class: 'btn btn-primary'
@@ -45,3 +50,27 @@
                     = owner.name
         - else
           %h5 No holidays found
+
+:javascript
+  $(document).ready(function() {
+    console.log('Ready....');
+    $('select#inactive-employees').hide();
+
+    $(document).on('click', 'button#active-button', function(event) {
+      event.preventDefault();
+      //Show active employee list
+      $('select#active-employees').show();
+      $('select#inactive-employees').hide();
+      $('button#active-button').addClass('btn-primary');
+      $('button#inactive-button').removeClass('btn-primary');
+    });
+
+    $(document).on('click', 'button#inactive-button', function(event) {
+      event.preventDefault();
+      //Show inactive employee list
+      $('select#active-employees').hide();
+      $('select#inactive-employees').show();
+      $('button#active-button').removeClass('btn-primary');
+      $('button#inactive-button').addClass('btn-primary');
+    });
+  });
