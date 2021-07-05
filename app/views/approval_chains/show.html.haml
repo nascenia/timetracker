@@ -9,10 +9,10 @@
         .panel-body
           = select_tag :employees,
                        options_from_collection_for_select(@available_users, :id, :name),
-                       multiple: true, id: 'active-employees', style: 'height: 200px'
+                       multiple: true, id: 'active-employees', style: 'width: 220px; height: 250px'
           = select_tag :employees,
                        options_from_collection_for_select(@inactive_users, :id, :name),
-                       multiple: true, id: 'inactive-employees', style: 'height: 200px'
+                       multiple: true, id: 'inactive-employees', style: 'width: 220px; height: 200px'
         .panel-footer
           = submit_tag 'Assign Path',
                         class: 'btn btn-primary'
