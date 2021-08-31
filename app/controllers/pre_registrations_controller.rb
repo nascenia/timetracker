@@ -35,11 +35,17 @@ class PreRegistrationsController < ApplicationController
     else
       pre_registration_params[:workstationReady] = true
     end
+
     pre_registration.step_no = 2
+
     if pre_registration.save
       UserMailer.send_new_employee_notification(pre_registration).deliver
       redirect_to new_pre_registration_path
+      return
     end
+
+    flash[:notice] = 'Validation failed unable to pre-register the user. Please make sure all input fields are entered properly.'
+    redirect_to new_pre_registration_path
   end
 
   def delete; end

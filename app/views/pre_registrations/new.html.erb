@@ -79,6 +79,7 @@
             <div class = 'col-md-6' >
                 <%= f.label :emailGroup do %>
                     <%= 'Suggested Email Group' %>
+                    <span class = 'required-asterisk' >*</span>
                 <% end %>
                 <p>
                     <%= f.text_field :emailGroup, class: 'form-control', required: 'true', maxlength: '128' %>
@@ -142,6 +143,7 @@
                 <%= f.label :employee_id do %>
                     <%= 'Employee ID' %>
                     <span class = 'required-asterisk' >*</span>
+                    <span>(Must be 5 character length)</span>
                 <% end %>
                 <p>
                     <%= f.text_field :employee_id, autofocus: 'true', class: 'form-control', pattern: '[A-Za-z0-9]+$', required: 'true', maxlength: '5' %>
