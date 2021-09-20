@@ -146,7 +146,7 @@
                     <span>(Must be 5 character length)</span>
                 <% end %>
                 <p>
-                    <%= f.text_field :employee_id, autofocus: 'true', class: 'form-control', pattern: '[A-Za-z0-9]+$', required: 'true', maxlength: '5' %>
+                    <%= f.text_field :employee_id, autofocus: 'true', class: 'form-control', placeholder: 'Example - A0001', pattern: '[A-Za-z0-9]+$', required: 'true', maxlength: '5' %>
                 </p>
             </div>
         </div>
