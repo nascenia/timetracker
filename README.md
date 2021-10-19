@@ -27,6 +27,14 @@ Things you may want to cover:
 
 * ...
 
+## Omniauth google oauth2
+Note: If you are using this app for your organization create and configure your own google app. 
 
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+In our case:
+```
+Both dev and production app is created from faruk@nascenia.com.
+Dev app name: TimeTracker production -> Nascenia Time Tracker Dev
+Production app name: TimeTracker production -> Nascenia Time Tracker
+```
+
+### Thank you.
