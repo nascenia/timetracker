@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210625105734) do
+ActiveRecord::Schema.define(version: 20211119103746) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -94,6 +94,14 @@ ActiveRecord::Schema.define(version: 20210625105734) do
   end
 
   add_index "exclusion_dates", ["excluded_id", "excluded_type"], name: "index_exclusion_dates_on_excluded_id_and_excluded_type", using: :btree
+
+  create_table "goal_categories", force: true do |t|
+    t.string   "title"
+    t.text     "description"
+    t.boolean  "published"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "holiday_schemes", force: true do |t|
     t.string   "name"
