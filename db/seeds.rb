@@ -25,3 +25,13 @@ if Designation.count.zero?
     { team: 'Developer', title: 'Senior Software Engineer', description: 'Senior software engineer', published: true }
   ])
 end
+
+if GoalCategory.count.zero?
+  p 'Creating goal categories...'
+  GoalCategory.create([
+    { title: 'Technical asset development', description: '', published: true },
+    { title: 'Develop skills',              description: '', published: true },
+    { title: 'Technical session',           description: '', published: true }
+  ])
+  p 'Done'
+end
