@@ -31,6 +31,7 @@
             Employee Onboarding
             - if employee_onboard != 0
               %span.badge= employee_onboard
+      %li= link_to 'Goals', goals_path
   %li{class: (params[:controller].eql?('users/registrations')? 'dropdown active' : 'dropdown')}
     %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
       = current_user.name

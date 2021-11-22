@@ -1,0 +1,54 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @goal.title %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @goal.description %>
+</p>
+
+<p>
+  <strong>Point:</strong>
+  <%= @goal.point %>
+</p>
+
+<p>
+  <strong>Percent completed:</strong>
+  <%= @goal.percent_completed %>
+</p>
+
+<p>
+  <strong>Achived point:</strong>
+  <%= @goal.achived_point %>
+</p>
+
+<p>
+  <strong>Deliverable link:</strong>
+  <%= @goal.deliverable_link %>
+</p>
+
+<p>
+  <strong>Comments:</strong>
+  <%= @goal.comments %>
+</p>
+
+<p>
+  <strong>Start date:</strong>
+  <%= @goal.start_date %>
+</p>
+
+<p>
+  <strong>End date:</strong>
+  <%= @goal.end_date %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @goal.status %>
+</p>
+
+<%= link_to 'Edit', edit_goal_path(@goal) %> |
+<%= link_to 'Back', goals_path %>
