@@ -1,0 +1,66 @@
+= form_for(@goal) do |f|
+  - if @goal.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@goal.errors.count, 'error')} prohibited this goal from being saved:"
+
+      %ul
+        - @goal.errors.full_messages.each do |msg|
+          %li= msg
+
+  .form-group
+    = f.radio_button :personal_or_team, "own"
+    = f.label :personal
+
+    = f.radio_button :personal_or_team, "team"
+    = f.label :team_member
+
+  .form-group
+    = f.label :user
+    = f.select :user, @team.map{ |u| [u.name, u.id]}, { include_blank: 'select'}, class: 'form-control'
+  
+  .form-group
+    = f.label :goal_category
+    = f.select :goal_category, @goal_categories.map{ |d| [d.title, d.id] }, { include_blank: 'select' }, class: 'form-control'
+
+  .form-group
+    = f.label :title
+    = f.text_field :title, class: 'form-control'
+
+  .form-group
+    = f.label :description
+    = f.text_area :description, class: 'form-control'
+
+  .form-group
+    = f.label :point
+    = f.text_field :point, class: 'form-control'
+
+  .form-group
+    = f.label :percent_completed
+    = f.text_field :percent_completed, class: 'form-control'
+
+  .form-group
+    = f.label :achived_point
+    = f.text_field :achived_point, class: 'form-control'
+
+  .form-group
+    = f.label :deliverable_link
+    = f.text_area :deliverable_link, class: 'form-control'
+
+  .form-group
+    = f.label :comments
+    = f.text_area :comments, class: 'form-control'
+  
+  .form-group
+    = f.label :start_date
+    = f.date_select :start_date, class: 'form-control'
+  
+  .form-group
+    = f.label :end_date
+    = f.date_select :end_date, class: 'form-control'
+  
+  .form-group
+    = f.label :status
+    = f.number_field :status, class: 'form-control'
+
+  .actions
+    = f.submit

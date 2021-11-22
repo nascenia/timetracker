@@ -30,6 +30,8 @@ class User < ActiveRecord::Base
   has_many :timesheets, dependent: :destroy
   has_and_belongs_to_many :projects
 
+  has_many  :goals
+  
   #
   # Callbacks
   #
