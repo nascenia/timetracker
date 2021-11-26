@@ -19,18 +19,18 @@
     .col-md-4
       .form-group
         = f.label 'Team member'
-        = f.select :user_id, @team.map{ |u| [u.name, u.id] }, { include_blank: 'select' }, class: 'form-control', disabled: 'disabled'
+        = f.select :team_member, @team.map{ |u| [u.name, u.id] }, { include_blank: 'select' }, class: 'form-control', disabled: 'disabled'
+        = f.hidden_field :user_id, value: current_user.id
     .col-md-4
       .form-group
         = f.label 'Time period'
         = f.select :time_period, [['Q-1', '0'], ['Q-2', '1'], ['Q-3', '2'], ['Q-4', '3']], { include_blank: 'select'}, class: 'form-control'
-
   %hr
   .row
     .col-md-4
       .form-group
         = f.label :goal_category
-        = f.select :goal_category, @goal_categories.map{ |d| [d.title, d.id] }, { include_blank: 'select' }, class: 'form-control'
+        = f.select :goal_category_id, @goal_categories.map{ |d| [d.title, d.id] }, { include_blank: 'select' }, class: 'form-control'
 
     .col-md-4
       .form-group
@@ -58,13 +58,18 @@
         = f.label :description
         = f.text_area :description, class: 'form-control'
     
-  .actions
+  .row.col-md-12
     = f.submit class: 'btn btn-primary'
+
+%br
+%br
 
 :javascript
   $(document).ready(function() {
-
-    console.log('loading..');
+    let goal = { 
+      own: $('#goal_user_id').val(),
+      team: null
+    };
     let year = new Date().getFullYear();
     let quaters = [
       { start_date: '01-01-' + year, end_date: '31-03-' + year },
@@ -74,31 +79,27 @@
     ];
 
     $(document).on('click', 'input[type=radio]', function() {
-      console.log('clicked');
 
       let selected = $('input[name="goal[personal_or_team]"]:checked').val();
-      console.log(selected);
+
       if(selected == 'own') {
-        $('#goal_user_id').prop('disabled', 'disabled');
+        $('#goal_team_member').prop('disabled', 'disabled');
       } else {
-        $('#goal_user_id').prop('disabled', '');
+        $('#goal_team_member').prop('disabled', '');
       }
-      
     });
 
+    $(document).on('change', 'select#goal_team_member', function() {
+      goal.team = $(this).children('option:selected').val();
+
+      $('#goal_user_id').val(goal.team);
+    });
 
     $(document).on('change', 'select#goal_time_period', function() {
-
-      console.log('change');
-
       let selectedQuater = $(this).children("option:selected").val();
-      console.log(quaters[selectedQuater]);
-
 
       $('#goal_start_date').val(quaters[selectedQuater].start_date);
       $('#goal_end_date').val(quaters[selectedQuater].end_date);
-
     });
-
 
   });
