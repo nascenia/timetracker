@@ -86,4 +86,12 @@ module ApplicationHelper
   def hidden_field_tag(name, value = true, options = {})
     text_field_tag(name, value, options.merge(type: :hidden))
   end
+
+  def blank_space count=1
+    space = ''
+    count.times do
+      space = space + '&nbsp;'
+    end
+    space.html_safe
+  end
 end
