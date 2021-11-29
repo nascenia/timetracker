@@ -74,9 +74,20 @@
     });
 
     $(document).on('change', 'select#goal_year', function() {
-      console.log($(this).children("option:selected").val());
       year = $(this).children("option:selected").val();
 
+      let start_date = $('#goal_start_date').val();
+      let end_date = $('#goal_end_date').val();
+
+      if(start_date != '') {
+        let tokens = start_date.split('-');
+        $('#goal_start_date').val(tokens[0] + '-' + tokens[1] + '-' + year);
+      }
+
+      if(end_date != '') {
+        let tokens = end_date.split('-');
+        $('#goal_end_date').val(tokens[0] + '-' + tokens[1] + '-' + year);
+      }
     });
 
     $(document).on('change', 'select#goal_time_period', function() {
