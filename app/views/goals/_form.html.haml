@@ -59,6 +59,7 @@
         = f.text_area :description, class: 'form-control'
     
   .row.col-md-12
+    = f.hidden_field :status, value: 0
     = f.submit class: 'btn btn-primary'
 
 %br
