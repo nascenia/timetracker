@@ -31,7 +31,7 @@
         %td= goal.achived_point
         %td= goal.start_date
         %td= goal.end_date
-        %td= goal.status
+        %td= goal.status.blank? ? '-' : Goal::STATUSES[goal.status]
         %td= link_to 'Show', goal
         %td= link_to 'Edit', edit_goal_path(goal)
         %td= link_to 'Destroy', goal, method: :delete, data: { confirm: 'Are you sure?' }
