@@ -2,3 +2,7 @@
 %hr
 
 = render 'form'
+
+- unless @goals.size.zero?
+  %hr
+  = render 'list'

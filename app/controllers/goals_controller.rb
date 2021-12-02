@@ -6,8 +6,9 @@ class GoalsController < ApplicationController
 
   # GET /goals
   def index
-    @goals = Goal.search(params[:goal], current_user)
-    @team  = User.active.where(ttf: current_user)
+    user_id = params.blank? ? current_user.id : params[:user_id]
+    @goals  = Goal.search(params[:goal], user_id)
+    @team   = User.active.where(ttf: current_user)
   end
 
   # GET /goals/1
@@ -19,6 +20,8 @@ class GoalsController < ApplicationController
     @goal             = Goal.new
     @goal_categories  = GoalCategory.where(published: true)
     @team             = User.active.where(ttf: current_user)
+    @goals            = []
+    @goals            = Goal.search(params, params[:user_id]) unless params[:user_id].blank?
   end
 
   # GET /goals/1/edit
@@ -30,7 +33,7 @@ class GoalsController < ApplicationController
     @goal = Goal.new(goal_params)
 
     if @goal.save
-      redirect_to goals_url, notice: 'Goal was successfully created.'
+      redirect_to new_goal_path(user_id: goal_params[:user_id], time_period: params[:goal][:time_period], start_date: goal_params[:start_date], end_date: goal_params[:end_date]), notice: 'Goal was successfully created.'
     else
       render :new
     end
