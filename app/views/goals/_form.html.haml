@@ -1,3 +1,13 @@
+- user_id             = params[:user_id].blank? ? current_user.id : params[:user_id]
+- time_period         = params[:time_period].blank? ? '' : params[:time_period]
+- start_date          = params[:start_date].blank? ? '' : params[:start_date]
+- end_date            = params[:end_date].blank? ? '' : params[:end_date]
+- team_member         = params[:team_member].blank? ? '' : params[:team_member]
+- goal_category_id    = params[:goal_category_id].blank? ? '' : params[:goal_category_id]
+- title               = params[:title].blank? ? '' : params[:title]
+- point               = params[:point].blank? ? '' : params[:point]
+- description         = params[:description].blank? ? '' : params[:description]
+
 = form_for(@goal, class: 'form-horizontal') do |f|
   - if @goal.errors.any?
     #error_explanation
@@ -11,15 +21,15 @@
     .col-md-4
       .form-group
         = f.label 'Time period'
-        = f.select :time_period, [['Q-1', '0'], ['Q-2', '1'], ['Q-3', '2'], ['Q-4', '3']], { include_blank: 'select'}, class: 'form-control'
+        = f.select :time_period, options_for_select([['Q-1', '0'], ['Q-2', '1'], ['Q-3', '2'], ['Q-4', '3']], time_period), { include_blank: 'select'}, class: 'form-control'
     .col-md-4
       .form-group
         = f.label :start_date
-        = f.text_field :start_date, class: 'form-control'
+        = f.text_field :start_date, value: start_date, class: 'form-control'
     .col-md-4
       .form-group
         = f.label :end_date
-        = f.text_field :end_date, class: 'form-control'
+        = f.text_field :end_date, value: end_date, class: 'form-control'
 
   %hr
   .row
@@ -34,32 +44,32 @@
     .col-md-4
       .form-group
         = f.label 'Team member'
-        = f.select :team_member, @team.map{ |u| [u.name, u.id] }, { include_blank: 'select' }, class: 'form-control', disabled: 'disabled'
-        = f.hidden_field :user_id, value: current_user.id
+        = f.select :team_member, options_for_select(@team.map{ |u| [u.name, u.id] }, team_member), { include_blank: 'select' }, class: 'form-control', disabled: 'disabled'
+        = f.hidden_field :user_id, value: user_id
     .col-md-4
       .form-group
         = f.label :goal_category
-        = f.select :goal_category_id, @goal_categories.map{ |d| [d.title, d.id] }, { include_blank: 'select' }, class: 'form-control'
+        = f.select :goal_category_id, options_for_select(@goal_categories.map{ |d| [d.title, d.id] }, goal_category_id), { include_blank: 'select' }, class: 'form-control'
 
   .row
     .col-md-8
       .form-group
         = f.label :title
-        = f.text_field :title, class: 'form-control'
+        = f.text_field :title, value: title, class: 'form-control'
     .col-md-4
       .form-group
         = f.label :point
-        = f.text_field :point, class: 'form-control'
+        = f.text_field :point, value: point, class: 'form-control'
 
   .row
     .col-md-12
       .form-group
         = f.label :description
-        = f.text_area :description, class: 'form-control'
+        = f.text_area :description, value: description, class: 'form-control'
     
   .row.col-md-12
     = f.hidden_field :status, value: 0
-    = f.submit class: 'btn btn-primary'
+    = f.submit 'Submit', class: 'btn btn-primary'
 
 %br
 %br

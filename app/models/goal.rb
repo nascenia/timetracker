@@ -13,9 +13,7 @@ class Goal < ActiveRecord::Base
     validates   :point, presence: true, numericality: true
 
 
-    def self.search(params = {}, current_user)
-        user_id = params.blank? ? current_user.id : params[:user_id]
-
+    def self.search(params = {}, user_id)
         goal = self
         goal = goal.where(user_id: user_id)
         unless params.blank? 
