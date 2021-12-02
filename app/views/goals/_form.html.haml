@@ -1,8 +1,8 @@
-- user_id             = params[:user_id].blank? ? current_user.id : params[:user_id]
+- user_id             = params[:user_id].blank? ? current_user.id : params[:user_id].to_i
 - time_period         = params[:time_period].blank? ? '' : params[:time_period]
 - start_date          = params[:start_date].blank? ? '' : params[:start_date]
 - end_date            = params[:end_date].blank? ? '' : params[:end_date]
-- team_member         = params[:team_member].blank? ? '' : params[:team_member]
+- team_member         = user_id
 - goal_category_id    = params[:goal_category_id].blank? ? '' : params[:goal_category_id]
 - title               = params[:title].blank? ? '' : params[:title]
 - point               = params[:point].blank? ? '' : params[:point]
@@ -37,9 +37,9 @@
       .form-group
         = f.label 'Persoonal or team'
         %br
-        = f.radio_button :personal_or_team, "own", { checked: true }
+        = f.radio_button :personal_or_team, "own", { checked: current_user.id == user_id }
         Own goal
-        = f.radio_button :personal_or_team, "team"
+        = f.radio_button :personal_or_team, "team", { checked: current_user.id != user_id }
         Team goal
     .col-md-4
       .form-group

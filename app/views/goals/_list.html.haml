@@ -1,27 +1,19 @@
 %table.table
   %thead
     %tr
-      %th Title
-      %th Description
-      %th Point
-      %th % completed
-      %th Achived point
-      %th Start date
-      %th End date
-      %th Status
-      %th
-      %th
-      %th
+      %th{ width: '35%' } Title
+      %th{ width: '30%' } Description
+      %th{ width: '10%' } Point
+      %th{ width: '10%' } Status
+      %th{ width: '5%' }
+      %th{ width: '5%' }
+      %th{ width: '5%' }
   %tbody
     - @goals.each do |goal|
       %tr
         %td= goal.title
         %td= goal.description
         %td= goal.point
-        %td= goal.percent_completed
-        %td= goal.achived_point
-        %td= goal.start_date
-        %td= goal.end_date
         %td= goal.status.blank? ? '-' : Goal::STATUSES[goal.status]
         %td= link_to 'Show', goal
         %td= link_to 'Edit', edit_goal_path(goal)
