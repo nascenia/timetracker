@@ -7,6 +7,7 @@
 - title               = params[:title].blank? ? '' : params[:title]
 - point               = params[:point].blank? ? '' : params[:point]
 - description         = params[:description].blank? ? '' : params[:description]
+- status              = params[:status].blank? ? 0 : params[:status]
 
 = form_for(@goal, class: 'form-horizontal') do |f|
   - if @goal.errors.any?
@@ -62,11 +63,14 @@
         = f.text_field :point, value: point, class: 'form-control'
 
   .row
-    .col-md-12
+    .col-md-8
       .form-group
         = f.label :description
         = f.text_area :description, value: description, class: 'form-control'
-    
+    .col-md-4
+      .form-group
+        = f.label :status
+        = f.select :status, options_for_select(Goal::STATUSES.each_with_index.map{ |v, i| [v, i] }, status), {}, class: 'form-control'
   .row.col-md-12
     = f.hidden_field :status, value: 0
     = f.submit 'Submit', class: 'btn btn-primary'
