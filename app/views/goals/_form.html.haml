@@ -72,7 +72,6 @@
         = f.label :status
         = f.select :status, options_for_select(Goal::STATUSES.each_with_index.map{ |v, i| [v, i] }, status), {}, class: 'form-control'
   .row.col-md-12
-    = f.hidden_field :status, value: 0
     = f.submit 'Submit', class: 'btn btn-primary'
 
 %br
