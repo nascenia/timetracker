@@ -26,6 +26,8 @@ class GoalsController < ApplicationController
 
   # GET /goals/1/edit
   def edit
+    @goal_categories  = GoalCategory.where(published: true)
+    @team             = User.active.where(ttf: current_user)
   end
 
   # POST /goals
