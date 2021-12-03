@@ -1,54 +1,39 @@
-<p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Title:</strong>
-  <%= @goal.title %>
-</p>
-
-<p>
-  <strong>Description:</strong>
-  <%= @goal.description %>
-</p>
-
-<p>
-  <strong>Point:</strong>
-  <%= @goal.point %>
-</p>
-
-<p>
-  <strong>Percent completed:</strong>
-  <%= @goal.percent_completed %>
-</p>
-
-<p>
-  <strong>Achived point:</strong>
-  <%= @goal.achived_point %>
-</p>
-
-<p>
-  <strong>Deliverable link:</strong>
-  <%= @goal.deliverable_link %>
-</p>
-
-<p>
-  <strong>Comments:</strong>
-  <%= @goal.comments %>
-</p>
-
-<p>
-  <strong>Start date:</strong>
-  <%= @goal.start_date %>
-</p>
-
-<p>
-  <strong>End date:</strong>
-  <%= @goal.end_date %>
-</p>
-
-<p>
-  <strong>Status:</strong>
-  <%= @goal.status %>
-</p>
-
-<%= link_to 'Edit', edit_goal_path(@goal) %> |
-<%= link_to 'Back', goals_path %>
+%table.table
+  %thead
+    %th{ width: '25%' } Property
+    %th{ width: '75%' } Value
+  %tbody
+    %tr
+      %td Title
+      %td= @goal.title
+    %tr
+      %td Description
+      %td= @goal.description
+    %tr
+      %td Point
+      %td= @goal.point
+    %tr
+      %td Percent completed:
+      %td= @goal.percent_completed
+    %tr
+      %td Achived point
+      %td= @goal.achived_point
+    %tr
+      %td Deliverable link
+      %td= @goal.deliverable_link
+    %tr
+      %td Comments
+      %td= @goal.comments
+    %tr
+      %td Start date
+      %td= @goal.start_date
+    %tr
+      %td End date
+      %td= @goal.end_date
+    %tr
+      %td Status
+      %td= @goal.status
+    
+= link_to 'Edit', edit_goal_path(@goal)
+= link_to 'Back', goals_path
