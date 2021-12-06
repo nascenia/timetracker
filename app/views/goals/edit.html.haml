@@ -29,19 +29,19 @@
       .form-group
         = f.label 'Persoonal or team'
         %br
-        = f.radio_button :personal_or_team, "own", { checked: false }
+        = f.radio_button :personal_or_team, "own", { checked: @goal.user_id == current_user.id }
         Own goal
-        = f.radio_button :personal_or_team, "team", { checked: false }
+        = f.radio_button :personal_or_team, "team", { checked: @goal.user_id != current_user.id }
         Team goal
     .col-md-4
       .form-group
         = f.label 'Team member'
-        = f.select :team_member, options_for_select(@team.map{ |u| [u.name, u.id] }), { include_blank: 'select' }, class: 'form-control', disabled: 'disabled'
+        = f.select :team_member, options_for_select(@team.map{ |u| [u.name, u.id] }, @goal.user_id), { include_blank: 'select' }, class: 'form-control', disabled: @goal.user_id == current_user.id
         = f.hidden_field :user_id
     .col-md-4
       .form-group
         = f.label :goal_category
-        = f.select :goal_category_id, options_for_select(@goal_categories.map{ |d| [d.title, d.id] }), { include_blank: 'select' }, class: 'form-control'
+        = f.select :goal_category_id, options_for_select(@goal_categories.map{ |d| [d.title, d.id] }, @goal.goal_category_id), { include_blank: 'select' }, class: 'form-control'
 
   .row
     .col-md-8
