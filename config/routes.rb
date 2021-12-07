@@ -102,7 +102,11 @@ Internal::Application.routes.draw do
     resources :promotions, only: [:new, :create]
   end
 
-  resources :goals
+  resources :goals do
+    collection do
+      get :review
+    end
+  end
   
   root :to => 'dashboard#index'
 end

@@ -56,6 +56,12 @@ class GoalsController < ApplicationController
     redirect_to goals_url, notice: 'Goal was successfully destroyed.'
   end
 
+  # GET /goals/review
+  def review
+    user_id = params[:goal].blank? ? current_user.id : params[:goal][:user_id]
+    @goals  = Goal.search(params[:goal], user_id)
+    @team   = User.active.where(ttf: current_user)
+  end
 
   private
   # Use callbacks to share common setup or constraints between actions.
