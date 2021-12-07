@@ -48,7 +48,7 @@
       %label End date
       %br
       = goal.end_date.strftime('%d-%m-%Y')
-  = form_for(:goal, url: review_goals_path, method: :get, html: { class: 'review-confirmation', id: "goal-id-#{goal.id}" }) do |f|
+  = form_for(:goal, url: goal_path(goal), method: :put, html: { class: 'review-confirmation', id: "goal-id-#{goal.id}" }) do |f|
     .row
       .col-md-6
         %label Title
@@ -136,8 +136,19 @@
 
       e.preventDefault();
     
-      console.log($(this).serialize());
+      let formData = $(this).serialize();
+      console.log(formData);
+      console.log($(this).attr('action'));
 
-      //$(this).append($(this).serialize() + '<br />');
+      $.ajax({
+        type: 'POST',
+        url: $(this).attr('action'),
+        data: formData,
+        dataType: 'JSON',
+        encode: true,
+      }).done(function (data) {
+        console.log(data);
+      });
+
     });
   });
