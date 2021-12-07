@@ -1,0 +1,143 @@
+%h1 Team members goal review
+%hr
+
+- team_member   = params[:commit] == 'Search' ? params[:goal][:team_member] : ''
+- year          = params[:commit] == 'Search' ? params[:goal][:year] : ''
+- time_period   = params[:commit] == 'Search' ? params[:goal][:time_period] : ''
+- start_date    = params[:commit] == 'Search' ? params[:goal][:start_date] : ''
+- end_date      = params[:commit] == 'Search' ? params[:goal][:end_date] : ''
+
+= form_for(:goal, url: review_goals_path, method: :get, html: { class: '' }) do |f|
+  .row
+    .col-md-2
+      .form-group
+        = f.label 'Team member'
+        = f.select :team_member, options_for_select(@team.map{ |u| [u.name, u.id] }, team_member), { include_blank: 'select' }, class: 'form-control'
+        = f.hidden_field :user_id, value: params[:goal].blank? ? '' : params[:goal][:user_id]
+    .col-md-2
+      .form-group
+        - c_y = Time.now.year
+        - s_y = c_y - 10
+        = f.label 'Year'
+        = f.select :year, options_for_select((s_y..c_y).to_a.map{ |y| [y, y] }.reverse, year), { include_blank: 'select' }, class: 'form-control'
+    .col-md-2
+      .form-group
+        = f.label 'Time period'
+        = f.select :time_period, options_for_select([['Q-1', '0'], ['Q-2', '1'], ['Q-3', '2'], ['Q-4', '3']], time_period), { include_blank: 'select'}, class: 'form-control'
+    .col-md-2
+      .form-group
+        = f.label :start_date
+        = f.text_field :start_date, value: start_date, class: 'form-control'
+    .col-md-2
+      .form-group
+        = f.label :end_date
+        = f.text_field :end_date, value: end_date, class: 'form-control'
+    .col-md-2.form-group
+      = blank_space
+      = f.submit 'Search', class: 'btn btn-info btn-block'
+
+
+- @goals.each do |goal|
+  %hr
+  .row
+    .col-md-6
+      %label Start date
+      %br
+      = goal.start_date.strftime('%d-%m-%Y')
+    .col-md-6
+      %label End date
+      %br
+      = goal.end_date.strftime('%d-%m-%Y')
+  = form_for(:goal, url: review_goals_path, method: :get, html: { class: 'review-confirmation', id: "goal-id-#{goal.id}" }) do |f|
+    .row
+      .col-md-6
+        %label Title
+        %br
+        = goal.title
+      .col-md-6
+        %label Point
+        %br
+        = f.text_field :point, value: goal.point, class: 'form-control', disabled: :disabled
+    .row
+      .col-md-6
+        %label Description
+        %br
+        = goal.description
+      .col-md-6
+        %label Percent completed
+        = f.text_field :percent_completed, class: 'form-control'
+    .row
+      .col-md-6
+        %label Comment
+        = f.text_area :comment, class: 'form-control'
+      .col-md-6
+        %label Achieved point
+        = f.text_field :point_achieved, class: 'form-control', disabled: :disabled
+        = f.hidden_field :achived_point
+    .row
+      .col-md-12
+        %br
+        = f.submit 'Save', class: 'btn btn-primary'
+
+:javascript
+  $(document).ready(function() {
+    let goal = { 
+      team: $('#goal_user_id').val()
+    };
+    let year = new Date().getFullYear();
+    let quaters = [
+      { start_date: '01-01-', end_date: '31-03-' },
+      { start_date: '01-04-', end_date: '30-06-' },
+      { start_date: '01-07-', end_date: '30-09-' },
+      { start_date: '01-10-', end_date: '31-12-' }
+    ];
+
+    $(document).on('change', 'select#goal_team_member', function() {
+      goal.team = $(this).children('option:selected').val();
+
+      $('#goal_user_id').val(goal.team);
+    });
+
+    $(document).on('change', 'select#goal_year', function() {
+      year = $(this).children("option:selected").val();
+
+      let start_date = $('#goal_start_date').val();
+      let end_date = $('#goal_end_date').val();
+
+      if(start_date != '') {
+        let tokens = start_date.split('-');
+        $('#goal_start_date').val(tokens[0] + '-' + tokens[1] + '-' + year);
+      }
+
+      if(end_date != '') {
+        let tokens = end_date.split('-');
+        $('#goal_end_date').val(tokens[0] + '-' + tokens[1] + '-' + year);
+      }
+    });
+
+    $(document).on('change', 'select#goal_time_period', function() {
+      let selectedQuater = $(this).children("option:selected").val();
+
+      $('#goal_start_date').val(quaters[selectedQuater].start_date + year);
+      $('#goal_end_date').val(quaters[selectedQuater].end_date + year);
+    });
+
+    $(document).on('focusout', 'input.form-control', function($this) {
+      let form = 'form#' + $this.currentTarget.form.id;
+      let point = parseFloat($(form + ' input#goal_point').val());
+      let percent_completed = parseFloat($(form + ' input#goal_percent_completed').val());
+      let achieved_point = (point * percent_completed) / 100.0;
+
+      $(form + ' input#goal_achived_point').val(achieved_point);
+      $(form + ' input#goal_point_achieved').val(achieved_point);
+    });
+
+    $(document).on('submit', 'form.review-confirmation', function(e) {
+
+      e.preventDefault();
+    
+      console.log($(this).serialize());
+
+      //$(this).append($(this).serialize() + '<br />');
+    });
+  });
