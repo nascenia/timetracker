@@ -44,7 +44,10 @@ class GoalsController < ApplicationController
   # PATCH/PUT /goals/1
   def update
     if @goal.update(goal_params)
-      redirect_to goals_url, notice: 'Goal was successfully updated.'
+      respond_to do |format|
+        format.html { redirect_to goals_url, notice: 'Goal was successfully updated.' }
+        format.js   { render json: { status: 200, notice: 'Review submitted successfully.' }}
+      end
     else
       render :edit
     end
