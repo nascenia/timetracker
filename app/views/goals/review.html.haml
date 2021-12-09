@@ -78,6 +78,7 @@
       .col-md-12
         %br
         = f.submit 'Save', class: 'btn btn-primary'
+        .alert.alert-success#review-success{ style: 'display: none' }
 
 :javascript
   $(document).ready(function() {
@@ -135,10 +136,8 @@
     $(document).on('submit', 'form.review-confirmation', function(e) {
 
       e.preventDefault();
-    
+      let form = 'form#' + $(this).attr('id');
       let formData = $(this).serialize();
-      console.log(formData);
-      console.log($(this).attr('action'));
 
       $.ajax({
         type: 'POST',
@@ -147,7 +146,9 @@
         dataType: 'JSON',
         encode: true,
       }).done(function (data) {
-        console.log(data);
+        $(form + " input.btn.btn-primary").hide();
+        $(form + " div#review-success").html(data.notice);
+        $(form + " div#review-success").show();
       });
 
     });
