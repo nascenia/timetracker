@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20211119111926) do
+ActiveRecord::Schema.define(version: 20211222095304) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -215,6 +215,14 @@ ActiveRecord::Schema.define(version: 20211119111926) do
   end
 
   add_index "path_chains", ["approval_path_id"], name: "index_path_chains_on_approval_path_id", using: :btree
+
+  create_table "performance_categories", force: true do |t|
+    t.string   "title"
+    t.text     "description"
+    t.boolean  "published"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "pre_registrations", force: true do |t|
     t.string   "name"
