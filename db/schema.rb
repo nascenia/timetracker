@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20211227060424) do
+ActiveRecord::Schema.define(version: 20211227061542) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -167,7 +167,10 @@ ActiveRecord::Schema.define(version: 20211227060424) do
     t.integer  "status"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "kpi_template_id"
   end
+
+  add_index "kpi_items", ["kpi_template_id"], name: "index_kpi_items_on_kpi_template_id", using: :btree
 
   create_table "kpi_templates", force: true do |t|
     t.string   "title"
