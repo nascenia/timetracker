@@ -107,6 +107,8 @@ Internal::Application.routes.draw do
       get :review
     end
   end
+
+  resources :kpi_items
   
   root :to => 'dashboard#index'
 end

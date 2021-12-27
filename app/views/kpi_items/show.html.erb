@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @kpi_item.title %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @kpi_item.description %>
+</p>
+
+<p>
+  <strong>Score:</strong>
+  <%= @kpi_item.score %>
+</p>
+
+<p>
+  <strong>Start date:</strong>
+  <%= @kpi_item.start_date %>
+</p>
+
+<p>
+  <strong>End date:</strong>
+  <%= @kpi_item.end_date %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @kpi_item.status %>
+</p>
+
+<%= link_to 'Edit', edit_kpi_item_path(@kpi_item) %> |
+<%= link_to 'Back', kpi_items_path %>
