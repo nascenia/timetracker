@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20211222095304) do
+ActiveRecord::Schema.define(version: 20211227043606) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -157,6 +157,14 @@ ActiveRecord::Schema.define(version: 20211222095304) do
   end
 
   add_index "honor_board_contents", ["honor_board_category_id"], name: "index_honor_board_contents_on_honor_board_category_id", using: :btree
+
+  create_table "kpi_templates", force: true do |t|
+    t.string   "title"
+    t.text     "description"
+    t.boolean  "published"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "leave_trackers", force: true do |t|
     t.integer  "user_id"
