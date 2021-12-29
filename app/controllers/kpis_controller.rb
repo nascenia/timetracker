@@ -6,9 +6,7 @@ class KpisController < InheritedResources::Base
 
   # GET /kpis
   def index
-    user_id = params[:kpi].blank? ? current_user.id : params[:kpi][:user_id]
-    @kpis  = Kpi.search(params[:kpi], user_id)
-    @team   = User.active.where(ttf: current_user)
+    @kpis  = Kpi.where(user_id: params[:user_id])
   end
 
   # GET /kpis/1
@@ -32,12 +30,16 @@ class KpisController < InheritedResources::Base
   def create
     @kpi = Kpi.new(kpi_params)
     kpi_template = KpiTemplate.includes(:kpi_items).find(params[:kpi][:kpi_template_id])
-    byebug
-    if @kpi.save
-      redirect_to employees_path notice: 'KPI was successfully assigned to the employee.'
-    else
-      render :new
+    
+    kpi_template.kpi_items.each do |kpi_item|
+      kpi = Kpi.new
+      kpi.user_id  =  params[:kpi][:user_id].to_i
+      kpi.title = kpi_item.title
+      kpi.description = kpi_item.description
+      kpi.save
     end
+
+    redirect_to employees_path, notice: 'KPI was successfully assigned to the employee.'
   end
 
   # PATCH/PUT /kpis/1
