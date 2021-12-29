@@ -108,6 +108,7 @@ Internal::Application.routes.draw do
     end
   end
 
+  resources :kpis
   resources :kpi_items
   
   root :to => 'dashboard#index'
