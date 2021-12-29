@@ -45,9 +45,9 @@
             %td= employee.blood_group
             - if current_user.has_admin_privilege?
               %td= employee.joining_date
-              %td= link_to 'Assign KPI', kpis_path(user_id: employee)
+              %td= link_to 'Assign KPI', new_kpi_path(user_id: employee)
             -if employee.ttf_id?
-              %td= User.find(employee.ttf_id).name
+              %td= employee.ttf.name
             -else
               %td= "N/A"
 
