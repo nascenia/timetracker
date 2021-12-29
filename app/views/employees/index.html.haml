@@ -11,36 +11,31 @@
         %th{:width => '5%'} Blood Group
         - if current_user.has_admin_privilege?
           %th{:width => '10%'} Joining Date
+          %th{:width => '10%'} KPI
         %th{:width => '15%'} TTF
     %tbody.word-break
       - @employees.each do |employee|
         - if @pending_employees_company_emails.include?(employee.email) and current_user.has_admin_privilege?
           %tr
-            %td.bg-danger
-              = link_to employee.name, employee_path(employee)
-            %td.bg-danger
-              = employee.email
+            %td.bg-danger= link_to employee.name, employee_path(employee)
+            %td.bg-danger= employee.email
             - if employee.mobile_number.present?
               %td.bg-danger
                 %a{:href =>"Tel:#{employee.mobile_number}"}= employee.mobile_number
             - else
-              %td.bg-danger
-                = 'N/A'
+              %td.bg-danger= 'N/A'
             %td.bg-danger
               = employee.blood_group
             - if current_user.has_admin_privilege?
-              %td.bg-danger
-                = employee.joining_date
+              %td.bg-danger= employee.joining_date
+              %td= 'N/A'
             -if employee.ttf_id?
-              %td.bg-danger
-                = User.find(employee.ttf_id).name
+              %td.bg-danger= employee.ttf.name
             -else
-              %td.bg-danger
-                = "N/A"
+              %td.bg-danger= "N/A"
         - else
           %tr
-            %td
-              = link_to employee.name, employee_path(employee)
+            %td= link_to employee.name, employee_path(employee)
             %td= employee.email
             - if employee.mobile_number.present?
               %td
@@ -50,6 +45,7 @@
             %td= employee.blood_group
             - if current_user.has_admin_privilege?
               %td= employee.joining_date
+              %td= link_to 'Assign KPI', kpis_path(user_id: employee)
             -if employee.ttf_id?
               %td= User.find(employee.ttf_id).name
             -else
