@@ -19,6 +19,7 @@ class KpisController < InheritedResources::Base
   def new
     @kpi              = Kpi.new
     @kpi_templates    = KpiTemplate.published
+    @user             = User.find(params[:user_id])
   end
 
   # GET /kpis/1/edit
@@ -30,7 +31,8 @@ class KpisController < InheritedResources::Base
   # POST /kpis
   def create
     @kpi = Kpi.new(kpi_params)
-
+    kpi_template = KpiTemplate.includes(:kpi_items).find(params[:kpi][:kpi_template_id])
+    byebug
     if @kpi.save
       redirect_to employees_path notice: 'KPI was successfully assigned to the employee.'
     else
