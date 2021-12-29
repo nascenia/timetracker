@@ -1,0 +1,50 @@
+- team_member   = params[:commit] == 'Search' ? params[:kpi][:team_member] : ''
+
+= form_for(:kpi, url: kpis_path, method: :get, html: { class: '' }) do |f|
+  .row
+    .col-md-4
+      .form-group
+        = f.label "KPI for"
+        %br
+        = f.radio_button :personal_or_team, "own", { checked: team_member.blank? }
+        My KPI
+        = f.radio_button :personal_or_team, "team", { checked: !team_member.blank? }
+        Team member KPI
+    .col-md-2
+      .form-group
+        = f.label 'Team member'
+        - if team_member.blank?
+          = f.select :team_member, options_for_select(@team.map{ |u| [u.name, u.id] }, team_member), { include_blank: 'select' }, class: 'form-control', disabled: 'disabled'
+        - else
+          = f.select :team_member, options_for_select(@team.map{ |u| [u.name, u.id] }, team_member), { include_blank: 'select' }, class: 'form-control'
+        = f.hidden_field :user_id, value: current_user.id
+ 
+    .col-md-2.form-group
+      = blank_space
+      = f.submit 'Search', class: 'btn btn-info btn-block'
+
+:javascript
+  $(document).ready(function() {
+    let kpi = { 
+      own: $('#kpi_user_id').val(),
+      team: null
+    };
+    
+    $(document).on('click', 'input[type=radio]', function() {
+
+      let selected = $('input[name="kpi[personal_or_team]"]:checked').val();
+
+      if(selected == 'own') {
+        $('#kpi_team_member').prop('disabled', 'disabled');
+      } else {
+        $('#kpi_team_member').prop('disabled', '');
+      }
+    });
+
+    $(document).on('change', 'select#kpi_team_member', function() {
+      kpi.team = $(this).children('option:selected').val();
+
+      $('#kpi_user_id').val(kpi.team);
+    });
+
+  });

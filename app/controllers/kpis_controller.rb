@@ -6,7 +6,9 @@ class KpisController < InheritedResources::Base
 
   # GET /kpis
   def index
-    @kpis  = Kpi.where(user_id: params[:user_id])
+    user_id = params[:kpi].blank? ? current_user.id : params[:kpi][:user_id]
+    @kpis   = Kpi.where(user_id: user_id)
+    @team   = User.active.where(ttf: current_user)
   end
 
   # GET /kpis/1
