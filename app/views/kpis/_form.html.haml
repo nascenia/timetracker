@@ -1,0 +1,15 @@
+= form_for(@kpi, class: 'form-horizontal') do |f|
+  - if @kpi.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@kpi.errors.count, "error")} prohibited this kpi from being saved:"
+
+      %ul
+        - @kpi.errors.full_messages.each do |msg|
+          %li= msg
+
+
+  .form-group
+    = f.label 'Select KPI Template'
+    = f.select :kpi_template, options_for_select(@kpi_templates.map{ |kt| [kt.title, kt.id] }), { include_blank: 'select' }, class: 'form-control'
+  .form-group
+    = f.submit class: 'btn btn-primary'
