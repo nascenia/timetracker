@@ -1,34 +1,18 @@
-%h1 Listing KPI's
+%h1 KPI's
 %hr
 
 = render 'search_form'
 
-%table.table
-  %thead
-    %tr
-      %th Title
-      %th Description
-      %th Score
-      %th Start date
-      %th End date
-      %th Status
-      %th 
-      %th 
-      %th 
-
-  %tbody
-    - @kpis.each do |kpi|
-      %tr
-        %td= kpi.title
-        %td= kpi.description
-        %td= kpi.score
-        %td= kpi.start_date
-        %td= kpi.end_date
-        %td= kpi.status
-        %td= link_to 'Show', kpi
-        %td= link_to 'Edit', edit_kpi_path(kpi)
-        %td= link_to 'Destroy', kpi, method: :delete, data: { confirm: 'Are you sure?' }
-%br
-
-= link_to 'New Kpi', new_kpi_path
+- @kpis.each do |kpi|
+  %hr
+  .row
+    .col-md-12
+      %h2= kpi.title 
+    .col-md-10
+      %p= kpi.description
+    .col-md-2
+      %label Score
+      %br
+      %input{ type: 'text', name: 'score', class: 'form-control kpi-score' } 
+      Out of 5
 
