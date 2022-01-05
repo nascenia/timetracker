@@ -72,7 +72,7 @@ class KpisController < InheritedResources::Base
     redirect_to kpis_url, notice: 'KPI was successfully destroyed.'
   end
 
-  # GET /kpis/review
+  # POST /kpis/review
   def review
     user_id = params[:kpi].blank? ? current_user.id : params[:kpi][:user_id]
     @kpis  = Kpi.search(params[:kpi], user_id)
