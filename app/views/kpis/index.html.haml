@@ -3,16 +3,22 @@
 
 = render 'search_form'
 
-- @kpis.each do |kpi|
-  %hr
-  .row
-    .col-md-12
-      %h2= kpi.title 
-    .col-md-10
-      %p= kpi.description
-    .col-md-2
-      %label Score
-      %br
-      %input{ type: 'text', name: 'score', class: 'form-control kpi-score' } 
-      Out of 5
+= form_for(:kpi, url: review_kpis_path, method: :post, html: { class: '' }) do |f|
+  - @kpis.each do |kpi|
+    %hr
+    .row
+      .col-md-12
+        %h2= kpi.title 
+      .col-md-10
+        %p= kpi.description
+      .col-md-2
+        %label Score
+        %br
+        %input{ type: 'hidden', name: 'ids[]', value: kpi.id }
+        %input{ type: 'text', name: 'score[]', class: 'form-control kpi-score' } 
+        Out of 5
+
+  = f.hidden_field :user_id, value: params[:kpi][:user_id] || current_user.id 
+  = f.submit 'Save', class: 'btn btn-info'
+  = f.submit 'Submit', class: 'btn btn-default'
 
