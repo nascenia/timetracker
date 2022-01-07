@@ -74,9 +74,17 @@ class KpisController < InheritedResources::Base
 
   # POST /kpis/review
   def review
-    user_id = params[:kpi].blank? ? current_user.id : params[:kpi][:user_id]
-    @kpis  = Kpi.search(params[:kpi], user_id)
-    @team   = User.active.where(ttf: current_user)
+    unless params[:kpi].blank?
+      user_id   = params[:kpi].blank? ? current_user.id : params[:kpi][:user_id]
+      kpis     = Kpi.where(user_id: user_id, id: params[:kpi_ids].map{ |id| id.to_i })
+
+      kpis.each_with_index do |kpi, i|
+        kpi.score = params[:kpi_score][i]
+        kpi.save
+      end
+
+      redirect_to kpis_path, notice: 'KPI score submitted successfully'
+    end
   end
 
   private

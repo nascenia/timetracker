@@ -14,11 +14,11 @@
       .col-md-2
         %label Score
         %br
-        %input{ type: 'hidden', name: 'ids[]', value: kpi.id }
-        %input{ type: 'text', name: 'score[]', class: 'form-control kpi-score' } 
+        %input{ type: 'hidden', name: 'kpi_ids[]', value: kpi.id }
+        %input{ type: 'text', name: 'kpi_score[]', class: 'form-control kpi-score' } 
         Out of 5
 
-  = f.hidden_field :user_id, value: params[:kpi][:user_id] || current_user.id 
+  = f.hidden_field :user_id, value: params.blank? && params[:kpi].blank? ? params[:kpi][:user_id] : current_user.id 
   = f.submit 'Save', class: 'btn btn-info'
   = f.submit 'Submit', class: 'btn btn-default'
 
