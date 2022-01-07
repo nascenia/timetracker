@@ -15,7 +15,7 @@
         %label Score
         %br
         %input{ type: 'hidden', name: 'kpi_ids[]', value: kpi.id }
-        %input{ type: 'text', name: 'kpi_score[]', class: 'form-control kpi-score' } 
+        %input{ type: 'text', name: 'kpi_score[]', value: kpi.score, class: 'form-control kpi-score' } 
         Out of 5
 
   = f.hidden_field :user_id, value: params.blank? && params[:kpi].blank? ? params[:kpi][:user_id] : current_user.id 
