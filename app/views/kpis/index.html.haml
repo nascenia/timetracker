@@ -9,7 +9,7 @@
 
 - message = "KPI is not submitted yet."
 - message = "KPI reviewed and approved by the TTF." if kpi_statuses.include?(Kpi::STATUSES[:approved])
-- message = "Your KPI is submitted and awaiting for review by the TTF." if kpi_statuses.include?(Kpi::STATUSES[:inreview])
+- message = "Your KPI is submitted and awaiting review by the TTF." if kpi_statuses.include?(Kpi::STATUSES[:inreview])
 
 .alert.alert-info= message
 
