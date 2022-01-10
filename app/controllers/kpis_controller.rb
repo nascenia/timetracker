@@ -6,8 +6,17 @@ class KpisController < InheritedResources::Base
 
   # GET /kpis
   def index
-    user_id = params[:kpi].blank? ? current_user.id : params[:kpi][:user_id]
+    user_id = params[:kpi].blank? ? current_user.id : params[:kpi][:user_id].to_i
     @kpis   = Kpi.where(user_id: user_id)
+
+    if !user_id.eql?(current_user.id)
+      kpi_user = User.find user_id
+      
+      unless kpi_user.ttf_id.eql?(current_user.id)
+        redirect_to kpis_path, notice: 'Sorry, You have no permission to access.'
+      end
+    end
+
     @team   = User.active.where(ttf: current_user)
   end
 
