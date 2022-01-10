@@ -23,9 +23,17 @@ Things you may want to cover:
 
 * Services (job queues, cache servers, search engines, etc.)
 
-* Deployment instructions
+## Deployment instructions
 
-* ...
+Production:
+```
+$ bundle exec cap prod deploy:cold
+```
+
+Staging:
+```
+$ bundle exec cap staging deploy:cold
+```
 
 ## Omniauth google oauth2
 Note: If you are using this app for your organization create and configure your own google app. 
