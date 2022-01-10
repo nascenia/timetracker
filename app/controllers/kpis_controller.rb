@@ -76,14 +76,20 @@ class KpisController < InheritedResources::Base
   def review
     unless params[:kpi].blank?
       user_id   = params[:kpi].blank? ? current_user.id : params[:kpi][:user_id]
-      kpis     = Kpi.where(user_id: user_id, id: params[:kpi_ids].map{ |id| id.to_i })
+      kpis      = Kpi.where(user_id: user_id, id: params[:kpi_ids].map{ |id| id.to_i })
 
       kpis.each_with_index do |kpi, i|
-        kpi.score = params[:kpi_score][i]
+        kpi.score   = params[:kpi_score][i]
+        kpi.status  = Kpi::STATUSES[:inreview] if params[:commit].eql?('Submit')
+        kpi.status  = Kpi::STATUSES[:approved] if params[:commit].eql?('Review and approve')
         kpi.save
       end
 
-      redirect_to kpis_path, notice: 'KPI score submitted successfully'
+      commit = 'saved' 
+      commit = 'submitted' if params[:commit].eql?('Submit')
+      commit = 'reviewed and approved' if params[:commit].eql?('Review and approve')
+
+      redirect_to kpis_path, notice: "KPI score #{commit} successfully."
     end
   end
 
