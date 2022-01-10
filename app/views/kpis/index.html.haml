@@ -1,3 +1,7 @@
+- user_id       = params.blank? || params[:kpi].blank? ? current_user.id : params[:kpi][:user_id].to_i
+- kpi_scores    = @kpis.map{ |kpi| kpi.score }
+- kpi_statuses  = @kpis.map{ |kpi| kpi.status }
+
 %h1 KPI's
 %hr
 
@@ -18,7 +22,14 @@
         %input{ type: 'text', name: 'kpi_score[]', value: kpi.score, class: 'form-control kpi-score' } 
         Out of 5
 
-  = f.hidden_field :user_id, value: params.blank? && params[:kpi].blank? ? params[:kpi][:user_id] : current_user.id 
-  = f.submit 'Save', class: 'btn btn-info'
-  = f.submit 'Submit', class: 'btn btn-default'
+  = f.hidden_field :user_id, value: user_id
 
+  - if user_id.eql?(current_user.id)
+    - if kpi_scores.include?(nil) || kpi_scores.include?('0.0')
+      = f.submit 'Save', class: 'btn btn-info'
+
+    - if kpi_statuses.include?(nil)
+      = f.submit 'Submit', class: 'btn btn-success'
+
+  - if current_user.is_ttf? && !user_id.eql?(current_user.id) && kpi_statuses.include?(Kpi::STATUSES[:inreview])
+    = f.submit 'Review and approve', class: 'btn btn-success'

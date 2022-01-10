@@ -10,7 +10,7 @@
         My KPI
         = f.radio_button :personal_or_team, "team", { checked: !team_member.blank? }
         Team member KPI
-    .col-md-2
+    .col-md-4
       .form-group
         = f.label 'Team member'
         - if team_member.blank?
@@ -19,7 +19,7 @@
           = f.select :team_member, options_for_select(@team.map{ |u| [u.name, u.id] }, team_member), { include_blank: 'select' }, class: 'form-control'
         = f.hidden_field :user_id, value: current_user.id
  
-    .col-md-2.form-group
+    .col-md-4.form-group
       = blank_space
       = f.submit 'Search', class: 'btn btn-info btn-block'
 
