@@ -13,6 +13,10 @@ permit_params [:title, :description, :published], :of, :attributes, :on, :model
 #   permitted
 # end
 
+  action_item :kpi_item, only: :show do
+    link_to 'New KPI Item', new_admin_kpi_item_path
+  end
+
   show do
     default_main_content
 
