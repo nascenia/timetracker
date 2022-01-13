@@ -1,6 +1,6 @@
 - user_id       = params.blank? || params[:kpi].blank? ? current_user.id : params[:kpi][:user_id].to_i
-- kpi_scores    = @kpis.map{ |kpi| kpi.score }
-- kpi_statuses  = @kpis.map{ |kpi| kpi.status }
+- #kpi_scores    = @kpis.map{ |kpi| kpi.score }
+- #kpi_statuses  = @kpis.map{ |kpi| kpi.status }
 
 %h1 KPI's
 %hr
@@ -8,34 +8,27 @@
 = render 'search_form'
 
 - message = "KPI is not submitted yet."
-- message = "KPI reviewed and approved by the TTF." if kpi_statuses.include?(Kpi::STATUSES[:approved])
-- message = "Your KPI is submitted and awaiting review by the TTF." if kpi_statuses.include?(Kpi::STATUSES[:inreview])
+- #message = "KPI reviewed and approved by the TTF." if kpi_statuses.include?(Kpi::STATUSES[:approved])
+- #message = "Your KPI is submitted and awaiting review by the TTF." if kpi_statuses.include?(Kpi::STATUSES[:inreview])
 
 .alert.alert-info= message
 
 = form_for(:kpi, url: review_kpis_path, method: :post, html: { class: '' }) do |f|
-  - @kpis.each do |kpi|
+  - @kpi_items.each do |kpi_item|
     %hr
     .row
-      .col-md-12
-        %h2= kpi.title 
       .col-md-10
-        %p= kpi.description
+        %h2= kpi_item.title 
+        %p= kpi_item.description
       .col-md-2
         %label Score
         %br
-        %input{ type: 'hidden', name: 'kpi_ids[]', value: kpi.id }
-        %input{ type: 'text', name: 'kpi_score[]', value: kpi.score, class: 'form-control kpi-score' } 
+        %input{ type: 'hidden', name: 'kpi_ids[]', value: kpi_item.id }
+        %input{ type: 'text', name: 'kpi_score[]', value: '', class: 'form-control kpi-score' } 
         Out of 5
 
   = f.hidden_field :user_id, value: user_id
 
-  - if user_id.eql?(current_user.id)
-    - if kpi_scores.include?(nil) || kpi_scores.include?('0.0')
-      = f.submit 'Save', class: 'btn btn-info'
-
-    - if kpi_statuses.include?(nil)
-      = f.submit 'Submit', class: 'btn btn-success'
-
-  - if current_user.is_ttf? && !user_id.eql?(current_user.id) && kpi_statuses.include?(Kpi::STATUSES[:inreview])
-    = f.submit 'Review and approve', class: 'btn btn-success'
+  = f.submit 'Save', class: 'btn btn-info'
+  = f.submit 'Submit', class: 'btn btn-success'
+  = f.submit 'Review and approve', class: 'btn btn-success'
