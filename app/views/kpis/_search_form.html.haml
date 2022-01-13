@@ -1,4 +1,7 @@
 - team_member   = params[:commit] == 'Search' ? params[:kpi][:team_member] : ''
+- time_period   = params[:commit] == 'Search' ? params[:goal][:time_period] : ''
+- start_date    = params[:commit] == 'Search' ? params[:goal][:start_date] : ''
+- end_date      = params[:commit] == 'Search' ? params[:goal][:end_date] : ''
 
 = form_for(:kpi, url: kpis_path, method: :get, html: { class: '' }) do |f|
   .row

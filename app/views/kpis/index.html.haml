@@ -14,6 +14,21 @@
 .alert.alert-info= message
 
 = form_for(:kpi, url: review_kpis_path, method: :post, html: { class: '' }) do |f|
+  %hr
+  .row
+    .col-md-4
+      .form-group
+        = f.label 'Time period'
+        = f.select :time_period, options_for_select([['Q-1', '0'], ['Q-2', '1'], ['Q-3', '2'], ['Q-4', '3']], ''), { include_blank: 'select'}, class: 'form-control'
+    .col-md-4
+      .form-group
+        = f.label :start_date
+        = f.text_field :start_date, value: '01-01-2022', class: 'form-control'
+    .col-md-4
+      .form-group
+        = f.label :end_date
+        = f.text_field :end_date, value: '03-31-2022', class: 'form-control'
+  
   - @kpi_items.each do |kpi_item|
     %hr
     .row
@@ -26,9 +41,20 @@
         %input{ type: 'hidden', name: 'kpi_ids[]', value: kpi_item.id }
         %input{ type: 'text', name: 'kpi_score[]', value: '', class: 'form-control kpi-score' } 
         Out of 5
-
+  %hr
+  .row
+    .col-md-12
+      = f.label "TTF/ Appraiser's comment (about job/task/career):"
+      = f.text_area :ttf_comment, class: 'form-control'
+  %hr
+  .row
+    .col-md-12
+      = f.label "Team Member/ Appraisee's comment (about job/task/career):"
+      = f.text_area :team_member_comment, class: 'form-control'
+      
   = f.hidden_field :user_id, value: user_id
 
+  %br
   = f.submit 'Save', class: 'btn btn-info'
   = f.submit 'Submit', class: 'btn btn-success'
   = f.submit 'Review and approve', class: 'btn btn-success'
