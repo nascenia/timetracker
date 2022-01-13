@@ -8,11 +8,14 @@ class KpisController < InheritedResources::Base
   def index
     user_id       = params[:kpi].blank? ? current_user.id : params[:kpi][:user_id].to_i
     user          = User.find(user_id)
+    @kpi          = Kpi.date_range('01-01-2022', '31-03-2022').where(user: user).last
+    @kpi          = Kpi.new if @kpi.nil?
+    @user_kpis    = !@kpi.nil? ? JSON.parse(@kpi.data) : [] 
     kpi_template  = KpiTemplate.includes(:kpi_items).find(user.kpi_template_id)
     @kpi_items    = kpi_template.kpi_items
 
     if !user_id.eql?(current_user.id)
-      unless kpi_user.ttf_id.eql?(current_user.id)
+      unless user.ttf_id.eql?(current_user.id)
         redirect_to kpis_path, notice: 'Sorry, You have no permission to access.'
       end
     end
@@ -78,12 +81,13 @@ class KpisController < InheritedResources::Base
   # POST /kpis/review
   def review
     unless params[:kpi].blank?
-      @kpi      = Kpi.new(kpi_params)
       user_id   = params[:kpi].blank? ? current_user.id : params[:kpi][:user_id]
+      @kpi      = Kpi.date_range('01-01-2022', '31-03-2022').where(user_id: user_id).last
+      @kpi      = Kpi.new(kpi_params) if @kpi.nil?
       item_ids  = params[:kpi_ids].map{|id| id.to_i}
-      data      = []      
+      data      = Hash.new     
       item_ids.each_with_index do |id, i|
-        data << { item_id: id, score: params[:kpi_score][i]}
+        data[id] = params[:kpi_score][i]
       end
       @kpi.data    = data.to_json
       @kpi.status  = Kpi::STATUSES[:inreview] if params[:commit].eql?('Submit')

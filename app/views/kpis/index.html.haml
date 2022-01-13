@@ -7,13 +7,7 @@
 
 = render 'search_form'
 
-- message = "KPI is not submitted yet."
-- #message = "KPI reviewed and approved by the TTF." if kpi_statuses.include?(Kpi::STATUSES[:approved])
-- #message = "Your KPI is submitted and awaiting review by the TTF." if kpi_statuses.include?(Kpi::STATUSES[:inreview])
-
-.alert.alert-info= message
-
-= form_for(:kpi, url: review_kpis_path, method: :post, html: { class: '' }) do |f|
+= form_for(@kpi, url: review_kpis_path, method: :post, html: { class: '' }) do |f|
   %hr
   .row
     .col-md-4
@@ -27,7 +21,7 @@
     .col-md-4
       .form-group
         = f.label :end_date
-        = f.text_field :end_date, value: '03-31-2022', class: 'form-control'
+        = f.text_field :end_date, value: '31-03-2022', class: 'form-control'
   
   - @kpi_items.each do |kpi_item|
     %hr
@@ -39,7 +33,7 @@
         %label Score
         %br
         %input{ type: 'hidden', name: 'kpi_ids[]', value: kpi_item.id }
-        %input{ type: 'text', name: 'kpi_score[]', value: '', class: 'form-control kpi-score' } 
+        %input{ type: 'text', name: 'kpi_score[]', value: @user_kpis[kpi_item.id.to_s], class: 'form-control kpi-score' } 
         Out of 5
   %hr
   .row
