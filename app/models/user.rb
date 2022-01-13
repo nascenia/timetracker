@@ -16,7 +16,8 @@ class User < ActiveRecord::Base
   belongs_to :weekend
   belongs_to :holiday_scheme
   belongs_to :ttf, :class_name => 'User'
-
+  belongs_to :kpi_template
+  
   has_many  :promotions
   has_one  :team, :class_name => 'User', :foreign_key => 'ttf_id'
 
