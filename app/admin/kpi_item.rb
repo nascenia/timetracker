@@ -22,4 +22,17 @@ permit_params [:kpi_template_id, :title, :description], :of, :attributes, :on, :
     end
     f.actions
   end
+
+  index do
+    column  :id
+    column  'KPI Template' do |kpi_item|
+      "#{kpi_item.kpi_template.title}"
+    end
+    column  :title
+    column  :description
+    
+    column  :created_at
+    column  :updated_at
+    actions
+  end
 end

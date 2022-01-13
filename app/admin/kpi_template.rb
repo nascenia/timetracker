@@ -13,5 +13,12 @@ permit_params [:title, :description, :published], :of, :attributes, :on, :model
 #   permitted
 # end
 
+  show do
+    default_main_content
+
+    div do
+      render 'kpi_item', { kpi: kpi_template }
+    end
+  end
 
 end
