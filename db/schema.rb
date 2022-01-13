@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20220105121606) do
+ActiveRecord::Schema.define(version: 20220113061142) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -178,7 +178,7 @@ ActiveRecord::Schema.define(version: 20220105121606) do
 
   create_table "kpis", force: true do |t|
     t.integer  "user_id"
-    t.string   "title",       null: false
+    t.string   "title",               null: false
     t.text     "description"
     t.string   "score"
     t.date     "start_date"
@@ -186,6 +186,8 @@ ActiveRecord::Schema.define(version: 20220105121606) do
     t.integer  "status"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "ttf_comment"
+    t.text     "team_member_comment"
   end
 
   add_index "kpis", ["user_id"], name: "index_kpis_on_user_id", using: :btree
