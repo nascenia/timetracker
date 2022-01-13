@@ -49,16 +49,10 @@ class KpisController < InheritedResources::Base
 
   # POST /kpis
   def create
-    @kpi = Kpi.new(kpi_params)
-    kpi_template = KpiTemplate.includes(:kpi_items).find(params[:kpi][:kpi_template_id])
-    
-    kpi_template.kpi_items.each do |kpi_item|
-      kpi = Kpi.new
-      kpi.user_id  =  params[:kpi][:user_id].to_i
-      kpi.title = kpi_item.title
-      kpi.description = kpi_item.description
-      kpi.save
-    end
+    kpi_template = KpiTemplate.find(params[:kpi][:kpi_template_id])
+    user = User.find(params[:kpi][:user_id].to_i)
+    user.kpi_template = kpi_template
+    user.save
 
     redirect_to employees_path, notice: 'KPI was successfully assigned to the employee.'
   end
