@@ -12,8 +12,6 @@ class KpisController < InheritedResources::Base
     @kpi_items    = kpi_template.kpi_items
 
     if !user_id.eql?(current_user.id)
-      
-      
       unless kpi_user.ttf_id.eql?(current_user.id)
         redirect_to kpis_path, notice: 'Sorry, You have no permission to access.'
       end
@@ -80,19 +78,21 @@ class KpisController < InheritedResources::Base
   # POST /kpis/review
   def review
     unless params[:kpi].blank?
+      @kpi      = Kpi.new(kpi_params)
       user_id   = params[:kpi].blank? ? current_user.id : params[:kpi][:user_id]
-      kpis      = Kpi.where(user_id: user_id, id: params[:kpi_ids].map{ |id| id.to_i })
-
-      kpis.each_with_index do |kpi, i|
-        kpi.score   = params[:kpi_score][i]
-        kpi.status  = Kpi::STATUSES[:inreview] if params[:commit].eql?('Submit')
-        kpi.status  = Kpi::STATUSES[:approved] if params[:commit].eql?('Review and approve')
-        kpi.save
+      item_ids  = params[:kpi_ids].map{|id| id.to_i}
+      data      = []      
+      item_ids.each_with_index do |id, i|
+        data << { item_id: id, score: params[:kpi_score][i]}
       end
+      @kpi.data    = data.to_json
+      @kpi.status  = Kpi::STATUSES[:inreview] if params[:commit].eql?('Submit')
+      @kpi.status  = Kpi::STATUSES[:approved] if params[:commit].eql?('Review and approve')
+      @kpi.save
 
-      commit = 'saved' 
+      #commit = 'saved' 
       commit = 'submitted' if params[:commit].eql?('Submit')
-      commit = 'reviewed and approved' if params[:commit].eql?('Review and approve')
+      #commit = 'reviewed and approved' if params[:commit].eql?('Review and approve')
 
       redirect_to kpis_path, notice: "KPI score #{commit} successfully."
     end
@@ -105,7 +105,13 @@ class KpisController < InheritedResources::Base
   end
 
   def kpi_params
-    params.require(:kpi).permit(:title, :description, :score, :start_date, :end_date, :status)
+    params.require(:kpi).permit(
+      :user_id,
+      :start_date, 
+      :end_date,
+      :ttf_comment,
+      :team_member_comment, 
+      :status)
   end
 end
 
