@@ -7,12 +7,8 @@ class KpisController < InheritedResources::Base
   # GET /kpis
   def index
     user_id       = params[:kpi].blank? ? current_user.id : params[:kpi][:user_id].to_i
+    @kpis         = Kpi.search(params[:kpi], user_id)
     user          = User.find(user_id)
-    @kpi          = Kpi.date_range('01-01-2022', '31-03-2022').where(user: user).last
-    @kpi          = Kpi.new if @kpi.nil?
-    @user_kpis    = !@kpi.nil? ? JSON.parse(@kpi.data) : [] 
-    kpi_template  = KpiTemplate.includes(:kpi_items).find(user.kpi_template_id)
-    @kpi_items    = kpi_template.kpi_items
 
     if !user_id.eql?(current_user.id)
       unless user.ttf_id.eql?(current_user.id)
