@@ -13,7 +13,7 @@
     = @kpi.status
   .col-md-2
     %label Score:
-    = "0"
+    = (@user_kpis.sum { |kpi| kpi["score"] } / @kpi_items.size).round(2)
 
 = render 'kpi_items'
 
