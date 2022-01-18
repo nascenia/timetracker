@@ -21,6 +21,9 @@ class KpisController < InheritedResources::Base
 
   # GET /kpis/1
   def show
+    @user_kpis    = @kpi.nil? ? [] : JSON.parse(@kpi.data)
+    kpi_template  = KpiTemplate.includes(:kpi_items).find(@kpi.user.kpi_template_id)
+    @kpi_items    = kpi_template.kpi_items
   end
 
   # GET /kpis/new
@@ -89,7 +92,7 @@ class KpisController < InheritedResources::Base
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_kpi
-    @kpi = Kpi.find(params[:id])
+    @kpi = Kpi.includes(:user).find(params[:id])
   end
 
   def kpi_params

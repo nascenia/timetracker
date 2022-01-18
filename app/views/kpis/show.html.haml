@@ -1,34 +1,26 @@
-<p id="notice"><%= notice %></p>
+%h2= "KPI details of #{@kpi.user.name} (#{@kpi.user.email})"
+%hr
 
-<p>
-  <strong>Title:</strong>
-  <%= @kpi.title %>
-</p>
+.row
+  .col-md-4
+    %label Start date:
+    = @kpi.start_date
+  .col-md-4
+    %label End date:
+    = @kpi.end_date
+  .col-md-4
+    %label Status:
+    = @kpi.status
 
-<p>
-  <strong>Description:</strong>
-  <%= @kpi.description %>
-</p>
+= render 'kpi_items'
 
-<p>
-  <strong>Score:</strong>
-  <%= @kpi.score %>
-</p>
-
-<p>
-  <strong>Start date:</strong>
-  <%= @kpi.start_date %>
-</p>
-
-<p>
-  <strong>End date:</strong>
-  <%= @kpi.end_date %>
-</p>
-
-<p>
-  <strong>Status:</strong>
-  <%= @kpi.status %>
-</p>
-
-<%= link_to 'Edit', edit_kpi_path(@kpi) %> |
-<%= link_to 'Back', kpis_path %>
+%hr
+.row
+  .col-md-12
+    %label TTF/ Appraiser's comment (about job/task/career):
+    %p= @kpi.ttf_comment
+%hr
+.row
+  .col-md-12
+    %label Team Member/ Appraisee's comment (about job/task/career):
+    %p= @kpi.team_member_comment
