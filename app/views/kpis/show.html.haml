@@ -8,9 +8,12 @@
   .col-md-4
     %label End date:
     = @kpi.end_date
-  .col-md-4
+  .col-md-2
     %label Status:
     = @kpi.status
+  .col-md-2
+    %label Score:
+    = "0"
 
 = render 'kpi_items'
 

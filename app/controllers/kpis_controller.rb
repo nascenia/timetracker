@@ -77,16 +77,32 @@ class KpisController < InheritedResources::Base
     redirect_to kpis_url, notice: 'KPI was successfully destroyed.'
   end
 
+  # 
+  def assign
+    kpi_template = KpiTemplate.find(params[:kpi][:kpi_template_id])
+    user = User.find(params[:kpi][:user_id].to_i)
+    user.kpi_template = kpi_template
+    user.save
+
+    redirect_to employees_path, notice: 'KPI was successfully assigned to the employee.'
+  end
+
   # POST /kpis/review
   def review
-    user_id       = params[:kpi].blank? ? current_user.id : params[:kpi][:user_id]
-    user          = User.find user_id
-    kpis          = Kpi.search(params[:kpi], user_id)
-    @kpi          = kpis.last
-    @user_kpis    = @kpi.nil? ? [] : JSON.parse(@kpi.data)
-    kpi_template  = KpiTemplate.includes(:kpi_items).find(user.kpi_template_id)
-    @kpi_items    = kpi_template.kpi_items
-    @team         = User.active.where(ttf: current_user)
+    @team           = User.active.where(ttf: current_user)
+
+    if !params[:kpi].blank?
+      user_id         = params[:kpi][:user_id]
+      user            = User.find user_id
+      if user.kpi_template_id.blank?
+        redirect_to kpis_path, notice: 'User have not assigned any KIP yet. Please contact with admin to assign KPI.'
+        return
+      end
+      kpi_template    = KpiTemplate.includes(:kpi_items).find(user.kpi_template_id)
+      @kpi_items      = kpi_template.kpi_items
+      @kpi            = Kpi.new
+    end
+    
   end
 
   private
