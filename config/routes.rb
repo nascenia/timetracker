@@ -110,6 +110,7 @@ Internal::Application.routes.draw do
 
   resources :kpis do
     collection do
+      post  :assign
       get   :review
     end
   end

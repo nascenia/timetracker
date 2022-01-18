@@ -10,6 +10,7 @@
       %th End date
       %th TTF comment
       %th Team member comment
+      %th Score
       %th Status
       %th
       %th
@@ -25,6 +26,7 @@
         %td= kpi.end_date
         %td= kpi.ttf_comment
         %td= kpi.team_member_comment
+        %td= "0.0"
         %td= kpi.status
         %td= link_to 'Show', kpi
         %td= link_to 'Edit', edit_kpi_path(kpi)

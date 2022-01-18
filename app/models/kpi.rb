@@ -4,7 +4,7 @@ class Kpi < ActiveRecord::Base
 
     belongs_to  :user
 
-    attr_accessor :personal_or_team, :kpi_template_id, :team_member, :time_period
+    attr_accessor :personal_or_team, :kpi_template_id, :team_member, :year, :time_period
 
     scope :by_date_range, -> (start_date, end_date) { 
       where("start_date >= ? AND end_date <= ?", Date.parse(start_date), Date.parse(end_date)) 
