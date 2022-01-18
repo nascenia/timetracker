@@ -1,0 +1,10 @@
+- @kpi_items.each do |kpi_item|
+  - score = @user_kpis.size.zero? ? '' : @user_kpis[kpi_item.id.to_s]
+  %hr
+  .row
+    .col-md-10
+      %label= kpi_item.title 
+      %p= kpi_item.description
+    .col-md-2
+      = "#{score} / 5"
+      

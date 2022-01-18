@@ -111,7 +111,6 @@ Internal::Application.routes.draw do
   resources :kpis do
     collection do
       get   :review
-      post  :review
     end
   end
   resources :kpi_items
