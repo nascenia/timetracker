@@ -1,5 +1,7 @@
 - @kpi_items.each do |kpi_item|
-  - score = @user_kpis.size.zero? ? '' : @user_kpis[kpi_item.id.to_s]
+  - score       = ''
+  - item_score  = @user_kpis.select{ |item| item["item_id"] == kpi_item.id }.first
+  - score       = item_score['score'] unless kpi_item.blank?
   %hr
   .row
     .col-md-10

@@ -51,12 +51,23 @@ class KpisController < InheritedResources::Base
 
   # POST /kpis
   def create
-    kpi_template = KpiTemplate.find(params[:kpi][:kpi_template_id])
-    user = User.find(params[:kpi][:user_id].to_i)
-    user.kpi_template = kpi_template
-    user.save
+    # TODO: If there is already a KPI in the selected date show flash message and return in current page
+    @kpi = Kpi.new(kpi_params)
+    item_ids  = params[:kpi_item_ids].map{|id| id.to_i}
+    data      = []
+    item_ids.each_with_index do |item_id, i|
+      data << { item_id: item_id, score: params[:kpi_item_score][i].to_f }
+    end
 
-    redirect_to employees_path, notice: 'KPI was successfully assigned to the employee.'
+    @kpi.data    = data.to_json
+    @kpi.status  = Kpi::STATUSES[:inreview] if params[:commit].eql?('Submit')
+    @kpi.status  = Kpi::STATUSES[:approved] if params[:commit].eql?('Review and approve')
+
+    if @kpi.save
+      redirect_to kpis_path, notice: 'KPI was successfully created.'
+    else
+      redirect_to kpis_path, alert: 'Sorry, Unable to create KPI.'
+    end
   end
 
   # PATCH/PUT /kpis/1
