@@ -76,26 +76,14 @@ class KpisController < InheritedResources::Base
 
   # POST /kpis/review
   def review
-    unless params[:kpi].blank?
-      user_id   = params[:kpi].blank? ? current_user.id : params[:kpi][:user_id]
-      @kpi      = Kpi.date_range('01-01-2022', '31-03-2022').where(user_id: user_id).last
-      @kpi      = Kpi.new(kpi_params) if @kpi.nil?
-      item_ids  = params[:kpi_ids].map{|id| id.to_i}
-      data      = Hash.new     
-      item_ids.each_with_index do |id, i|
-        data[id] = params[:kpi_score][i]
-      end
-      @kpi.data    = data.to_json
-      @kpi.status  = Kpi::STATUSES[:inreview] if params[:commit].eql?('Submit')
-      @kpi.status  = Kpi::STATUSES[:approved] if params[:commit].eql?('Review and approve')
-      @kpi.save
-
-      #commit = 'saved' 
-      commit = 'submitted' if params[:commit].eql?('Submit')
-      #commit = 'reviewed and approved' if params[:commit].eql?('Review and approve')
-
-      redirect_to kpis_path, notice: "KPI score #{commit} successfully."
-    end
+    user_id       = params[:kpi].blank? ? current_user.id : params[:kpi][:user_id]
+    user          = User.find user_id
+    kpis          = Kpi.search(params[:kpi], user_id)
+    @kpi          = kpis.last
+    @user_kpis    = @kpi.nil? ? [] : JSON.parse(@kpi.data)
+    kpi_template  = KpiTemplate.includes(:kpi_items).find(user.kpi_template_id)
+    @kpi_items    = kpi_template.kpi_items
+    @team         = User.active.where(ttf: current_user)
   end
 
   private
