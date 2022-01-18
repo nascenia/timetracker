@@ -1,21 +1,45 @@
 
-= form_for(@kpi, url: review_kpis_path, method: :post, html: { class: '' }) do |f|
-  %hr
+%h1 Team members KPI review
+%hr
+
+- user_id       = params[:kpi].blank? ? '' : params[:kpi][:user_id]
+- team_member   = params[:commit] == 'Search' ? params[:kpi][:team_member] : ''
+- year          = params[:commit] == 'Search' ? params[:kpi][:year] : ''
+- time_period   = params[:commit] == 'Search' ? params[:kpi][:time_period] : ''
+- start_date    = params[:commit] == 'Search' ? params[:kpi][:start_date] : ''
+- end_date      = params[:commit] == 'Search' ? params[:kpi][:end_date] : ''
+
+= form_for(:kpi, url: review_kpis_path, method: :get, html: { class: '' }) do |f|
   .row
-    .col-md-4
+    .col-md-2
+      .form-group
+        = f.label 'Team member'
+        = f.select :team_member, options_for_select(@team.map{ |u| [u.name, u.id] }, team_member), { include_blank: 'select' }, class: 'form-control'
+        = f.hidden_field :user_id, value: user_id
+    .col-md-2
+      .form-group
+        - c_y = Time.now.year
+        - s_y = c_y - 10
+        = f.label 'Year'
+        = f.select :year, options_for_select((s_y..c_y).to_a.map{ |y| [y, y] }.reverse, year), { include_blank: 'select' }, class: 'form-control'
+    .col-md-2
       .form-group
         = f.label 'Time period'
-        = f.select :time_period, options_for_select([['Q-1', '0'], ['Q-2', '1'], ['Q-3', '2'], ['Q-4', '3']], ''), { include_blank: 'select'}, class: 'form-control'
-    .col-md-4
+        = f.select :time_period, options_for_select([['Q-1', '0'], ['Q-2', '1'], ['Q-3', '2'], ['Q-4', '3']], time_period), { include_blank: 'select'}, class: 'form-control'
+    .col-md-2
       .form-group
         = f.label :start_date
-        = f.text_field :start_date, value: '01-01-2022', class: 'form-control'
-    .col-md-4
+        = f.text_field :start_date, value: start_date, class: 'form-control'
+    .col-md-2
       .form-group
         = f.label :end_date
-        = f.text_field :end_date, value: '31-03-2022', class: 'form-control'
-  
+        = f.text_field :end_date, value: end_date, class: 'form-control'
+    .col-md-2.form-group
+      = blank_space
+      = f.submit 'Search', class: 'btn btn-info btn-block'
+
   - @kpi_items.each do |kpi_item|
+    - score = @user_kpis.size.zero? ? '' : @user_kpis[kpi_item.id.to_s]
     %hr
     .row
       .col-md-10
@@ -25,7 +49,7 @@
         %label Score
         %br
         %input{ type: 'hidden', name: 'kpi_ids[]', value: kpi_item.id }
-        %input{ type: 'text', name: 'kpi_score[]', value: @user_kpis[kpi_item.id.to_s], class: 'form-control kpi-score' } 
+        %input{ type: 'text', name: 'kpi_score[]', value: score, class: 'form-control kpi-score' } 
         Out of 5
   %hr
   .row
