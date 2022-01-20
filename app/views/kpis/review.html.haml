@@ -2,10 +2,6 @@
 %hr
 
 - user_id       = params[:kpi].blank? ? '' : params[:kpi][:user_id]
-- year          = params[:commit] == 'Submit' ? params[:kpi][:year] : ''
-- time_period   = params[:commit] == 'Submit' ? params[:kpi][:time_period] : ''
-- start_date    = params[:commit] == 'Submit' ? params[:kpi][:start_date] : ''
-- end_date      = params[:commit] == 'Submit' ? params[:kpi][:end_date] : ''
 
 = form_for(:kpi, url: review_kpis_path, method: :get, html: { class: '' }) do |f|
   .row
@@ -18,6 +14,11 @@
       = f.submit 'Find KPI', class: 'btn btn-info btn-block'
 
 - unless user_id.blank?
+  - year          = params[:kpi][:start_date].blank? ? '' : params[:kpi][:start_date].split('-').first
+  - time_period   = params[:kpi][:start_date].blank? ? '' : params[:kpi][:time_period]
+  - start_date    = params[:kpi][:start_date].blank? ? '' : params[:kpi][:start_date]
+  - end_date      = params[:kpi][:end_date].blank? ? '' : params[:kpi][:end_date]
+
   = form_for(:kpi, url: kpis_path, method: :post, html: { class: '' }) do |f|
     %hr
     .row
@@ -50,7 +51,7 @@
           %label Score
           %br
           %input{ type: 'hidden', name: 'kpi_item_ids[]', value: kpi_item.id }
-          %input{ type: 'text', name: 'kpi_item_score[]', value: '', class: 'form-control kpi-score' } 
+          %input{ type: 'text', name: 'kpi_item_score[]', value: '', class: 'form-control kpi-score' }
           Out of 5
     %hr
     .row

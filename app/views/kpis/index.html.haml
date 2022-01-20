@@ -29,7 +29,7 @@
         %td= "0.0"
         %td= kpi.status
         %td= link_to 'Show', kpi
-        %td= link_to 'Edit', edit_kpi_path(kpi)
+        %td= link_to 'Edit', review_kpis_path(kpi: { user_id: kpi.user_id, start_date: kpi.start_date, end_date: kpi.end_date })
         %td= link_to 'Destroy', kpi, method: :delete, data: { confirm: 'Are you sure?' }
      
 %br
