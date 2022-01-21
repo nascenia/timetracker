@@ -26,7 +26,7 @@
         %td= kpi.end_date
         %td= kpi.ttf_comment
         %td= kpi.team_member_comment
-        %td= kpi_score_calculation(kpi.data)
+        %td= kpi.score
         %td= kpi_status_str(kpi.status)
         %td= link_to 'Show', kpi
         %td= link_to 'Edit', edit_kpi_path(kpi)
