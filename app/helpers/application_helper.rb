@@ -94,4 +94,19 @@ module ApplicationHelper
     end
     space.html_safe
   end
+
+  def kpi_status_str status
+    str = '-'
+
+    str = 'In-review' if(status == Kpi::STATUSES[:inreview])
+    str = 'Approved' if(status == Kpi::STATUSES[:approved])
+    str
+  end
+
+  def kpi_score_calculation data
+    score = 0
+    data  = JSON.parse(data)
+    score = (data.sum { |kpi| kpi["score"] } / data.size).round(2)
+    score
+  end
 end
