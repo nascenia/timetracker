@@ -14,19 +14,19 @@
         - c_y = Time.now.year
         - s_y = c_y - 10
         = f.label 'Year'
-        = f.select :year, options_for_select((s_y..c_y).to_a.map{ |y| [y, y] }.reverse, year), { include_blank: 'select' }, class: 'form-control'
+        = f.select :year, options_for_select((s_y..c_y).to_a.map{ |y| [y, y] }.reverse, year), { include_blank: 'select' }, class: 'form-control', disabled: !current_user.is_ttf?
     .col-md-2
       .form-group
         = f.label 'Time period'
-        = f.select :time_period, options_for_select([['Q-1', '0'], ['Q-2', '1'], ['Q-3', '2'], ['Q-4', '3']], time_period), { include_blank: 'select'}, class: 'form-control'
+        = f.select :time_period, options_for_select([['Q-1', '0'], ['Q-2', '1'], ['Q-3', '2'], ['Q-4', '3']], time_period), { include_blank: 'select'}, class: 'form-control', disabled: !current_user.is_ttf?
     .col-md-2
       .form-group
         = f.label :start_date
-        = f.text_field :start_date, value: start_date, class: 'form-control'
+        = f.text_field :start_date, value: start_date, class: 'form-control', disabled: !current_user.is_ttf?
     .col-md-2
       .form-group
         = f.label :end_date
-        = f.text_field :end_date, value: end_date, class: 'form-control'
+        = f.text_field :end_date, value: end_date, class: 'form-control', disabled: !current_user.is_ttf?
 
   - data = JSON.parse(@kpi.data)
   - @kpi_items.each do |kpi_item|
@@ -41,24 +41,25 @@
         %label Score
         %br
           %input{ type: 'hidden', name: 'kpi_item_ids[]', value: kpi_item.id }
-          %input{ type: 'text', name: 'kpi_item_score[]', value: score, class: 'form-control kpi-score' }
+          %input{ type: 'text', name: 'kpi_item_score[]', value: score, class: 'form-control kpi-score', disabled: !current_user.is_ttf? }
           Out of 5
   %hr
   .row
     .col-md-12
       = f.label "TTF/ Appraiser's comment (about job/task/career):"
-      = f.text_area :ttf_comment, class: 'form-control'
+      = f.text_area :ttf_comment, class: 'form-control', disabled: !current_user.is_ttf?
   %hr
   .row
     .col-md-12
       = f.label "Team Member/ Appraisee's comment (about job/task/career):"
-      = f.text_area :team_member_comment, class: 'form-control'
+      = f.text_area :team_member_comment, class: 'form-control', disabled: current_user.is_ttf?
     
   = f.hidden_field :user_id, value: user_id
 
   %br
   = f.submit 'Save', class: 'btn btn-info'
-  = f.submit 'Submit', class: 'btn btn-success'
+  - if current_user.is_ttf? 
+    = f.submit 'Submit', class: 'btn btn-success'
 
 :javascript
   $(document).ready(function() {
