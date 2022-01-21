@@ -1,7 +1,9 @@
-%h1 Team members KPI review
-%hr
+- user_id   = params[:kpi].blank? ? '' : params[:kpi][:user_id]
+- header    = "Team members KPI review"
+- header    = "Reviewing KPI of: #{@user.name}" unless user_id.blank?
 
-- user_id       = params[:kpi].blank? ? '' : params[:kpi][:user_id]
+%h2= header
+%hr
 
 = form_for(:kpi, url: review_kpis_path, method: :get, html: { class: '' }) do |f|
   .row
@@ -69,7 +71,6 @@
     %br
     = f.submit 'Save', class: 'btn btn-info'
     = f.submit 'Submit', class: 'btn btn-success'
-    = f.submit 'Review and approve', class: 'btn btn-success'
 
 :javascript
   $(document).ready(function() {

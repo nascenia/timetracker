@@ -61,8 +61,8 @@ class KpisController < InheritedResources::Base
     end
 
     @kpi.data    = data.to_json
-    @kpi.status  = Kpi::STATUSES[:inreview] if params[:commit].eql?('Submit')
-    @kpi.status  = Kpi::STATUSES[:approved] if params[:commit].eql?('Review and approve')
+    @kpi.status  = Kpi::STATUSES[:inreview] if params[:commit].eql?('Save')
+    @kpi.status  = Kpi::STATUSES[:approved] if params[:commit].eql?('Submit')
 
     if @kpi.save
       redirect_to kpis_path, notice: 'KPI was successfully created.'
@@ -80,8 +80,10 @@ class KpisController < InheritedResources::Base
       data << { item_id: item_id, score: params[:kpi_item_score][i].to_f }
     end
 
-    kpi_attrs[:data]  = data.to_json
-    byebug
+    kpi_attrs[:data]    = data.to_json
+    kpi_attrs[:status]  = Kpi::STATUSES[:inreview] if params[:commit].eql?('Save')
+    kpi_attrs[:status]  = Kpi::STATUSES[:approved] if params[:commit].eql?('Submit')
+
     if @kpi.update(kpi_attrs)
       respond_to do |format|
         format.html { redirect_to kpis_url, notice: 'KPI was successfully updated.' }
@@ -114,12 +116,12 @@ class KpisController < InheritedResources::Base
 
     if !params[:kpi].blank?
       user_id         = params[:kpi][:user_id]
-      user            = User.find user_id
-      if user.kpi_template_id.blank?
+      @user           = User.find user_id
+      if @user.kpi_template_id.blank?
         redirect_to kpis_path, notice: 'User have not assigned any KIP yet. Please contact with admin to assign KPI.'
         return
       end
-      kpi_template    = KpiTemplate.includes(:kpi_items).find(user.kpi_template_id)
+      kpi_template    = KpiTemplate.includes(:kpi_items).find(@user.kpi_template_id)
       @kpi_items      = kpi_template.kpi_items
       @kpi            = Kpi.new
     end
