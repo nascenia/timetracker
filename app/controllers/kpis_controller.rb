@@ -45,8 +45,9 @@ class KpisController < InheritedResources::Base
 
   # GET /kpis/1/edit
   def edit
-    @kpi_templates    = KpiTemplate.published
     @team             = User.active.where(ttf: current_user)
+    kpi_template      = KpiTemplate.includes(:kpi_items).find(@kpi.user.kpi_template_id)
+    @kpi_items        = kpi_template.kpi_items
   end
 
   # POST /kpis
@@ -72,7 +73,16 @@ class KpisController < InheritedResources::Base
 
   # PATCH/PUT /kpis/1
   def update
-    if @kpi.update(kpi_params)
+    kpi_attrs = kpi_params
+    data      = []
+    item_ids  = params[:kpi_item_ids].map{|id| id.to_i}
+    item_ids.each_with_index do |item_id, i|
+      data << { item_id: item_id, score: params[:kpi_item_score][i].to_f }
+    end
+
+    kpi_attrs[:data]  = data.to_json
+    byebug
+    if @kpi.update(kpi_attrs)
       respond_to do |format|
         format.html { redirect_to kpis_url, notice: 'KPI was successfully updated.' }
         format.js   { render json: { status: 200, notice: 'Review submitted successfully.' }}
