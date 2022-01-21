@@ -2,10 +2,10 @@
 %hr
 
 - user_id       = @kpi.user_id || ''
-- year          = @kpi.start_date.to_s.split('-').first || ''
-- time_period   = ''
-- start_date    = @kpi.start_date || ''
-- end_date      = @kpi.end_date || ''
+- start_date    = @kpi.start_date.to_s || ''
+- end_date      = @kpi.end_date.to_s || ''
+- year          = start_date.split('-').first || ''
+- time_period   = Kpi::QUATERS.find_index{|q| q[:start_month] == start_date.split('-')[1].to_i && q[:end_month] == end_date.split('-')[1].to_i}
 
 = form_for(@kpi, html: { class: '' }) do |f|
   .row
