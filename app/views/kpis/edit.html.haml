@@ -47,6 +47,7 @@
 
   %br
   = f.submit 'Save', class: 'btn btn-info'
+  = f.submit 'Submit for review', class: 'btn btn-success' if @kpi.saved?
 
 :javascript
   $(document).ready(function() {
