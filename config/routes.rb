@@ -109,6 +109,9 @@ Internal::Application.routes.draw do
   end
 
   resources :kpis, except: [:destroy] do
+    member do
+      post  :comment
+    end
     collection do
       get   :review
     end

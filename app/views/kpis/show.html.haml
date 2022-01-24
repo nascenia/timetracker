@@ -17,13 +17,17 @@
 
 = render 'kpi_items'
 
+
 %hr
 .row
   .col-md-12
     %label TTF/ Appraiser's comment (about job/task/career):
     %p= @kpi.ttf_comment
+
 %hr
 .row
   .col-md-12
     %label Team Member/ Appraisee's comment (about job/task/career):
     %p= @kpi.team_member_comment
+
+= render 'comment_form'

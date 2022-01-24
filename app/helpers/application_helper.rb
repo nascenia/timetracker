@@ -96,10 +96,17 @@ module ApplicationHelper
   end
 
   def kpi_status_str status
-    str = '-'
-
-    str = 'In-review' if(status == Kpi::STATUSES[:inreview])
-    str = 'Approved' if(status == Kpi::STATUSES[:approved])
-    str
+    case status
+    when Kpi::STATUSES[:saved]
+      'Saved'
+    when Kpi::STATUSES[:submitted]
+      'Submitted'
+    when Kpi::STATUSES[:inreview]
+      'In-review'
+    when Kpi::STATUSES[:approved]
+      'Approved'
+    else
+      '-'
+    end
   end
 end

@@ -1,6 +1,6 @@
 class Kpi < ActiveRecord::Base
 
-    STATUSES = { inreview: 0, approved: 1 }
+    STATUSES = { saved: 0, submitted: 1, inreview: 2, approved: 3 }
     QUATERS   = [
       { start_month: 1, end_month: 3 }, 
       { start_month: 4, end_month: 6 }, 
@@ -15,6 +15,22 @@ class Kpi < ActiveRecord::Base
     scope :by_date_range, -> (start_date, end_date) { 
       where("start_date >= ? AND end_date <= ?", Date.parse(start_date), Date.parse(end_date)) 
     }
+
+    def saved?
+      self.status.eql?(STATUSES[:saved])
+    end
+
+    def submitted?
+      self.status.eql?(STATUSES[:submitted])
+    end
+
+    def inreview?
+      self.status.eql?(STATUSES[:inreview])
+    end
+
+    def approved?
+      self.status.eql?(STATUSES[:approved])
+    end
 
     def score
       kpi = self
