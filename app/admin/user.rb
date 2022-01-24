@@ -59,7 +59,7 @@ ActiveAdmin.register User do
 
     column 'KPI' do |user|
       if user.kpi_template.blank?
-        'Assign'
+        'N/A'
       else
         user.kpi_template.title
       end
