@@ -1,6 +1,6 @@
 ActiveAdmin.register User do
 
-  permit_params :email, :name, :is_active, :role, :ttf_id, :sttf_id, :personal_email, :present_address, :mobile_number,
+  permit_params :email, :name, :is_active, :role, :ttf_id, :sttf_id, :kpi_template_id, :personal_email, :present_address, :mobile_number,
                 :alternate_contact, :permanent_address, :date_of_birth, :last_degree, :last_university, :passing_year,
                 :emergency_contact_person_name, :emergency_contact_person_relation, :emergency_contact_person_number,
                 :blood_group, :joining_date, :resignation_date, :is_published, :employee_id
@@ -57,6 +57,13 @@ ActiveAdmin.register User do
       (User.find obj.sttf_id).name if obj.sttf_id.present?
     end
 
+    column 'KPI' do |user|
+      if user.kpi_template.blank?
+        'Assign'
+      else
+        user.kpi_template.title
+      end
+    end
     column :is_active
     actions
   end
@@ -70,6 +77,7 @@ ActiveAdmin.register User do
       row :role
       row :ttf_id
       row :sttf_id
+      row :kpi_template_id
       row :date_of_birth
       row :joining_date
       row 'Date of Last Working Day', &:resignation_date
@@ -96,6 +104,7 @@ ActiveAdmin.register User do
       f.input :role, as: :select, collection: User::ROLES
       f.input :ttf_id, as: :select, collection: User.active.ttf
       #f.input :sttf_id, as: :select, collection: User.super_ttf
+      f.input :kpi_template_id, as: :select, collection: KpiTemplate.published
       f.input :date_of_birth, start_year: 1970
       f.input :joining_date
       f.input :resignation_date, label: 'Date of Last Working Day'
