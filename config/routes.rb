@@ -108,13 +108,11 @@ Internal::Application.routes.draw do
     end
   end
 
-  resources :kpis do
+  resources :kpis, except: [:destroy] do
     collection do
-      post  :assign
       get   :review
     end
   end
-  resources :kpi_items
   
   root :to => 'dashboard#index'
 end

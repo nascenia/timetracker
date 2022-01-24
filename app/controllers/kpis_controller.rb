@@ -100,16 +100,6 @@ class KpisController < InheritedResources::Base
     redirect_to kpis_url, notice: 'KPI was successfully destroyed.'
   end
 
-  # 
-  def assign
-    kpi_template = KpiTemplate.find(params[:kpi][:kpi_template_id])
-    user = User.find(params[:kpi][:user_id].to_i)
-    user.kpi_template = kpi_template
-    user.save
-
-    redirect_to employees_path, notice: 'KPI was successfully assigned to the employee.'
-  end
-
   # POST /kpis/review
   def review
     @team           = User.active.where(ttf: current_user)

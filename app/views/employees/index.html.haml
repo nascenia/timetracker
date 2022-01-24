@@ -6,13 +6,12 @@
     %thead
       %tr
         %th{:width => '25%'} Name
-        %th{:width => '30%'} Email
+        %th{:width => '25%'} Email
         %th{:width => '15%'} Contact Number
         %th{:width => '5%'} Blood Group
         - if current_user.has_admin_privilege?
           %th{:width => '10%'} Joining Date
-          %th{:width => '10%'} KPI
-        %th{:width => '15%'} TTF
+        %th{:width => '20%'} TTF
     %tbody.word-break
       - @employees.each do |employee|
         - if @pending_employees_company_emails.include?(employee.email) and current_user.has_admin_privilege?
@@ -28,7 +27,6 @@
               = employee.blood_group
             - if current_user.has_admin_privilege?
               %td.bg-danger= employee.joining_date
-              %td= 'N/A'
             -if employee.ttf_id?
               %td.bg-danger= employee.ttf.name
             -else
@@ -45,12 +43,6 @@
             %td= employee.blood_group
             - if current_user.has_admin_privilege?
               %td= employee.joining_date
-              %td
-                - if employee.kpi_template.nil?
-                  = link_to 'Assign KPI', new_kpi_path(user_id: employee)
-                - else
-                  = link_to 'KPI', kpis_path(user_id: employee)
-
             -if employee.ttf_id?
               %td= employee.ttf.name
             -else
