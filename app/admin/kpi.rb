@@ -22,7 +22,7 @@ ActiveAdmin.register Kpi do
     column :team_member_comment
     column :score
     column :status do |kpi|
-      kpi.status == 0 ? 'In-Review' : 'Approved'
+        kpi_status_str(kpi.status)
     end
     actions
   end
@@ -35,21 +35,24 @@ ActiveAdmin.register Kpi do
       row   :end_date
       row   :ttf_comment
       row   :team_member_comment
+      row   :score
       row   :status do |kpi|
-        kpi.status == 0 ? 'In-Review' : 'Approved'
+        kpi_status_str(kpi.status)
       end
     end
 
     kpi_items = kpi.user.kpi_template.kpi_items
+    data = JSON.parse(kpi.data)
 
     panel "KPI Items" do
       table_for kpi_items do
         column :title
-        column  :score do
-          '0.0'
+        column  :score do |kpi_item|
+          item = data.find{ |item| item['item_id'] == kpi_item.id }
+          score = item.blank? ? '' : item['score']
+          score
         end
       end
     end
-    
   end
 end
