@@ -12,9 +12,7 @@
       %th Team member comment
       %th Score
       %th Status
-      %th
-      %th
-      %th
+      %th Action
 
   %tbody
     - if @kpis.size.zero?
@@ -28,9 +26,10 @@
         %td= kpi.team_member_comment
         %td= kpi.score
         %td= kpi_status_str(kpi.status)
-        %td= link_to 'Show', kpi
-        %td= link_to 'Edit', edit_kpi_path(kpi)
-        %td= link_to 'Destroy', kpi, method: :delete, data: { confirm: 'Are you sure?' }
+        %td
+          = link_to 'Show', kpi
+          = link_to 'Edit', edit_kpi_path(kpi) if kpi.status.eql?(Kpi::STATUSES[:inreview]) && current_user.is_ttf?
+          = link_to 'Destroy', kpi, method: :delete, data: { confirm: 'Are you sure?' } if current_user.is_ttf?
      
 %br
 

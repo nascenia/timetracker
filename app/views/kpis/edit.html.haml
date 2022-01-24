@@ -58,7 +58,7 @@
 
   %br
   = f.submit 'Save', class: 'btn btn-info'
-  - if current_user.is_ttf? 
+  - if current_user.is_ttf? && current_user.id != @kpi.user_id
     = f.submit 'Submit', class: 'btn btn-success'
 
 :javascript
