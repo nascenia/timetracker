@@ -43,23 +43,10 @@
           %input{ type: 'hidden', name: 'kpi_item_ids[]', value: kpi_item.id }
           %input{ type: 'text', name: 'kpi_item_score[]', value: score, class: 'form-control kpi-score', disabled: !current_user.is_ttf? }
           Out of 5
-  %hr
-  .row
-    .col-md-12
-      = f.label "TTF/ Appraiser's comment (about job/task/career):"
-      = f.text_area :ttf_comment, class: 'form-control', disabled: !current_user.is_ttf?
-  %hr
-  .row
-    .col-md-12
-      = f.label "Team Member/ Appraisee's comment (about job/task/career):"
-      = f.text_area :team_member_comment, class: 'form-control', disabled: current_user.is_ttf?
-    
   = f.hidden_field :user_id, value: user_id
 
   %br
   = f.submit 'Save', class: 'btn btn-info'
-  - if current_user.is_ttf? && current_user.id != @kpi.user_id
-    = f.submit 'Submit', class: 'btn btn-success'
 
 :javascript
   $(document).ready(function() {

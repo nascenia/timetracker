@@ -28,7 +28,7 @@
         %td= kpi_status_str(kpi.status)
         %td
           = link_to 'Show', kpi
-          = link_to 'Edit', edit_kpi_path(kpi) if kpi.status.eql?(Kpi::STATUSES[:inreview]) && current_user.is_ttf?
+          = link_to 'Edit', edit_kpi_path(kpi) if kpi.saved?
 %br
 
 :javascript

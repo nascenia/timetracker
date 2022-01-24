@@ -2,7 +2,7 @@ class KpisController < InheritedResources::Base
 
   layout 'time_tracker'
 
-  before_action :set_kpi, only: [:show, :edit, :update, :destroy]
+  before_action :set_kpi, only: [:show, :edit, :update, :destroy, :comment]
 
   # GET /kpis
   def index
@@ -28,19 +28,8 @@ class KpisController < InheritedResources::Base
 
   # GET /kpis/new
   def new
-
-    unless current_user.admin?
-      redirect_to kpis_path, notice: 'Sorry, You have no permission to access.'
-    end
-
-    if params[:user_id].nil?
-      redirect_to employees_path, notice: 'You have to select employee, please select an employee.'
-      return
-    end
-
     @kpi              = Kpi.new
-    @kpi_templates    = KpiTemplate.published
-    @user             = User.find(params[:user_id])
+    @kpi_template     = KpiTemplate.includes(:kpi_items).find(current_user.kpi_template_id)
   end
 
   # GET /kpis/1/edit
@@ -100,7 +89,7 @@ class KpisController < InheritedResources::Base
     redirect_to kpis_url, notice: 'KPI was successfully destroyed.'
   end
 
-  # POST /kpis/review
+  # GET /kpis/review
   def review
     @team           = User.active.where(ttf: current_user)
 
@@ -116,6 +105,17 @@ class KpisController < InheritedResources::Base
       @kpi            = Kpi.new
     end
     
+  end
+
+  # POST kpi/:id/comment
+  def comment
+    if @kpi.update(kpi_params)
+      respond_to do |format|
+        format.html { redirect_to kpis_url, notice: 'KPI was successfully updated.' }
+      end
+    else
+      redirect_to kpis_url, notice: 'Unable to add comment to KPI. Please try again later.'
+    end
   end
 
   private
