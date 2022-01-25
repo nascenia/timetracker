@@ -1,6 +1,6 @@
 - user_id   = params[:kpi].blank? ? '' : params[:kpi][:user_id]
-- header    = "Team members KPI review"
-- header    = "Reviewing KPI of: #{@user.name}" unless user_id.blank?
+- header    = "Submit team member KPI"
+- header    = "Review and submit KPI of: #{@user.name}" unless user_id.blank?
 
 %h2= header
 %hr
