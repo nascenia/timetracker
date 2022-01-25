@@ -109,4 +109,9 @@ module ApplicationHelper
       '-'
     end
   end
+
+  def kpi_editable? kpi
+    (kpi.draft? && kpi.user.id.eql?(current_user.id)) || 
+    (kpi.review_request? && kpi.user.ttf_id.eql?(current_user.id))
+  end
 end
