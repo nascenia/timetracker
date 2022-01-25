@@ -52,7 +52,7 @@ class KpisController < InheritedResources::Base
     @kpi.data    = data.to_json
     @kpi.status  = Kpi::STATUSES[:draft] if params[:commit].eql?('Save')
     @kpi.status  = Kpi::STATUSES[:review_request] if params[:commit].eql?('Review request')
-    @kpi.status  = Kpi::STATUSES[:completed] if params[:commit].eql?('Submit')
+    @kpi.status  = Kpi::STATUSES[:reviewed] if params[:commit].eql?('Save & submit')
 
     if @kpi.save
       redirect_to kpis_path, notice: 'KPI was successfully created.'

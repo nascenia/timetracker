@@ -37,7 +37,7 @@
       %li= link_to "KPI's", kpis_path
       %li= link_to "Submit my KPI", new_kpi_path
       - if [2, 3].include?(current_user.role)
-        %li= link_to "Submit team new KPI", review_kpis_path
+        %li= link_to "Submit team KPI", review_kpis_path
   %li{class: (params[:controller].eql?('users/registrations')? 'dropdown active' : 'dropdown')}
     %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
       = current_user.name
