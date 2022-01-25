@@ -60,17 +60,11 @@
       .col-md-12
         = f.label "TTF/ Appraiser's comment (about job/task/career):"
         = f.text_area :ttf_comment, class: 'form-control'
-    %hr
-    .row
-      .col-md-12
-        = f.label "Team Member/ Appraisee's comment (about job/task/career):"
-        = f.text_area :team_member_comment, class: 'form-control'
-        
+
     = f.hidden_field :user_id, value: user_id
 
     %br
-    = f.submit 'Save', class: 'btn btn-info'
-    = f.submit 'Submit', class: 'btn btn-success'
+    = f.submit 'Save & submit', class: 'btn btn-success'
 
 :javascript
   $(document).ready(function() {
