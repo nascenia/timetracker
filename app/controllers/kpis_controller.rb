@@ -71,6 +71,7 @@ class KpisController < InheritedResources::Base
 
     kpi_attrs[:data]    = data.to_json
     kpi_attrs[:status]  = Kpi::STATUSES[:saved] if params[:commit].eql?('Save')
+    kpi_attrs[:status]  = Kpi::STATUSES[:inreview] if params[:commit].eql?('Submit')
     kpi_attrs[:status]  = Kpi::STATUSES[:submitted] if params[:commit].eql?('Submit for review')
 
     if @kpi.update(kpi_attrs)
