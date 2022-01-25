@@ -2,18 +2,18 @@
 %hr
 
 .row
-  .col-md-4
+  .col-md-3
     %label Start date:
     = @kpi.start_date
-  .col-md-4
+  .col-md-3
     %label End date:
     = @kpi.end_date
+  .col-md-4
+    %label Status:
+    %span.label.label-info= kpi_status_str(@kpi.status)
   .col-md-2
-    %label.label.label-info Status:
-    %span= kpi_status_str(@kpi.status)
-  .col-md-2
-    %label.label.label-success Score:
-    %span= @kpi.score
+    %label Score:
+    %span.label.label-success= @kpi.score
 
 = render 'kpi_items'
 

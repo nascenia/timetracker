@@ -97,14 +97,14 @@ module ApplicationHelper
 
   def kpi_status_str status
     case status
-    when Kpi::STATUSES[:saved]
-      'Saved'
-    when Kpi::STATUSES[:submitted]
-      'Submitted'
-    when Kpi::STATUSES[:inreview]
-      'In-review'
-    when Kpi::STATUSES[:approved]
-      'Approved'
+    when Kpi::STATUSES[:draft]
+      'Draft'
+    when Kpi::STATUSES[:review_request]
+      'Review request'
+    when Kpi::STATUSES[:reviewed]
+      'Reviewed'
+    when Kpi::STATUSES[:completed]
+      'Completed'
     else
       '-'
     end

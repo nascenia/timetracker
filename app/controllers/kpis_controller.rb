@@ -50,8 +50,9 @@ class KpisController < InheritedResources::Base
     end
 
     @kpi.data    = data.to_json
-    @kpi.status  = Kpi::STATUSES[:inreview] if params[:commit].eql?('Save')
-    @kpi.status  = Kpi::STATUSES[:approved] if params[:commit].eql?('Submit')
+    @kpi.status  = Kpi::STATUSES[:draft] if params[:commit].eql?('Save')
+    @kpi.status  = Kpi::STATUSES[:review_request] if params[:commit].eql?('Review request')
+    @kpi.status  = Kpi::STATUSES[:completed] if params[:commit].eql?('Submit')
 
     if @kpi.save
       redirect_to kpis_path, notice: 'KPI was successfully created.'
@@ -70,14 +71,23 @@ class KpisController < InheritedResources::Base
     end
 
     kpi_attrs[:data]    = data.to_json
-    kpi_attrs[:status]  = Kpi::STATUSES[:saved] if params[:commit].eql?('Save')
-    kpi_attrs[:status]  = Kpi::STATUSES[:inreview] if params[:commit].eql?('Submit')
-    kpi_attrs[:status]  = Kpi::STATUSES[:submitted] if params[:commit].eql?('Submit for review')
+    notice              = 'KPI updated successfully.'
+
+    if params[:commit].eql?('Save')
+      kpi_attrs[:status]  = Kpi::STATUSES[:draft]
+      notice              = 'KPI saved successfully.'
+    elsif params[:commit].eql?('Submit')
+      kpi_attrs[:status]  = Kpi::STATUSES[:reviewed]
+      notice              = 'KPI reviewed successfully.'
+    elsif params[:commit].eql?('Submit for review')
+      kpi_attrs[:status]  = Kpi::STATUSES[:review_request]
+      notice              = 'KPI review request sent successfully.'
+    end
 
     if @kpi.update(kpi_attrs)
       respond_to do |format|
-        format.html { redirect_to kpis_url, notice: 'KPI was successfully updated.' }
-        format.js   { render json: { status: 200, notice: 'Review submitted successfully.' }}
+        format.html { redirect_to kpis_url, notice: notice }
+        format.js   { render json: { status: 200, notice: notice }}
       end
     else
       render :edit
