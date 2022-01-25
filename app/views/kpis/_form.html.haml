@@ -46,7 +46,7 @@
 
 :javascript
   $(document).ready(function() {
-    let goal = { 
+    let kpi = { 
       own: $('#kpi_user_id').val(),
       team: null
     };
@@ -62,7 +62,7 @@
 
     $(document).on('click', 'input[type=radio]', function() {
 
-      let selected = $('input[name="goal[personal_or_team]"]:checked').val();
+      let selected = $('input[name="kpi[personal_or_team]"]:checked').val();
 
       if(selected == 'own') {
         $('#kpi_team_member').prop('disabled', 'disabled');
@@ -72,12 +72,12 @@
     });
 
     $(document).on('change', 'select#kpi_team_member', function() {
-      goal.team = $(this).children('option:selected').val();
+      kpi.team = $(this).children('option:selected').val();
 
-      $('#kpi_user_id').val(goal.team);
+      $('#kpi_user_id').val(kpi.team);
     });
 
-    $(document).on('change', 'select#goal_year', function() {
+    $(document).on('change', 'select#kpi_year', function() {
       year = $(this).children("option:selected").val();
 
       let start_date = $('#kpi_start_date').val();
