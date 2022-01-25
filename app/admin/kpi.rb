@@ -16,8 +16,12 @@ ActiveAdmin.register Kpi do
   index do
     selectable_column
     id_column
-    column :start_date
-    column :end_date
+    column :start_date do |kpi|
+      kpi.start_date.strftime('%Y-%m-%d')
+    end
+    column :end_date do |kpi|
+      kpi.end_date.strftime('%Y-%m-%d')
+    end
     column :ttf_comment
     column :team_member_comment
     column :score
@@ -31,8 +35,12 @@ ActiveAdmin.register Kpi do
     attributes_table do
       row   :id
       row   :user
-      row   :start_date
-      row   :end_date
+      row   :start_date do |kpi|
+        kpi.start_date.strftime('%Y-%m-%d')
+      end
+      row   :end_date do |kpi|
+        kpi.end_date.strftime('%Y-%m-%d')
+      end
       row   :ttf_comment
       row   :team_member_comment
       row   :score
