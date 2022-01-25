@@ -28,7 +28,8 @@
         %td= kpi_status_str(kpi.status)
         %td
           = link_to 'Show', kpi
-          = link_to 'Edit', edit_kpi_path(kpi) if kpi.draft? || kpi.review_request?
+          - if (kpi.draft? && kpi.user.id.eql?(current_user.id)) || (kpi.review_request? && kpi.user.ttf_id.eql?(current_user.id))
+            = link_to 'Edit', edit_kpi_path(kpi) 
 %br
 
 :javascript
