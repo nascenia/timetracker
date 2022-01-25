@@ -44,10 +44,18 @@
           %input{ type: 'text', name: 'kpi_item_score[]', value: score, class: 'form-control kpi-score', disabled: !current_user.is_ttf? }
           Out of 5
   = f.hidden_field :user_id, value: user_id
-
+  - if @kpi.submitted? && @kpi.user.ttf_id.eql?(current_user.id) 
+    %hr
+    .row
+      .col-md-12
+        = f.label "TTF/ Appraiser's comment (about job/task/career):"
+        = f.text_area :ttf_comment, class: 'form-control'
+        = f.hidden_field :status, value: Kpi::STATUSES[:inreview]
+  
   %br
-  = f.submit 'Save', class: 'btn btn-info'
+  = f.submit 'Save', class: 'btn btn-default' if !@kpi.submitted?
   = f.submit 'Submit for review', class: 'btn btn-success' if @kpi.saved?
+  = f.submit 'Submit', class: 'btn btn-info' if current_user.is_ttf? && current_user.id != @kpi.user_id
 
 :javascript
   $(document).ready(function() {
