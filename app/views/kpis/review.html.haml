@@ -10,6 +10,7 @@
     .col-md-4
       .form-group
         = f.label 'Team member'
+        = label '', ' *', class: 'required-asterisk'
         = f.select :user_id, options_for_select(@team.map{ |u| [u.name, u.id] }, user_id), { include_blank: 'select' }, class: 'form-control'
     .col-md-2.form-group
       = blank_space
@@ -21,7 +22,7 @@
   - start_date    = params[:kpi][:start_date].blank? ? '' : params[:kpi][:start_date]
   - end_date      = params[:kpi][:end_date].blank? ? '' : params[:kpi][:end_date]
 
-  = form_for(:kpi, url: kpis_path, method: :post, html: { class: '' }) do |f|
+  = form_for(:kpi, url: kpis_path, method: :post, html: { class: '', id: 'kpi-review-form' }) do |f|
     %hr
     .row
       .col-md-2
@@ -29,19 +30,23 @@
           - c_y = Time.now.year
           - s_y = c_y - 10
           = f.label 'Year'
+          = label '', ' *', class: 'required-asterisk'
           = f.select :year, options_for_select((s_y..c_y).to_a.map{ |y| [y, y] }.reverse, year), { include_blank: 'select' }, class: 'form-control'
       .col-md-2
         .form-group
           = f.label 'Time period'
+          = label '', ' *', class: 'required-asterisk'
           = f.select :time_period, options_for_select([['Q-1', '0'], ['Q-2', '1'], ['Q-3', '2'], ['Q-4', '3']], time_period), { include_blank: 'select'}, class: 'form-control'
       .col-md-2
         .form-group
           = f.label :start_date
-          = f.text_field :start_date, value: start_date, class: 'form-control'
+          = label '', ' *', class: 'required-asterisk'
+          = f.text_field :start_date, value: start_date, class: 'form-control', required: true
       .col-md-2
         .form-group
           = f.label :end_date
-          = f.text_field :end_date, value: end_date, class: 'form-control'
+          = label '', ' *', class: 'required-asterisk'
+          = f.text_field :end_date, value: end_date, class: 'form-control', required: true
 
     - @kpi_items.each do |kpi_item|
       %hr
@@ -59,7 +64,8 @@
     .row
       .col-md-12
         = f.label "TTF/ Appraiser's comment (about job/task/career):"
-        = f.text_area :ttf_comment, class: 'form-control'
+        = label '', ' *', class: 'required-asterisk'
+        = f.text_area :ttf_comment, class: 'form-control', required: true
 
     = f.hidden_field :user_id, value: user_id
 
