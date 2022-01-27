@@ -16,6 +16,7 @@ permit_params [:user_id, :start_date, :end_date, :ttf_comment, :team_member_comm
   index do
     selectable_column
     id_column
+    column :user
     column :start_date do |kpi|
       kpi.start_date.strftime('%Y-%m-%d')
     end
