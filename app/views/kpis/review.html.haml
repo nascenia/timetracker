@@ -56,9 +56,10 @@
           %p= kpi_item.description
         .col-md-2
           %label Score
+          = label '', ' *', class: 'required-asterisk'
           %br
           %input{ type: 'hidden', name: 'kpi_item_ids[]', value: kpi_item.id }
-          %input{ type: 'text', name: 'kpi_item_score[]', value: '', class: 'form-control kpi-score' }
+          %input{ type: 'text', name: 'kpi_item_score[]', value: '', class: 'form-control kpi-score', required: true }
           Out of 5
     %hr
     .row
