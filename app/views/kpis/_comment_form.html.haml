@@ -4,7 +4,8 @@
     .row
       .col-md-12
         = f.label "TTF/ Appraiser's comment (about job/task/career):"
-        = f.text_area :ttf_comment, class: 'form-control'
+        = label '', ' *', class: 'required-asterisk'
+        = f.text_area :ttf_comment, class: 'form-control', required: true
     .row
       .col-md-2.form-group
         = blank_space
@@ -16,7 +17,8 @@
     .row
       .col-md-12
         = f.label "Team Member/ Appraisee's comment (about job/task/career):"
-        = f.text_area :team_member_comment, class: 'form-control'
+        = label '', ' *', class: 'required-asterisk'
+        = f.text_area :team_member_comment, class: 'form-control', required: true
         = f.hidden_field :status, value: Kpi::STATUSES[:completed]
     .row
       .col-md-2.form-group

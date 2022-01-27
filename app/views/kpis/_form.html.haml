@@ -19,11 +19,13 @@
     .col-md-2
       .form-group
         = f.label :start_date
-        = f.text_field :start_date, value: start_date, class: 'form-control'
+        = label '', ' *', class: 'required-asterisk'
+        = f.text_field :start_date, value: start_date, class: 'form-control', required: true
     .col-md-2
       .form-group
         = f.label :end_date
-        = f.text_field :end_date, value: end_date, class: 'form-control'
+        = label '', ' *', class: 'required-asterisk'
+        = f.text_field :end_date, value: end_date, class: 'form-control', required: true
 
   - @kpi_template.kpi_items.each do |kpi_item|
     %hr
@@ -33,9 +35,10 @@
         %p= kpi_item.description
       .col-md-2
         %label Score
+        = label '', ' *', class: 'required-asterisk'
         %br
         %input{ type: 'hidden', name: 'kpi_item_ids[]', value: kpi_item.id }
-        %input{ type: 'text', name: 'kpi_item_score[]', value: '', class: 'form-control kpi-score' }
+        %input{ type: 'text', name: 'kpi_item_score[]', value: '', class: 'form-control kpi-score', required: true }
         Out of 5
 
   = f.hidden_field :user_id, value: user_id

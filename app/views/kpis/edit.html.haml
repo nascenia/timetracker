@@ -14,19 +14,21 @@
         - c_y = Time.now.year
         - s_y = c_y - 10
         = f.label 'Year'
-        = f.select :year, options_for_select((s_y..c_y).to_a.map{ |y| [y, y] }.reverse, year), { include_blank: 'select' }, class: 'form-control', disabled: !current_user.is_ttf?
+        = f.select :year, options_for_select((s_y..c_y).to_a.map{ |y| [y, y] }.reverse, year), { include_blank: 'select' }, class: 'form-control'
     .col-md-2
       .form-group
         = f.label 'Time period'
-        = f.select :time_period, options_for_select([['Q-1', '0'], ['Q-2', '1'], ['Q-3', '2'], ['Q-4', '3']], time_period), { include_blank: 'select'}, class: 'form-control', disabled: !current_user.is_ttf?
+        = f.select :time_period, options_for_select([['Q-1', '0'], ['Q-2', '1'], ['Q-3', '2'], ['Q-4', '3']], time_period), { include_blank: 'select'}, class: 'form-control'
     .col-md-2
       .form-group
         = f.label :start_date
-        = f.text_field :start_date, value: start_date, class: 'form-control', disabled: !current_user.is_ttf?
+        = label '', ' *', class: 'required-asterisk'
+        = f.text_field :start_date, value: start_date, class: 'form-control', required: true
     .col-md-2
       .form-group
         = f.label :end_date
-        = f.text_field :end_date, value: end_date, class: 'form-control', disabled: !current_user.is_ttf?
+        = label '', ' *', class: 'required-asterisk'
+        = f.text_field :end_date, value: end_date, class: 'form-control', required: true
 
   - data = JSON.parse(@kpi.data)
   - @kpi_items.each do |kpi_item|
@@ -39,9 +41,10 @@
         %p= kpi_item.description
       .col-md-2
         %label Score
+        = label '', ' *', class: 'required-asterisk'
         %br
           %input{ type: 'hidden', name: 'kpi_item_ids[]', value: kpi_item.id }
-          %input{ type: 'text', name: 'kpi_item_score[]', value: score, class: 'form-control kpi-score', disabled: !current_user.is_ttf? }
+          %input{ type: 'text', name: 'kpi_item_score[]', value: score, class: 'form-control kpi-score', required: true }
           Out of 5
   = f.hidden_field :user_id, value: user_id
   - if @kpi.review_request? && @kpi.user.ttf_id.eql?(current_user.id) 
@@ -49,7 +52,8 @@
     .row
       .col-md-12
         = f.label "TTF/ Appraiser's comment (about job/task/career):"
-        = f.text_area :ttf_comment, class: 'form-control'
+        = label '', ' *', class: 'required-asterisk'
+        = f.text_area :ttf_comment, class: 'form-control', required: true
         = f.hidden_field :status, value: Kpi::STATUSES[:reviewed]
   
   %br
