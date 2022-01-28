@@ -30,8 +30,9 @@ class KpisController < InheritedResources::Base
   def new
     if current_user.kpi_template_id.blank?
       redirect_to kpis_path, notice: 'Sorry, you have not assigned any KPI. Please contact with HR/admin.'
-      return;
+      return
     end
+
     @kpi              = Kpi.new
     @kpi_template     = KpiTemplate.includes(:kpi_items).find(current_user.kpi_template_id)
   end
