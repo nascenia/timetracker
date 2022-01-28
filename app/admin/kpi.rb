@@ -3,7 +3,7 @@ ActiveAdmin.register Kpi do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
-permit_params [:user_id, :start_date, :end_date, :ttf_comment, :team_member_comment, :data, :status], :of, :attributes, :on, :model
+  permit_params [:user_id, :start_date, :end_date, :ttf_comment, :team_member_comment, :data, :status], :of, :attributes, :on, :model
 #
 # or
 #
@@ -12,6 +12,8 @@ permit_params [:user_id, :start_date, :end_date, :ttf_comment, :team_member_comm
 #   permitted << :other if params[:action] == 'create' && current_user.admin?
 #   permitted
 # end
+
+  actions :all, except: [:new]
 
   index do
     selectable_column
