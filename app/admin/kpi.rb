@@ -14,6 +14,11 @@ ActiveAdmin.register Kpi do
 # end
 
   actions :all, except: [:new]
+  
+  filter  :user, as: :select, collection: proc { User.active }
+  filter  :start_date
+  filter  :end_date
+  filter  :status, as: :select, collection: Kpi::STATUSES.to_a
 
   index do
     selectable_column
