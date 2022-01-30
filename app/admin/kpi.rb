@@ -66,4 +66,23 @@ ActiveAdmin.register Kpi do
       end
     end
   end
+
+  csv do
+    column   :id
+    column   :user do |kpi|
+      kpi.user.name
+    end
+    column   :start_date do |kpi|
+      kpi.start_date.strftime('%Y-%m-%d')
+    end
+    column   :end_date do |kpi|
+      kpi.end_date.strftime('%Y-%m-%d')
+    end
+    column   :ttf_comment
+    column   :team_member_comment
+    column   :score
+    column   :status do |kpi|
+      kpi_status_str(kpi.status)
+    end
+  end
 end
