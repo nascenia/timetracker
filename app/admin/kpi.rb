@@ -20,7 +20,7 @@ ActiveAdmin.register Kpi do
   filter  :end_date
   filter  :status, as: :select, collection: Kpi::STATUSES.to_a
 
-  index do
+  index download_links: [:csv] do
     selectable_column
     id_column
     column :user
