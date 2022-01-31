@@ -3,4 +3,6 @@ class KpiTemplate < ActiveRecord::Base
     has_many    :users
     
     scope :published, -> { where(published: true) }
+
+    validates   :title, presence: true, uniqueness: true
 end
