@@ -12,6 +12,10 @@ class Kpi < ActiveRecord::Base
 
     attr_accessor :personal_or_team, :kpi_template_id, :team_member, :year, :time_period
 
+    validates :user, presence: true
+    validates :start_date, presence: true
+    validates :end_date, presence: true
+
     scope :by_date_range, -> (start_date, end_date) { 
       where("start_date >= ? AND end_date <= ?", Date.parse(start_date), Date.parse(end_date)) 
     }
