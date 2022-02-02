@@ -43,8 +43,8 @@
 :javascript
   $(document).ready(function() {
     let goal = { 
-      own: $('#goal_user_id').val(),
-      team: null
+      own_id: $('#goal_user_id').val(),
+      team_id: null
     };
     let year = new Date().getFullYear();
     let quaters = [
@@ -61,16 +61,19 @@
       let selected = $('input[name="goal[personal_or_team]"]:checked').val();
 
       if(selected == 'own') {
-        $('#goal_team_member').prop('disabled', 'disabled');
+        $('#goal_user_id').val(goal.own_id);
+        $('select#goal_team_member').val("");
+        $('#goal_team_member').prop('disabled', true);
       } else {
-        $('#goal_team_member').prop('disabled', '');
+        $('#goal_user_id').val(goal.team_id);
+        $('#goal_team_member').prop('disabled', false);
       }
     });
 
     $(document).on('change', 'select#goal_team_member', function() {
-      goal.team = $(this).children('option:selected').val();
+      goal.team_id = $(this).children('option:selected').val();
 
-      $('#goal_user_id').val(goal.team);
+      $('#goal_user_id').val(goal.team_id);
     });
 
     $(document).on('change', 'select#goal_year', function() {
