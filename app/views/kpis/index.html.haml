@@ -34,9 +34,9 @@
 
 :javascript
   $(document).ready(function() {
-    let goal = { 
-      own: $('#kpi_user_id').val(),
-      team: null
+    let kpi = { 
+      own_id: $('#kpi_user_id').val(),
+      team_id: null
     };
     let year = new Date().getFullYear();
     let quaters = [
@@ -50,22 +50,25 @@
 
     $(document).on('click', 'input[type=radio]', function() {
 
-      let selected = $('input[name="goal[personal_or_team]"]:checked').val();
+      let selected = $('input[name="kpi[personal_or_team]"]:checked').val();
 
       if(selected == 'own') {
-        $('#kpi_team_member').prop('disabled', 'disabled');
+        $('#kpi_user_id').val(kpi.own_id);
+        $('select#kpi_team_member').val("");
+        $('#kpi_team_member').prop('disabled', true);
       } else {
-        $('#kpi_team_member').prop('disabled', '');
+        $('#kpi_user_id').val(kpi.team_id);
+        $('#kpi_team_member').prop('disabled', false);
       }
     });
 
     $(document).on('change', 'select#kpi_team_member', function() {
-      goal.team = $(this).children('option:selected').val();
+      kpi.team_id = $(this).children('option:selected').val();
 
-      $('#kpi_user_id').val(goal.team);
+      $('#kpi_user_id').val(kpi.team_id);
     });
 
-    $(document).on('change', 'select#goal_year', function() {
+    $(document).on('change', 'select#kpi_year', function() {
       year = $(this).children("option:selected").val();
 
       let start_date = $('#kpi_start_date').val();

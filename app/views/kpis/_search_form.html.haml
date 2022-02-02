@@ -41,29 +41,3 @@
     .col-md-2.form-group
       = blank_space
       = f.submit 'Search', class: 'btn btn-info btn-block'
-
-:javascript
-  $(document).ready(function() {
-    let kpi = { 
-      own_id: $('#kpi_user_id').val(),
-      team_id: null
-    };
-
-    $(document).on('click', 'input[type=radio]', function() {
-      let selected = $('input[name="kpi[personal_or_team]"]:checked').val();
-
-      if(selected == 'own') {
-        $('#kpi_user_id').val(kpi.own_id);
-        $('select#kpi_team_member').val("");
-        $("select#kpi_team_member").prop('disabled', true);
-      } else {
-        $('#kpi_user_id').val(kpi.team_id);
-        $('select#kpi_team_member').prop('disabled', false);
-      }
-    });
-
-    $(document).on('change', 'select#goal_team_member', function() {
-      kpi.team_id = $(this).children('option:selected').val();
-      $('#kpi_user_id').val(kpi.team_id);
-    });
-  });
