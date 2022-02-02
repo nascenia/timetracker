@@ -1,3 +1,4 @@
+- user_id       = params[:commit] == 'Search' ? params[:kpi][:user_id].to_i : current_user.id
 - team_member   = params[:commit] == 'Search' ? params[:kpi][:team_member] : ''
 - year          = params[:commit] == 'Search' ? params[:kpi][:year] : ''
 - time_period   = params[:commit] == 'Search' ? params[:kpi][:time_period] : ''
@@ -10,17 +11,14 @@
       .form-group
         = f.label "Type"
         %br
-        = f.radio_button :personal_or_team, "own", { checked: team_member.blank? }
+        = f.radio_button :personal_or_team, "own", { checked: user_id == current_user.id }
         My KPI
-        = f.radio_button :personal_or_team, "team", { checked: !team_member.blank? }
+        = f.radio_button :personal_or_team, "team", { checked: user_id != current_user.id }
         Team KPI
     .col-md-2
       .form-group
         = f.label 'Team member'
-        - if team_member.blank?
-          = f.select :team_member, options_for_select(@team.map{ |u| [u.name, u.id] }, team_member), { include_blank: 'select' }, class: 'form-control', disabled: 'disabled'
-        - else
-          = f.select :team_member, options_for_select(@team.map{ |u| [u.name, u.id] }, team_member), { include_blank: 'select' }, class: 'form-control'
+        = f.select :team_member, options_for_select(@team.map{ |u| [u.name, u.id] }, user_id), { include_blank: 'select' }, class: 'form-control', disabled: user_id == current_user.id
         = f.hidden_field :user_id, value: current_user.id
     .col-md-2
       .form-group
@@ -43,3 +41,29 @@
     .col-md-2.form-group
       = blank_space
       = f.submit 'Search', class: 'btn btn-info btn-block'
+
+:javascript
+  $(document).ready(function() {
+    let kpi = { 
+      own_id: $('#kpi_user_id').val(),
+      team_id: null
+    };
+
+    $(document).on('click', 'input[type=radio]', function() {
+      let selected = $('input[name="kpi[personal_or_team]"]:checked').val();
+
+      if(selected == 'own') {
+        $('#kpi_user_id').val(kpi.own_id);
+        $('select#kpi_team_member').val("");
+        $("select#kpi_team_member").prop('disabled', true);
+      } else {
+        $('#kpi_user_id').val(kpi.team_id);
+        $('select#kpi_team_member').prop('disabled', false);
+      }
+    });
+
+    $(document).on('change', 'select#goal_team_member', function() {
+      kpi.team_id = $(this).children('option:selected').val();
+      $('#kpi_user_id').val(kpi.team_id);
+    });
+  });

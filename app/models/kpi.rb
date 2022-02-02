@@ -52,6 +52,6 @@ class Kpi < ActiveRecord::Base
       unless params.blank?
         kpi = kpi.by_date_range(params[:start_date], params[:end_date]) unless params[:start_date].blank? && params[:end_date].blank?
       end
-      kpi = kpi.order(id: :desc)
+      kpi = kpi.order(start_date: :desc)
     end
 end
