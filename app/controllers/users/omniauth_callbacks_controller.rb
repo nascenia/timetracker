@@ -17,7 +17,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         redirect_to root_path and return
       end
     else
-      if request.env["omniauth.auth"][:extra][:id_info][:email].to_s == 'satamim79@gmail.com'
+      outside_email = request.env["omniauth.auth"][:extra][:id_info][:email].to_s
+
+      if CONFIG['email_whitelist'].include? outside_email
         @user = User.find_for_google_oauth2(request.env["omniauth.auth"])
         if !@user.nil?
           if @user.persisted?

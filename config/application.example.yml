@@ -2,6 +2,7 @@ default: &default
   ip_whitelist: ['192.168.1.1', '192.168.1.2', '127.0.0.1']
   admins: ['admin@example.com', 'imran.saimun@bdipo.com', 'masud@example.com']
   domain_whitelist: ['nascenia.com', 'bdipo.com']
+  email_whitelist: ['xxx@gmail.com', 'xxxx@gmail.com']
   year_range:
     start: 2010
     end: 2020
