@@ -38,14 +38,14 @@
         = label '', ' *', class: 'required-asterisk'
         %br
         %input{ type: 'hidden', name: 'kpi_item_ids[]', value: kpi_item.id }
-        %input{ type: 'text', name: 'kpi_item_score[]', value: '', class: 'form-control kpi-score', required: true }
+        %input{ type: 'number', name: 'kpi_item_score[]', value: '', min: 0, max: 5, class: 'form-control kpi-score', required: true }
         Out of 5
 
   = f.hidden_field :user_id, value: user_id
 
   %br
-  = f.submit 'Save', class: 'btn btn-default'
-  = f.submit 'Review request', class: 'btn btn-success'
+  =# f.submit 'Save', class: 'btn btn-default'
+  = f.submit 'Submit for Review', class: 'btn btn-success'
 
 :javascript
   $(document).ready(function() {
