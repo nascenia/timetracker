@@ -3,21 +3,20 @@
   %p Time & Leave tracking made smart!
   %hr
   = link_to 'Sign in with Google', user_omniauth_authorize_path(:google_oauth2), :class => 'btn btn-large btn-primary btn-sign-in'
-  %hr
+
+%h3.text-center Or
+
+.row
+  .col-md-4.col-md-offset-4
+    = form_for(resource, as: resource_name, url: session_path(resource_name), class: 'form-horizontal') do |f|
+      .form-group    
+        = f.label :email
+        = f.email_field :email, autofocus: true, class: 'form-control'
+      .form-group
+        = f.label :password
+        = f.password_field :password, autocomplete: 'off', class: 'form-control'
+      .form-group
+        = f.submit 'Sign In', class: 'btn btn-primary btn-block'
+
+.text-center.custom-font
   %p Start timers and easily manage your existing time entries in just one tap.
-
--# Uncomment the lines below if you need to sign in using local accounts on development mode for testing purpose
--# Also carefully make sure these lines are not pushed or deployed uncommented
-
--#= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
--#  %div
--#    = f.label :email
--#    %br/
--#    = f.email_field :email, autofocus: true
--#
--#  %div
--#    = f.label :password
--#    %br/
--#    = f.password_field :password, autocomplete: 'off'
--#
--#  = f.submit 'Sign In'
