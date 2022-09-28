@@ -174,6 +174,12 @@
                     <%= f.email_field :HR_email,  pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$', title: 'Enter a valid email address!', id: 'hr_email', onchange: 'validateEmails();', class: 'form-control', maxlength: '128', required: true %>
                 <% end %>
             </div>
+            <div class="col-md-12">
+                <%= f.label :zoho_email_account do %>
+                    <%= f.check_box :zoho_email_account, checked: false, required: true %>
+                    Zoho email account
+                <% end %>
+            </div>
         <% end %>    
     </div>
     <%= f.submit 'Submit', class: 'btn btn-success', confirm: 'Are you sure?' %>

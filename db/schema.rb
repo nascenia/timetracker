@@ -15,9 +15,9 @@ ActiveRecord::Schema.define(version: 20221004063619) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
-    t.text     "body",          limit: 16777215
-    t.string   "resource_id",                    null: false
-    t.string   "resource_type",                  null: false
+    t.text     "body"
+    t.string   "resource_id",   null: false
+    t.string   "resource_type", null: false
     t.integer  "author_id"
     t.string   "author_type"
     t.datetime "created_at"
@@ -66,7 +66,7 @@ ActiveRecord::Schema.define(version: 20221004063619) do
   add_index "attendances", ["user_id"], name: "index_attendances_on_user_id", using: :btree
 
   create_table "comments", force: true do |t|
-    t.text     "body",       limit: 16777215
+    t.text     "body"
     t.integer  "leave_id"
     t.integer  "user_id"
     t.datetime "created_at"
@@ -141,23 +141,6 @@ ActiveRecord::Schema.define(version: 20221004063619) do
 
   add_index "holidays", ["holiday_scheme_id"], name: "index_holidays_on_holiday_scheme_id", using: :btree
 
-  create_table "honor_board_categories", force: true do |t|
-    t.string   "category",   default: "", null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "honor_board_contents", force: true do |t|
-    t.string   "name"
-    t.text     "reason",                  limit: 16777215
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "honor_board_category_id"
-    t.string   "photo"
-  end
-
-  add_index "honor_board_contents", ["honor_board_category_id"], name: "index_honor_board_contents_on_honor_board_category_id", using: :btree
-
   create_table "kpi_items", force: true do |t|
     t.string   "title"
     t.text     "description"
@@ -202,13 +185,13 @@ ActiveRecord::Schema.define(version: 20221004063619) do
     t.integer  "consumed_vacation"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "accrued_vacation_this_year",                  default: 0
-    t.integer  "accrued_medical_this_year",                   default: 0
-    t.integer  "accrued_vacation_total",                      default: 0
-    t.integer  "accrued_medical_total",                       default: 0
+    t.integer  "accrued_vacation_this_year", default: 0
+    t.integer  "accrued_medical_this_year",  default: 0
+    t.integer  "accrued_vacation_total",     default: 0
+    t.integer  "accrued_medical_total",      default: 0
     t.datetime "commenced_date"
-    t.integer  "awarded_leave",                               default: 0
-    t.text     "note",                       limit: 16777215
+    t.integer  "awarded_leave",              default: 0
+    t.text     "note"
   end
 
   add_index "leave_trackers", ["user_id"], name: "index_leave_trackers_on_user_id", using: :btree
@@ -222,15 +205,15 @@ ActiveRecord::Schema.define(version: 20221004063619) do
 
   create_table "leaves", force: true do |t|
     t.integer  "user_id"
-    t.text     "reason",           limit: 16777215
+    t.text     "reason"
     t.integer  "leave_type"
     t.integer  "status"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date     "start_date"
     t.date     "end_date"
-    t.integer  "half_day",                          default: 0, null: false
-    t.integer  "pending_at",                                    null: false
+    t.integer  "half_day",         default: 0, null: false
+    t.integer  "pending_at",                   null: false
     t.integer  "approval_path_id"
     t.integer  "hour"
   end
@@ -310,23 +293,16 @@ ActiveRecord::Schema.define(version: 20221004063619) do
 
   add_index "promotions", ["user_id"], name: "index_promotions_on_user_id", using: :btree
 
-  create_table "salaats", force: true do |t|
-    t.string   "waqt"
-    t.time     "time"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "timesheets", force: true do |t|
     t.date     "date"
-    t.text     "description",   limit: 16777215
+    t.text     "description"
     t.integer  "project_id"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "task",          limit: 16777215
+    t.text     "task"
     t.string   "ticket_number"
-    t.text     "ticket_link",   limit: 16777215
+    t.text     "ticket_link"
     t.integer  "hours"
     t.integer  "minutes"
   end
@@ -335,12 +311,12 @@ ActiveRecord::Schema.define(version: 20221004063619) do
   add_index "timesheets", ["user_id"], name: "index_timesheets_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "email",                                              default: "",    null: false
-    t.string   "encrypted_password",                                 default: "",    null: false
+    t.string   "email",                                        default: "",    null: false
+    t.string   "encrypted_password",                           default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                                      default: 0,     null: false
+    t.integer  "sign_in_count",                                default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -348,7 +324,7 @@ ActiveRecord::Schema.define(version: 20221004063619) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
-    t.boolean  "is_active",                                          default: true
+    t.boolean  "is_active",                                    default: true
     t.integer  "role"
     t.integer  "ttf_id"
     t.integer  "sttf_id"
@@ -356,10 +332,10 @@ ActiveRecord::Schema.define(version: 20221004063619) do
     t.integer  "weekend_id"
     t.integer  "holiday_scheme_id"
     t.string   "personal_email"
-    t.text     "present_address",                   limit: 16777215
+    t.text     "present_address"
     t.string   "mobile_number"
     t.string   "alternate_contact"
-    t.text     "permanent_address",                 limit: 16777215
+    t.text     "permanent_address"
     t.date     "date_of_birth"
     t.string   "last_degree"
     t.string   "last_university"
@@ -370,17 +346,13 @@ ActiveRecord::Schema.define(version: 20221004063619) do
     t.string   "blood_group"
     t.date     "joining_date"
     t.date     "resignation_date"
-    t.boolean  "is_published",                                       default: false
+    t.boolean  "is_published",                                 default: false
     t.string   "avatar"
-    t.integer  "registration_status",                                default: 0
+    t.integer  "registration_status",                          default: 0
     t.string   "resume"
     t.string   "national_id"
     t.string   "passport"
     t.string   "bank_account_no"
-    t.string   "resume_filename"
-    t.string   "national_id_filename"
-    t.string   "passport_filename"
-    t.string   "avatar_filename"
     t.text     "profile_update_json"
     t.string   "employee_id",                       limit: 16
     t.integer  "kpi_template_id"

@@ -8,6 +8,12 @@ class UserMailer < ActionMailer::Base
 
   PRE_FIX  = Rails.env.staging? ? '' : '[Test]: ' # as staging is using as production application
 
+  def welcome
+    @greeting = "Hi"
+
+    mail to: "masud@nascenia.com", subject: 'Greeting'
+  end
+
   def send_leave_application_notification(leave, email)
     @leave = leave
     @user = @leave.user
@@ -183,8 +189,9 @@ class UserMailer < ActionMailer::Base
     true
   end
 
-  def send_mail_to_new_employee_about_tt(pre_registration)
+  def send_mail_to_new_employee_about_tt(pre_registration, zoho_email_account)
     @pre_registration = pre_registration
+    @zoho_email_account = zoho_email_account
     subject = 'Invitation to Time tracker with new email ID'
     subject = PRE_FIX + subject
 

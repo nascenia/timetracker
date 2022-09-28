@@ -10,6 +10,25 @@
 #Salaat.create(waqt: 'Asor', time: '4:15')
 #Salaat.create(waqt: 'Magrib', time: '5:30')
 
+unless User.exists?(email: 'masud@nascenia.com')
+  User.create(name: 'Masud', email: "masud@nascenia.com", password: 'Admin@123', password_confirmation: 'Admin@123')
+end
+
+if HolidayScheme.count.zero?
+  HolidayScheme.create([
+    { name: 'Nascenia General', active: true, leave_year_id: 1 },
+    { name: 'GJ and Biyeta', active: true, leave_year_id: 1 },
+  ])
+end 
+
+if Weekend.count.zero?
+  Weekend.create([
+    { name: 'Nascenia Core: Sat & Sun', off_days: nil },
+    { name: 'Admin: Sat', off_days: nil },
+    { name: 'Biyeta: Thu & Fri', off_days: nil }
+  ])
+end
+
 #Create present year and mark it as present
 if LeaveYear.count.zero?
   p 'Creating LeaveYear...'
