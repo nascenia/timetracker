@@ -1,20 +1,29 @@
 %h2 Sign up
-= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
+%hr
+
+= form_for(resource, as: resource_name, url: registration_path(resource_name), class: 'form-horizontal') do |f|
   = devise_error_messages!
-  %div
-    = f.label :email
-    %br/
-    = f.email_field :email, autofocus: true
-  %div
-    = f.label :password
-    - if @validatable
-      %i
-        (#{@minimum_password_length} characters minimum)
-    %br/
-    = f.password_field :password, autocomplete: "off"
-  %div
-    = f.label :password_confirmation
-    %br/
-    = f.password_field :password_confirmation, autocomplete: "off"
-  %div= f.submit "Sign up"
-= render "devise/shared/links"
+
+  .row
+    .col-md-4
+      = f.label :email
+      %br/
+      = f.email_field :email, autofocus: true, value: params[:email], class: 'form-control'
+  .row
+    .col-md-4
+      = f.label :password
+      - if @validatable
+        %i
+          (#{@minimum_password_length} characters minimum)
+      %br/
+      = f.password_field :password, autocomplete: "off", class: 'form-control'
+  .row
+    .col-md-4
+      = f.label :password_confirmation
+      %br/
+      = f.password_field :password_confirmation, autocomplete: "off", class: 'form-control'
+  .row
+    .col-md-4
+      = f.submit "Sign up", class: 'btn btn-primary'
+
+= render "devise/shared/links" unless params[:email].present?

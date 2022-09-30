@@ -1,5 +1,7 @@
 # :nodoc:
 class Users::RegistrationsController < Devise::RegistrationsController
+  before_action :signup_invitation_validation, only: [:new, :create]
+  
   layout 'time_tracker'
 
   protected
@@ -71,4 +73,25 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def after_sign_up_path_for(resource)
     after_sign_in_path_for(resource)
   end
+
+  private
+
+  def signup_invitation_validation
+    user = User.find_by(email: params[:email])
+
+    if user.present?
+      flash[:notice] = 'You are already a registered user.'
+
+      redirect_to new_user_session_path && return
+    end
+    
+    pr = PreRegistration.find_by(companyEmail: params[:email]) # TODO: Add invitation token
+
+    if pr.blank?
+      flash[:alert] = 'Sorry, you are not invited to register.'
+
+      redirect_to root_path && return
+    end
+  end
+
 end
