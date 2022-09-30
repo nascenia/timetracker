@@ -27,7 +27,7 @@
             = image_tag 'logo.png', style: 'margin-top: -25px;'
 
         %div#navbar.collapse.navbar-collapse
-          = render 'shared/top_nav_menu'
+          = render 'shared/top_nav_menu' if current_user.present?
 
     <!-- /.container -->
     .container

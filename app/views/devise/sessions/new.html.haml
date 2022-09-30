@@ -2,7 +2,10 @@
   %h1 Nascenia Time & Leave Tracker
   %p Time & Leave tracking made smart!
   %hr
-  = link_to 'Sign in with Google', user_omniauth_authorize_path(:google_oauth2), :class => 'btn btn-large btn-primary btn-sign-in'
+
+.row
+  .col-md-4.col-md-offset-4
+    = link_to 'Sign in with Google', user_omniauth_authorize_path(:google_oauth2), :class => 'btn btn-block btn-primary'
 
 %h3.text-center Or
 

@@ -37,7 +37,7 @@ class User < ActiveRecord::Base
   # Callbacks
   #
   before_save :alter_user_activity
-  after_create :create_leave_tracker
+  after_create :create_leave_tracker, :update_pre_register_info
 
   #
   # Plugins
@@ -567,4 +567,22 @@ class User < ActiveRecord::Base
     super_admin? || admin?
   end
 
+  private
+
+  def update_pre_register_info
+    pr = PreRegistration.find_by(companyEmail: self.email)
+    pr.user = self
+    pr.save
+
+    user  = self
+    user.name = pr.name
+    user.joining_date = pr.joiningDate
+    user.employee_id = pr.employee_id
+    user.mobile_number = pr.contactNumber
+    user.weekend_id = pr.weekend_id.to_i
+    user.holiday_scheme_id = pr.holiday_scheme_id.to_i
+    user.approval_path_id = pr.leave_approval_path_id
+    user.ttf_id = pr.ttf_id
+    user.save
+  end
 end
