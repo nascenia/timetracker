@@ -19,7 +19,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     else
       outside_email = request.env["omniauth.auth"][:extra][:id_info][:email].to_s
 
-      if CONFIG['email_whitelist'].include? outside_email
+      if WhitelistEmail.published.pluck(:email).include? outside_email
         @user = User.find_for_google_oauth2(request.env["omniauth.auth"])
         if !@user.nil?
           if @user.persisted?
