@@ -77,7 +77,6 @@ class PreRegistrationsController < ApplicationController
   end
 
   def update
-    byebug
     pre_registration = PreRegistration.find params[:id]
     @flag = false
     @flag = params[:ceo_flag]
