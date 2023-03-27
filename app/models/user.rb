@@ -572,6 +572,7 @@ class User < ActiveRecord::Base
   def update_pre_register_info
     pr = PreRegistration.find_by(companyEmail: self.email)
     pr.user = self
+    pr.step_no = 3
     pr.save
 
     user  = self
