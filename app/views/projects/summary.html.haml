@@ -1,0 +1,44 @@
+%h2 Projects summary report
+%hr
+
+= render 'search_form'
+
+%table.table
+  %thead>
+    %th Name
+    %th Total hours
+    %th Projects
+
+  %tbody
+  - @users.each do |user|
+    - total_minutes = @timesheets[user.id].inject(0) {|sum, h| sum + h[:working_minutes]}
+    %tr
+      %td= user.name
+      %td= total_minutes / 60
+      %td
+        - projects = []
+        - @timesheets[user.id].each do |project|
+          - next if project[:working_minutes].zero?
+          - str = project[:project_name]
+          - if total_minutes > 0 
+            - str += " #{(100.0 * (project[:working_minutes].to_f / total_minutes.to_f)).round(2)}%"
+          - else
+            - str += " 0.0%"
+          - str += " (#{project[:working_minutes] / 60})"
+          - projects << str
+
+        = projects.join(" | ")
+
+:javascript
+
+  $('#dt2').datepicker().on('changeDate', function (ev) {
+      $('#dt2').change();
+  });
+
+  $('#dt1').datepicker().on('changeDate', function (ev) {
+      $('#dt1').change();
+  });
+
+  $(document).ready(function () {
+
+  });
