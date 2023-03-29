@@ -1,5 +1,6 @@
 # :nodoc:
 class ProjectsController < ApplicationController
+  skip_before_action :authenticate_user!
   layout 'time_tracker'
 
   def show
@@ -50,6 +51,25 @@ class ProjectsController < ApplicationController
     @project = Project.new
   end
   
+  def summary
+    @users = User.includes(:projects).active
+    @timesheets = Hash.new
+
+    @users.each do |user|
+      project_timesheets = []
+      user.projects.each do |project|
+        timesheets = user.timesheets.where(project: project, date: params[:start_date]..params[:end_date])
+        hash = Hash.new
+        hash[:project_name] = project.project_name
+        hash[:working_minutes] = [60 * timesheets.map{|ts| ts.hours}.sum, timesheets.map{|ts| ts.minutes}.sum].sum
+        # hash[:percentage] = 
+        project_timesheets << hash
+      end
+
+      @timesheets[user.id] = project_timesheets
+    end
+  end
+
   def show_all
     @start_date = params[:start_date]
     @end_date = params[:end_date]

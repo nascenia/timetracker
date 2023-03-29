@@ -28,6 +28,7 @@
 
         %div#navbar.collapse.navbar-collapse
           = render 'shared/top_nav_menu' if current_user.present?
+          = link_to 'Projects Summary', summary_projects_path(project: {time_period: 7, start_date: 7.days.ago.strftime('%Y/%m/%d'), end_date: Time.now.strftime('%Y/%m/%d')}, commit: 'Search')
 
     <!-- /.container -->
     .container
