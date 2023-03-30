@@ -1,0 +1,29 @@
+%h2 Projects
+%hr
+
+- if params[:status].eql?('inactive')
+  = link_to 'Active Projects', projects_path(status: 'active'), class: 'btn btn-info'
+- else
+  = link_to 'Inactive Projects', projects_path(status: 'inactive'), class: 'btn btn-info'
+
+%table.table
+  %thead
+    %tr
+      %th Project Name
+      %th Total Hours
+      %th Team Members
+      %th Status
+      - if @is_admin == 1
+        %th Action
+
+  %tbody
+  - @projects.each do |project|
+    %tr
+      %td= link_to project.project_name, project_path(project, start_date: Time.now.strftime('%Y/%m/%d'), end_date: Time.now.strftime('%Y/%m/%d'), selected_index: 1)
+      %td= project.description
+      %td
+        - project.users.each do |user|
+          = link_to  user.email , employee_path(user)
+      %td= project.is_active ? 'Yes' : 'No'
+      - if @is_admin == 1
+        %td= link_to 'Edit', edit_project_path(project)
