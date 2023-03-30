@@ -2,7 +2,7 @@
 - start_date    = params[:commit] == 'Search' ? params[:project][:start_date] : ''
 - end_date      = params[:commit] == 'Search' ? params[:project][:end_date] : ''
 
-- time_periods = [['Today', '0'], ['Last 7 days', '7'], ['Last 14 days', '14'], ['Last 30 days', '30'], ['Last 90 days', '90']]
+- time_periods = [['Today', '0'], ['Last 7 days', '7'], ['Last 14 days', '14'], ['Last 30 days', '30'], ['Last 90 days', '90'], ['Last 6 months', '180'], ['Last 1 year', '365']]
 
 = form_for(:project, url: summary_projects_path, method: :get, html: { class: '' }) do |f|
   .col-md-4
@@ -25,19 +25,13 @@
   $(document).ready(function() {
     $(document).on('change', 'select#project_time_period', function() {
 
-      // let params = new URLSearchParams(window.location.search)
-      
       let time_period = $(this).children("option:selected").val();
       console.log("time_period = ", time_period);
 
-      let start_date = new Date();
-      console.log(start_date);
-
-      let end_date = start_date.setDate(start_date.getDate() - time_period);
-      console.log(end_date); 
-
-
-      $('#project_start_date').val(start_date.getFullYear() + "/" + start_date.getMonth() + "/" + start_date.getDate());
-      $('#project_start_date').val(end_date.getFullYear() + "/" + end_date.getMonth() + "/" + end_date.getDate());
+      let date = new Date();
+      date.setDate(date.getDate() - time_period);
+      let month = (date.getMonth() + 1) <= 9 ? "0" + (date.getMonth() + 1) : (date.getMonth() + 1);
+      
+      $('#project_start_date').val(date.getFullYear() + "/" + month + "/" + date.getDate());
     });
   });

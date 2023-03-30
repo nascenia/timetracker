@@ -57,12 +57,14 @@ class ProjectsController < ApplicationController
 
     @users.each do |user|
       project_timesheets = []
+
       user.projects.each do |project|
-        timesheets = user.timesheets.where(project: project, date: params[:start_date]..params[:end_date])
+        timesheets = user.timesheets.where(project: project, date: params[:project][:start_date]..params[:project][:end_date])
+
         hash = Hash.new
         hash[:project_name] = project.project_name
         hash[:working_minutes] = [60 * timesheets.map{|ts| ts.hours}.sum, timesheets.map{|ts| ts.minutes}.sum].sum
-        # hash[:percentage] = 
+
         project_timesheets << hash
       end
 
