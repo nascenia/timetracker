@@ -35,16 +35,22 @@ class ProjectsController < ApplicationController
 
   def index
     @is_admin = 0
-    if current_user.has_admin_privilege?
-      @is_admin = 1
-    end
-    if params[:is_active] == 'false'
-      @projects = Project.all.where(is_active: false)
-      @is_active = false
-    else
-      @projects = Project.all.where(is_active: true)
+    #if current_user.has_admin_privilege?
+    #  @is_admin = 1
+    #end
+
+    @projects = []
+    project = Project.includes(:users)
+
+    if params[:status].eql?('active')
+      @projects = project.active
       @is_active = true
+    else
+      @projects = project.inactive
+      @is_active = false
     end
+
+
   end
 
   def new
