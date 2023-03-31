@@ -34,23 +34,14 @@ class ProjectsController < ApplicationController
   end
 
   def index
-    @is_admin = 0
-    #if current_user.has_admin_privilege?
-    #  @is_admin = 1
-    #end
-
     @projects = []
-    project = Project.includes(:users)
+    project = Project.includes(:users, :timesheets)
 
     if params[:status].eql?('active')
       @projects = project.active
-      @is_active = true
     else
       @projects = project.inactive
-      @is_active = false
     end
-
-
   end
 
   def new
