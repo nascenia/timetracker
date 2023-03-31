@@ -13,17 +13,20 @@
       %th Total Hours
       %th Team Members
       %th Status
-      - if @is_admin == 1
+      - if current_user && current_user.has_admin_privilege?
         %th Action
 
   %tbody
   - @projects.each do |project|
     %tr
       %td= link_to project.project_name, project_path(project, start_date: Time.now.strftime('%Y/%m/%d'), end_date: Time.now.strftime('%Y/%m/%d'), selected_index: 1)
-      %td= project.description
+      %td= number_with_precision(project.timesheets.sum{|ts| ts.hours * 60 + ts.minutes} / 60, precision: 2)
       %td
         - project.users.each do |user|
-          = link_to  user.email , employee_path(user)
+          = link_to "#{user.name} (#{user.email})", employee_path(user)
+          - timesheets = project.timesheets.select{|ts| ts.user_id == user.id}
+          %span= number_with_precision(timesheets.sum{|ts| ts.hours * 60 + ts.minutes} / 60, precision: 2)
+          %br
       %td= project.is_active ? 'Yes' : 'No'
-      - if @is_admin == 1
+      - if current_user && current_user.has_admin_privilege?
         %td= link_to 'Edit', edit_project_path(project)
