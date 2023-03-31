@@ -1,22 +1,32 @@
-%h2 Projects summary report
-%hr
+.row
+  %h2 Projects summary report
+  %hr
 
-= render 'search_form'
+.row 
+  = render 'search_form'
 
-.col-md-12
+.row 
   = link_to 'Download weekly report', weekly_report_projects_path(start_date: params[:project][:start_date], end_date: params[:project][:end_date], format: 'xls')
   |
   = link_to 'Download monthly report', monthly_report_projects_path(start_date: params[:project][:start_date], end_date: params[:project][:end_date], format: 'xls')
 
-%table.table
-  %thead>
-    %th Name
-    %th Total hours
-    %th Projects
+%br
 
-  %tbody
-  - @users.each do |user|
-    %tr
-      %td= user.name
-      %td= total_working_hours(@timesheets[user.id])
-      %td= user_timesheet_summary(@timesheets[user.id])
+.row 
+  .panel.panel-default
+    .panel-heading
+      %span
+        %b= "Active team members: #{@users.size}"
+
+    %table.table.table-bordered.table-hover
+      %thead>
+        %th Name
+        %th Total hours
+        %th Projects
+
+      %tbody
+      - @users.each do |user|
+        %tr
+          %td= user.name
+          %td= total_working_hours(@timesheets[user.id])
+          %td= user_timesheet_summary(@timesheets[user.id])
