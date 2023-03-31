@@ -56,7 +56,6 @@ Internal::Application.routes.draw do
   end
   resources :projects do
     collection do
-      get :show_all
       get :summary
       get :weekly_report
       get :download_projects
