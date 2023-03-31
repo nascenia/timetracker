@@ -3,6 +3,11 @@
 
 = render 'search_form'
 
+.col-md-12
+  = link_to 'Download weekly report', weekly_report_projects_path(start_date: params[:project][:start_date], end_date: params[:project][:end_date], format: 'xls')
+  |
+  = link_to 'Download monthly report', monthly_report_projects_path(start_date: params[:project][:start_date], end_date: params[:project][:end_date], format: 'xls')
+
 %table.table
   %thead>
     %th Name
