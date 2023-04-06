@@ -55,6 +55,6 @@
       %li= link_to 'New Time Entry', new_timesheet_path
       - if current_user.has_admin_privilege?
         %li= link_to 'Create Project', new_project_path
-      %li= link_to 'Projects', projects_path(is_active: true)
+      %li= link_to 'Projects', dashboard_projects_path(status: :active)
       %li= link_to 'Projects Summary', summary_projects_path(project: {time_period: 7, start_date: 7.days.ago.strftime('%Y/%m/%d'), end_date: Time.now.strftime('%Y/%m/%d')}, commit: 'Search')
       %li= link_to 'Individual Log', timesheets_path(selected_index: 1, start_date: Time.now.strftime('%Y/%m/%d'), end_date: Time.now.strftime('%Y/%m/%d'))

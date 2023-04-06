@@ -34,6 +34,24 @@ class ProjectsController < ApplicationController
   end
 
   def index
+    @is_admin = 0
+    if current_user.has_admin_privilege?
+      @is_admin = 1
+    end
+    if params[:is_active] == 'false'
+      @projects = Project.all.where(is_active: false)
+      @is_active = false
+    else
+      @projects = Project.all.where(is_active: true)
+      @is_active = true
+    end
+  end
+
+  def new
+    @project = Project.new
+  end
+
+  def dashboard
     @projects = []
     project = Project.includes(:users, :timesheets)
 
@@ -42,10 +60,6 @@ class ProjectsController < ApplicationController
     else
       @projects = project.inactive
     end
-  end
-
-  def new
-    @project = Project.new
   end
   
   def summary
