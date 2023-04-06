@@ -63,7 +63,7 @@ class ProjectsController < ApplicationController
   end
   
   def summary
-    @users = User.includes(:projects).active
+    @users = User.includes(:projects).active.order(name: :asc)
     @timesheets = Hash.new
 
     @users.each do |user|

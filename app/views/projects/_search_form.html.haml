@@ -26,12 +26,14 @@
     $(document).on('change', 'select#project_time_period', function() {
 
       let time_period = $(this).children("option:selected").val();
-      console.log("time_period = ", time_period);
-
       let date = new Date();
+      
       date.setDate(date.getDate() - time_period);
       let month = (date.getMonth() + 1) <= 9 ? "0" + (date.getMonth() + 1) : (date.getMonth() + 1);
       
       $('#project_start_date').val(date.getFullYear() + "/" + month + "/" + date.getDate());
     });
+
+    $("#project_start_date").datepicker();
+    $("#project_end_date").datepicker();
   });

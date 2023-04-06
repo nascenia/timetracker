@@ -11,7 +11,7 @@
 
 %br
 
-%table.table
+%table.table.table-bordered.display#projects-dashboard{width: "100%"}
   %thead
     %tr
       %th Project Name
@@ -35,3 +35,23 @@
       %td= project.is_active ? 'Active' : 'Inactive'
       - if current_user && current_user.has_admin_privilege?
         %td= link_to 'Edit', edit_project_path(project)
+
+:javascript
+  $(document).ready(function() {
+    
+    var dataTable = $('#projects-dashboard').DataTable({
+      lengthChange: false,
+      pageLength: 100,
+      order: [0,'asc'],
+      dom: 'T<"clear">lfrtip',
+      buttons: ['print']
+    });
+
+    $(document).on("turbolinks:before-cache", function() {
+      if (dataTable !== null) {
+        dataTable.destroy();
+        dataTable = null;
+      }
+    });
+  });
+  
