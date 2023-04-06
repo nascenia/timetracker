@@ -1,11 +1,15 @@
+<h3>Projects</h3>
+
+<% if @is_active %>
+    <%= link_to 'Show inactive projects', projects_path(is_active: false) %>
+<% else %>
+    <%= link_to 'Show active projects', projects_path(is_active: true) %>
+<% end %>
+
+|
+<%= link_to 'Switch to new view', dashboard_projects_path(status: :active) %>
 
 <table style="width:100%" id="projects-list-table">
-    <h3>Projects</h3>
-    <% if @is_active %>
-        <%= link_to 'Inactive Projects', projects_path(is_active: false) %>
-    <%else %>
-        <%= link_to 'Active Projects', projects_path(is_active: true) %>
-    <% end %>
 <!--    <tfoot class="col-search">-->
 <!--    <tr>-->
 <!--        <th>Project Name</th>-->

@@ -4,9 +4,11 @@
 = render 'search_form'
 
 .col-md-12
-  = link_to 'Download weekly report', weekly_report_projects_path(start_date: params[:project][:start_date], end_date: params[:project][:end_date], format: 'xls'),  class: 'btn btn-default'
-  = link_to 'Download monthly report', monthly_report_projects_path(start_date: params[:project][:start_date], end_date: params[:project][:end_date], format: 'xls'),  class: 'btn btn-default'
-  = link_to 'Old view', show_all_projects_path(selected_index: 2, start_date: 7.days.ago.strftime('%Y/%m/%d'), end_date: Time.now.strftime('%Y/%m/%d'))
+  = link_to 'Download weekly report', weekly_report_projects_path(start_date: params[:project][:start_date], end_date: params[:project][:end_date], format: 'xls')
+  |
+  = link_to 'Download monthly report', monthly_report_projects_path(start_date: params[:project][:start_date], end_date: params[:project][:end_date], format: 'xls')
+  |
+  = link_to 'Switch to old view', show_all_projects_path(selected_index: 2, start_date: 7.days.ago.strftime('%Y/%m/%d'), end_date: Time.now.strftime('%Y/%m/%d'))
 
 %table.table.table-bordered#projects-summary
   %thead>
