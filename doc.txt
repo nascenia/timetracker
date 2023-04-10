@@ -1,0 +1,6 @@
+utf8=✓&goal%5Bpersonal_or_team%5D=team&goal%5Bteam_member%5D=44&goal%5Byear%5D=&goal%5Btime_period%5D=&goal%5Bstart_date%5D=&goal%5Bend_date%5D=&commit=Search
+
+- Goal update redirect to filtered page
+- User can't modify after approving the goal
+
+
