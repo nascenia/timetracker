@@ -10,19 +10,20 @@
   |
   = link_to 'Switch to old view', show_all_projects_path(selected_index: 2, start_date: 7.days.ago.strftime('%Y/%m/%d'), end_date: Time.now.strftime('%Y/%m/%d'))
 
-%table.table.table-bordered#projects-summary
-  %thead>
-    %tr
-      %th Name
-      %th Total hours
-      %th Projects
+.row
+  %table.table.table-bordered#projects-summary
+    %thead>
+      %tr
+        %th Name
+        %th Total hours
+        %th Projects
 
-  %tbody
-  - @users.each do |user|
-    %tr
-      %td= user.name
-      %td= total_working_hours(@timesheets[user.id])
-      %td= user_timesheet_summary(@timesheets[user.id])
+    %tbody
+      - @users.each do |user|
+        %tr
+          %td= user.name
+          %td= total_working_hours(@timesheets[user.id])
+          %td= user_timesheet_summary(@timesheets[user.id])
 
 :javascript
 
