@@ -15,11 +15,14 @@ class Goal < ActiveRecord::Base
 
     def self.search(params = {}, user_id)
 
-      return [] if params.blank?
-      
       goal = self
       goal = goal.where(user_id: user_id)
-      goal = goal.by_date_range(params[:start_date], params[:end_date]) unless params[:start_date].blank? && params[:end_date].blank?
+      return goal if params.blank?
+
+      unless params[:start_date].blank? && params[:end_date].blank?
+        goal = goal.by_date_range(params[:start_date], params[:end_date]) 
+      end
       goal = goal.order(id: :desc)
+      goal
     end
 end

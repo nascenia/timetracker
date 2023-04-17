@@ -6,7 +6,12 @@ class GoalsController < ApplicationController
 
   # GET /goals
   def index
-    user_id = params[:goal].blank? ? current_user.id : params[:goal][:user_id]
+    user_id = current_user.id
+
+    if params[:goal].present? && params[:goal][:personal_or_team].eql?('team') 
+      user_id = params[:goal][:team_member]
+    end
+
     @goals  = Goal.search(params[:goal], user_id)
     @team   = User.active.where(ttf: current_user)
   end
