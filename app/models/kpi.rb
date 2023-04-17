@@ -45,13 +45,16 @@ class Kpi < ActiveRecord::Base
     end
 
     def self.search(params = {}, user_id)
-      return [] if user_id.blank? && params.blank?
+      return [] if user_id.blank?
       
       kpi = self
       kpi = kpi.where(user_id: user_id)
+      return kpi if params.blank?
+
       unless params.blank?
         kpi = kpi.by_date_range(params[:start_date], params[:end_date]) unless params[:start_date].blank? && params[:end_date].blank?
       end
+      
       kpi = kpi.order(start_date: :desc)
     end
 end
