@@ -1,4 +1,3 @@
-- user_id       = params[:commit] == 'Search' ? params[:goal][:user_id].to_i : current_user.id
 - team_member   = params[:commit] == 'Search' ? params[:goal][:team_member] : ''
 - year          = params[:commit] == 'Search' ? params[:goal][:year] : ''
 - time_period   = params[:commit] == 'Search' ? params[:goal][:time_period] : ''
@@ -11,15 +10,14 @@
       .form-group
         = f.label "Goal type"
         %br
-        = f.radio_button :personal_or_team, "own", { checked: user_id == current_user.id }
+        = f.radio_button :personal_or_team, "own", { checked: team_member.blank? }
         My goal
-        = f.radio_button :personal_or_team, "team", { checked: user_id != current_user.id }
+        = f.radio_button :personal_or_team, "team", { checked: team_member.present? }
         Team goal
     .col-md-2
       .form-group
         = f.label 'Team member'
-        = f.select :team_member, options_for_select(@team.map{ |u| [u.name, u.id] }, team_member), { include_blank: 'select' }, class: 'form-control', disabled: user_id == current_user.id
-        = f.hidden_field :user_id, value: current_user.id
+        = f.select :team_member, options_for_select(@team.map{ |u| [u.name, u.id] }, team_member), { include_blank: 'select' }, class: 'form-control', disabled: team_member.blank?
     .col-md-2
       .form-group
         - c_y = Time.now.year
