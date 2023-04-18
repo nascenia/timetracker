@@ -1,4 +1,4 @@
-class KpisController < InheritedResources::Base
+class KpisController < ApplicationController
 
   layout 'time_tracker'
 
