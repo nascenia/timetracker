@@ -52,13 +52,37 @@ class ProjectsController < ApplicationController
   end
 
   def dashboard
-    @projects = []
-    project = Project.includes(:users, :timesheets)
+    timesheets = Timesheet.where(date: Date.parse(params[:project][:start_date])..Date.parse(params[:project][:end_date]))
+    project_ids = timesheets.map{ |t| t.project_id }.uniq.sort
+    user_ids = timesheets.map{ |t| t.user_id }.uniq.sort
+    projects = Project.find project_ids 
+    users = User.find user_ids
+    @timesheets = []
+    
+    projects.each do |project|
+      project_timesheets = timesheets.select{ |t| t.project_id == project.id }
 
-    if params[:status].eql?('active')
-      @projects = project.active
-    else
-      @projects = project.inactive
+      item = Hash.new
+      item[:id] = project.id
+      item[:project_name] = project.project_name
+      item[:total_hours] = (project_timesheets.map{ |ts| 60 * ts.hours + ts.minutes }.sum / 60).round(2)
+      item[:status] = project.is_active ? 'Active' : 'Inactive'
+      item[:users] = []
+
+      project_user_ids = project_timesheets.map(&:user_id).uniq.sort
+
+      project_user_ids.each do |u_id|
+        user = users.find{|user| user.id == u_id}
+        u_hash = {
+          id: u_id,
+          name: user.name,
+          email: user.email,
+          total_hours: (project_timesheets.select{ |pt| pt.user_id == u_id }.map{ |ts| 60 * ts.hours + ts.minutes }.sum / 60).round(2)
+        }
+        item[:users] << u_hash
+      end
+
+      @timesheets << item
     end
   end
   
