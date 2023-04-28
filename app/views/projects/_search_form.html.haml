@@ -12,11 +12,11 @@
   .col-md-2
     .form-group
       = f.label :start_date
-      = f.text_field :start_date, value: start_date, class: 'form-control'
+      = f.text_field :start_date, value: start_date, class: 'form-control', data: { date_format: "yyyy/mm/dd" }
   .col-md-2
     .form-group
       = f.label :end_date
-      = f.text_field :end_date, value: end_date, class: 'form-control'
+      = f.text_field :end_date, value: end_date, class: 'form-control', data: { date_format: "yyyy/mm/dd" }
   .col-md-2.form-group
     = blank_space
     = f.submit 'Search', class: 'btn btn-info btn-block'
