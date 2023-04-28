@@ -17,11 +17,11 @@
     .col-md-2
       .form-group
         = f.label :start_date
-        = f.text_field :start_date, value: start_date, class: 'form-control'
+        = f.text_field :start_date, value: start_date, class: 'form-control', data: { date_format: "yyyy/mm/dd" }
     .col-md-2
       .form-group
         = f.label :end_date
-        = f.text_field :end_date, value: end_date, class: 'form-control'
+        = f.text_field :end_date, value: end_date, class: 'form-control', data: { date_format: "yyyy/mm/dd" }
     .col-md-2
       .form-group
         = f.label :status
@@ -68,7 +68,9 @@
 
       let time_period = $(this).children("option:selected").val();
       let date = new Date();
-      
+
+      $('#project_end_date').val(date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate());
+
       date.setDate(date.getDate() - time_period);
       let month = (date.getMonth() + 1) <= 9 ? "0" + (date.getMonth() + 1) : (date.getMonth() + 1);
       
