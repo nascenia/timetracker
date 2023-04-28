@@ -62,7 +62,16 @@ class ProjectsController < ApplicationController
     project_ids = timesheets.map{ |t| t.project_id }.uniq.sort
     user_ids = timesheets.map{ |t| t.user_id }.uniq.compact.sort
 
-    projects = Project.find project_ids 
+    projects = []
+    case params[:project][:status]
+    when 'active'
+      projects = Project.active
+    when 'inactive'
+      projects = Project.inactive
+    else
+      projects = Project.find project_ids
+    end
+    
     users = User.find user_ids
     
     projects.each do |project|
@@ -85,7 +94,7 @@ class ProjectsController < ApplicationController
           email: user.email,
           total_hours: (project_timesheets.select{ |pt| pt.user_id == u_id }.map{ |ts| 60 * ts.hours + ts.minutes }.sum / 60).round(2)
         }
-        
+
         item[:users] << u_hash
       end
 
