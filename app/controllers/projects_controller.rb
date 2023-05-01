@@ -1,6 +1,5 @@
 # :nodoc:
 class ProjectsController < ApplicationController
-  skip_before_action :authenticate_user!
   layout 'time_tracker'
 
   def show
