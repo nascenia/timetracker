@@ -50,7 +50,17 @@ class GoalsController < ApplicationController
   def update
     if @goal.update(goal_params)
       respond_to do |format|
-        format.html { redirect_to goals_url, notice: 'Goal was successfully updated.' }
+        url_params = {
+          personal_or_team: params[:goal][:personal_or_team],
+          team_member: params[:goal][:team_member],
+          year: params[:goal][:start_date].split("-").first,
+          time_period: params[:goal][:time_period],
+          start_date: params[:goal][:start_date],
+          end_date: params[:goal][:end_date]
+        }
+        format.html {
+          redirect_to goals_url(goal: url_params, commit: 'Search'), notice: 'Goal was successfully updated.' 
+        }
         format.js   { render json: { status: 200, notice: 'Review submitted successfully.' }}
       end
     else

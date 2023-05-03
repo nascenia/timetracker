@@ -61,7 +61,7 @@
     .col-md-4
       .form-group
         = f.label :status
-        = f.select :status, options_for_select(Goal::STATUSES.each_with_index.map{ |v, i| [v, i] }), {}, class: 'form-control'
+        = f.select :status, options_for_select(Goal::STATUSES.each_with_index.map{ |v, i| [v, i] }, @goal.status), {}, class: 'form-control'
   .row.col-md-12
     = f.submit 'Submit', class: 'btn btn-primary'
 
