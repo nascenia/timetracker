@@ -33,6 +33,30 @@ class GoalsController < ApplicationController
   def edit
     @goal_categories  = GoalCategory.where(published: true)
     @team             = User.active.where(ttf: current_user)
+
+    url_params = {
+      personal_or_team: params[:goal][:personal_or_team],
+      team_member: params[:goal][:team_member],
+      year: params[:goal][:year],
+      time_period: params[:goal][:time_period],
+      start_date: params[:goal][:start_date],
+      end_date: params[:goal][:end_date]
+    }
+
+    team_members = @team.map{|tu| tu.id}
+    team_members << current_user.id
+
+    if !team_members.include?(@goal.user_id)
+      flash[:notice] = 'Access denied. You have no permission to access this resource.'
+
+      redirect_to goals_path(goal: url_params, commit: 'Search')
+    end
+
+    if !@goal.status.eql?(0)
+      flash[:notice] = 'Sorry, this goal is no longer valid for edit.'
+
+      redirect_to goals_path(goal: url_params, commit: 'Search')
+    end
   end
 
   # POST /goals

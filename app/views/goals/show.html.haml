@@ -1,3 +1,10 @@
+- personal_or_team = params[:commit] == 'Search' ? params[:goal][:personal_or_team] : ''
+- team_member   = params[:commit] == 'Search' ? params[:goal][:team_member] : ''
+- year          = params[:commit] == 'Search' ? params[:goal][:year] : ''
+- time_period   = params[:commit] == 'Search' ? params[:goal][:time_period] : ''
+- start_date    = params[:commit] == 'Search' ? params[:goal][:start_date] : ''
+- end_date      = params[:commit] == 'Search' ? params[:goal][:end_date] : ''
+- url_params = { personal_or_team: personal_or_team, team_member: team_member, year: year, time_period: time_period, start_date: start_date, end_date: end_date }
 
 %table.table
   %thead
@@ -33,7 +40,6 @@
       %td= @goal.end_date
     %tr
       %td Status
-      %td= @goal.status
+      %td= @goal.status.blank? ? '-' : Goal::STATUSES[@goal.status]
     
-= link_to 'Edit', edit_goal_path(@goal)
-= link_to 'Back', goals_path
+= link_to 'Back', goals_path(goal: url_params, commit: 'Search')
