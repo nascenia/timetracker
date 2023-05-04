@@ -8,7 +8,7 @@
 - start_date    = params[:commit] == 'Search' ? params[:goal][:start_date] : ''
 - end_date      = params[:commit] == 'Search' ? params[:goal][:end_date] : ''
 - url_params = { personal_or_team: personal_or_team, team_member: team_member, year: year, time_period: time_period, start_date: start_date, end_date: end_date }
-- byebug
+
 = render 'search_form', url_params 
 
 %table.table

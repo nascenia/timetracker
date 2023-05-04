@@ -13,6 +13,12 @@ class Goal < ActiveRecord::Base
     validates   :point, presence: true, numericality: true
 
 
+    def quarter
+      start_month = self.start_date.strftime('%m').to_i
+      
+      start_month / 3
+    end
+
     def self.search(params = {}, user_id)
 
       goal = self

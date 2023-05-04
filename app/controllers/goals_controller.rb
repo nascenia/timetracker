@@ -52,11 +52,11 @@ class GoalsController < ApplicationController
       respond_to do |format|
         url_params = {
           personal_or_team: params[:goal][:personal_or_team],
-          team_member: params[:goal][:team_member],
-          year: params[:goal][:start_date].split("-").first,
-          time_period: params[:goal][:time_period],
-          start_date: params[:goal][:start_date],
-          end_date: params[:goal][:end_date]
+          team_member: @goal.user_id,
+          year: @goal.start_date.strftime("%Y"),
+          time_period: @goal.quarter,
+          start_date: @goal.start_date.strftime('%d-%m-%Y'),
+          end_date: @goal.end_date.strftime('%d-%m-%Y')
         }
         format.html {
           redirect_to goals_url(goal: url_params, commit: 'Search'), notice: 'Goal was successfully updated.' 

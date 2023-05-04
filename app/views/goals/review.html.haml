@@ -39,16 +39,18 @@
 
 - @goals.each do |goal|
   %hr
-  .row
-    .col-md-6
-      %label Start date
-      %br
-      = goal.start_date.strftime('%d-%m-%Y')
-    .col-md-6
-      %label End date
-      %br
-      = goal.end_date.strftime('%d-%m-%Y')
   = form_for(:goal, url: goal_path(goal), method: :put, html: { class: 'review-confirmation', id: "goal-id-#{goal.id}" }) do |f|
+    .row
+      .col-md-12.alert.alert-success#review-success{ style: 'display: none' }
+    .row
+      .col-md-6
+        %label Start date
+        %br
+        = goal.start_date.strftime('%d-%m-%Y')
+      .col-md-6
+        %label End date
+        %br
+        = goal.end_date.strftime('%d-%m-%Y')
     .row
       .col-md-6
         %label Title
@@ -65,20 +67,20 @@
         = goal.description
       .col-md-6
         %label Percent completed
-        = f.text_field :percent_completed, class: 'form-control'
+        = f.text_field :percent_completed, value: goal.percent_completed, class: 'form-control', disabled: goal.status.eql?(2)
     .row
       .col-md-6
         %label Comment
-        = f.text_area :comment, class: 'form-control'
+        = f.text_area :comments, value: goal.comments, class: 'form-control', disabled: goal.status.eql?(2)
       .col-md-6
         %label Achieved point
-        = f.text_field :point_achieved, class: 'form-control', disabled: :disabled
-        = f.hidden_field :achived_point
+        = f.text_field :point_achieved, value: goal.achived_point, class: 'form-control', disabled: :disabled
+        = f.hidden_field :achived_point, value: goal.achived_point
     .row
       .col-md-12
         %br
-        = f.submit 'Save', class: 'btn btn-primary'
-        .alert.alert-success#review-success{ style: 'display: none' }
+        = f.hidden_field :status, value: 2
+        = f.submit 'Save', class: 'btn btn-primary', disabled: goal.status.eql?(2)
 
 :javascript
   $(document).ready(function() {
@@ -127,7 +129,7 @@
       let form = 'form#' + $this.currentTarget.form.id;
       let point = parseFloat($(form + ' input#goal_point').val());
       let percent_completed = parseFloat($(form + ' input#goal_percent_completed').val());
-      let achieved_point = (point * percent_completed) / 100.0;
+      let achieved_point = Math.round(point * percent_completed) / 100;
 
       $(form + ' input#goal_achived_point').val(achieved_point);
       $(form + ' input#goal_point_achieved').val(achieved_point);
@@ -146,7 +148,7 @@
         dataType: 'JSON',
         encode: true,
       }).done(function (data) {
-        $(form + " input.btn.btn-primary").hide();
+        $(form + " input.btn.btn-primary").attr('disabled','disabled');
         $(form + " div#review-success").html(data.notice);
         $(form + " div#review-success").show();
       });
