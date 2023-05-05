@@ -1,7 +1,15 @@
 %h1 Summary of goals
 %hr
 
-= render 'search_form'
+- personal_or_team = params[:commit] == 'Search' ? params[:goal][:personal_or_team] : ''
+- team_member   = params[:commit] == 'Search' ? params[:goal][:team_member] : ''
+- year          = params[:commit] == 'Search' ? params[:goal][:year] : ''
+- time_period   = params[:commit] == 'Search' ? params[:goal][:time_period] : ''
+- start_date    = params[:commit] == 'Search' ? params[:goal][:start_date] : ''
+- end_date      = params[:commit] == 'Search' ? params[:goal][:end_date] : ''
+- url_params = { personal_or_team: personal_or_team, team_member: team_member, year: year, time_period: time_period, start_date: start_date, end_date: end_date }
+
+= render 'search_form' 
 
 %table.table
   %thead
@@ -14,8 +22,6 @@
       %th Start date
       %th End date
       %th Status
-      %th
-      %th
       %th
 
   %tbody
@@ -32,9 +38,13 @@
         %td= goal.start_date
         %td= goal.end_date
         %td= goal.status.blank? ? '-' : Goal::STATUSES[goal.status]
-        %td= link_to 'Show', goal
-        %td= link_to 'Edit', edit_goal_path(goal)
-        %td= link_to 'Destroy', goal, method: :delete, data: { confirm: 'Are you sure?' }
+        %td
+          = link_to 'Show', goal_path(goal, goal: url_params, commit: 'Search')
+          - if goal.status.eql?(0)
+            |
+            = link_to 'Edit', edit_goal_path(goal, goal: url_params, commit: 'Search') 
+            |
+            = link_to 'Destroy', goal, method: :delete, data: { confirm: 'Are you sure?' }
      
 %br
 
