@@ -102,23 +102,34 @@ class ProjectsController < ApplicationController
   end
   
   def summary
-    @users = User.includes(:projects).active.order(name: :asc)
-    @timesheets = Hash.new
+    timesheets = Timesheet.where(date: Date.parse(params[:project][:start_date])..Date.parse(params[:project][:end_date]))
+    project_ids = timesheets.map{ |t| t.project_id }.uniq.compact.sort
+    user_ids = timesheets.map{ |t| t.user_id }.uniq.compact.sort
+    
+    projects = Project.find project_ids
+    users = User.find user_ids
 
-    @users.each do |user|
-      project_timesheets = []
+    @project_summaries = []
 
-      user.projects.each do |project|
-        timesheets = user.timesheets.where(project: project, date: params[:project][:start_date]..params[:project][:end_date])
+    users.each do |user|
+      user_projects = timesheets.select{ |ts| ts.user_id == user.id }
+      summary = Hash.new
+      summary[:user_name] = user.name
+      summary[:total_hours] = (user_projects.map{ |ts| 60 * ts.hours + ts.minutes }.sum / 60).round(2)
+      summary[:projects] = []
+      project_ids = user_projects.map{ |ts| ts.project_id }.uniq.compact.sort
+
+      project_ids.each do |project_id|
+        project = projects.find{ |project| project.id == project_id }
 
         hash = Hash.new
-        hash[:project_name] = project.project_name
-        hash[:working_minutes] = [60 * timesheets.map{|ts| ts.hours}.sum, timesheets.map{|ts| ts.minutes}.sum].sum
+        hash[:name] = project.project_name
+        hash[:hours] = (user_projects.select{ |ts| ts.project_id == project_id }.map{ |ts| 60 * ts.hours + ts.minutes }.sum / 60).round(2)
 
-        project_timesheets << hash
+        summary[:projects] << hash
       end
 
-      @timesheets[user.id] = project_timesheets
+      @project_summaries << summary
     end
   end
 

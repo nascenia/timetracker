@@ -19,11 +19,14 @@
         %th Projects
 
     %tbody
-      - @users.each do |user|
+      - @project_summaries.each do |summary|
         %tr
-          %td= user.name
-          %td= total_working_hours(@timesheets[user.id])
-          %td= user_timesheet_summary(@timesheets[user.id])
+          %td= summary[:user_name]
+          %td= summary[:total_hours]
+          %td
+            - summary[:projects].each do |project|
+              - percentage = (100 * (project[:hours].to_f / summary[:total_hours].to_f)).round(2)
+              %span{style: 'border: 1px solid gray; padding: 5px;'}= "#{project[:name]} #{percentage}% (#{project[:hours]})"
 
 :javascript
 
