@@ -38,14 +38,14 @@
       .form-group
         = f.label 'Persoonal or team'
         %br
-        = f.radio_button :personal_or_team, "own", { checked: current_user.id == user_id }
+        = f.radio_button :personal_or_team, "own", { checked: team_member.eql?(current_user.id) }
         Own goal
-        = f.radio_button :personal_or_team, "team", { checked: current_user.id != user_id }
+        = f.radio_button :personal_or_team, "team", { checked: !team_member.eql?(current_user.id) }
         Team goal
     .col-md-4
       .form-group
         = f.label 'Team member'
-        = f.select :team_member, options_for_select(@team.map{ |u| [u.name, u.id] }, team_member), { include_blank: 'select' }, class: 'form-control', disabled: 'disabled'
+        = f.select :team_member, options_for_select(@team.map{ |u| [u.name, u.id] }, team_member), { include_blank: 'select' }, class: 'form-control', disabled:  team_member.eql?(current_user.id)
         = f.hidden_field :user_id, value: user_id
     .col-md-4
       .form-group
