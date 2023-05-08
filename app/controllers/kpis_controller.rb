@@ -27,8 +27,9 @@ class KpisController < ApplicationController
   # GET /kpis/1
   def show
     @user_kpis    = @kpi.nil? ? [] : JSON.parse(@kpi.data)
+    kpi_ids       = @user_kpis.map{|kpi| kpi['item_id']}
     kpi_template  = KpiTemplate.includes(:kpi_items).find(@kpi.user.kpi_template_id)
-    @kpi_items    = kpi_template.kpi_items
+    @kpi_items    = KpiItem.find kpi_ids
   end
 
   # GET /kpis/new
