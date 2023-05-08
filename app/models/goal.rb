@@ -2,8 +2,9 @@ class Goal < ActiveRecord::Base
 
     STATUSES = ['Pending', 'Approved', 'Completed']
 
-    belongs_to  :goal_category
-    belongs_to  :user
+    belongs_to :goal_category
+    belongs_to :user
+    # belongs_to :reviewer
 
     attr_accessor :personal_or_team, :time_period, :team_member
     

@@ -1,4 +1,4 @@
-- team_member   = params[:commit] == 'Search' ? params[:goal][:team_member] : ''
+- team_member   = params[:commit] == 'Search' ? params[:goal][:team_member].to_i : ''
 - year          = params[:commit] == 'Search' ? params[:goal][:year] : ''
 - time_period   = params[:commit] == 'Search' ? params[:goal][:time_period] : ''
 - start_date    = params[:commit] == 'Search' ? params[:goal][:start_date] : ''
@@ -10,9 +10,9 @@
       .form-group
         = f.label "Goal type"
         %br
-        = f.radio_button :personal_or_team, "own", { checked: team_member.blank? }
+        = f.radio_button :personal_or_team, "own", { checked: team_member.eql?(current_user.id) }
         My goal
-        = f.radio_button :personal_or_team, "team", { checked: team_member.present? }
+        = f.radio_button :personal_or_team, "team", { checked: !team_member.eql?(current_user.id) }
         Team goal
     .col-md-2
       .form-group
