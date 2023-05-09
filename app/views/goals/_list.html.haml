@@ -17,6 +17,7 @@
         %td= goal.point
         %td= goal.status.blank? ? '-' : Goal::STATUSES[goal.status]
         %td= link_to 'Show', goal
-        %td= link_to 'Edit', edit_goal_path(goal, goal: url_params, commit: 'Search')
+        - if goal.status.eql?(0)
+          %td= link_to 'Edit', edit_goal_path(goal, goal: url_params, commit: 'Search')
         %td= link_to 'Destroy', goal, method: :delete, data: { confirm: 'Are you sure?' }
         

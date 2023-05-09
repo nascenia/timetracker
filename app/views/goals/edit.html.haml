@@ -1,5 +1,7 @@
 %h1 Goal edit
 
+- time_period = @goal.quarter
+
 = form_for(@goal, class: 'form-horizontal') do |f|
   - if @goal.errors.any?
     #error_explanation
@@ -12,8 +14,8 @@
   .row
     .col-md-4
       .form-group
-        = f.label 'Time period'
-        = f.select :time_period, options_for_select([['Q-1', '0'], ['Q-2', '1'], ['Q-3', '2'], ['Q-4', '3']]), { include_blank: 'select'}, class: 'form-control'
+        = f.label 'Quarter'
+        = f.select :time_period, options_for_select([['Q-1', '0'], ['Q-2', '1'], ['Q-3', '2'], ['Q-4', '3']], time_period), { include_blank: 'select'}, class: 'form-control'
     .col-md-4
       .form-group
         = f.label :start_date

@@ -20,15 +20,23 @@ class Goal < ActiveRecord::Base
       start_month / 3
     end
 
-    def self.search(params = {}, user_id)
+    def self.search(params = {}, user_id, current_user)
 
       goal = self
-      goal = goal.where(user_id: user_id)
+      if user_id.present?
+        goal = goal.where(user_id: user_id)
+      else
+        team = User.active.where(ttf: current_user)
+        team_member_ids = team.map{|u| u.id}
+        goal = goal.where(user_id: team_member_ids)
+      end
+  
       return goal if params.blank?
 
       unless params[:start_date].blank? && params[:end_date].blank?
         goal = goal.by_date_range(params[:start_date], params[:end_date]) 
       end
+
       goal = goal.order(id: :desc)
       goal
     end

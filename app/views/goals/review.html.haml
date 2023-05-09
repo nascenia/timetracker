@@ -22,7 +22,7 @@
         = f.select :year, options_for_select((s_y..c_y).to_a.map{ |y| [y, y] }.reverse, year), { include_blank: 'select' }, class: 'form-control'
     .col-md-2
       .form-group
-        = f.label 'Time period'
+        = f.label 'Quarter'
         = f.select :time_period, options_for_select([['Q-1', '0'], ['Q-2', '1'], ['Q-3', '2'], ['Q-4', '3']], time_period), { include_blank: 'select'}, class: 'form-control'
     .col-md-2
       .form-group
@@ -42,6 +42,10 @@
   = form_for(:goal, url: goal_path(goal), method: :put, html: { class: 'review-confirmation', id: "goal-id-#{goal.id}" }) do |f|
     .row
       .col-md-12.alert.alert-success#review-success{ style: 'display: none' }
+    .row 
+      .col-md-6
+        %label Team member: 
+        = goal.user.name
     .row
       .col-md-6
         %label Start date
