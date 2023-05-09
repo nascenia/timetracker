@@ -12,7 +12,7 @@ class GoalsController < ApplicationController
       user_id = params[:goal][:team_member]
     end
 
-    @goals  = Goal.search(params[:goal], user_id)
+    @goals  = Goal.search(params[:goal], user_id, current_user)
     @team   = User.active.where(ttf: current_user)
   end
 
@@ -26,7 +26,7 @@ class GoalsController < ApplicationController
     @goal_categories  = GoalCategory.where(published: true)
     @team             = User.active.where(ttf: current_user)
     @goals            = []
-    @goals            = Goal.search(params, params[:user_id]) unless params[:user_id].blank?
+    @goals            = Goal.search(params, params[:user_id], current_user) unless params[:user_id].blank?
   end
 
   # GET /goals/1/edit
@@ -101,7 +101,7 @@ class GoalsController < ApplicationController
   # GET /goals/review
   def review
     user_id = params[:goal].blank? ? current_user.id : params[:goal][:user_id]
-    @goals  = Goal.search(params[:goal], user_id)
+    @goals  = Goal.search(params[:goal], user_id, current_user)
     @team   = User.active.where(ttf: current_user)
   end
 
