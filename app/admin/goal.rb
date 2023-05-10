@@ -25,11 +25,8 @@ ActiveAdmin.register Goal do
     column 'Category' do |goal|
       goal.goal_category.title
     end
-    #column  'Reviewer' do |timesheet|
-    #  timesheet.reviewer.name
-    #end
-    column  'User' do |timesheet|
-      "#{timesheet.user.name}"
+    column 'User' do |goal|
+      goal.user.name
     end
     column :status do |goal|
       Goal::STATUSES[goal.status]

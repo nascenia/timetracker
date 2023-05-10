@@ -14,17 +14,17 @@ ActiveAdmin.register Timesheet do
 # end
 
   index do
-    column  :id
+    column :id
     column :task
     column :description
     column :date
     column :hours
     column :minutes
     column  'Project' do |timesheet|
-      "#{timesheet.project.project_name}"
+      timesheet.project.project_name
     end
     column  'User' do |timesheet|
-      "#{timesheet.user.name}"
+      timesheet.user.present? ? timesheet.user.name : 'n/a'
     end
     column :created_at
     column :updated_at
