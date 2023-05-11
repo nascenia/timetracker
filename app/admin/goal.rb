@@ -23,10 +23,10 @@ ActiveAdmin.register Goal do
     column :start_date
     column :end_date
     column 'Category' do |goal|
-      goal.goal_category.title
+      goal.goal_category.present? ? goal.goal_category.title : 'n/a'
     end
     column 'User' do |goal|
-      goal.user.name
+      goal.user.present? ? goal.user.name : 'n/a'
     end
     column :status do |goal|
       Goal::STATUSES[goal.status]

@@ -7,7 +7,7 @@
 <% end %>
 
 |
-<%= link_to 'Switch to new view', dashboard_projects_path(status: :active) %>
+<%= link_to 'Switch to new view', dashboard_projects_path(project: {time_period: 7, start_date: 7.days.ago.strftime('%Y/%m/%d'), end_date: Time.now.strftime('%Y/%m/%d')}, commit: 'Search') %>
 
 <table style="width:100%" id="projects-list-table">
 <!--    <tfoot class="col-search">-->
