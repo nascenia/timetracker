@@ -21,7 +21,7 @@ ActiveAdmin.register Timesheet do
     column :hours
     column :minutes
     column  'Project' do |timesheet|
-      timesheet.project.project_name
+      timesheet.project.present? ? timesheet.project.project_name : 'n/a'
     end
     column  'User' do |timesheet|
       timesheet.user.present? ? timesheet.user.name : 'n/a'
