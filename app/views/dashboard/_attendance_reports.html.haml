@@ -1,0 +1,9 @@
+.card.mb-4
+  .card-header
+    %b Reports
+
+  %ul.list-group.list-group-flush{style: 'margin: 0'}
+    %li.list-group-item
+      = link_to 'Download attendances CSV', download_attendances_path(:format => :xls), title: 'Last six months', target: '_blank'
+    %li.list-group-item
+      = link_to 'Download users CSV', download_users_path(:format => :xls), title: 'All users', target: '_blank'

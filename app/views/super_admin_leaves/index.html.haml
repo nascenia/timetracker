@@ -1,0 +1,51 @@
+-#= form_tag super_admin_leaves_path, method: :get, class: 'form-inline' do
+-#  = select_tag :status, options_for_select(Leave::LEAVE_STATUSES, params[:status]), class: 'form-control', prompt: 'Select leave status'
+-#  = submit_tag 'Submit', class: 'btn btn-success'
+= render partial: 'shared/leave_filter'
+.panel.panel-default
+  .panel-heading
+    %h3
+      All Leaves
+
+  #loading-message Loading table... Please Wait
+  %table.table.table-bordered.table-hover.hidden#leave-table
+    %thead
+      %tr
+        %th Name
+        %th Leave type
+        %th Status
+        %th Start date
+        %th End date
+        %th Action
+    %tbody
+      - @leaves.each do |leave|
+        %tr
+          %td= leave.user.name
+          %td= get_type leave
+          %td= get_status leave.status
+          %td= leave.start_date
+          %td= leave.end_date
+          %td
+            - unless unannounced?(leave)
+              = link_to 'Show', leave_path(leave)
+            - if leave.start_date >= Time.now or leave.is_awarded?
+              |
+              = link_to 'Cancel', leave_path(leave), method: :delete, data: { confirm: 'Are you sure' }
+-#  %p= paginate @leaves
+:javascript
+  $(document).ready(function() {
+      var dataTable = $('#leave-table').DataTable({
+        pageLength: 50,
+        ordering: false,
+        dom: 'rtip'
+      });
+      $('#loading-message').hide();
+      $('#leave-table').removeClass('hidden');
+
+      $(document).on("turbolinks:before-cache", function() {
+        if (dataTable !== null) {
+          dataTable.destroy();
+          dataTable = null;
+        }
+      });
+  });

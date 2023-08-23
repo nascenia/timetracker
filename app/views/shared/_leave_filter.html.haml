@@ -1,0 +1,23 @@
+.panel.panel-default
+  .panel-heading
+
+    = form_tag super_admin_leaves_path, method: :get, class: 'form-inline filter' do
+      .row
+        .col-sm-3
+          = select_tag :time, options_for_select([['This month', 1], ['This year', 2], ['Last month', 3], ['Last year',4], ['Custom','5']],
+           params[:time]), class: 'form-control', prompt: 'All leaves', id: 'time-dropdown-filter'
+        .col-md-3
+          = text_field_tag 'start_date', params[:start_date] , :class => 'form-control start-date-picker-admin-filter', :placeholder => 'Start date', :autocomplete => :off, :required => true
+        .col-md-3
+          = text_field_tag 'end_date', params[:end_date] , :class => 'form-control end-date-picker-admin-filter', :placeholder => 'End date', :autocomplete => :off, :required => true
+
+      .row
+        .col-sm-3
+          = select_tag :status, options_for_select(Leave::LEAVE_STATUSES[0..2], params[:status]),
+           class: 'form-control', prompt: 'All leave status', id: 'leave-status-filter'
+        .col-sm-3
+          = select_tag :type, options_for_select([['Casual Leave', 1], ['Medical Leave', 2], ['Unannounced Leave', 3]],
+           params[:type]), class: 'form-control', prompt: 'All leave type', id: 'leave-type-filter'
+        .col-sm-3
+          = submit_tag 'Submit', class: 'btn btn-primary'
+          = submit_tag 'Reset', class: 'btn btn-default', id: 'filter-reset-btn'

@@ -1,0 +1,43 @@
+.log-status
+  - unless @attendance.present?
+    .alert.alert-warning{:role => 'alert'}
+      Please check in!
+  - else
+    .alert.alert-info{:role => 'alert'}
+      Today's in time
+      %b= "#{@attendance.in_time.strftime('%I:%M %p')} "
+      - unless is_late_attendance? @attendance.in_time
+        %span.label.label-success On time
+      - else
+        %span.label.label-danger Late
+
+.row.mb-2
+  .col-sm-3
+    = form_for(:kpi, url: attendances_path, method: :post, html: { class: '' }) do |f|
+      .d-grid.gap-2.col-12.mx-auto
+        = f.button 'Check In', class: "btn btn-success #{'disabled' if @attendance.present?}"
+
+  - if @attendance.present?
+    .col-sm-3
+      .d-grid.gap-2.col-12.mx-auto
+        = link_to  'Check Out', attendance_path(@attendance), method: :put, class: "btn btn-danger #{'disabled' if !@attendance.present?}"
+
+.row
+  .col-md-8
+    = render 'todays_attendance'
+
+  .col-md-4
+    = render 'attendance_summary'
+    - if @all_approved_leaves.count > 0
+      = render 'on_leave_users'
+    = render 'internal_services'
+    = render 'rules_instructions'
+    - if current_user.present? && current_user.has_admin_privilege?
+      = render 'attendance_reports'
+
+.row
+  #salaat-summary &nbsp;
+
+
+-#.row{"data-controller" => "dashboard"}
+  %input#datepicker{ "type" => "text" }

@@ -1,0 +1,250 @@
+.row
+  .col-md-8
+    .content-show-item
+      %h3
+        %b Basic Information
+        .content-info
+          .row
+            .item-email
+              .col-md-4
+                %h5
+                  Designation
+              .col-md-4
+                %h5
+                  = @user.promotions.last.nil? ? 'Not assigned yet!' : @user.promotions.last.designation
+              - if current_user.has_admin_privilege?
+                .col-md-4
+                  %h5= link_to 'New Promotion', new_employee_promotion_path(@user)
+          .row
+            .item-email
+              .col-md-4
+                %h5
+                  Supervisor/TTF
+              .col-md-4
+                %h5
+                  = @user.ttf.name
+              - if current_user.id.eql?(@user.id)
+                .col-md-4
+                  %h5= link_to 'Change supervisor/ttf', edit_user_registration_path(change_ttf: true)
+          
+          .row
+            .item-email
+              .col-md-4
+                %h5
+                  Leave Approval Path
+              .col-md-8
+                %h5
+                  - unless @user.approval_path.nil? || @user.approval_path.path_chains.empty?
+                    - count = @user.approval_path.path_chains.count
+                    - @user.approval_path.path_chains.order(priority: :desc).each do |chain|
+                      = chain.user.name
+                      - if count > 1
+                        %span.fa.fa-chevron-circle-right
+                      - count = count - 1
+          .row
+            .item-email
+              .col-md-4
+                %h5
+                  Email
+              .col-md-8
+                %h5
+                  = @user.email
+          .row
+            .item-mobile
+              .col-md-4
+                %h5
+                  Mobile
+              .col-md-8
+                %h5
+                  %a{:href =>"Tel:#{@user.mobile_number}"}= @user.mobile_number
+          .row
+            .item-university
+              .col-md-4
+                %h5 University
+              .col-md-8
+                %h5
+                  = @user.last_university
+          .row
+            .item-last_degree
+              .col-md-4
+                %h5
+                  Last Degree
+              .col-md-8
+                %h5
+                  = @user.last_degree
+          .row
+            .item-passing_year
+              .col-md-4
+                %h5
+                  Passing Year
+              .col-md-8
+                %h5
+                  = @user.passing_year
+          .row
+            .item-blood_group
+              .col-md-4
+                %h5
+                  Blood Group
+              .col-md-8
+                %h5
+                  = @user.blood_group
+          .row
+            .item-passing_year
+              .col-md-4
+                %h5
+                  Joining Date
+              .col-md-8
+                %h5
+                  = @user.joining_date
+          .row
+            .item-passing_year
+              .col-md-4
+                %h5
+                  Employee ID
+              .col-md-8
+                %h5
+                  = @user.employee_id.nil? ? 'N/A' : @user.employee_id
+          .clearfix
+
+      - if current_user.has_admin_privilege?
+        %h3
+          %b Detail Information
+          .content-info
+            - if @user.alternate_contact.present?
+              .row
+                .item-alternate_contact
+                  .col-md-4
+                    %h5
+                      Alternate Contact
+                  .col-md-8
+                    %h5
+                      %a{:href =>"Tel:#{@user.alternate_contact}"}= @user.alternate_contact
+            .row
+              .item-personal_email
+                .col-md-4
+                  %h5
+                    Personal Mail
+                .col-md-8
+                  %h5
+                    = @user.personal_email
+            .row
+              .item-emergency_contact_person_name
+                .col-md-4
+                  %h5
+                    Emergency Contact
+                .col-md-8
+                  %h5
+                    = @user.emergency_contact_person_name
+            .row
+              .item-emergency_contact_person_relation
+                .col-md-4
+                  %h5
+                    Relation
+                .col-md-8
+                  %h5
+                    = @user.emergency_contact_person_relation
+            .row
+              .item-emergency_contact_person_number
+                .col-md-4
+                  %h5
+                    Mobile
+                .col-md-8
+                  %h5
+                    %a{:href =>"Tel:#{@user.emergency_contact_person_number}"}= @user.emergency_contact_person_number
+            .row
+              .item-present_address
+                .col-md-4
+                  %h5 Present Address
+                .col-md-8
+                  %h5
+                    = @user.present_address
+            .row
+              .item-permanent_address
+                .col-md-4
+                  %h5
+                    Permanent Address
+                .col-md-8
+                  %h5
+                    = @user.permanent_address
+            .row
+              .item-date_of_birth
+                .col-md-4
+                  %h5 Date of Birth
+                .col-md-8
+                  %h5
+                    = @user.date_of_birth
+            .row
+              .col-md-4
+                %h5 Designation History
+              .col-md-8
+                - @user.promotions.each_with_index do |promotion, i|
+                  - designation_history = "#{promotion.designation} on #{promotion.start_date}"
+                  - if i.eql?(0)
+                    - designation_history = "Joined As: #{promotion.designation} on #{promotion.start_date.split('T').first}"
+                  %p.designation-history= designation_history
+          %h3
+            %b Document
+            .content-info
+              .row
+                .item-bank_account_no
+                  .col-md-4
+                    %h5
+                      Bank Account No
+                  .col-md-8
+                    %h5
+                      - if @user.bank_account_no.present?
+                        = @user.bank_account_no
+                      - else
+                        N/A
+              .row
+                .item-ndaDoc
+                  .col-md-4
+                    %h5
+                      NDA
+                  .col-md-8
+                    %h5
+                      - if @ndaDoc.present?
+                        = link_to 'View', @ndaDoc.url, {class: 'link', target: :_blank}
+                      - else
+                        N/A
+              .row
+                .item-cv
+                  .col-md-4
+                    %h5
+                      CV
+                  .col-md-8
+                    %h5
+                      - if @user.resume.present?
+                        = link_to 'View', @user.resume.url, {class: 'link', target: :_blank}
+                      - else
+                        N/A
+              .row
+                .item-national_id
+                  .col-md-4
+                    %h5
+                      National ID/ Birth Certificate
+                  .col-md-8
+                    %h5
+                      - if @user.national_id.present?
+                        = link_to 'View', @user.national_id.url, {class: 'link', target: :_blank}
+                      - else
+                        N/A
+              .row
+                .item-passport
+                  .col-md-4
+                    %h5
+                      Passport
+                  .col-md-8
+                    %h5
+                      - if @user.passport.present?
+                        = link_to 'View', @user.passport.url, {class: 'link', target: :_blank}
+                      - else
+                        N/A
+            .clearfix
+  .col-md-4
+    .img-responsive.profile_image
+      = image_tag @user.avatar.url(:large)
+- if @show_actions_to_admin
+  .container_accept_or_reject
+    .row
+      = render partial: 'actions'

@@ -1,0 +1,26 @@
+= form_for(@kpi, url: comment_kpi_path, method: :post, html: { class: '' }) do |f|
+  - if @kpi.review_request? && @kpi.user.ttf_id.eql?(current_user.id) 
+    %hr
+    .row
+      .col-md-12
+        = f.label "TTF/ Appraiser's comment (about job/task/career):"
+        = label '', ' *', class: 'required-asterisk'
+        = f.text_area :ttf_comment, class: 'form-control', required: true
+    .row
+      .col-md-2.form-group
+        = blank_space
+        = f.hidden_field :status, value: Kpi::STATUSES[:reviewed]
+        = f.submit 'Submit', class: 'btn btn-info btn-block'
+
+  - if @kpi.reviewed? && @kpi.user_id.eql?(current_user.id) 
+    %hr
+    .row
+      .col-md-12
+        = f.label "Team Member/ Appraisee's comment (about job/task/career):"
+        = label '', ' *', class: 'required-asterisk'
+        = f.text_area :team_member_comment, class: 'form-control', required: true
+        = f.hidden_field :status, value: Kpi::STATUSES[:completed]
+    .row
+      .col-md-2.form-group
+        = blank_space
+        = f.submit 'Submit', class: 'btn btn-info btn-block'

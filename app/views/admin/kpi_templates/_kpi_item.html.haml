@@ -1,0 +1,10 @@
+#main_content_wrapper
+  #main_content
+    .panel
+      %h3 KPI Items
+      .panel_contents
+        - count = 0
+        - kpi.kpi_items.each do |kpi_item|
+          - count += 1
+          %h3.h3.text-secondary.fw-normal= link_to "#{count}. #{kpi_item.title}", edit_admin_kpi_item_path(kpi_item)
+          %p.text-secondary.about-p= kpi_item.description

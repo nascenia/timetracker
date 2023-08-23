@@ -1,0 +1,33 @@
+%h2= "KPI details of: #{@kpi.user.name}"
+%hr
+
+.row
+  .col-md-3
+    %label Start date:
+    = @kpi.start_date
+  .col-md-3
+    %label End date:
+    = @kpi.end_date
+  .col-md-4
+    %label Status:
+    %span.label.label-info= kpi_status_str(@kpi.status)
+  .col-md-2
+    %label Score:
+    %span.label.label-success= @kpi.score
+
+= render 'kpi_items'
+
+
+%hr
+.row
+  .col-md-12
+    %label TTF/ Appraiser's comment (about job/task/career):
+    %p= @kpi.ttf_comment
+
+%hr
+.row
+  .col-md-12
+    %label Team Member/ Appraisee's comment (about job/task/career):
+    %p= @kpi.team_member_comment
+
+= render 'comment_form'

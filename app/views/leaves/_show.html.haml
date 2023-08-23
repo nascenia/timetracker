@@ -1,0 +1,99 @@
+%h1.page-header
+  Leave application summary
+
+.panel.panel-default
+  .panel-heading
+    %b= "Leave status of : #{@leave.user.name}"
+
+  %table.table.table-bordered
+    %thead
+      %tr
+        %th
+        %th Casual (hours)
+        %th Medical (hours)
+    %tbody
+      %tr
+        %th Accrued Leave
+        %td= @leave.user.leave_tracker.accrued_vacation_total if @leave.user.leave_tracker.present?
+        %td= @leave.user.leave_tracker.accrued_medical_total if @leave.user.leave_tracker.present?
+      %tr
+        %th Consumed Leave
+        %td= @leave.user.leave_tracker.consumed_vacation if @leave.user.leave_tracker.present?
+        %td= @leave.user.leave_tracker.consumed_medical if @leave.user.leave_tracker.present?
+
+.panel.panel-default
+  .panel-heading
+    %b Leave approval
+
+  %table.table.table-bordered
+    %tbody
+      %tr
+        %th Name
+        %td= @leave.user.name
+      %tr
+        %th Email
+        %td= @leave.user.email
+      %tr
+        %th Leave type
+        %td
+          - if current_user.try(:has_admin_privilege?) && @leave.leave_type == Leave::UNANNOUNCED
+            = select_tag :leave_type, options_for_select(['Casual', 'Medical', 'Unannounced'], get_type(@leave)),
+                         onchange: "change_leave_type(#{@leave.id})"
+          - else
+            = get_type @leave
+      %tr
+        %th Applied on
+        %td= @leave.created_at.strftime("%d-%b-%y")
+
+      %tr
+        %th Duration
+        %td= get_duration @leave
+      %tr
+        %th Start date
+        -if @leave.start_date.present?
+          %td= @leave.start_date.strftime("%d-%b-%y")
+        -else
+          %td= 'N/A'
+
+      %tr
+        %th End date
+        -if @leave.end_date.present?
+          %td= @leave.end_date.strftime("%d-%b-%y")
+        -else
+          %td= 'N/A'
+      %tr
+        %th Description
+        %td= @leave.reason
+      %tr
+        %th Status
+        %td= get_status @leave.status
+      - unless @leave.is_awarded?
+        %tr
+          %th Approved by
+          %td= @approvers.present? && @approvers.size > 0 ? @approvers.join(', ') : 'N/A'
+        %tr
+          %th Rejected by
+          %td
+            - if @leave.status == Leave::REJECTED
+              = @rejector ? @rejector.name : 'Admin'
+            - else
+              = 'N/A'
+
+
+.panel.panel-default
+  .panel-heading
+    %b Comments
+
+  %table.table.table-bordered
+    %tbody
+      - @leave.comments.each do |comment|
+        %tr
+          %td
+            %b= comment.user.name + ': '
+            = comment.body
+            %br
+            - if comment.user == current_user
+              = link_to 'Edit', edit_comment_path(comment), remote: true, turbolinks: false
+              |
+            - if comment.user == current_user || current_user.try(:has_admin_privilege?)
+              = link_to 'Delete', comment_path(comment), method: :delete

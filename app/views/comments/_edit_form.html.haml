@@ -1,0 +1,11 @@
+- content_for :modal_body do
+  = form_for @comment do |f|
+    .form-group
+      = f.text_area :body, maxlength: '300', class: 'form-control', rows: 7
+
+      %p.help-block
+        %span= 300
+        characters remaining.
+
+    .form-group
+      = f.submit 'Submit', class: 'form-control btn btn-primary'

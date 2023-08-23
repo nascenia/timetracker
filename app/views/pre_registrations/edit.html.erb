@@ -1,0 +1,186 @@
+<% if @flag %>
+    <h3><b>New Employee Information</b></h3>
+<% else %>
+    <h3><b>On proces of joining</b></h3>
+<% end %>
+<br>
+<%= form_for @pre_registration do |f| %>
+        <div class = 'row' >
+    
+            <div class = 'col-md-6' >
+                <%= f.label :name do %>
+                    <%= 'Employee Name' %>
+                    <span class = 'required-asterisk' >*</span>
+                <% end %>    
+                <p>
+                    <%= f.text_field :name, class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false %>
+                </p>
+            </div>
+            
+            <div class = 'col-md-6' >
+                <%= f.label :joiningDate do %>
+                    <%= 'Joining Date' %>
+                    <span class = 'required-asterisk' >*</span>
+                <% end %> 
+                <p>
+                    <%= f.text_field :joiningDate, class: 'form-control timesheet-date-picker_new_join', required: 'true', value: @pre_registration.joiningDate, onkeydown: 'return false' %>
+                </p>
+            </div>
+
+            <div class = 'col-md-6' >
+                <%= f.label :designation do %>
+                    <%= 'Designation' %>
+                    <span class = 'required-asterisk' >*</span>
+                <% end %>
+                <p>
+                    <%= f.select :designation, Designation.published.map{ |d| [d.title, d.title] }, { include_blank: 'select' }, class: 'form-control' %>
+                </p>
+            </div>
+
+            <div class = 'col-md-6' >
+                <%= f.label :ttf_id do %>
+                    <%= 'Name of TTF' %>
+                    <span class = 'required-asterisk' >*</span>
+                <% end %>
+                <p>
+                    <%= f.select :ttf_id, options_for_select(@ttf_list.collect { | ttf_list | [ttf_list.name,  ttf_list.id] }, selected: @pre_registration.ttf_id), {}, required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects' %>
+                </p>
+            </div>
+                    
+            <div class = 'col-md-6' >
+                <%= f.label :emailGroup do %>
+                    <%= 'Suggested Email Group' %>
+                    <span class = 'required-asterisk' >*</span>
+                <% end %>
+                <p>
+                    <%= f.text_field :emailGroup, class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false %>
+                </p>
+            </div>
+
+            <div class="col-md-6">
+                <%= f.label :leave_approval_path_id do %>
+                    <%= 'Leave Approval Path' %>
+                    <span class = 'required-asterisk' >*</span>
+                <% end %>
+                <p>
+                  <%= f.select :leave_approval_path_id, options_for_select(ApprovalPath.all.collect { | ap | [ap.name,  ap.id] }, selected: @pre_registration.leave_approval_path_id), {}, required: 'true', autofocus: 'true', class: 'form-control', id: '' %>
+                </p>
+                <p>
+                  <%= link_to 'Click here', new_approval_chain_path %>
+                  to create a leave approval path with this TTF first if not found.
+                </p>
+            </div>
+
+            <div class = 'col-md-6' >
+                <%= f.label :contactNumber do %>
+                    <%= 'Contact Number' %>
+                    <span class = 'required-asterisk' >*</span> 
+                <% end %>
+                <p>
+                    <%= f.text_field :contactNumber, pattern: '[0][1][3-9][0-9]{8}', title: 'Enter a valid mobile number!', class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false %>
+                </p>
+            </div>
+
+            <div class = 'col-md-6' >
+                <%= f.label :personalEmail do %>
+                    <%= 'Personal Email' %>
+                    <span class = 'required-asterisk' >*</span>
+                <% end %>
+                <p>
+                    <%= f.email_field :personalEmail, pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$', title: 'Enter a valid email address!', class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false %>
+                </p>
+            </div>
+
+            <div class = 'col-md-6' >
+                <%= f.label :holiday_scheme_id do %>
+                    <%= 'Holiday Scheme' %>
+                    <span class = 'required-asterisk' >*</span>
+                <% end %>
+                <p>
+                    <%= f.select :holiday_scheme_id, options_for_select(@holiday_scheme.collect { | holiday | [holiday.name,  holiday.id] }, selected: @pre_registration.holiday_scheme_id), {}, required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects' %>
+                </p>
+            </div>
+
+            <div class = 'col-md-6' >
+                <%= f.label :weekend_id do %>
+                    <%= 'Weekend Scheme' %>
+                    <span class = 'required-asterisk' >*</span>
+                <% end %>
+                <p>
+                    <%= f.select :weekend_id, options_for_select(@weekend_scheme.collect { | weekend | [weekend.name,  weekend.id] }, selected: @pre_registration.weekend_id), {}, required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects' %>
+                </p>
+            </div>
+
+            <div class = 'col-md-6' >
+                <%= f.label :employee_id do %>
+                    <%= 'Employee ID' %>
+                <% end %>
+                <p>
+                    <%= f.text_field :employee_id, autofocus: 'true', class: 'form-control', pattern: '[A-Za-z0-9]+$', required: 'true', maxlength: '5' %>
+                </p>
+            </div>
+        </div>
+
+        <div class = 'row' >
+            <div class = 'col-md-6' >
+                <%= f.label :NdaSigned do %>
+                    <%= f.check_box :NdaSigned, checked: @pre_registration.NdaSigned, required: true %>
+                    <%= 'NDA Signed' %>
+                    <span class = 'required-asterisk' >*</span>
+                    <br/><br/>
+                    <%= f.file_field :ndaDoc, onchange: 'validateFiles(this);', data: { max_file_size: 50.megabytes }  %>
+                    <br/>
+                    <% if @pre_registration.ndaDoc.present? %>
+                        <%= link_to 'Current NDA', @pre_registration.ndaDoc.url, {class: 'link', target: :_blank} %>
+                    <% end %>
+                <% end %>
+            </div>
+
+            <div class = 'col-md-6' >
+                <%= f.label :workstationReady do %>
+                    <%= f.check_box :workstationReady, checked: @pre_registration.workstationReady, required: true %>
+                    <%= 'Workstation prepared for new employee?' %>
+                    <span class = 'required-asterisk' >*</span>
+                    &nbsp;&nbsp;
+                <% end %>
+            </div>
+            <br/><br/>
+            <div class = 'col-md-6' >
+                <%= f.label :packReady do %>
+                    <%= f.check_box :packReady, checked: @pre_registration.packReady, required: true %>
+                    <%= 'Greeting pack prepared for new employee?' %>
+                    <span class = 'required-asterisk' >*</span>
+                <% end %>
+            </div>
+
+        </div>
+    <br/>
+    <hr>
+    <%= hidden_field_tag 'selected', @is_for_admin  %>
+    <br/>
+    <div class = 'row' >
+        <% if @is_for_admin == '23' %>
+            <div class = 'col-md-6' >
+                <%= f.label :companyEmail do %>
+                    <%= 'Company Email' %>
+                    <span class = 'required-asterisk' >*</span>
+                    <%= f.email_field :companyEmail,  pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$', title: 'Enter a valid email address!', id: 'company_email', onchange: 'validateEmails();', class: 'form-control', maxlength: '128', required: true %>
+                <% end %>
+            </div>
+            <div class = 'col-md-6' >
+                <%= f.label :HR_email do %>
+                    <%= 'Notify HR to follow the next step' %>
+                    <span class = 'required-asterisk' >*</span>
+                    <%= f.email_field :HR_email,  pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$', title: 'Enter a valid email address!', id: 'hr_email', onchange: 'validateEmails();', class: 'form-control', maxlength: '128', required: true %>
+                <% end %>
+            </div>
+            <div class="col-md-12">
+                <%= f.label :zoho_email_account do %>
+                    <%= f.check_box :zoho_email_account %>
+                    Zoho email account
+                <% end %>
+            </div>
+        <% end %>    
+    </div>
+    <%= f.submit 'Submit', class: 'btn btn-success', confirm: 'Are you sure?' %>
+<% end %>

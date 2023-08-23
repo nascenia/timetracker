@@ -1,0 +1,210 @@
+<%= stylesheet_link_tag 'pre_registrations', :media => 'all', 'data-turbolinks-track' => true %>
+<h3><b>On Process of Joining</b></h3><br/>
+<table style = 'width:100%' >
+    <tr>
+        <th class = 'pre_reg_th left' >Name</th>
+        <th class='pre_reg_th'>Email ID</th>
+        <th class='pre_reg_th'>Contact Number</th>
+        <th colspan = '3' class = 'pre_reg_th right' >Joining Date</th>
+    </tr>
+    <% last_date = '' %>
+    <% if @on_process_of_joining_employees.empty? %>
+        <tr>
+            <td class = 'pre_reg_td both_side' style = "text-align:center;" colspan = '6' >No Record</td>
+        </tr>
+    <% end %>
+    <% @on_process_of_joining_employees.each do |employee| %>
+        <tr>
+            <td class = 'pre_reg_td left' ><%= employee.name %></td>
+            <td class='pre_reg_td'><%= employee.personalEmail %></td>
+            <td class='pre_reg_td'><%= employee.contactNumber %></td>
+            <td class='pre_reg_td'><%= employee.joiningDate%></td>
+            <td class='pre_reg_td'><%= link_to 'Edit', edit_pre_registration_path(employee) %></td>
+            <td class='pre_reg_td right'><%= link_to 'Delete', pre_registration_path(employee), method: :delete, data: { confirm: 'Are you sure you want to delete this?' } %></td>
+        </tr>
+    <% end %>
+
+</table>
+<br/>
+<p>
+  <button class='btn btn-primary' type='button' data-bs-toggle='collapse' data-bs-target='#addEmployee' aria-expanded='false' aria-controls='collapseExample'>
+    Add New Employee
+  </button>
+</p>
+<div class='collapse' id='addEmployee'>
+    <div class='card card-body'>
+        <h3><b>Fill Employee Information</b></h3><br>
+            <%= form_for @pre_registration do |f| %>
+            <div class = 'row' >
+            <div class = 'col-md-6' >
+                <%= f.label :name do %>
+                    <%= 'Employee Name' %>
+                    <span class = 'required-asterisk' >*</span>
+                <% end %>
+                <p>
+                    <%= f.text_field :name, class: 'form-control', required: 'true', maxlength: '128' %>
+                </p>
+            </div>
+  
+            <div class = 'col-md-6' >
+                <%= f.label :joiningDate do %>
+                    <%= 'Joining Date' %>
+                    <span class = 'required-asterisk' >*</span>
+                <% end %>
+                <p>
+                    <%= f.text_field :joiningDate, class: 'form-control timesheet-date-picker_new_join', value: Time.now.strftime('%Y/%m/%d'), onkeydown: 'return false' %>
+                </p>
+            </div>
+  
+            <div class = 'col-md-6' >
+                <%= f.label :designation do %>
+                    <%= 'Designation' %>
+                    <span class = 'required-asterisk' >*</span>
+                <% end %>
+                <p>
+                    <%= f.select :designation, Designation.published.map{ |d| [d.title, d.title] }, { include_blank: 'select' }, class: 'form-control' %>
+                </p>
+            </div>
+  
+            <div class = 'col-md-6' >
+                <%= f.label :ttf_id do %>
+                    <%= 'Name of TTF/Mentor' %>
+                    <span class = 'required-asterisk' >*</span>
+                <% end %>
+                <p>
+                    <%= f.select :ttf_id, options_for_select(@ttf_list.collect { | ttf_list | [ttf_list.name,  ttf_list.id] }), { include_blank: 'select' }, required: 'true', autofocus: 'true', class: 'form-control', id:'select-ttf' %>
+                </p>
+            </div>
+  
+            <div class = 'col-md-6' >
+                <%= f.label :emailGroup do %>
+                    <%= 'Suggested Email Group' %>
+                    <span class = 'required-asterisk' >*</span>
+                <% end %>
+                <p>
+                    <%= f.text_field :emailGroup, class: 'form-control', required: 'true', maxlength: '128' %>
+                </p>
+            </div>
+  
+            <div class="col-md-6">
+                <%= f.label :leave_approval_path_id do %>
+                    <%= 'Leave Approval Path' %>
+                    <span class = 'required-asterisk'>*</span>
+                <% end %>
+                <p>
+                  <%= f.select :leave_approval_path_id, options_for_select(ApprovalPath.all.collect { | ap | [ap.name,  ap.id] }), { include_blank: 'select' }, required: 'true', autofocus: 'true', class: 'form-control', id: 'leave-approval-path' %>
+                </p>
+                <p>
+                  <%= link_to 'Click here', new_approval_chain_path %>
+                  to create a leave approval path with this TTF first, if not there is one already.
+                </p>
+            </div>
+
+            <div class = 'col-md-6' >
+                <%= f.label :contactNumber do %>
+                    <%= 'Contact Number' %>
+                    <span class = 'required-asterisk' >*</span>
+                <% end %>
+                <p>
+                    <%= f.text_field :contactNumber, pattern: '[0][1][3-9][0-9]{8}', title: 'Enter a valid mobile number!', class: 'form-control', required: 'true', maxlength: '128' %>
+                </p>
+            </div>
+  
+            <div class = 'col-md-6' >
+                <%= f.label :personalEmail do %>
+                    <%= 'Personal Email' %>
+                    <span class = 'required-asterisk' >*</span>
+                <% end %>
+                <p>
+                    <%= f.text_field :personalEmail , class: 'form-control', pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$', title: 'Enter a valid email address!', required: 'true', maxlength: '128' %>
+                </p>
+            </div>
+  
+            <div class = 'col-md-6' >
+                <%= f.label :holiday_scheme_id do %>
+                    <%= 'Holiday Scheme' %>
+                    <span class = 'required-asterisk' >*</span>
+                <% end %>
+                <p>
+                    <%= f.select :holiday_scheme_id, options_for_select(@holiday_scheme.collect{ | holiday | [holiday.name,  holiday.id] }), {}, required: 'true', autofocus: 'true', class: 'form-control', id: 'select-other-projects' %>
+                </p>
+            </div>
+  
+            <div class = 'col-md-6' >
+                <%= f.label :weekend_id do %>
+                    <%= 'Weekend Scheme' %>
+                    <span class = 'required-asterisk' >*</span>
+                <% end %>
+                <p>
+                    <%= f.select :weekend_id, options_for_select(@weekend_scheme.collect{ | weekend | [weekend.name, weekend.id] }), {}, required: 'true', autofocus: 'true', class: 'form-control', id: 'select-other-projects' %>
+                </p>
+            </div>
+            <div class = 'col-md-6' >
+                <%= f.label :employee_id do %>
+                    <%= 'Employee ID' %>
+                    <span class = 'required-asterisk' >*</span>
+                    <span>(Must be 5 character length)</span>
+                <% end %>
+                <p>
+                    <%= f.text_field :employee_id, autofocus: 'true', class: 'form-control', placeholder: 'Example - A0001', pattern: '[A-Za-z0-9]+$', required: 'true', maxlength: '5' %>
+                </p>
+            </div>
+        </div>
+  
+        <div class = 'row' >
+        
+            <div class = 'col-md-6' >
+                <%= f.label :NdaSigned do %>
+                    <%= f.check_box :NdaSigned, checked: false, required: true %>
+                    <%= 'NDA Signed' %>
+                    <span class = 'required-asterisk' >*</span>
+                    <br/><br/>
+                    <%= f.file_field :ndaDoc, onchange: 'validateFiles(this);', data: { max_file_size: 50.megabytes } %>
+                <% end %>
+            </div>
+            
+            <div class = 'col-md-6' >
+                <%= f.label :workstationReady do %>
+                    <%= f.check_box :workstationReady, checked: false, required: true %>
+                    <%= 'Workstation prepared for new employee?' %>    
+                    <span class = 'required-asterisk' >*</span>
+                <% end %>
+            </div>
+            <br/><br/>
+            <div class = 'col-md-6' >
+                <%= f.label :packReady do %>
+                    <%= f.check_box :packReady, checked: false, required: true %>
+                    <%= 'Greeting pack prepared for new employee?' %>
+                    <span class = 'required-asterisk' >*</span>
+                <% end %>
+            </div>
+        </div>
+        <br/>  
+        <%= f.submit 'Submit', class: 'btn btn-success' %>
+        <% end %>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    //console.log('Loaded...');
+    $(document).on('change', 'select#select-ttf', function(event) {
+      //console.log('clicked!', event, $(this).children("option:selected").val());
+      $.ajax({
+        url: "/approval_chains/ttf_own",
+        type: "GET",
+        data:  { user_id: $(this).children("option:selected").val() },
+        beforeSend: function() {
+        },
+        success: function(response) {
+          var $el = $("select#leave-approval-path");
+          $el.empty();
+          $el.append($("<option></option>").attr('value', '').text('select'));
+          response.approval_paths.forEach(function(approval_path) {
+            $el.append($("<option></option>").attr("value", approval_path.id).text(approval_path.name));
+          });
+        }
+      });
+    });
+  });
+</script>

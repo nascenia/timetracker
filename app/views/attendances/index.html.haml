@@ -1,0 +1,73 @@
+.row
+  %table.table.table-hover.table-bordered#monthly-attendance-table
+    %thead
+      %tr
+        %th{:rowspan => "2"} Name
+        %th{:colspan => "3"}= Time.now.strftime('%B, %Y')
+        %th{:colspan => "3"}= 1.month.ago.strftime('%B, %Y')
+      %tr
+        %th Average in time
+        %th Total hours
+        %th Average hours
+        %th Average in time
+        %th Total hours
+        %th Average hours
+    %tbody
+      - @users.each do |user|
+      - current_month =  user.attendances.monthly_attendance_summary(Date.today.at_beginning_of_month, Date.today).includes(:children)
+      - previous_month =  user.attendances.monthly_attendance_summary(1.month.ago.at_beginning_of_month, 1.month.ago.end_of_month).includes(:children)
+        %tr
+          %td
+            %a.monthly-summary{:href => 'javascript:void()', :data => {:user => {id: user.id, month: Time.now.month, year: Time.now.year}}}
+              = user.name
+          %td= Attendance.monthly_average_check_in_time(current_month)
+          %td{"data-order" => "#{Attendance.monthly_total_hours(current_month)}"}
+            = Attendance.get_humanize_total_hour(current_month)
+          %td{"data-order" => "#{Attendance.monthly_average_hours(current_month)}"}
+            = Attendance.humanized_average_hours(Attendance.monthly_average_hours(current_month))
+          %td= Attendance.monthly_average_check_in_time(previous_month)
+          %td{"data-order" => "#{Attendance.monthly_total_hours(previous_month)}"}
+            = Attendance.get_humanize_total_hour(previous_month)
+          %td{"data-order" => "#{Attendance.monthly_average_hours(previous_month)}"}
+            = Attendance.humanized_average_hours(Attendance.monthly_average_hours(previous_month))
+.row
+  #attendance-summary &nbsp;
+
+
+
+:javascript
+  $(document).ready(function() {
+      var dataTable = $('#monthly-attendance-table').DataTable({
+        lengthChange: false,
+        pageLength: 100,
+        order: [2,'desc'],
+        dom: 'T<"clear">lfrtip',
+        buttons: ['print']
+      });
+      $(document).on("turbolinks:before-cache", function() {
+        if (dataTable !== null) {
+          dataTable.destroy();
+          dataTable = null;
+        }
+      });
+  });
+
+  $(document).on('click', '.monthly-summary', function() {
+    var user = {
+      id: $(this).data().userId,
+      month: $(this).data().userMonth,
+      year: $(this).data().userYear
+    };
+
+    $.ajax({
+      url: "/attendances/monthly_summary",
+      type: "GET",
+      data:  { user: user },
+      beforeSend: function() {
+        $("#modal-loading-image").show();
+      },
+      success: function(msg) {
+        $("#modal-loading-image").hide();
+      }
+    });
+  });

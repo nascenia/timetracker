@@ -1,0 +1,31 @@
+.panel.panel-default
+  .panel.panel-heading
+    %h3 Weekday Schemes
+  .panel-body
+    - if @weekends.count > 0
+      %table.table.table-bordered.table-hover
+        %thead
+          %tr
+            %th Name
+            %th Action
+        %tbody
+          - @weekends.each do |weekend|
+            %tr
+              %td
+                = link_to weekend.name, detail_weekend_path(weekend)
+              %td
+                = link_to 'Assign', weekend_path(weekend)
+                |
+                = link_to 'Remove', detail_weekend_path(weekend)
+                |
+                = link_to 'Edit', edit_weekend_path(weekend)
+                |
+                = link_to 'Destroy', weekend_path(weekend), method: :delete,
+                                                            data: {confirm: 'Are you sure ??'}
+                |
+                = link_to 'Add exclusion date', new_polymorphic_path([weekend, ExclusionDate]), remote: true
+
+    - else
+      %p No weekend scheme present
+  .panel-footer
+    = link_to 'Create new', new_weekend_path, class: 'btn btn-primary'

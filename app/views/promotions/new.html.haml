@@ -1,0 +1,29 @@
+%h2= "Add new promotion to #{@promotion.user.name}"
+%hr
+
+= form_for(@promotion, url: employee_promotions_path(params[:employee_id])) do |f|
+  = render 'shared/error_messages', target: @promotion
+  .row
+    = f.hidden_field :user_id, value: params[:employee_id]
+  .row
+    .col-md-3
+      = f.label :designation
+      = f.label '', ' *', class: 'required-asterisk'
+    .col-md-9
+      = f.select :designation, Designation.published.map{ |d| [d.title, d.title] }, { include_blank: 'select' }, class: 'form-control'
+  %br
+  .row
+    .col-md-3
+      = f.label :start_date
+      = f.label '', ' *', class: 'required-asterisk'
+    .col-md-9
+      = f.text_field :start_date, class: 'form-control timesheet-date-picker', placeholder: 'example- YYYY-MM-DD'
+  %br
+  .row
+    .col-md-3
+      = ""
+    .col-md-9
+      = f.submit class: 'btn btn-primary'
+  %br
+  .row
+    = link_to 'Back', employee_path(params[:employee_id])

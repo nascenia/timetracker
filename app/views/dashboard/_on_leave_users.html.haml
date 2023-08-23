@@ -1,0 +1,12 @@
+.card.mb-4
+  .card-header
+    %b On Leave
+
+  %table.table.table-bordered.table-hover
+    %tbody
+      - @all_approved_leaves.each do |leave|
+        %tr
+          %td
+            = leave.user.name
+          %td
+            = leave.get_leave_type_in_string

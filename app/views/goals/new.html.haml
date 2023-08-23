@@ -1,0 +1,8 @@
+%h2 Create new goal
+%hr
+
+= render 'form'
+
+- unless @goals.size.zero?
+  %hr
+  = render 'list'

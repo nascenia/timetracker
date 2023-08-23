@@ -1,0 +1,83 @@
+.modal{:id => 'userModal'}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{'aria-hidden' => true, 'data-dismiss' => 'modal', :type => 'button'} ×
+        %h4.modal-title= "Attendance Summary of #{@user.name}: #{get_month_name(@selected[:month])}, #{@selected[:year]}"
+      .modal-body
+        .panel.panel-default
+          .panel-heading
+            %span Select
+            = select_tag :month,
+                          options_for_select(get_formatted_months, @selected[:month]),
+                          :class => 'btn btn-default btn-sm',
+                          :id => 'summary-month',
+                          :prompt => '- Select -'
+            = select_tag :year,
+                          options_for_select(get_years, @selected[:year]),
+                          :class => 'btn btn-default btn-sm',
+                          :id => 'summary-year',
+                          :prompt => '- Select -'
+            %button.btn.btn-default.btn-sm#monthly-summary{:data => {:user => {:id => "#{@user.id}"}}}
+              Submit
+            = image_tag 'ajax-loader.gif', id: 'modal-loading-image'
+
+          %table.table.table-hover.table-bordered
+            %thead
+              %tr
+                %th{:width => '10%'} #
+                %th{:width => '20%'} Date
+                %th{:width => '15%'} In time
+                %th{:width => '15%'} Out time
+                %th{:width => '20%'} Total hours
+                %th{:width => '20%'} Status
+            %tbody
+              - @attendances.each_with_index do |attendance, index|
+                %tr
+                  %td= index + 1
+                  %td= get_formatted_date(attendance.checkin_date)
+                  %td= get_formatted_time(attendance.in_time)
+                  %td= get_formatted_time(attendance.out_time)
+                  %td= get_daily_total_hours(attendance)
+                  %td
+                    - if attendance.has_multiple_checkin?
+                      %span.label.label-warning
+                        Multi entry
+                    - else
+                      - unless is_late_attendance? attendance.in_time
+                        %span.label.label-success On time
+                      - else
+                        %span.label.label-danger Late
+              %tr
+                %td &nbsp;
+                %td &nbsp;
+                %td &nbsp;
+                %td
+                  %b Total
+                %td
+                  %b= Attendance.get_humanize_total_hour(@attendances)
+                %td &nbsp;
+      .modal-footer
+        %button.btn.btn-default{'data-dismiss' => 'modal', :type => 'button'}
+          Close
+
+:javascript
+  $(document).on('click', '#monthly-summary', function() {
+    var user = {
+      id: $(this).data().userId,
+      month: $('#summary-month').val(),
+      year: $('#summary-year').val()
+    };
+
+    $.ajax({
+      url: "/attendances/monthly_summary",
+      type: "GET",
+      data:  { user: user },
+      beforeSend: function() {
+        $("#modal-loading-image").show();
+      },
+      success: function(msg) {
+        $("#modal-loading-image").hide();
+      }
+    });
+  });

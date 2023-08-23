@@ -1,0 +1,78 @@
+.row
+  .col-sm-4
+    = form_tag assign_approval_chain_path(params[:id]) do
+      .panel.panel-default
+        .panel-heading
+          %h4 Assign Users
+          %button#active-button.btn.btn-primary Active
+          %button#inactive-button.btn Inctive
+        .panel-body
+          = select_tag :employees,
+                       options_from_collection_for_select(@available_users, :id, :name),
+                       multiple: true, id: 'active-employees', style: 'width: 220px; height: 250px'
+          = select_tag :employees,
+                       options_from_collection_for_select(@inactive_users, :id, :name),
+                       multiple: true, id: 'inactive-employees', style: 'width: 220px; height: 200px'
+        .panel-footer
+          = submit_tag 'Assign Path',
+                        class: 'btn btn-primary'
+  .col-sm-4
+    .panel.panel-default
+      .panel-heading
+        %h4 Currently assigned users
+      .panel-body
+        - if @users.count > 0
+          %table.table.table-bordered.table-hover
+            %thead
+              %tr
+                %th Name
+            %tbody
+              - @users.each do |user|
+                %tr
+                  %td
+                    = user.name
+                  %td
+                    = link_to 'Remove', remove_approval_chain_path(user)
+        - else
+          %h5 No user assigned.
+  .col-sm-4
+    .panel.panel-default
+      .panel-heading
+        %h4 Owners of the Path
+      .panel-body
+        - if @path_owners.count > 0
+          %table.table.table-bordered.table-hover
+            %thead
+              %tr
+                %th Name
+            %tbody
+              - @path_owners.each do |owner|
+                %tr
+                  %td
+                    = owner.name
+        - else
+          %h5 No contributing owners found!
+
+:javascript
+  $(document).ready(function() {
+    console.log('Ready....');
+    $('select#inactive-employees').hide();
+
+    $(document).on('click', 'button#active-button', function(event) {
+      event.preventDefault();
+      //Show active employee list
+      $('select#active-employees').show();
+      $('select#inactive-employees').hide();
+      $('button#active-button').addClass('btn-primary');
+      $('button#inactive-button').removeClass('btn-primary');
+    });
+
+    $(document).on('click', 'button#inactive-button', function(event) {
+      event.preventDefault();
+      //Show inactive employee list
+      $('select#active-employees').hide();
+      $('select#inactive-employees').show();
+      $('button#active-button').removeClass('btn-primary');
+      $('button#inactive-button').addClass('btn-primary');
+    });
+  });

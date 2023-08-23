@@ -1,0 +1,95 @@
+.row 
+  %h2 Projects
+  %hr
+
+- time_periods = [['Today', '0'], ['Last 7 days', '7'], ['Last 14 days', '14'], ['Last 30 days', '30'], ['Last 90 days', '90'], ['Last 6 months', '180'], ['Last 1 year', '365']]
+- time_period   = params[:commit] == 'Search' ? params[:project][:time_period] : 1
+- start_date = params[:commit] == 'Search' ? params[:project][:start_date] : ''
+- end_date = params[:commit] == 'Search' ? params[:project][:end_date] : ''
+- status = params[:commit] == 'Search' ? params[:project][:status] : ''
+
+.row 
+  = form_for(:project, url: dashboard_projects_path, method: :get, html: { class: '' }) do |f|
+    .col-md-2
+      .form-group
+        = f.label 'Time period'
+        = f.select :time_period, options_for_select(time_periods, time_period), { include_blank: 'select'}, class: 'form-control'
+    .col-md-2
+      .form-group
+        = f.label :start_date
+        = f.text_field :start_date, value: start_date, class: 'form-control', data: { date_format: "yyyy/mm/dd" }
+    .col-md-2
+      .form-group
+        = f.label :end_date
+        = f.text_field :end_date, value: end_date, class: 'form-control', data: { date_format: "yyyy/mm/dd" }
+    .col-md-2
+      .form-group
+        = f.label :status
+        = f.select :status, options_for_select([['All', ''], ['Active', 'active'], ['Inactive', 'inactive']], status), { include_blank: ''}, class: 'form-control'
+    .col-md-2.form-group
+      = blank_space
+      = f.submit 'Search', class: 'btn btn-info btn-block'
+
+= link_to 'Switch to old view', projects_path(is_active: true)
+
+%br
+
+.row
+  %table.table.table-bordered#projects-dashboard
+    %thead
+      %tr
+        %th Project Name
+        %th Total Hours
+        %th Team Members
+        %th Status
+        - if current_user && current_user.has_admin_privilege?
+          %th Action
+
+    %tbody
+      - @timesheets.each do |project|
+        %tr
+          %td= link_to project[:project_name], project_path(project[:id], start_date: Time.now.strftime('%Y/%m/%d'), end_date: Time.now.strftime('%Y/%m/%d'), selected_index: 1)
+          %td= number_with_precision(project[:total_hours], precision: 2)
+          %td
+            - project[:users].each do |user|
+              = link_to "#{user[:name]} (#{user[:email]})", employee_path(user[:id])
+              %span= number_with_precision(user[:total_hours], precision: 2)
+              %br
+          %td= project[:status]
+          - if current_user && current_user.has_admin_privilege?
+            %td= link_to 'Edit', edit_project_path(project[:id])
+
+:javascript
+  $(document).ready(function() {
+    $("#project_start_date").datepicker();
+    $("#project_end_date").datepicker();
+
+    $(document).on('change', 'select#project_time_period', function() {
+
+      let time_period = $(this).children("option:selected").val();
+      let date = new Date();
+
+      $('#project_end_date').val(date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate());
+
+      date.setDate(date.getDate() - time_period);
+      let month = (date.getMonth() + 1) <= 9 ? "0" + (date.getMonth() + 1) : (date.getMonth() + 1);
+      
+      $('#project_start_date').val(date.getFullYear() + "/" + month + "/" + date.getDate());
+    });
+
+    var dataTable = $('#projects-dashboard').DataTable({
+      lengthChange: false,
+      pageLength: 100,
+      order: [0,'asc'],
+      dom: 'T<"clear">lfrtip',
+      buttons: ['print']
+    });
+
+    $(document).on("turbolinks:before-cache", function() {
+      if (dataTable !== null) {
+        dataTable.destroy();
+        dataTable = null;
+      }
+    });
+  });
+  

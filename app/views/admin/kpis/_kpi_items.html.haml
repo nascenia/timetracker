@@ -1,0 +1,20 @@
+#main_content_wrapper
+  #main_content
+    .panel
+      %h3 KPI Items
+      .panel_contents
+        %table
+          %thead
+            %tr
+              %th Title
+              %th Score
+          %tbody
+            - data = JSON.parse(kpi.data)
+            - kpi_items.each do |kpi_item|
+              - item = data.find{ |item| item['item_id'] == kpi_item.id }
+              - score = item.blank? ? '' : item['score']
+              %tr
+                %td.col= kpi_item.title
+                %td.col
+                  %input{ type: 'hidden', name: 'kpi_item_ids[]', value: kpi_item.id }
+                  %input{ type: 'text', name: 'kpi_item_score[]', value: score, class: 'form-control kpi-score', required: true }

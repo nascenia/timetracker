@@ -1,0 +1,47 @@
+%html{:lang => "en"}
+  %head
+    %title Timetracker | Rails7
+
+    %meta{:charset => "utf-8"}
+    %meta{:http => {:equiv => "X-UA-Compatible"}, :content => "IE=edge"}
+    %meta{:name => "viewport", :content => "width=device-width,initial-scale=1"}
+    %meta{:name => "description", :content => ""}
+    %meta{:name => "author", :content => ""}
+
+    = csrf_meta_tags
+    = csp_meta_tag
+
+    = favicon_link_tag 'nascenia-logo-motif-only.png'
+    = stylesheet_link_tag "application", "data-turbo-track": "reload"
+    = javascript_importmap_tags
+
+  %body
+    %nav.navbar.navbar-expand-md.navbar-dark.fixed-top.bg-dark
+      %div.container
+        %a{:class => 'navbar-brand', :href => "/"}
+          = image_tag 'logo.png', style: 'height: 35px; margin-top: 0px;'
+        %button.navbar-toggler{:type => "button", 'data-bs-toggle' => "collapse", 'data-bs-target' => "#navbarCollapse", 'aria-controls' => "navbarCollapse", 'aria-expanded' => "false", 'aria-label' => "Toggle navigation"}
+          %span.navbar-toggler-icon
+        
+        %div.collapse.navbar-collapse#navbarCollapse
+          = render 'layouts/shared/navbar'
+          
+    %main.container
+      .row
+        .col-sm-3
+          = render 'layouts/shared/left_menu'
+        .col-sm-9
+          .flash-message
+            - if notice
+              .alert.alert-danger{role: "alert"}
+                = notice
+            - elsif alert 
+              .alert.alert-info{role: "alert"}
+                = alert
+    
+          .content
+            = yield
+
+    = render 'layouts/shared/footer'
+
+  .modal.fade#modal-window{ tabindex: '-1', role: 'dialog' }

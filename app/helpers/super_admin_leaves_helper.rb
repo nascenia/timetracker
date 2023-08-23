@@ -1,0 +1,2 @@
+module SuperAdminLeavesHelper
+end

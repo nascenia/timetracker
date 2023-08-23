@@ -1,0 +1,4 @@
+
+= form_tag employees_path, method: :get , id:'filter-form' , class:'employee-filter-form' do
+  = select_tag :employee_status, options_for_select([['Current Employees', 1],['Ex Employees', 2]], params[:employee_status]),
+  class: 'employee-info-filter'

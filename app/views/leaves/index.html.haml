@@ -1,0 +1,31 @@
+%h1.page-header
+  Leaves
+
+- if has_owned_paths?
+  - statuses = [["Pending", 3], ["Rejected", 2], ["Rollbacked", 4]]
+  = form_tag leaves_path, method: :get, class: 'form-inline' do
+    = select_tag :category, options_for_select(statuses,
+                 params[:category]), class: 'form-control'
+    = submit_tag 'Submit', class: 'btn btn-success'
+
+- if @leaves.size > 0
+  %table.table.table-bordered
+    %thead
+      %tr
+        %th{:width => '20%'} Name
+        %th{:width => '15%'} Type
+        %th{:width => '40%'} Description
+        %th{:width => '15'} Status
+        %th{:width => '10'}
+    %tbody
+      - @leaves.each do |leave|
+        %tr
+          %td= leave.user.name
+          %td= leave.leave_type == Leave::CASUAL ? 'Casual' : 'Medical'
+          %td= leave.reason
+          %td= get_status(leave.status)
+          %td= link_to 'show', leave_path(leave)
+- else
+  .alert.alert-info{:role => 'alert'}
+    %strong Empty!
+    No record found.

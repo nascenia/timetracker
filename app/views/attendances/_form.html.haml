@@ -1,0 +1,21 @@
+= form_for(@attendance) do |f|
+  = render 'shared/error_messages', target: @attendance
+
+  .field
+    = f.label :user_id
+    %br/
+    = f.number_field :user_id
+  .field
+    = f.label :checkin_date
+    %br/
+    = f.date_select :checkin_date
+  .field
+    = f.label :in_time
+    %br/
+    = f.time_select :in_time
+  .field
+    = f.label :out_time
+    %br/
+    = f.time_select :out_time
+  .actions
+    = f.submit

@@ -1,0 +1,74 @@
+<%= link_to 'Go Back', projects_path(is_active: true) %>
+<h3>Edit Project </h3><br>
+<%= form_for @project do |f| %>
+    <%= label :project_name, 'Project Name' %>
+    <br />
+    <%= f.text_field :project_name ,:maxlength=>"64"%>
+    <br /> <br />
+    <%= label :project_description, 'Project Description' %>
+    <br />
+    <%= f.text_area :description, size: "60x12",:maxlength=>"128" %>
+    <br /> <br />
+    <%= f.radio_button :is_active, 'true', :checked => true %>
+    <%= label :contactmethod_email, 'Active' %>
+    <%= f.radio_button :is_active, 'false' %>
+    <%= label :contactmethod_sms, 'Not Active' %>
+    <br /><br />
+    <h4>Select Users</h4>
+    <% users = ''; %>
+    <select id='callbacks' multiple='multiple'>
+        <% @active_user.each do |user| %>
+            <option value=<%=user.id %>><%=user.name %></option>
+        <%end %>
+        <% @project.users.each_with_index do |user,index| %>
+            <option selected value=<%=user.id %>><%=user.name %></option>
+            <% if index == 0 %>
+                <% users = users +user.id.to_s %>
+            <% else %>
+                <% users = users +','+user.id.to_s %>
+            <% end %>
+
+
+        <%end %>
+    </select>
+    <input id="ids" name="user_ids" type="hidden"
+        value= '<%= users.to_s %>'
+        />
+    <br/>
+    <br/>
+
+    <%= f.submit "Update" %>
+
+<% end %>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    // run callbacks
+    var user_ids = [];
+    // var user_selected_ids = [];
+    $('#callbacks').multiSelect({
+        afterSelect: function(values){
+            // alert("Select value: "+values);
+            user_ids.push(values);
+            $('#ids').val(user_ids);
+        },
+        afterDeselect: function(values){
+            // alert("Deselect value: "+values);
+            user_ids.splice(user_ids.indexOf(values),1);
+            $('#ids').val(user_ids);
+
+        }
+    });
+    $(document).ready(function() {
+        var template = '<h1>Hello world!</h1>';
+        // document.getElementById("#ms-selection").innerHTML = template;
+        var number=$('#ids').val();
+        if(number.length>0)
+            user_ids =  number.split(',')
+        // $('div.ms-selection').html(
+        //     $('<div/>', {
+        //         html: user_ids
+        //     }).text()
+        // )
+    });
+
+</script>

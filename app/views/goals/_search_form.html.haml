@@ -1,0 +1,42 @@
+- personal_or_team   = params[:commit] == 'Search' ? params[:goal][:personal_or_team] : 'own'
+- team_member   = params[:commit] == 'Search' ? params[:goal][:team_member].to_i : current_user.id
+- year          = params[:commit] == 'Search' ? params[:goal][:year] : ''
+- time_period   = params[:commit] == 'Search' ? params[:goal][:time_period] : ''
+- start_date    = params[:commit] == 'Search' ? params[:goal][:start_date] : ''
+- end_date      = params[:commit] == 'Search' ? params[:goal][:end_date] : ''
+
+= form_for(:goal, url: goals_path, method: :get, html: { class: '' }) do |f|
+  .row
+    .col-md-2
+      .form-group
+        = f.label "Goal type"
+        %br
+        = f.radio_button :personal_or_team, "own", { checked: personal_or_team.eql?('own') || team_member.eql?(current_user.id) }
+        My goal
+        = f.radio_button :personal_or_team, "team", { checked: personal_or_team.eql?('team') }
+        Team goal
+    .col-md-2
+      .form-group
+        = f.label 'Team member'
+        = f.select :team_member, options_for_select(@team.map{ |u| [u.name, u.id] }, team_member), { include_blank: 'select' }, class: 'form-control', disabled: team_member.eql?(current_user.id)
+    .col-md-2
+      .form-group
+        - c_y = Time.now.year
+        - s_y = c_y - 10
+        = f.label 'Year'
+        = f.select :year, options_for_select((s_y..c_y).to_a.map{ |y| [y, y] }.reverse, year), { include_blank: 'select' }, class: 'form-control'
+    .col-md-1
+      .form-group
+        = f.label 'Quarter'
+        = f.select :time_period, options_for_select([['Q-1', '0'], ['Q-2', '1'], ['Q-3', '2'], ['Q-4', '3']], time_period), { include_blank: 'select'}, class: 'form-control'
+    .col-md-2
+      .form-group
+        = f.label :start_date
+        = f.text_field :start_date, value: start_date, class: 'form-control'
+    .col-md-2
+      .form-group
+        = f.label :end_date
+        = f.text_field :end_date, value: end_date, class: 'form-control'
+    .col-md-1.form-group
+      = blank_space
+      = f.submit 'Search', class: 'btn btn-info btn-block'

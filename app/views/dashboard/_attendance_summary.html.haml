@@ -1,0 +1,15 @@
+.card.mb-4
+  .card-header
+    %b Your monthly summary
+
+  %table.table.table-bordered.table-hover
+    %tbody
+      %tr
+        %td Avg. in time
+        %td= Attendance.monthly_average_check_in_time(@attendance_summary)
+      %tr
+        %td Avg. hours
+        %td= Attendance.humanized_average_hours(Attendance.monthly_average_hours(@attendance_summary))
+      %tr
+        %td Total hours
+        %td= Attendance.get_humanize_total_hour(@attendance_summary)

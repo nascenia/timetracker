@@ -1,0 +1,31 @@
+.card
+  .card-header
+    %span.float-start
+      %b= get_humanize_date(Date.today)
+    %span.float-end
+      %b= "Total present today: #{@attendances.size}"
+
+  %table.table.table-bordered.table-hover
+    %thead
+      %tr
+        %th{:width => '25%'} Name
+        %th{:width => '30%'} Email
+        %th{:width => '15%'} In time
+        %th{:width => '15%'} Out time
+        %th{:width => '15%'} Status
+    %tbody.word-break
+      - @attendances.each do |attendance|
+        %tr
+          %td= attendance.user.name
+          %td= attendance.user.email
+          %td= get_formatted_time(attendance.in_time)
+          %td= get_formatted_time(attendance.out_time)
+          %td
+            - if attendance.has_multiple_checkin?
+              %span.label.label-warning
+                = link_to 'Multi entry >>', attendance_path(attendance)
+            - else
+              - unless is_late_attendance? attendance.in_time
+                %span.label.label-success On time
+              - else
+                %span.label.label-danger Late

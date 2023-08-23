@@ -1,0 +1,60 @@
+%ul.nav.navbar-nav
+  %li{class: (params[:controller].eql?('attendances') ? 'active' : '')}
+    = link_to 'Monthly TT', attendances_path
+  %li{class: (params[:controller].eql?('users') || params[:controller].eql?('leaves') || params[:controller].eql?('leave_tracker')  || params[:controller].eql?('approval_chains')  || params[:controller].eql?('weekends')  || params[:controller].eql?('holiday_schemes')  || params[:controller].eql?('super_admin_leaves') ? 'active' : '')}
+    = link_to 'My Leave', leave_tracker_path(current_user)
+  %li{class: (params[:controller].eql?('salaat_times') ? 'active' : '')}
+    = link_to 'Salaat time', salaat_times_path
+
+  - if current_user.has_admin_privilege?
+    %li
+      = link_to 'Admin', admin_dashboard_path, :target => '_blank'
+  %li.dropdown
+    %a.dropdown-toggle{"data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false",:href => "#"}
+      = 'Employee'
+      - if current_user.has_admin_privilege?
+        - if count_employee != 0
+          %span.badge= count_employee
+      %span.caret
+    %ul.dropdown-menu
+      %li
+        = link_to 'Employee Info', employees_path
+      - if current_user.has_admin_privilege?
+        %li
+          = link_to new_pre_registration_path do
+            Add new Employee
+            - if add_employee != 0
+              %span.badge= add_employee
+      - if current_user.has_admin_privilege?
+        %li
+          = link_to pre_registrations_path do
+            Employee Onboarding
+            - if employee_onboard != 0
+              %span.badge= employee_onboard
+      %li= link_to 'Goals', goals_path
+      - if [2, 3].include?(current_user.role)
+        %li= link_to 'Goals Review', review_goals_path
+      %li= link_to "KPI's", kpis_path
+      %li= link_to "Submit my KPI", new_kpi_path
+      - if [2, 3].include?(current_user.role)
+        %li= link_to "Submit team KPI", review_kpis_path
+  %li{class: (params[:controller].eql?('users/registrations')? 'dropdown active' : 'dropdown')}
+    %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
+      = current_user.name
+      %span.caret
+    %ul.dropdown-menu
+      %li
+        = link_to 'Profile', edit_user_registration_path
+      %li
+        = link_to 'Logout', destroy_user_session_path, method: :delete
+  %li.dropdown
+    %a.dropdown-toggle{"data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false",:href => "#"}
+      = 'Work Log'
+      %span.caret
+    %ul.dropdown-menu
+      %li= link_to 'New Time Entry', new_timesheet_path
+      - if current_user.has_admin_privilege?
+        %li= link_to 'Create Project', new_project_path
+      %li= link_to 'Projects', dashboard_projects_path(project: {time_period: 7, start_date: 7.days.ago.strftime('%Y/%m/%d'), end_date: Time.now.strftime('%Y/%m/%d')}, commit: 'Search')
+      %li= link_to 'Projects Summary', summary_projects_path(project: {time_period: 7, start_date: 7.days.ago.strftime('%Y/%m/%d'), end_date: Time.now.strftime('%Y/%m/%d')}, commit: 'Search')
+      %li= link_to 'Individual Log', timesheets_path(selected_index: 1, start_date: Time.now.strftime('%Y/%m/%d'), end_date: Time.now.strftime('%Y/%m/%d'))

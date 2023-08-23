@@ -1,0 +1,8 @@
+-if flash[:warning].present?
+  .alert.alert-danger
+    = flash[:warning]
+
+- unless params[:change_ttf].blank?
+  = render partial: 'change_ttf'
+- else
+  = render partial: 'form'

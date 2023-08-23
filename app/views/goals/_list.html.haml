@@ -1,0 +1,23 @@
+%table.table
+  %thead
+    %tr
+      %th{ width: '35%' } Title
+      %th{ width: '30%' } Description
+      %th{ width: '10%' } Point
+      %th{ width: '10%' } Status
+      %th{ width: '5%' }
+      %th{ width: '5%' }
+      %th{ width: '5%' }
+  %tbody
+    - @goals.each do |goal|
+      - url_params = { personal_or_team: 'own', time_period: goal.quarter, start_date: goal.start_date.strftime('%d-%m-%Y'), end_date: goal.end_date.strftime('%d-%m-%Y') }
+      %tr
+        %td= goal.title
+        %td= goal.description
+        %td= goal.point
+        %td= goal.status.blank? ? '-' : Goal::STATUSES[goal.status]
+        %td= link_to 'Show', goal
+        - if goal.status.eql?(0)
+          %td= link_to 'Edit', edit_goal_path(goal, goal: url_params, commit: 'Search')
+        %td= link_to 'Destroy', goal, method: :delete, data: { confirm: 'Are you sure?' }
+        
