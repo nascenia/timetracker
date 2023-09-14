@@ -15,12 +15,12 @@
   .col-sm-3
     = form_for(:kpi, url: attendances_path, method: :post, html: { class: '' }) do |f|
       .d-grid.gap-2.col-12.mx-auto
-        = f.button 'Check In', class: "btn btn-success #{'disabled' if @attendance.present?}"
+        = f.button 'Check In', class: "btn btn-success #{'disabled' if [@attendance.present?, @attendance.in_time.present?, @attendance.out_time.nil?].all? }"
 
   - if @attendance.present?
     .col-sm-3
       .d-grid.gap-2.col-12.mx-auto
-        = link_to  'Check Out', attendance_path(@attendance), method: :put, class: "btn btn-danger #{'disabled' if !@attendance.present?}"
+        = link_to  'Check Out', attendance_path(@attendance), method: :put, class: "btn btn-danger #{'disabled' if [@attendance.present?, @attendance.out_time.present?].all? }"
 
 .row
   .col-md-8

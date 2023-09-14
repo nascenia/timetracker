@@ -2,7 +2,7 @@ class Attendance < ApplicationRecord
   belongs_to :user
   has_many :children, class_name: 'Attendance', foreign_key: 'parent_id', dependent: :destroy
 
-  USUAL_OFFICE_TIME = Rails.application.config.x.app[:usual_office_time]
+  OFFICE_START_TIME = Rails.application.config.x.app[:office_start_time]
   IP_WHITELIST = Rails.application.config.x.app[:ip_whitelist]
   MONTHS = [
       ['1', 'January'],

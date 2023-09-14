@@ -6,7 +6,7 @@ module ApplicationHelper
   end
 
   def is_late_attendance? check_in_time
-    Time.at(check_in_time).strftime('%H:%M') > Time.at(Time.parse(Attendance::USUAL_OFFICE_TIME)).strftime('%H:%M')
+    Time.at(check_in_time).strftime('%H:%M') > Time.at(Time.parse(Attendance::OFFICE_START_TIME)).strftime('%H:%M')
   end
 
   def get_humanize_date date
