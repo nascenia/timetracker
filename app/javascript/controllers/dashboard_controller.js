@@ -25,9 +25,5 @@ export default class extends Controller {
         }
       });
     });
-  
-    $(document).on('click', '#rules', function() {
-      $("#rulesModal").modal('show');
-    });
   }
 }
