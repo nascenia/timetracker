@@ -9,6 +9,22 @@ module ApplicationHelper
     Time.at(check_in_time).strftime('%H:%M') > Time.at(Time.parse(Attendance::OFFICE_START_TIME)).strftime('%H:%M')
   end
 
+  def is_checked_in? attendance
+    unless attendance.nil?
+      return [attendance.in_time.present?, attendance.out_time.nil?].all?
+    end
+
+    return false
+  end
+
+  def is_checked_out? attendance
+    unless attendance.nil?
+      return attendance.out_time.present?
+    end
+
+    retrun false
+  end
+
   def get_humanize_date date
     date.present? ? date.strftime('%B %d, %Y') : '-'
   end
