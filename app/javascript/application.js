@@ -8,3 +8,7 @@ import "jquery_ujs"
 import "./jquery_ui"
 
 import "datatable"
+
+import * as bootstrap from "bootstrap"
+
+window.bootstrap = bootstrap;

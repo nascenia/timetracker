@@ -1,0 +1,38 @@
+
+%h5.modal-title.fs-6= "Summary of #{@user.name}: #{get_month_name(@selected[:month])}, #{@selected[:year]}"
+
+%table.table.table-hover.table-bordered
+  %thead
+    %tr
+      %th{:width => '10%'} #
+      %th{:width => '20%'} Date
+      %th{:width => '15%'} In time
+      %th{:width => '15%'} Out time
+      %th{:width => '20%'} Total hours
+      %th{:width => '20%'} Status
+  %tbody
+    - @attendances.each_with_index do |attendance, index|
+      %tr
+        %td= index + 1
+        %td= get_formatted_date(attendance.checkin_date)
+        %td= get_formatted_time(attendance.in_time)
+        %td= get_formatted_time(attendance.out_time)
+        %td= get_daily_total_hours(attendance)
+        %td
+          - if attendance.has_multiple_checkin?
+            %span.label.label-warning
+              Multi entry
+          - else
+            - unless is_late_attendance? attendance.in_time
+              %span.label.label-success On time
+            - else
+              %span.label.label-danger Late
+    %tr
+      %td &nbsp;
+      %td &nbsp;
+      %td &nbsp;
+      %td
+        %b Total
+      %td
+        %b= Attendance.get_humanize_total_hour(@attendances)
+      %td &nbsp;

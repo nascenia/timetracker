@@ -109,12 +109,14 @@ class AttendancesController < ApplicationController
   end
 
   def monthly_summary
-    @selected = { month: params[:user][:month], year: params[:user][:year] }
-    @user = User.find params[:user][:id]
+    @selected = { month: params[:month], year: params[:year] }
+    @user = User.find params[:user_id]
     @attendances = @user.attendances.by_month_and_year(@selected[:month], @selected[:year]).includes(:children)
 
     respond_to do |format|
-      format.js {}
+      format.html {
+        render "attendances/monthly_summary", :layout => false
+      }
     end
   end
 
