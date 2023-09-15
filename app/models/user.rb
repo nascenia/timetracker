@@ -556,6 +556,24 @@ class User < ApplicationRecord
     super_admin? || admin?
   end
 
+  def self.to_csv users
+    
+    columns = %w{name email joining_date employee_id}
+
+    CSV.generate(headers: true) do |csv|
+      csv << columns.map(&:upcase)
+
+      users.each do |user|
+        row = []
+        row << user.name
+        row << user.email
+        row << user.joining_date
+        row << user.employee_id
+        csv << row
+      end
+    end
+  end
+
   private
 
   def update_pre_register_info

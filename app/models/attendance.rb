@@ -158,4 +158,21 @@ class Attendance < ApplicationRecord
     total_hours = self.monthly_total_hours(monthly_attendances)
     (total_hours.to_i).to_s + ':' + (((total_hours % 1)* 60).round(0)).to_s
   end
+
+  def self.build_csv(attendances)
+    columns = %w{checkin_date user_email in_time out_time}
+
+    CSV.generate(headers: true) do |csv|
+      csv << columns.map(&:upcase)
+
+      attendances.each do |attendance|
+        row = []
+        row << attendance.checkin_date
+        row << attendance.user.email
+        row << attendance.in_time.strftime('%I:%m%p') if attendance.in_time.present?
+        row << attendance.out_time.strftime('%I:%m%p') unless attendance.out_time.nil?
+        csv << row
+      end
+    end
+  end
 end

@@ -119,10 +119,15 @@ class AttendancesController < ApplicationController
   end
 
   def download
-    @attendances = Attendance.last_six_months
+    @attendances = Attendance.includes(:user).last_six_months
 
     respond_to do |format|
-      format.xls {send_data @attendances.to_csv(col_sep: "\t") }
+      format.csv { 
+        send_data(
+          Attendance.build_csv(@attendances),
+          :disposition => "attachment; filename=#{'attendances'.upcase}_#{Time.now.strftime('%Y%m%d%I%M%S')}.csv"
+        ) 
+      }
     end
   end
 

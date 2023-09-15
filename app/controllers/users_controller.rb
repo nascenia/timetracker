@@ -41,7 +41,12 @@ class UsersController < ApplicationController
     @users = User.all.order(:email)
 
     respond_to do |format|
-      format.xls { send_data @users.to_csv(col_sep: '\t') }
+      format.csv { 
+        send_data(
+          User.to_csv(@users),
+          :disposition => "attachment; filename=#{'users'.upcase}_#{Time.now.strftime('%Y%m%d%I%M%S')}.csv"
+        ) 
+      }
     end
   end
 
