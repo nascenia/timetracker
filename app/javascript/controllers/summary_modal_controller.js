@@ -23,4 +23,18 @@ export default class extends Controller {
       });
   }
 
+  filterMonthlySummary() {
+    const modalContentElement = document.getElementById('modal-content');
+    let url = '/attendances/monthly_summary?user_id=' + this.element.getAttribute('data-user-id') + '&month=' + $('#summary-month').val() + '&year=' + $('#summary-year').val();
+    $("#summaryModal .spinner-border").show();
+
+    fetch(url)
+      .then((response) => response.text())
+      .then((html) => {
+        // Update the modal content with the fetched data
+        modalContentElement.innerHTML = html;
+
+        $("#summaryModal .spinner-border").hide();
+      });
+  }
 }

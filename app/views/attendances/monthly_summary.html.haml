@@ -1,4 +1,19 @@
+%label.badge.bg-light.fs-6.text-dark Month
+= select_tag :month,
+              options_for_select(I18n.t("date.month_names").map.with_index{|e, i| [e, i]}, @selected[:month]),
+              :class => 'btn btn-default btn-sm',
+              :id => 'summary-month',
+              :prompt => '- Select -'
+%label.badge.bg-light.fs-6.text-dark Year
+= select_tag :year,
+              options_for_select((2010..Time.now.year).to_a, @selected[:year]),
+              :class => 'btn btn-default btn-sm',
+              :id => 'summary-year',
+              :prompt => '- Select -'
+%button.btn.btn-light.btn-sm#monthly-summary{:data => {:user => {:id => "#{@user.id}"}, controller: 'summary-modal', action: 'click->summary-modal#filterMonthlySummary'}}
+  Submit
 
+%hr
 %h5.modal-title.fs-6= "Summary of #{@user.name}: #{get_month_name(@selected[:month])}, #{@selected[:year]}"
 
 %table.table.table-hover.table-bordered
@@ -20,13 +35,13 @@
         %td= get_daily_total_hours(attendance)
         %td
           - if attendance.has_multiple_checkin?
-            %span.label.label-warning
+            %span.badge.bg-warning
               Multi entry
           - else
             - unless is_late_attendance? attendance.in_time
-              %span.label.label-success On time
+              %span.badge.bg-success On time
             - else
-              %span.label.label-danger Late
+              %span.badge.bg-danger Late
     %tr
       %td &nbsp;
       %td &nbsp;
