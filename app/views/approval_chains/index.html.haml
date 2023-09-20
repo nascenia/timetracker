@@ -1,10 +1,8 @@
+.card
+  .card-header
+    %h2.fs-5 Current paths
 
-
-.panel.panel-default
-  .panel-heading
-    %h4 Current Paths
-
-  .panel-body
+  .card-body
     %table.table.table-bordered.table-hover
       %thead
         %tr
@@ -36,9 +34,5 @@
               = link_to 'Delete', approval_chain_path(path),
                                   method: :delete,
                                   data: { confirm: warning_message }
-  .panel-footer
-    .link-button
-      = link_to 'Create New Path',
-                 new_approval_chain_path,
-                 :class => 'btn btn-primary',
-                 style: 'inline: block'
+  .card-footer
+    = link_to 'Create new path', new_approval_chain_path, class: 'btn btn-primary'

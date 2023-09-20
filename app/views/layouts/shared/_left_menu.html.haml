@@ -6,7 +6,7 @@
     = link_to 'Apply leave', new_leave_path
   - if has_co_worker? || current_user.has_admin_privilege?
     %li.list-group-item{:class => current_page?(team_user_path(current_user)) ? 'bg-light' : ''}
-      = link_to 'Employees\' leaves', team_user_path(current_user)
+      = link_to 'Employees leaves', team_user_path(current_user)
   - if has_owned_paths? || current_user.has_admin_privilege?
     %li.list-group-item{:class => current_page?(leaves_path) ? 'bg-light' : ''}
       = link_to 'Pending leaves', leaves_path

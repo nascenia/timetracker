@@ -7,7 +7,6 @@ class HolidaySchemesController < ApplicationController
 
   def index
     @holiday_schemes = HolidayScheme.all
-    @heading = "Holiday Schemes"
   end
 
   def show
@@ -21,8 +20,6 @@ class HolidaySchemesController < ApplicationController
     end
 
     @holidays = @holiday_scheme.holidays.by_year(params[:year]) if params[:year].present?
-
-
   end
 
   def new
@@ -38,8 +35,7 @@ class HolidaySchemesController < ApplicationController
     end
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @holiday_scheme.update_attribute(:name,params['holiday_scheme']['name'])

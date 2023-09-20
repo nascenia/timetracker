@@ -1,8 +1,8 @@
 .card
   .card.card-header
-    %h3 Weekday Schemes
+    %h2.fs-5 Weekday schemes
   .card-body
-    - if @weekends.count > 0
+    - unless @weekends.empty?
       %table.table.table-bordered.table-hover
         %thead
           %tr

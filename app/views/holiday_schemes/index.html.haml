@@ -1,9 +1,8 @@
-.panel.panel-default
-  .panel-heading
-    %h3
-      = @heading
-  .panel-body
-    - if @holiday_schemes.count > 0
+.card
+  .card-header
+    %h2.fs-5 Holiday schemes
+  .card-body
+    - unless @holiday_schemes.empty?
       %table.table.table-bordered
         %thead
           %tr
@@ -30,5 +29,5 @@
 
     - else
       %p No holiday schemes found
-  .panel-footer
+  .card-footer
     = link_to 'Create new', new_holiday_scheme_path, class: 'btn btn-primary'
