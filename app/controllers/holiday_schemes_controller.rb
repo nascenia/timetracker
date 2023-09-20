@@ -1,5 +1,4 @@
 class HolidaySchemesController < ApplicationController
-
   before_action :authenticate_admin_user!
   before_action :get_holiday_scheme, only: [:show, :edit, :update, :destroy, :assign_form, :assign]
 

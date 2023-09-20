@@ -6,24 +6,20 @@
       %table.table.table-bordered
         %thead
           %tr
-            %th
-              Name
-            %th
-              Action
+            %th Name
+            %th Action
         %tbody
           - @holiday_schemes.each do |scheme|
             %tr
+              %td= link_to scheme.name,  holiday_scheme_path(scheme)
               %td
-                = link_to scheme.name,  holiday_scheme_path(scheme)
-              %td
-                = link_to 'Add new holiday', new_holiday_path(scheme)
+                = link_to 'Add new holiday', new_holiday_path(scheme_id: scheme.id)
                 |
                 = link_to 'Assign users', assign_form_holiday_scheme_path(scheme)
                 |
                 = link_to 'Edit', edit_holiday_scheme_path(scheme)
                 |
-                = link_to 'Destroy', holiday_scheme_path(scheme),
-                method: :delete, data:{confirm: 'Are you sure'}
+                = link_to 'Destroy', holiday_scheme_path(scheme), method: :delete, data:{confirm: 'Are you sure'}
                 |
                 = link_to 'Add exclusion date', new_polymorphic_path([scheme, ExclusionDate]), remote: true
 

@@ -1,6 +1,6 @@
 class HolidayScheme < ApplicationRecord
   has_one :pre_registration, dependent: :destroy
-  has_many :exclusion_dates, as: :excluded, dependent: :destroy # TODO: Not sure where exclusing dates are using check and remove if not using
+  has_many :exclusion_dates, as: :excluded, dependent: :destroy
   has_many :holidays, dependent: :destroy
   has_many :users
 

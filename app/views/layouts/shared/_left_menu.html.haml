@@ -1,5 +1,5 @@
 %ul.list-group
-  %li.list-group-item.bg-secondary Leave management
+  %li.list-group-item.bg-secondary.fs-5 Leave management
   %li.list-group-item{:class => current_page?(leave_tracker_path(current_user)) ? 'bg-light' : ''}
     = link_to 'My leave', leave_tracker_path(current_user)
   %li.list-group-item{:class => current_page?(new_leave_path) ? 'bg-light' : ''}
@@ -12,14 +12,14 @@
       = link_to 'Pending leaves', leaves_path
   - if current_user.has_admin_privilege?
     %li.list-group-item{:class => current_page?(approval_chains_path) ? 'bg-light' : ''}
-      = link_to 'Approval Paths', approval_chains_path
+      = link_to 'Approval paths', approval_chains_path
   - if current_user.has_admin_privilege?
     %li.list-group-item{:class => current_page?(weekends_path) ? 'bg-light' : ''}
-      = link_to 'Weekend Scheme', weekends_path
+      = link_to 'Weekend scheme', weekends_path
   - if current_user.has_admin_privilege?
     %li.list-group-item{:class => current_page?(holiday_schemes_path) ? 'bg-light' : ''}
-      = link_to 'Holiday Scheme', holiday_schemes_path
+      = link_to 'Holiday scheme', holiday_schemes_path
   - if current_user.has_admin_privilege?
     %li.list-group-item{:class => current_page?(super_admin_leaves_path) ? 'bg-light' : ''}
-      = link_to 'All Leaves', super_admin_leaves_path
+      = link_to 'All leaves', super_admin_leaves_path
     

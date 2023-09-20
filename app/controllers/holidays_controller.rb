@@ -1,5 +1,4 @@
 class HolidaysController < ApplicationController
-
   before_action :authenticate_admin_user!
   before_action :get_holiday, only: [:edit, :update, :destroy]
 
@@ -7,14 +6,18 @@ class HolidaysController < ApplicationController
 
   def new
     @holiday = Holiday.new
-    @holiday_scheme = HolidayScheme.find(params['format'].to_i)
+    @holiday_scheme = HolidayScheme.find(params['scheme_id'].to_i)
   end
 
   def create
     holiday = Holiday.new(holiday_params)
+
     if holiday.save
-      holiday_scheme = HolidayScheme.find((params['holiday']['holiday_scheme_id']).to_i)
-      redirect_to holiday_scheme_path(holiday_scheme)
+      flash[:notice] = 'Holiday created successfully.'
+
+      redirect_to holiday_scheme_path(holiday.holiday_scheme)
+    else
+      render :new
     end
   end
 
@@ -43,5 +46,4 @@ class HolidaysController < ApplicationController
     @holiday = Holiday.find(params[:id])
     @holiday_scheme = @holiday.holiday_scheme
   end
-
 end
