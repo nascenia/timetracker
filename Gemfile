@@ -48,6 +48,7 @@ gem "bootsnap", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
+gem 'bitmask_attributes', '~> 1.0'
 gem 'bootstrap', '~> 5.2', '>= 5.2.3'
 
 gem 'dotenv-rails', '~> 2.8', '>= 2.8.1'
@@ -70,6 +71,7 @@ gem 'mini_magick', '~> 4.12'
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
+  gem 'letter_opener'
   gem 'pry-byebug', '~> 3.10', '>= 3.10.1'
 end
 

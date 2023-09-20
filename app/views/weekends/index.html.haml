@@ -1,7 +1,7 @@
-.panel.panel-default
-  .panel.panel-heading
+.card
+  .card.card-header
     %h3 Weekday Schemes
-  .panel-body
+  .card-body
     - if @weekends.count > 0
       %table.table.table-bordered.table-hover
         %thead
@@ -27,5 +27,5 @@
 
     - else
       %p No weekend scheme present
-  .panel-footer
+  .card-footer
     = link_to 'Create new', new_weekend_path, class: 'btn btn-primary'

@@ -1,20 +1,24 @@
-.panel.panel-default
-  .panel-heading
+.card
+  .card-header
     %h3
       = heading
 
-  = form_for @weekend do |f|
-    = render 'shared/error_messages', target: @weekend
+  .card-body
+    = form_for @weekend do |f|
+      = render 'shared/error_messages', target: @weekend
 
-    .panel-body
-      .form-group
-        = f.label :name
-        = f.text_field :name, class: 'form-control'
-      = label_tag 'Select Day(s)'
-
-      .checkbox
-        = f.collection_check_boxes(:off_days, f.object.class.off_day_options, :first, :last) do |b|
-          .field= b.check_box + b.label
-
-    .panel-footer
-      = f.submit action_name, class: 'btn btn-primary'
+      .row.mb-3
+        %label.col-sm-2.col-form-label Name
+        .col-sm-10
+          = f.text_field :name, class: 'form-control'
+      .row.mb-3
+        %label.col-sm-2.col-form-label Select days
+        .col-sm-10
+          = f.collection_check_boxes(:off_days, f.object.class.off_day_options, :first, :last) do |b|
+            .field
+              = b.check_box
+              = b.label(class: 'mr-2')
+      .row.mb-3
+        %label.col-sm-2.col-form-label
+        .col-sm-10
+          = f.submit action_name, class: 'btn btn-primary'

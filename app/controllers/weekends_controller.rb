@@ -39,7 +39,14 @@ class WeekendsController < ApplicationController
 
   def create
     @weekend = Weekend.create(weekend_params)
-    @weekend.save ? redirect_to(weekends_path) : render(:new)
+
+    if @weekend.save
+      flash[:notice] = 'Weekend scheme created successfully.'
+      
+      redirect_to(weekends_path)
+    else 
+      render(:new)
+    end
   end
 
   def edit
