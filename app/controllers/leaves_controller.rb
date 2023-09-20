@@ -42,20 +42,17 @@ class LeavesController < ApplicationController
   def create
     @leave = Leave.new(leave_params)
     @leave.status = Leave::PENDING
-    @leave.user_id = current_user.id
+    @leave.user = current_user
     approval_users = @leave.approval_path.path_chains.order(priority: :desc).map(&:user_id)
     emails = []
+    
     approval_users.each do |approval_user|
       email = User.find_by(id: approval_user).email
       emails << email
     end
-    email = emails[0]
+    
     if @leave.save
       if UserMailer.send_leave_application_notification(@leave, emails[0]).deliver
-        # emails.shift
-        # emails.each do |email|
-        #   UserMailer.send_leave_application_notification(@leave, email).deliver
-        # end
         redirect_to leave_path(@leave), notice: 'Your TTF will be notified soon. Thanks!'
       else
         redirect_to leave_path(@leave), alert: 'Sorry something went wrong to send mail, please contact with your TTF'
@@ -91,7 +88,10 @@ class LeavesController < ApplicationController
 
   def approve
     if current_user.try(:has_admin_privilege?)
-      @leave.update_attributes(status: Leave::ACCEPTED, pending_at: 0)
+      @leave.status = Leave::ACCEPTED
+      @leave.pending_at = 0
+      @leave.save
+
       @leave.user.leave_tracker.update_leave_tracker(@leave)
       @leave.remove_unannounced_for_same_date
       UserMailer.send_approval_or_rejection_notification(@leave).deliver
@@ -99,23 +99,29 @@ class LeavesController < ApplicationController
     else
       if @leave.pending_at == 1
         if @leave.start_date < Date.today
-          @leave.update_attribute(:status, Leave::REJECTED)
+          @leave.status = Leave::REJECTED
+          @leave.save
           flash[:warning] = 'Leave tracker already updated and you can not approved it now!'
           redirect_to :back and return
         end
 
         @leave.remove_unannounced_for_same_date
 
-        @leave.update_attributes(status: Leave::ACCEPTED, pending_at: 0)
+        @leave.status = Leave::ACCEPTED
+        @leave.pending_at = 0
+        @leave.save
+        
         @leave.user.leave_tracker.update_leave_tracker(@leave)
         UserMailer.send_approval_or_rejection_notification(@leave).deliver
         UserMailer.send_approval_or_rejection_notification_to_hr(@leave).deliver
       else
-        @leave.update_attribute(:pending_at, @leave.pending_at -= 1)
+        @leave.pending_at = @leave.pending_at -= 1
+        @leave.save
         email = @leave.approval_path.path_chains.find_by(priority: @leave.pending_at).user.email
         UserMailer.send_leave_application_notification(@leave, email).deliver
       end
     end
+
     redirect_to new_leave_comment_path(@leave), turbolinks: false
   end
 

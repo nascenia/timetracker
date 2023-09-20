@@ -44,7 +44,13 @@ Rails.application.routes.draw do
   # leaves_controller projects generate paths with 'leafe' as singular for 'leaves'
   # That is why we defined plural and singular for leave in config/initializers/inflections.rb
   resources :leaves do
-    member { post :approve, :reject, :award, :special_award}
+    member do 
+      get :approve
+      get :reject
+      post :award
+      post :special_award 
+    end
+    
     resources :comments, only: [:new, :create]
   end
 

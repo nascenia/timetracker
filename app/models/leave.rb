@@ -1,7 +1,6 @@
 class Leave < ApplicationRecord
   belongs_to :approval_path
   belongs_to :user
-  belongs_to :leave_tracker
 
   has_many :comments
 
@@ -139,11 +138,10 @@ class Leave < ApplicationRecord
   def number_of_days
     if user.holiday_scheme && user.weekend
       dates = (start_date..end_date).map(&:to_date) - user.holiday_scheme.holidays.map { |holiday| holiday.date }
-      (dates.map(&:to_date).map { |day| day.strftime('%A') } - [user.weekend.off_days].map(&:capitalize).map(&:to_s)).count
+      (dates.map(&:to_date).map { |day| day.strftime('%A') } - user.weekend.off_days.map(&:capitalize).map(&:to_s)).count
     else
       0
     end
-
   end
 
   def total_leave_hour_of(month)

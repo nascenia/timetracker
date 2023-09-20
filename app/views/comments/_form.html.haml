@@ -1,14 +1,12 @@
-- content_for :modal_title do
-  Additional comment for the applicant
+- comment_type = "approve" if @leave.is_accepted?
+- comment_type = "reject" if @leave.is_rejected?
 
-- content_for :modal_body do
-  = form_for [@leave, @leave.comments.build] do |f|
-    .form-group
+.card
+  .card-header
+    .fs-5= "Leave application #{comment_type} comment"
+  .card-body 
+    = form_for [@leave, @leave.comments.build] do |f|
       = f.text_area :body, maxlength: '300', class: 'form-control', rows: 7
+      %p.help-block 300 characters remaining.
+      = f.submit 'Submit', class: 'btn btn-primary'
 
-      %p.help-block
-        %span= 300
-        characters remaining.
-
-    .form-group
-      = f.submit 'Submit', class: 'form-control btn btn-primary'

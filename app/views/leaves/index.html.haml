@@ -1,12 +1,14 @@
 %h1.page-header
   Leaves
+%hr
 
 - if has_owned_paths?
   - statuses = [["Pending", 3], ["Rejected", 2], ["Rollbacked", 4]]
-  = form_tag leaves_path, method: :get, class: 'form-inline' do
-    = select_tag :category, options_for_select(statuses,
-                 params[:category]), class: 'form-control'
-    = submit_tag 'Submit', class: 'btn btn-success'
+  = form_tag leaves_path, method: :get, class: 'row g-3' do
+    .col-auto
+      = select_tag :category, options_for_select(statuses, params[:category]), class: 'form-select'
+    .col-auto
+      = submit_tag 'Submit', class: 'btn btn-success'
 
 - if @leaves.size > 0
   %table.table.table-bordered

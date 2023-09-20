@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: "from@example.com"
-  layout "mailer"
+  default from: "Leave Tracker | Nascenia <leave.nascenia@gmail.com>"
+  layout "notification"
 end

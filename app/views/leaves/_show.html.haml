@@ -1,8 +1,8 @@
-%h1.page-header
-  Leave application summary
+%h1.page-header Leave application summary
+%hr
 
-.panel.panel-default
-  .panel-heading
+.card.mb-4
+  .card-header
     %b= "Leave status of : #{@leave.user.name}"
 
   %table.table.table-bordered
@@ -21,8 +21,8 @@
         %td= @leave.user.leave_tracker.consumed_vacation if @leave.user.leave_tracker.present?
         %td= @leave.user.leave_tracker.consumed_medical if @leave.user.leave_tracker.present?
 
-.panel.panel-default
-  .panel-heading
+.card.mb-4
+  .card-header
     %b Leave approval
 
   %table.table.table-bordered
@@ -44,7 +44,6 @@
       %tr
         %th Applied on
         %td= @leave.created_at.strftime("%d-%b-%y")
-
       %tr
         %th Duration
         %td= get_duration @leave
@@ -78,10 +77,8 @@
               = @rejector ? @rejector.name : 'Admin'
             - else
               = 'N/A'
-
-
-.panel.panel-default
-  .panel-heading
+.card.mb-4
+  .card-header
     %b Comments
 
   %table.table.table-bordered
