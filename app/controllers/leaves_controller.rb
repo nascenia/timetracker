@@ -156,6 +156,7 @@ class LeavesController < ApplicationController
     @leave.leave_type = Leave::AWARDED
     @leave.status = Leave::ACCEPTED
     @leave.user_id = params[:id]
+    @leave.start_date = params[:leave][:leave_award_date]
 
     unless @leave.valid_date?
       flash[:notice]='You can not award leaves for Future dates !'

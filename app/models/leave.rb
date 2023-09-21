@@ -4,6 +4,8 @@ class Leave < ApplicationRecord
 
   has_many :comments
 
+  attr_accessor :leave_award_date
+  
   validates :pending_at, presence: true
 
   # TODO: update to enum

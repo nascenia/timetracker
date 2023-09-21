@@ -1,6 +1,6 @@
 module LeaveTrackerHelper
   def type_of(leave)
-    p Leave::LEAVE_TYPES[leave.leave_type]
+    # p Leave::LEAVE_TYPES[leave.leave_type]
     case leave.leave_type
       when Leave::CASUAL
         'Casual'
