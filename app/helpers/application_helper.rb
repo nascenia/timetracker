@@ -1,5 +1,6 @@
 module ApplicationHelper
   include ActionView::Helpers::NumberHelper
+  include Pagy::Frontend
   
   def copyright_year
     Time.zone.now.year
