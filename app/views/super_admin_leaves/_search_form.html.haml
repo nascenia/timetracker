@@ -1,0 +1,19 @@
+- start_date = params[:commit] == 'Search' ? params[:leave][:start_date] : ''
+- end_date = params[:commit] == 'Search' ? params[:leave][:end_date] : ''
+- user_id = params[:commit] == 'Search' ? params[:leave][:user_id] : ''
+- status = params[:commit] == 'Search' ? params[:leave][:status] : ''
+- type = params[:commit] == 'Search' ? params[:leave][:type] : ''
+
+= form_for(:leave, url: super_admin_leaves_path, method: :get, html: { class: 'row g-3', 'data-controller' => 'leave'}) do |f|
+  .col-auto 
+    = f.select :user_id, options_for_select(@users, user_id), { include_blank: 'Select user'}, class: 'form-select'
+  .col-auto
+    = f.text_field :start_date, value: start_date, :class => 'form-control date-picker', :placeholder => 'Start date', :autocomplete => :off
+  .col-auto
+    = f.text_field :end_date, value: end_date, :class => 'form-control date-picker', :placeholder => 'End date', :autocomplete => :off
+  .col-auto
+    = f.select :status, options_for_select(Leave::LEAVE_STATUSES[0..2], status), { include_blank: 'All' }, class: 'form-select'
+  .col-auto
+    = f.select :type, options_for_select([['Casual Leave', 1], ['Medical Leave', 2], ['Unannounced Leave', 3]], type), { include_blank: 'All' }, class: 'form-select'
+  .col-auto
+    = f.submit 'Search', class: 'btn btn-primary'

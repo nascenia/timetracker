@@ -1,5 +1,5 @@
 %ul.list-group
-  %li.list-group-item.bg-secondary.fs-5 Leave management
+  %li.list-group-item.bg-light.fs-5 Leave management
   %li.list-group-item{:class => current_page?(leave_tracker_path(current_user)) ? 'bg-light' : ''}
     = link_to 'My leave', leave_tracker_path(current_user)
   %li.list-group-item{:class => current_page?(new_leave_path) ? 'bg-light' : ''}

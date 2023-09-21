@@ -5,7 +5,7 @@ class Leave < ApplicationRecord
   has_many :comments
 
   attr_accessor :leave_award_date
-  
+
   validates :pending_at, presence: true
 
   # TODO: update to enum
@@ -213,5 +213,21 @@ class Leave < ApplicationRecord
       leave.user.leave_tracker.update_attribute(:consumed_vacation, leave.user.leave_tracker.consumed_vacation - leave.total_leave_hour)
     end
     leaves_on_same_date.destroy_all
+  end
+
+  def self.search(params = {})
+    leave = self
+    return leave if params.blank?
+
+    leave = leave.where(user_id: params[:user_id]) unless params[:user_id].blank?
+    leave = leave.leaves_by_status(params[:status]) unless params[:status].blank?
+    leave = leave.leaves_by_type(params[:type]) unless params[:type].blank?
+
+    unless params[:start_date].blank? && params[:end_date].blank?
+      leave = leave.leaves_in_between(params[:start_date], params[:end_date]) 
+    end
+
+    leave = leave.order(id: :desc)
+    leave
   end
 end
