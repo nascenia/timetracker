@@ -1,0 +1,149 @@
+.card
+  .card-header
+    %h2.fs-5= @flag ? 'New employee information' : 'On proces of joining'
+
+  .card-body
+    = form_for @pre_registration, html: {class: '', 'data-controller' => 'leave'} do |f|
+      .row.mb-3
+        .col-sm-2.col-form-label
+          = f.label :name do
+            = 'Employee name'
+            %span.text-danger *
+        .col-sm-10
+          = f.text_field :name, class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false
+                
+      .row.mb-3
+        .col-sm-2.col-form-label
+          = f.label :joining_date do
+            = 'Joining Date' 
+            %span.text-danger *
+        .col-sm-10
+          = f.text_field :joining_date, class: 'form-control date-picker', required: 'true', value: @pre_registration.joining_date, onkeydown: 'return false'
+                  
+      .row.mb-3
+        .col-sm-2.col-form-label
+          = f.label :designation do
+            = 'Designation'
+            %span.text-danger *
+        .col-sm-10
+          = f.select :designation, Designation.published.map{ |d| [d.title, d.title] }, { include_blank: 'select' }, class: 'form-control'
+
+      .row.mb-3
+        .col-sm-2.col-form-label
+          = f.label :ttf_id do
+            = 'Name of TTF'
+            %span.text-danger *
+        .col-sm-10
+          = f.select :ttf_id, options_for_select(@ttf_list.collect { | ttf_list | [ttf_list.name,  ttf_list.id] }, selected: @pre_registration.ttf_id), {}, required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'
+                  
+      .row.mb-3
+        .col-sm-2.col-form-label
+          = f.label :email_group do
+            = 'Suggested email group'
+            %span.text-danger *
+        .col-sm-10          
+          = f.text_field :email_group, class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false
+
+      .row.mb-3
+        .col-sm-2.col-form-label
+          = f.label :leave_approval_path_id do
+            = 'Leave approval path'
+            %span.text-danger *
+        .col-sm-10 
+          = f.select :leave_approval_path_id, options_for_select(ApprovalPath.all.collect { | ap | [ap.name,  ap.id] }, selected: @pre_registration.leave_approval_path_id), {}, required: 'true', autofocus: 'true', class: 'form-control'
+          = link_to 'Click here', new_approval_chain_path
+          %p to create a leave approval path with this TTF first if not found.
+                  
+      .row.mb-3
+        .col-sm-2.col-form-label 
+          = f.label :contact_number do
+            = 'Contact number'
+            %span.text-danger *
+        .col-sm-10
+          = f.text_field :contact_number, pattern: '[0][1][3-9][0-9]{8}', title: 'Enter a valid mobile number!', class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false
+                  
+      .row.mb-3
+        .col-sm-2.col-form-label 
+          = f.label :personal_email do
+            = 'Personal email'
+            %span.text-danger *
+        .col-sm-10
+          = f.email_field :personal_email, pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$', title: 'Enter a valid email address!', class: 'form-control', required: 'true', maxlength: '128', readonly: @flag ? true : false
+      
+      .row.mb-3
+        .col-sm-2.col-form-label 
+          = f.label :holiday_scheme_id do
+            = 'Holiday Scheme'
+            %span.text-danger *
+        .col-sm-10
+          = f.select :holiday_scheme_id, options_for_select(@holiday_scheme.collect { | holiday | [holiday.name,  holiday.id] }, selected: @pre_registration.holiday_scheme_id), {}, required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'
+                  
+      .row.mb-3
+        .col-sm-2.col-form-label 
+          = f.label :weekend_id do
+            = 'Weekend scheme'
+          %span.text-danger  *
+        .col-sm-10
+          = f.select :weekend_id, options_for_select(@weekend_scheme.collect { | weekend | [weekend.name,  weekend.id] }, selected: @pre_registration.weekend_id), {}, required: 'true', autofocus: 'true', class: 'form-control', id:'select-other-projects'
+                  
+      .row.mb-3
+        .col-sm-2.col-form-label 
+          = f.label :employee_id do
+            = 'Employee ID'
+        .col-sm-10
+          = f.text_field :employee_id, autofocus: 'true', class: 'form-control', pattern: '[A-Za-z0-9]+$', required: 'true', maxlength: '5'
+                
+      .row.mb-3
+        .col-sm-2.col-form-label 
+          = f.label :nda_signed do
+            = 'NDA signed'
+            %span.text-danger *
+        .col-sm-10
+          = f.check_box :nda_signed, checked: @pre_registration.nda_signed, required: true
+          = f.file_field :nda_doc, onchange: 'validateFiles(this);', data: { max_file_size: 50.megabytes }  
+          - if @pre_registration.nda_doc.present? 
+            =# link_to 'Current NDA', @pre_registration.nda_doc.url, {class: 'link', target: :_blank}
+      .row.mb-3
+        .col-sm-2.col-form-label 
+          = f.label :workstation_ready do
+            = 'Workstation prepared for new employee?'
+            %span.text-danger *
+        .col-sm-10
+          = f.check_box :workstation_ready, checked: @pre_registration.workstation_ready, required: true
+                      
+      .row.mb-3
+        .col-sm-2.col-form-label 
+          = f.label :pack_ready do
+            = 'Greeting pack prepared for new employee?'
+            %span.text-danger *
+        .col-sm-10
+          = f.check_box :packReady, checked: @pre_registration.pack_ready, required: true 
+          
+      %hr.mb-3
+      = hidden_field_tag 'selected', @is_for_admin 
+
+      - if @is_for_admin == '23'
+        .row.mb-3
+          .col-sm-2.col-form-label 
+            = f.label :company_email do
+              = 'Company email'
+              %span.text-danger *
+          .col-sm-10
+            = f.email_field :company_email,  pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$', title: 'Enter a valid email address!', id: 'company_email', onchange: 'validateEmails();', class: 'form-control', maxlength: '128', required: true
+
+        .row.mb-3
+          .col-sm-2.col-form-label 
+            = f.label :hr_email do
+              = 'Notify HR to follow the next step' 
+              %span.text-danger *
+          .col-sm-10
+            = f.email_field :hr_email,  pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$', title: 'Enter a valid email address!', id: 'hr_email', onchange: 'validateEmails();', class: 'form-control', maxlength: '128', required: true
+                
+        .row.mb-3
+          .col-sm-2.col-form-label 
+            = f.label :zoho_email_account do
+              = 'Zoho email account'
+          .col-sm-10
+            = f.check_box :zoho_email_account
+                    
+      = f.submit 'Submit', class: 'btn btn-success'

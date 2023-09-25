@@ -577,16 +577,16 @@ class User < ApplicationRecord
   private
 
   def update_pre_register_info
-    pr = PreRegistration.find_by(companyEmail: self.email)
+    pr = PreRegistration.find_by(company_email: self.email)
     pr.user = self
     pr.step_no = 3
     pr.save
 
     user  = self
     user.name = pr.name
-    user.joining_date = pr.joiningDate
+    user.joining_date = pr.joining_date
     user.employee_id = pr.employee_id
-    user.mobile_number = pr.contactNumber
+    user.mobile_number = pr.contact_number
     user.weekend_id = pr.weekend_id.to_i
     user.holiday_scheme_id = pr.holiday_scheme_id.to_i
     user.approval_path_id = pr.leave_approval_path_id

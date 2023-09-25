@@ -20,20 +20,20 @@ class PreRegistrationsController < ApplicationController
 
   def create
     pre_registration = PreRegistration.new(pre_registration_params)
-    if pre_registration_params[:packReady].to_s == '0'
-      pre_registration_params[:packReady] = false
+    if pre_registration_params[:pack_ready].to_s == '0'
+      pre_registration_params[:pack_ready] = false
     else
-      pre_registration_params[:packReady] = true
+      pre_registration_params[:pack_ready] = true
     end
-    if pre_registration_params[:NdaSigned].to_s == '0'
-      pre_registration_params[:NdaSigned] = false
+    if pre_registration_params[:nda_signed].to_s == '0'
+      pre_registration_params[:nda_signed] = false
     else
-      pre_registration_params[:NdaSigned] = true
+      pre_registration_params[:nda_signed] = true
     end
-    if pre_registration_params[:workstationReady].to_s == '0'
-      pre_registration_params[:workstationReady] = false
+    if pre_registration_params[:workstation_ready].to_s == '0'
+      pre_registration_params[:workstation_eady] = false
     else
-      pre_registration_params[:workstationReady] = true
+      pre_registration_params[:workstation_ready] = true
     end
 
     pre_registration.step_no = 2
@@ -111,22 +111,22 @@ class PreRegistrationsController < ApplicationController
   def pre_registration_params
     params.require(:pre_registration).permit(
       :name,
-      :companyEmail,
-      :joiningDate,
+      :company_email,
+      :joining_date,
       :datetime,
       :designation,
-      :NdaSigned,
-      :ndaDoc,
+      :nda_signed,
+      :nda_doc,
       :user_id,
       :ttf_id,
-      :HR_email,
-      :emailGroup,
-      :contactNumber,
-      :personalEmail,
+      :hr_email,
+      :email_group,
+      :contact_number,
+      :personal_email,
       :holiday_scheme_id,
       :weekend_id,
-      :workstationReady,
-      :packReady,
+      :workstation_ready,
+      :pack_ready,
       :salary_account_details_sent,
       :employee_contract_sign,
       :id_card_given,

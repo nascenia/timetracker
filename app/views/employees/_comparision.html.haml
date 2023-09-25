@@ -247,14 +247,14 @@
                       - else
                         N/A
               .row
-                .item-ndaDoc
+                .item-nda_doc
                   .col-md-4
                     %h5
                       NDA
                   .col-md-8
                     %h5
-                      - if @ndaDoc.present?
-                        = link_to 'View', @ndaDoc.url, {class: 'link', target: :_blank}
+                      - if @nda_doc.present?
+                        = link_to 'View', @nda_doc.url, {class: 'link', target: :_blank}
                       - else
                         N/A
               .row

@@ -189,7 +189,7 @@ class UserMailer < ApplicationMailer
     subject = 'Invitation to Time tracker with new email ID'
     subject = PRE_FIX + subject
 
-    mail to: @pre_registration.companyEmail,
+    mail to: @pre_registration.company_email,
          subject: subject
     true
     rescue => e

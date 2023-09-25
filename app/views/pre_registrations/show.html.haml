@@ -1,0 +1,31 @@
+.card
+  .card-header
+    %h2.fs-5= "Information of : #{@pre_registration.name}"
+
+  .card-body
+    = form_for @pre_registration do |f|
+    
+      = hidden_field_tag 'hidden_flag'
+
+      .row
+        = f.label :salary_account_details_sent do
+          = f.check_box :salary_account_details_sent, checked: @pre_registration.salary_account_details_sent
+          = 'Salary account details sent to CEO?'
+      .row      
+        = f.label :employee_contract_sign do
+          = f.check_box :employee_contract_sign, checked: @pre_registration.employee_contract_sign 
+          = 'Employee contract signed?'
+      .row
+        = f.label :id_card_given do
+          = f.check_box :id_card_given, checked: @pre_registration.id_card_given 
+          = 'ID card given?'
+      .row
+        = f.label :pic_and_other_relevant_info do
+          = f.check_box :pic_and_other_relevant_info, checked: @pre_registration.pic_and_other_relevant_info
+          = 'Picture and other relevant information about new employee updated on website?'
+      .row      
+        = f.label :has_sent_invitation_to_visit_internal_website do
+          = f.check_box :has_sent_invitation_to_visit_internal_website, checked: @pre_registration.has_sent_invitation_to_visit_internal_website
+          = 'Has sent an invitation to visit the internal website?'
+      
+      = f.submit 'Submit', class: 'btn btn-success mt-3'

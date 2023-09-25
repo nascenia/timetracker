@@ -1,0 +1,55 @@
+.card 
+  .card-header
+    %h2.fs-5 On process of joining
+  .card-body
+    %table.table
+      %thead
+        %tr
+          %th Name
+          %th Email
+          %th Contact number
+          %th{colspan: 3} Joining date
+
+      %tbody
+        - last_date = '' 
+        - if @on_process_of_joining_employees.empty? 
+          %tr
+            %td{colspan: '6'} No record found!
+
+        - @on_process_of_joining_employees.each do |employee|
+          %tr
+            %td= employee.name
+            %td= employee.personal_email
+            %td= employee.contact_number
+            %td= employee.joining_date
+            %td= link_to 'Edit', edit_pre_registration_path(employee) 
+            %td= link_to 'Delete', pre_registration_path(employee), method: :delete, data: { confirm: 'Are you sure you want to delete this?' }
+
+.mt-3
+  %button.btn.btn-primary{:type => 'button', 'data-bs-toggle' => 'collapse', 'data-bs-target' => '#addEmployee', 'aria-expanded' => 'false', 'aria-controls' => 'collapseExample'}
+    Add new employee
+
+= render 'form'
+
+:javascript
+  $(document).ready(function() {
+    //console.log('Loaded...');
+    $(document).on('change', 'select#select-ttf', function(event) {
+      //console.log('clicked!', event, $(this).children("option:selected").val());
+      $.ajax({
+        url: "/approval_chains/ttf_own",
+        type: "GET",
+        data:  { user_id: $(this).children("option:selected").val() },
+        beforeSend: function() {
+        },
+        success: function(response) {
+          var $el = $("select#leave-approval-path");
+          $el.empty();
+          $el.append($("<option></option>").attr('value', '').text('select'));
+          response.approval_paths.forEach(function(approval_path) {
+            $el.append($("<option></option>").attr("value", approval_path.id).text(approval_path.name));
+          });
+        }
+      });
+    });
+  });

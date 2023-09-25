@@ -1,10 +1,10 @@
 class PreRegistration < ApplicationRecord
-  mount_uploader :ndaDoc, FileUploader
-  belongs_to :user
+  mount_uploader :nda_doc, FileUploader
+  # belongs_to :user
 
   attr_accessor :zoho_email_account
 
-  validates_uniqueness_of :companyEmail, allow_blank: true, allow_nil: true
+  validates_uniqueness_of :company_email, allow_blank: true, allow_nil: true
   
   validates :employee_id, presence: true, uniqueness: true, length: { is: 5 }
   #validates :employee_id, format: { with: /[^a-zA-Z0-9]/, message: 'Only letter and number are allowed', multiline: true }
