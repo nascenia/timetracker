@@ -9,7 +9,7 @@
 - description         = params[:description].blank? ? '' : params[:description]
 - status              = params[:status].blank? ? 0 : params[:status]
 
-= form_for(@goal, class: 'form-horizontal') do |f|
+= form_for(@goal, html: {class: '', 'data-controller' => 'goal'}) do |f|
   - if @goal.errors.any?
     #error_explanation
       %h2= "#{pluralize(@goal.errors.count, 'error')} prohibited this goal from being saved:"
@@ -22,7 +22,7 @@
     .col-md-4
       .form-group
         = f.label 'Quarter'
-        = f.select :time_period, options_for_select([['Q-1', '0'], ['Q-2', '1'], ['Q-3', '2'], ['Q-4', '3']], time_period), { include_blank: 'select'}, class: 'form-control'
+        = f.select :time_period, options_for_select([['Q-1', '0'], ['Q-2', '1'], ['Q-3', '2'], ['Q-4', '3']], time_period), { include_blank: 'select'}, class: 'form-select'
     .col-md-4
       .form-group
         = f.label :start_date
@@ -33,7 +33,7 @@
         = f.text_field :end_date, value: end_date, class: 'form-control'
 
   %hr
-  .row
+  .row.mb-3
     .col-md-4
       .form-group
         = f.label 'Persoonal or team'
@@ -45,14 +45,14 @@
     .col-md-4
       .form-group
         = f.label 'Team member'
-        = f.select :team_member, options_for_select(@team.map{ |u| [u.name, u.id] }, team_member), { include_blank: 'select' }, class: 'form-control', disabled:  team_member.eql?(current_user.id)
+        = f.select :team_member, options_for_select(@team.map{ |u| [u.name, u.id] }, team_member), { include_blank: 'select' }, class: 'form-select', disabled:  team_member.eql?(current_user.id)
         = f.hidden_field :user_id, value: user_id
     .col-md-4
       .form-group
         = f.label :goal_category
-        = f.select :goal_category_id, options_for_select(@goal_categories.map{ |d| [d.title, d.id] }, goal_category_id), { include_blank: 'select' }, class: 'form-control'
+        = f.select :goal_category_id, options_for_select(@goal_categories.map{ |d| [d.title, d.id] }, goal_category_id), { include_blank: 'select' }, class: 'form-select'
 
-  .row
+  .row.mb-3
     .col-md-8
       .form-group
         = f.label :title
@@ -62,7 +62,7 @@
         = f.label :point
         = f.text_field :point, value: point, class: 'form-control'
 
-  .row
+  .row.mb-3
     .col-md-8
       .form-group
         = f.label :description
@@ -70,49 +70,10 @@
     .col-md-4
       .form-group
         = f.label :status
-        = f.select :status, options_for_select(Goal::STATUSES.each_with_index.map{ |v, i| [v, i] }, status), {}, class: 'form-control'
-  .row.col-md-12
-    = f.submit 'Submit', class: 'btn btn-primary'
+        = f.select :status, options_for_select(Goal::STATUSES.each_with_index.map{ |v, i| [v, i] }, status), {}, class: 'form-select'
+  .row.mb-3
+    .col-md-12
+      = f.submit 'Submit', class: 'btn btn-primary col-md-2'
 
 %br
 %br
-
-:javascript
-  $(document).ready(function() {
-    let goal = { 
-      own: $('#goal_user_id').val(),
-      team: null
-    };
-    let year = new Date().getFullYear();
-    let quaters = [
-      { start_date: '01-01-' + year, end_date: '31-03-' + year },
-      { start_date: '01-04-' + year, end_date: '30-06-' + year },
-      { start_date: '01-07-' + year, end_date: '30-09-' + year },
-      { start_date: '01-10-' + year, end_date: '31-12-' + year }
-    ];
-
-    $(document).on('click', 'input[type=radio]', function() {
-
-      let selected = $('input[name="goal[personal_or_team]"]:checked').val();
-
-      if(selected == 'own') {
-        $('#goal_team_member').prop('disabled', 'disabled');
-      } else {
-        $('#goal_team_member').prop('disabled', '');
-      }
-    });
-
-    $(document).on('change', 'select#goal_team_member', function() {
-      goal.team = $(this).children('option:selected').val();
-
-      $('#goal_user_id').val(goal.team);
-    });
-
-    $(document).on('change', 'select#goal_time_period', function() {
-      let selectedQuater = $(this).children("option:selected").val();
-
-      $('#goal_start_date').val(quaters[selectedQuater].start_date);
-      $('#goal_end_date').val(quaters[selectedQuater].end_date);
-    });
-
-  });

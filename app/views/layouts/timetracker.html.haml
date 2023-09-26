@@ -29,10 +29,10 @@
     %main.container
       %div.flash-message
         - if notice
-          .alert.alert-danger{role: "alert"}
+          .alert.alert-info{role: "alert"}
             = notice
         - elsif alert 
-          .alert.alert-info{role: "alert"}
+          .alert.alert-danger{role: "alert"}
             = alert
   
       .content
