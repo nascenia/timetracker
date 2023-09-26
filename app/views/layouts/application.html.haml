@@ -1,6 +1,6 @@
 %html{:lang => "en"}
   %head
-    %title Timetracker | Rails7
+    %title Nascenia | Time tracker
 
     %meta{:charset => "utf-8"}
     %meta{:http => {:equiv => "X-UA-Compatible"}, :content => "IE=edge"}
@@ -23,25 +23,15 @@
           %span.navbar-toggler-icon
         
         %div.collapse.navbar-collapse#navbarCollapse
-          =# render 'layouts/shared/navbar'
-          %ul.navbar-nav.me-auto.mb-2.mb-md-0
-            %li.nav-item
-              %a.nav-link.active{ 'aria-current' => "page", href: "#"} Home
-            %li.nav-item
-              %a.nav-link{ href: "#" } Link1
-            %li.nav-item
-              %a.nav-link{ href: "#" } Link2
 
     %main.container
       %div.flash-message
         - if notice 
-          .alert.alert-danger{role: "alert"}
-            A simple danger alert—check it out! 
+          .alert.alert-info{role: "alert"}
             = notice
         - elsif alert
-        .alert.alert-info{role: "alert"}
-          A simple info alert—check it out!
-          = alert
+          .alert.alert-danger{role: "alert"}
+            = alert
   
       .content
         = yield
