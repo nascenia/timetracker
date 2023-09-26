@@ -7,9 +7,9 @@
       Today's in time
       %b= "#{@attendance.in_time.strftime('%I:%M %p')} "
       - unless is_late_attendance? @attendance.in_time
-        %span.label.label-success On time
+        %span.badge.bg-success On time
       - else
-        %span.label.label-danger Late
+        %span.badge.bg-danger Late
 
 .row.mb-2
   .col-sm-3

@@ -2,15 +2,17 @@
   .col-sm-12
     %h1.page-header
       = "Daily time tracker of #{@attendance.user.name}"
+    %hr
 
   .col-sm-12
-    .panel.panel-default
-      .panel-heading
-        %span
-          %b= get_humanize_date(Date.today)
-        %span.pull-right
-          %b= "Total entries: #{1 + @attendance.children.size}"
-
+    .card
+      .card-header
+        .row
+          .col-sm-6.text-start
+            %b= get_humanize_date(Date.today)
+          .col.sm-6.text-end
+            %b= "Total entries: #{1 + @attendance.children.size}"
+    
       %table.table.table-bordered.table-hover
         %thead
           %tr

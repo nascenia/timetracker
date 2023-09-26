@@ -22,10 +22,10 @@
           %td= get_formatted_time(attendance.out_time)
           %td
             - if attendance.has_multiple_checkin?
-              %span.label.label-warning
+              %span.badge.bg-warning
                 = link_to 'Multi entry >>', attendance_path(attendance)
             - else
               - unless is_late_attendance? attendance.in_time
-                %span.label.label-success On time
+                %span.badge.bg-success On time
               - else
-                %span.label.label-danger Late
+                %span.badge.bg-danger Late
