@@ -4,7 +4,7 @@
 - start_date    = params[:commit] == 'Search' ? params[:kpi][:start_date] : ''
 - end_date      = params[:commit] == 'Search' ? params[:kpi][:end_date] : ''
 
-= form_for(:kpi, url: kpis_path, method: :get, html: { class: '' }) do |f|
+= form_for(:kpi, url: kpis_path, method: :get, html: { class: '', 'data-controller' => 'kpis' }) do |f|
   .row
     .col-md-2
       .form-group
@@ -17,17 +17,17 @@
     .col-md-2
       .form-group
         = f.label 'Team member'
-        = f.select :team_member, options_for_select(@team.map{ |u| [u.name, u.id] }, team_member), { include_blank: 'select' }, class: 'form-control', disabled: team_member.blank?
+        = f.select :team_member, options_for_select(@team.map{ |u| [u.name, u.id] }, team_member), { include_blank: 'select' }, class: 'form-select', disabled: team_member.blank?
     .col-md-2
       .form-group
         - c_y = Time.now.year
         - s_y = c_y - 10
         = f.label 'Year'
-        = f.select :year, options_for_select((s_y..c_y).to_a.map{ |y| [y, y] }.reverse, year), { include_blank: 'select' }, class: 'form-control'
+        = f.select :year, options_for_select((s_y..c_y).to_a.map{ |y| [y, y] }.reverse, year), { include_blank: 'select' }, class: 'form-select'
     .col-md-2
       .form-group
         = f.label 'Time period'
-        = f.select :time_period, options_for_select([['Q-1', '0'], ['Q-2', '1'], ['Q-3', '2'], ['Q-4', '3']], time_period), { include_blank: 'select'}, class: 'form-control'
+        = f.select :time_period, options_for_select([['Q-1', '0'], ['Q-2', '1'], ['Q-3', '2'], ['Q-4', '3']], time_period), { include_blank: 'select'}, class: 'form-select'
     .col-md-1
       .form-group
         = f.label :start_date
@@ -37,5 +37,5 @@
         = f.label :end_date
         = f.text_field :end_date, value: end_date, class: 'form-control'
     .col-md-2.form-group
-      = blank_space
+      %br
       = f.submit 'Search', class: 'btn btn-info btn-block'
