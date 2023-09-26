@@ -6,40 +6,47 @@
 - end_date      = params[:commit] == 'Search' ? params[:goal][:end_date] : ''
 - url_params = { personal_or_team: personal_or_team, team_member: team_member, year: year, time_period: time_period, start_date: start_date, end_date: end_date }
 
-%table.table
-  %thead
-    %th{ width: '25%' } Property
-    %th{ width: '75%' } Value
-  %tbody
-    %tr
-      %td Title
-      %td= @goal.title
-    %tr
-      %td Description
-      %td= @goal.description
-    %tr
-      %td Point
-      %td= @goal.point
-    %tr
-      %td Percent completed:
-      %td= @goal.percent_completed
-    %tr
-      %td Achived point
-      %td= @goal.achived_point
-    %tr
-      %td Deliverable link
-      %td= @goal.deliverable_link
-    %tr
-      %td Comments
-      %td= @goal.comments
-    %tr
-      %td Start date
-      %td= @goal.start_date
-    %tr
-      %td End date
-      %td= @goal.end_date
-    %tr
-      %td Status
-      %td= @goal.status.blank? ? '-' : Goal::STATUSES[@goal.status]
+%h1 Goal details
+%hr
+
+.card
+  .card-header
+    %h2.fs-5= "Assigned to: #{@goal&.user.name}"
+
+  %table.table.table-bordered
+    %thead
+      %th{ width: '25%' } Property
+      %th{ width: '75%' } Value
+    %tbody
+      %tr
+        %td Title
+        %td= @goal.title
+      %tr
+        %td Description
+        %td= @goal.description
+      %tr
+        %td Point
+        %td= @goal.point
+      %tr
+        %td Percent completed
+        %td= @goal.percent_completed
+      %tr
+        %td Achived point
+        %td= @goal.achived_point
+      %tr
+        %td Deliverable link
+        %td= @goal.deliverable_link
+      %tr
+        %td Comments
+        %td= @goal.comments
+      %tr
+        %td Start date
+        %td= @goal.start_date
+      %tr
+        %td End date
+        %td= @goal.end_date
+      %tr
+        %td Status
+        %td= @goal.status.blank? ? '-' : Goal::STATUSES[@goal.status]
     
 = link_to 'Back', goals_path(goal: url_params, commit: 'Search')
