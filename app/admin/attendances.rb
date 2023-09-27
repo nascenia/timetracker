@@ -5,7 +5,7 @@ ActiveAdmin.register Attendance do
   #
   # Uncomment all parameters which should be permitted for assignment
   #
-  # permit_params :checkin_date, :in_time, :out_time, :total_hours, :parent_id, :user_id
+  permit_params :checkin_date, :in_time, :out_time, :total_hours, :parent_id, :user_id
   #
   # or
   #

@@ -17,6 +17,7 @@ module TimetrackerRails7
     # in config/environments, which are processed later.
     #
     # config.time_zone = "Central Time (US & Canada)"
+    config.time_zone = 'Dhaka'
     # config.eager_load_paths << Rails.root.join("extras")
 
     config.x.app = config_for(:application)

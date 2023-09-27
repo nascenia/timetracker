@@ -35,7 +35,7 @@ module ApplicationHelper
   end
 
   def get_formatted_time time
-     time.present? ? Time.at(time).utc.strftime('%I:%M %p') : '-'
+     time.present? ? Time.at(time).strftime('%I:%M %p') : '-'
   end
 
   def link_to_modal(name = nil, options = {}, html_options = {}, &block)
