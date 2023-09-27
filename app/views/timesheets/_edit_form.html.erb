@@ -1,0 +1,79 @@
+<%= form_for @timesheet, html: {class: 'row', 'data-controller' => 'timesheet'} do |f| %>
+  <div class="col-sm-6 pe-3">
+    <div class="row mb-3">
+      <div class="col-sm-3 col-form-label">
+        <%= f.label :date, 'Date' %>
+        <span class="text-danger">*</span>
+      </div>
+      <div class="col-sm-9">
+        <%= f.text_field :date, :class => 'form-control date-picker', value: Time.now.strftime("%Y-%m-%d"), :onkeydown => "return false" %>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-sm-3 col-form-label">
+        <%= f.label 'Task' %>
+        <span class="text-danger">*</span>
+      </div>
+      <div class="col-sm-9">
+        <%= f.text_field :task, :class => 'form-control', required: 'true', :maxlength => "128" %>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-sm-3 col-form-label">
+        <%= f.label 'Ticket link' %>
+      </div>
+      <div class="col-sm-9">
+        <%= f.text_field :ticket_link, :class => 'form-control', :maxlength => "128" %>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-sm-3 col-form-label">
+        <%= f.label 'Description' %>
+      </div>
+      <div class="col-sm-9">
+        <%= f.text_area :description, :class => 'form-control' , cols: "30", rows: "10",:maxlength=>"512"%>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 ps-3">
+    <div class="row mb-3">
+      <div class="col-sm-3 col-form-label">
+        <%= f.label 'Project name' %>
+        <span class="text-danger">*</span>
+      </div>
+      <div class="col-sm-9 col-form-label">
+        <%= f.select :project_id, options_for_select(@projects.collect { | project | [project.project_name,  project.id] }, selected: @timesheet.project_id), {}, {required: 'true', autofocus: 'true', class: 'form-select', :maxlength=>"128"} %>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-sm-3 col-form-label">
+        <%= f.label 'Ticket number' %>
+      </div>
+      <div class="col-sm-9 col-form-label">
+        <%= f.text_field :ticket_number, :class => 'form-control', :maxlength => "128" %>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-sm-3 col-form-label">
+        <%= f.label 'Hours spent' %>
+        <span class="text-danger">*</span>
+      </div>
+      <div class="col-sm-3">                
+        <%= f.select :hours, options_for_select(0..@total_hours, selected: @timesheet.hours) , {}, {required: 'true', autofocus: 'true', class: 'form-select'} %>
+      </div>  
+      <div class="col-sm-3 col-form-label">
+        <%= f.label 'Minutes spent' %>
+        <span class="text-danger">*</span>
+      </div>
+      <div class="col-sm-3">      
+        <%= f.select :minutes, options_for_select((0..@total_mins).map {|n| n*15 }, selected: @timesheet.minutes) , {}, {required: 'true', autofocus: 'true', class: 'form-select'} %>        
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <%= f.submit "Update", class: 'btn btn-primary' %>
+    </div>
+  </div>
+<% end %>

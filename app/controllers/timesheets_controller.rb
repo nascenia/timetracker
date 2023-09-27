@@ -1,38 +1,7 @@
 class TimesheetsController < ApplicationController
   layout 'timetracker'
 
-  def show
-    @is_editable = 0
-    # if params[:selected_index]
-    #     @selected_index =0
-    # else
-    @selected_index = params[:selected_index]
-    # end
-    @start_date = params[:start_date]
-    @end_date = params[:end_date]
-    @project_id = params[:project_id]
-    @timesheets = Timesheet.where(user_id: params[:id], project_id: params[:project_id],
-                                  date: params[:start_date]..params[:end_date]).order(date: :desc)
-    @username = User.find(params[:id])
-    if @username == current_user
-      @is_editable = 1
-    end
-    @number_span = {}
-    @daily_total_time = {}
-    @timesheets.each do |timesheet|
-      daily_total_time_in_min = (timesheet.hours * 60).to_i + timesheet.minutes.to_i
-      if @number_span[timesheet.date].present?
-        @number_span[timesheet.date] = @number_span[timesheet.date] + 1
-      else
-        @number_span[timesheet.date] = 1
-      end
-      if @daily_total_time[timesheet.date].present?
-        @daily_total_time[timesheet.date] = @daily_total_time[timesheet.date].to_i + daily_total_time_in_min
-      else
-        @daily_total_time[timesheet.date] = daily_total_time_in_min
-      end
-    end
-  end
+  def show; end
 
   def index
     start_date = Time.now.strftime("%Y-%m-%d") 
@@ -168,20 +137,20 @@ class TimesheetsController < ApplicationController
   end
 
   def edit
-    @timesheets = Timesheet.find(params[:id])
-    if @timesheets.date.to_date >= Time.now.to_date - 35
+    @timesheet = Timesheet.find(params[:id])
+    if @timesheet.date.to_date >= Time.now.to_date - 35
       @total_hours = 14
       @projects = Project.all
-      user_timesheet = current_user.timesheets.where(date: Timesheet.find(params[:id]).date)
+      user_timesheet = current_user.timesheets.where(date: @timesheet.date)
       total_hours_hash = user_timesheet.sum(:hours)
       total_minute_hash = user_timesheet.sum(:minutes)
       @total_mins = 3
-      @total_hours = (14 - (total_hours_hash + total_minute_hash / 60)) + Timesheet.find(params[:id]).hours
+      @total_hours = (14 - (total_hours_hash + total_minute_hash / 60)) + @timesheet.hours
       if (14 - (total_hours_hash + total_minute_hash / 60) == 0)
         total_min = @total_hours * 60
         @total_mins = (total_min % 60) / 15
       end
-      session[:is_from_timesheet_edit] = @timesheets.date.to_date
+      session[:is_from_timesheet_edit] = @timesheet.date.to_date
     else
       flash[:alert] = 'You cannot edit before 35 days'
       redirect_to timesheets_path(selected_index: 1, start_date: (Time.now - 0.days).strftime('%Y/%m/%d'), end_date: Time.now.strftime('%Y/%m/%d'))
