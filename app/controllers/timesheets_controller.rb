@@ -1,4 +1,3 @@
-# :nodoc:
 class TimesheetsController < ApplicationController
   layout 'timetracker'
 
@@ -36,22 +35,25 @@ class TimesheetsController < ApplicationController
   end
 
   def index
-    @selected_index = params[:selected_index]
-    @start_date = params[:start_date]
-    @end_date = params[:end_date]
-    @timesheets = Timesheet.all.where(user_id: current_user.id,
-                                      date: params[:start_date]..params[:end_date]).order(date: :desc)
-    @projects = Project.all
-    @user = current_user
+    start_date = Time.now.strftime("%Y-%m-%d") 
+    end_date = Time.now.strftime("%Y-%m-%d") 
+    start_date = params[:timesheet][:start_date] unless params[:timesheet].blank?
+    end_date = params[:timesheet][:end_date] unless params[:timesheet].blank?
+
+    @timesheets = Timesheet.where(user_id: current_user.id, date: Date.parse(start_date)..Date.parse(end_date)).order(date: :desc)
+
     @number_span = {}
     @daily_total_time = {}
+
     @timesheets.each do |timesheet|
       daily_total_time_in_min = (timesheet.hours * 60).to_i + timesheet.minutes.to_i
+
       if @number_span[timesheet.date].present?
         @number_span[timesheet.date] = @number_span[timesheet.date] + 1
       else
         @number_span[timesheet.date] = 1
       end
+
       if @daily_total_time[timesheet.date].present?
         @daily_total_time[timesheet.date] = @daily_total_time[timesheet.date].to_i + daily_total_time_in_min
       else
@@ -61,7 +63,9 @@ class TimesheetsController < ApplicationController
   end
 
   def new
+    @timesheet = Timesheet.new
     @is_from_attent = 0
+
     if session[:is_from_checkout] == 1
       @is_from_attent = 1
       session[:is_from_checkout] = 0
@@ -69,12 +73,9 @@ class TimesheetsController < ApplicationController
     else
       session[:should_force_check_out] = 0
     end
+
     projects = current_user.projects
-    p '#####CU project'
-    projects.each do |project|
-      p project
-    end
-    p '#####CU project'
+
     @projects = Project.where.not(id: current_user.projects).where(is_active: true)
     @total_hours = 14
     user_timesheet = current_user.timesheets.where(date: Time.now.to_date)
@@ -82,11 +83,11 @@ class TimesheetsController < ApplicationController
     total_minute_hash = user_timesheet.sum(:minutes)
     @total_hours -= total_hours_hash + (total_minute_hash / 60)
     @total_mins = 3
+
     if @total_hours.zero?
       total_min = @total_hours * 60
       @total_mins = (total_min % 60) / 15
     end
-    @timesheet = Timesheet.new
   end
 
   def create

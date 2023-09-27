@@ -1,0 +1,21 @@
+- time_period   = params[:commit] == 'Search' ? params[:timesheet][:time_period] : 0
+- start_date    = params[:commit] == 'Search' ? params[:timesheet][:start_date] : Time.now.strftime("%Y-%m-%d")
+- end_date      = params[:commit] == 'Search' ? params[:timesheet][:end_date] : Time.now.strftime("%Y-%m-%d")
+- time_periods  = [['Today', '0'], ['Last 7 days', '7'], ['Last 14 days', '14'], ['Last 30 days', '30'], ['Last 90 days', '90'], ['Last 6 months', '180'], ['Last 1 year', '365']]
+
+= form_for(:timesheet, url: timesheets_path, method: :get, html: { class: 'row', 'data-controller' => 'timesheets' }) do |f|
+  .col-md-2
+    = f.label 'Time period'
+    = f.select :time_period, options_for_select(time_periods, time_period), { include_blank: 'select'}, class: 'form-select'
+  .col-md-2
+    = f.label :start_date
+    = f.text_field :start_date, value: start_date, class: 'form-control date-picker', data: { date_format: "yyyy-mm-dd" }
+  .col-md-2
+    = f.label :end_date
+    = f.text_field :end_date, value: end_date, class: 'form-control date-picker', data: { date_format: "yyyy-mm-dd" }
+  .col-md-2
+    %br
+    = f.submit 'Search', class: 'btn btn-primary'
+  .col-md-4
+    %br
+    = link_to 'New time entry', new_timesheet_path, class: 'btn btn-info float-end'

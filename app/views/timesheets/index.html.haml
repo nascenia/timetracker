@@ -1,0 +1,36 @@
+%h2= "Time sheet of #{current_user.name}"
+%hr
+
+= render 'search_form'
+
+%table.table.table-bordered
+  %tr
+    %th Date
+    %th Total hours
+    %th Project Name
+    %th Time
+    %th Task
+    %th Ticket Number
+    %th Ticket Link
+    %th Description
+    %th Action
+  
+  - last_date = ''
+  - @timesheets.each do |timesheet|
+    %tr
+      - if timesheet.date != last_date
+        %td{rowspan: @number_span[timesheet.date]}= timesheet.date
+
+      - if timesheet.date != last_date
+        - hours_timesheet = @daily_total_time[timesheet.date]/60
+        - minuties_timesheet = @daily_total_time[timesheet.date]%60
+        %td{rowspan: @number_span[timesheet.date]}= hours_timesheet.to_s+":"+minuties_timesheet.to_s
+
+      %td= link_to timesheet.project.project_name, project_path(timesheet.project, :start_date => Time.now.strftime("%Y/%m/%d"), :end_date => Time.now.strftime("%Y/%m/%d"), :selected_index => 1)
+      %td= timesheet.hours.to_s+":"+timesheet.minutes.to_s
+      %td= timesheet.task
+      %td= timesheet.ticket_number
+      %td= timesheet.ticket_link
+      %td= timesheet.description
+      %td= link_to 'Edit', edit_timesheet_path(timesheet) 
+      - last_date = timesheet.date

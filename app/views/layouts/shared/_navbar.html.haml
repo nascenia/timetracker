@@ -15,7 +15,7 @@
       = 'Employee'
       - if current_user.has_admin_privilege?
         - if count_employee != 0
-          %span.badge= count_employee
+          %span.badge.bg-danger.rounded-circle= count_employee
       %span.caret
     %ul.dropdown-menu{"aria-labelledby" => "dropdownMenuButton1"}
       %li
@@ -25,13 +25,13 @@
           = link_to new_pre_registration_path, class: 'dropdown-item' do
             Add new Employee
             - if add_employee != 0
-              %span.badge= add_employee
+              %span.badge.bg-danger.rounded-circle= add_employee
       - if current_user.has_admin_privilege?
         %li
           = link_to pre_registrations_path, class: 'dropdown-item' do
             Employee Onboarding
             - if employee_onboard != 0
-              %span.badge= employee_onboard
+              %span.badge.bg-danger.rounded-circle= employee_onboard
       %li= link_to 'Goals', goals_path, class: 'dropdown-item'
       - if [2, 3].include?(current_user.role)
         %li= link_to 'Goals Review', review_goals_path, class: 'dropdown-item'
@@ -50,7 +50,7 @@
         %li= link_to 'Create Project', new_project_path, class: 'dropdown-item'
       %li= link_to 'Projects', dashboard_projects_path(project: {time_period: 7, start_date: 7.days.ago.strftime('%Y/%m/%d'), end_date: Time.now.strftime('%Y/%m/%d')}, commit: 'Search'), class: 'dropdown-item'
       %li= link_to 'Projects Summary', summary_projects_path(project: {time_period: 7, start_date: 7.days.ago.strftime('%Y/%m/%d'), end_date: Time.now.strftime('%Y/%m/%d')}, commit: 'Search'), class: 'dropdown-item'
-      %li= link_to 'Individual Log', timesheets_path(selected_index: 1, start_date: Time.now.strftime('%Y/%m/%d'), end_date: Time.now.strftime('%Y/%m/%d')), class: 'dropdown-item'
+      %li= link_to 'Individual Log', timesheets_path(time_period: 0, start_date: Time.now.strftime('%Y-%m-%d'), end_date: Time.now.strftime('%Y-%m-%d')), class: 'dropdown-item'
   
   %li{class: (params[:controller].eql?('users/registrations')? 'dropdown active' : 'dropdown')}
     %a.dropdown-toggle#dropdownMenuButton2{"data-bs-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false", :href => "#"}
