@@ -1,0 +1,92 @@
+<%= form_for @timesheet, html: {class: 'row', 'data-controller' => 'timesheet'} do |f| %>
+  <div class="col-sm-6 pe-3">
+    <div class="row mb-3">
+      <div class="col-sm-3 col-form-label">
+        <%= f.label :date, 'Date' %>
+        <span class="text-danger">*</span>
+      </div>
+      <div class="col-sm-9">
+        <%= f.text_field :date, :class => 'form-control date-picker', value: Time.now.strftime("%Y-%m-%d"), :onkeydown => "return false" %>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-sm-3 col-form-label">
+        <%= f.label 'Task' %>
+        <span class="text-danger">*</span>
+      </div>
+      <div class="col-sm-9">
+        <%= f.text_field :task, :class => 'form-control', required: 'true', :maxlength => "128" %>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-sm-3 col-form-label">
+        <%= f.label 'Ticket link' %>
+      </div>
+      <div class="col-sm-9">
+        <%= f.text_field :ticket_link, :class => 'form-control', :maxlength => "128" %>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-sm-3 col-form-label">
+        <%= f.label 'Description' %>
+      </div>
+      <div class="col-sm-9">
+        <%= f.text_area :description,:class => 'form-control' , cols: "30", rows: "10",:maxlength=>"512"%>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 ps-3">
+    <div class="row mb-3">
+      <div class="col-sm-3 col-form-label">
+        <%= f.label 'Project name' %>
+        <span class="text-danger">*</span>
+      </div>
+      <div class="col-sm-9 col-form-label">
+        <%= f.select :project_id, options_for_select(current_user.projects.collect { | project | [project.project_name,  project.id] }), { include_blank: 'select' }, { required: 'true', autofocus: 'true', class: 'form-select', id:'select-current-user-projects' } %>
+        <%= f.select :project_id, options_for_select(@projects.collect { | project | [project.project_name,  project.id] }), { include_blank: 'select' }, { required: 'true', autofocus: 'true', class: 'form-select', id:'select-other-projects', style: 'display: none;' } %>
+        <%= f.label 'Show other projects' %>
+        <input type="checkbox" id="other-projects-cb" />
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-sm-3 col-form-label">
+        <%= f.label 'Ticket number' %>
+      </div>
+      <div class="col-sm-9 col-form-label">
+        <%= f.text_field :ticket_number, :class => 'form-control', :maxlength => "128" %>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-sm-3 col-form-label">
+        <%= f.label 'Hours spent' %>
+        <span class="text-danger">*</span>
+      </div>
+      <div class="col-sm-3">                
+        <% hours = 0..@total_hours %>
+        <%= f.select :hours, options_for_select(hours), { include_blank: 'select' }, { required: 'true', autofocus: 'true', class: 'form-select', :maxlength => "128" } %>
+      </div>  
+      <div class="col-sm-3 col-form-label">
+        <%= f.label 'Minutes spent' %>
+        <span class="text-danger">*</span>
+      </div>
+      <div class="col-sm-3">      
+        <% minutes = (0..@total_mins).map { |n| n*15 } %>
+        <%= f.select :minutes, options_for_select(minutes, 0) , {}, { required: 'true', autofocus: 'true', class: 'form-select', :maxlength => "128" } %>          
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <% if @total_hours != 0 && @total_mins != 0 %>
+        <% if @is_from_attent == 1 %>
+          <%= f.submit "Submit and checkout", class: 'btn btn-warning me-3' %>
+        <% else %>
+          <%= f.submit "Submit", class: 'btn btn-primary me-3'%>
+        <% end %>
+      <% end %>
+
+      <%= f.submit "Submit and add new", class: 'btn btn-info' %>
+    </div>
+  </div>
+<% end %>
