@@ -2,6 +2,6 @@ class Project < ApplicationRecord
   has_many :timesheets
   has_and_belongs_to_many :users
 
-  scope :active, -> { where(status: true).order(name: :asc) }
-  scope :inactive, -> { where(status: false).order(name: :asc) }
+  scope :active, -> { where(is_active: true).order(project_name: :asc) }
+  scope :inactive, -> { where(is_active: false).order(project_name: :asc) }
 end
