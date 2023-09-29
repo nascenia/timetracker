@@ -1,8 +1,9 @@
 -if flash[:warning].present?
   .alert.alert-success
     = flash[:warning]
-%h1
-  %b= @user.name
+
+%h1= @user.name
+%hr
 
 - unless @user.profile_update_json.nil?
   = render partial: 'comparision'

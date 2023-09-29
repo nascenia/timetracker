@@ -1,31 +1,28 @@
-.row
-  .col-md-8
-    .content-show-item
-      %h3
-        %b Basic Information
-        .content-info
-          .row
-            .item-email
-              .col-md-4
-                %h5
-                  Designation
-              .col-md-4
-                %h5
-                  = @user.promotions.last.nil? ? 'Not assigned yet!' : @user.promotions.last.designation
-              - if current_user.has_admin_privilege?
-                .col-md-4
-                  %h5= link_to 'New Promotion', new_employee_promotion_path(@user)
-          .row
-            .item-email
-              .col-md-4
-                %h5
-                  Supervisor/TTF
-              .col-md-4
-                %h5
-                  = @user.ttf.name
-              - if current_user.id.eql?(@user.id)
-                .col-md-4
-                  %h5= link_to 'Change supervisor/ttf', edit_user_registration_path(change_ttf: true)
+.card
+  .card-header
+    Basic Information
+  
+  .card-body
+    .row.mb-3
+      .col-sm-4
+        Designation
+      .col-md-4
+        = @user.promotions.last.nil? ? 'Not assigned yet!' : @user.promotions.last.designation
+        - if current_user.has_admin_privilege?
+          .col-md-4
+            %h5= link_to 'New Promotion', new_employee_promotion_path(@user)
+          
+      .row
+        .item-email
+          .col-md-4
+            %h5
+              Supervisor/TTF
+          .col-md-4
+            %h5
+              = @user.ttf.name
+          - if current_user.id.eql?(@user.id)
+            .col-md-4
+              %h5= link_to 'Change supervisor/ttf', edit_user_registration_path(change_ttf: true)
           
           .row
             .item-email

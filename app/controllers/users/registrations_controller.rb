@@ -58,10 +58,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
       passport: params[:passport]
     }
     resource.update_without_password(file_data) unless params[:name].blank?
-    resource.update_attributes(profile_update_json: hash.to_json, registration_status: User::REGISTRATION_STATUS[:not_approved])
-
-    UserMailer.send_approval_or_rejection_notification_of_employee_registration_to_hr(resource).deliver
-    #UserMailer.send_approval_or_rejection_notification_of_employee_registration_to_ceo(resource).deliver
+    resource.profile_update_json = hash.to_json
+    resource.registration_status = User::REGISTRATION_STATUS[:not_approved]
+    
+    if resource.save
+      UserMailer.send_approval_or_rejection_notification_of_employee_registration_to_hr(resource).deliver
+    end
 
     after_update_path_for(resource)
   end
