@@ -235,8 +235,10 @@ class User < ApplicationRecord
       end
     end
     date_difference = date_difference - total_holiday
-    CSV.generate(options) do |csv|
+
+    CSV.generate(headers: true) do |csv|
       csv << [ 'TTF', 'Projects', 'Name', 'Expected time to spend in office (work days - leave)*9', 'Expected productive hrs(weekly working days- Leave)*8(g)', 'Spent Hours in Office', 'Hours Logged In(i)', 'Hours not accounted for any project(g-i)/g']
+      
       @users.each do |user|
         project_name_total = ''
         expected_time_to_spend_in_office  = date_difference*9
@@ -250,28 +252,27 @@ class User < ApplicationRecord
             total_hours_spend_in_office = total_hours_spend_in_office+attendance_hour_count_by_date_individual.total_hours
           end
         end
+        
         hour_logged_in_timesheet = Timesheet.all.where(:user_id => user[:id],date: options2[:start_date].to_date..options2[:end_date].to_date)
         hour_logged_in_timesheet.each do |hour_logged_in_timesheet_individual|
           tota_hour_logged_local = (hour_logged_in_timesheet_individual.hours*60+hour_logged_in_timesheet_individual.minutes)/60.to_f
           total_hours_logged_in = total_hours_logged_in +tota_hour_logged_local
         end
+
         local_date_diff = 0
-        # if user[:id]== 151
-        #   logger.debug "Break Points"
-        # end
         leave_count_by_date = Leave.all.where(:user_id => user[:id],start_date: options2[:start_date].to_date..options2[:end_date].to_date)
-        # if leave_count_by_date.size >= 1
+
         leave_count_by_date.each do |leave_count_by_date_individual|
           if !leave_count_by_date_individual.end_date.nil?
             if leave_count_by_date_individual.half_day == Leave::FULL_DAY
               if leave_count_by_date_individual.end_date >= options2[:end_date].to_date
                 local_date_diff = ((options2[:end_date].to_date - leave_count_by_date_individual.start_date)+1).to_i
-                logger.info user[:name]+"  END DATE : "+ leave_count_by_date_individual.end_date.to_s+" *******************************   245  "+"  START DATE : "+ leave_count_by_date_individual.start_date.to_s+" ****"+  local_date_diff.to_s
+                # logger.info user[:name]+"  END DATE : "+ leave_count_by_date_individual.end_date.to_s+" *******************************   245  "+"  START DATE : "+ leave_count_by_date_individual.start_date.to_s+" ****"+  local_date_diff.to_s
                 expected_time_to_spend_in_office  = expected_time_to_spend_in_office - (date_difference-local_date_diff)*9
                 expected_productive_time_to_in_office  = expected_productive_time_to_in_office - (date_difference-local_date_diff)*8
               else
                 local_date_diff = ((leave_count_by_date_individual.end_date - leave_count_by_date_individual.start_date)+1).to_i
-                logger.info user[:name]+"  END DATE : "+ leave_count_by_date_individual.end_date.to_s+" *******************************   250  "+"  START DATE : "+ leave_count_by_date_individual.start_date.to_s+" ****"+  local_date_diff.to_s
+                # logger.info user[:name]+"  END DATE : "+ leave_count_by_date_individual.end_date.to_s+" *******************************   250  "+"  START DATE : "+ leave_count_by_date_individual.start_date.to_s+" ****"+  local_date_diff.to_s
                 expected_time_to_spend_in_office  = (date_difference-local_date_diff)*9
                 expected_productive_time_to_in_office  = (date_difference-local_date_diff)*8
               end
@@ -284,48 +285,36 @@ class User < ApplicationRecord
               expected_time_to_spend_in_office  = expected_time_to_spend_in_office-4.5
               expected_productive_time_to_in_office  = expected_productive_time_to_in_office-4
             end
-            # else
-            #   date_diff_db = (leave_count_by_date_individual.end_date - leave_count_by_date_individual.start_date).to_i
-            #   expected_time_to_spend_in_office  = (date_difference-date_diff_db)*9
-            #   expected_productive_time_to_in_office  = (date_difference-date_diff_db)*8
-
           end
         end
-        # end
+
         leave_count_by_date = Leave.all.where(:user_id => user[:id],end_date: options2[:start_date].to_date..options2[:end_date].to_date)
+        
         leave_count_by_date.each do |leave_count_by_date_individual|
           if !leave_count_by_date_individual.start_date.nil?
-            logger.info   user[:name]+"     ***********SIZE****************     " +leave_count_by_date.size.to_s + "     ***************************"
+            # logger.info   user[:name]+"     ***********SIZE****************     " +leave_count_by_date.size.to_s + "     ***************************"
             if leave_count_by_date_individual.half_day == Leave::FULL_DAY
               if leave_count_by_date_individual.start_date < options2[:start_date].to_date
                 local_date_diff = ((  leave_count_by_date_individual.end_date - options2[:start_date].to_date )+1 ).to_i
-                logger.info user[:name]+"  END DATE : "+ leave_count_by_date_individual.end_date.to_s+" *******************************   277  "+"  START DATE : "+ leave_count_by_date_individual.start_date.to_s+" ****"+  local_date_diff.to_s
+                # logger.info user[:name]+"  END DATE : "+ leave_count_by_date_individual.end_date.to_s+" *******************************   277  "+"  START DATE : "+ leave_count_by_date_individual.start_date.to_s+" ****"+  local_date_diff.to_s
                 expected_time_to_spend_in_office  = expected_time_to_spend_in_office - (date_difference-local_date_diff)*9
                 expected_productive_time_to_in_office  = expected_productive_time_to_in_office - (date_difference-local_date_diff)*8
-                # else
-                #   local_date_diff = local_date_diff+((leave_count_by_date_individual.end_date - leave_count_by_date_individual.start_date)+1).to_i
-                #   logger.info  user[:name]+"*******************************   282  "+  local_date_diff.to_s
-                #   expected_time_to_spend_in_office  = (date_difference-local_date_diff)*9
-                #   expected_productive_time_to_in_office  = (date_difference-local_date_diff)*8
               end
             end
+
             if leave_count_by_date_individual.half_day == Leave::FIRST_HALF
               expected_time_to_spend_in_office  = expected_time_to_spend_in_office-4.5
               expected_productive_time_to_in_office  = expected_productive_time_to_in_office-4
             end
+
             if leave_count_by_date_individual.half_day == Leave::SECOND_HALF
               expected_time_to_spend_in_office  = expected_time_to_spend_in_office-4.5
               expected_productive_time_to_in_office  = expected_productive_time_to_in_office-4
             end
-            # else
-            #   date_diff_db = (leave_count_by_date_individual.end_date - leave_count_by_date_individual.start_date).to_i
-            #   expected_time_to_spend_in_office  = (date_difference-date_diff_db)*9
-            #   expected_productive_time_to_in_office  = (date_difference-date_diff_db)*8
-
           end
         end
-        # end
-        if user[:projects].size >0
+
+        if user[:projects].size > 0
           user[:projects].each do |user_project|
             if project_name_total.empty?
               project_name_total =  user_project[:object].project_name.to_s
@@ -407,14 +396,21 @@ class User < ApplicationRecord
       @users << tmp
     end
 
-    CSV.generate(options) do |csv|
-      csv << ['Name','Projects','Hours' ]
-      @users.each do |user|
-        if user[:projects].size >0
+    columns = %w{name projects hours}
 
+    CSV.generate(headers: true) do |csv|
+      csv << columns.map(&:upcase)
+
+      @users.each do |user|
+        unless user[:projects].empty?
           user[:projects].each do |user_project|
-            totaltimeinhour = user_project[:hours].to_i+(user_project[:minutes].to_f/60)
-            csv <<[user[:name],user_project[:object].project_name.to_s,ActionController::Base.helpers.number_with_precision(totaltimeinhour, precision: 2)]
+            totaltimeinhour = user_project[:hours].to_i + (user_project[:minutes].to_f/60)
+            row = []
+            row << user[:name]
+            row << user_project[:object].project_name.to_s
+            row << ActionController::Base.helpers.number_with_precision(totaltimeinhour, precision: 2)
+            
+            csv << row
           end
         end
       end

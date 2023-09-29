@@ -254,7 +254,12 @@ class ProjectsController < ApplicationController
     @users = User.all.order(:email)
 
     respond_to do |format|
-      format.xls { send_data @users.to_csv_timesheet(start_date: params[:start_date], end_date: params[:end_date]) }
+      format.csv { 
+        send_data(
+          User.to_csv_timesheet(start_date: params[:start_date], end_date: params[:end_date]),
+          :disposition => "attachment; filename=#{'weekly_report'.upcase}_#{Time.now.strftime('%Y%m%d%I%M%S')}.csv"
+        ) 
+      }
     end
   end
 
@@ -262,7 +267,7 @@ class ProjectsController < ApplicationController
     timesheets= Timesheet.all
 
     respond_to do |format|
-      format.xls do
+      format.csv do
         send_data timesheets.to_csv_timesheet(start_date: params[:start_date],
                                               end_date: params[:end_date],
                                               project_id: params[:project_id])
@@ -274,7 +279,12 @@ class ProjectsController < ApplicationController
     @users = User.all.order(:email)
 
     respond_to do |format|
-      format.xls { send_data @users.to_csv_monthly_report(start_date: params[:start_date], end_date: params[:end_date]) }
+      format.csv { 
+        send_data(
+          User.to_csv_monthly_report(start_date: params[:start_date], end_date: params[:end_date]),
+          :disposition => "attachment; filename=#{'monthly_report'.upcase}_#{Time.now.strftime('%Y%m%d%I%M%S')}.csv"
+        ) 
+      }
     end
   end
 
