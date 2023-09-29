@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
+  devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks', :registrations => 'users/registrations' }
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   devise_for :admin_users, ActiveAdmin::Devise.config
@@ -10,8 +10,6 @@ Rails.application.routes.draw do
 
   get "promotions/new"
   get "projects/index"
-
-  # devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks", :registrations => 'users/registrations' }
 
   resources :approval_chains do
     member do

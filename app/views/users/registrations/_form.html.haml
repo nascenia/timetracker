@@ -1,148 +1,158 @@
-%h2
-  %b
-    Employee Details
-%br
+%h1= "Employee datails update request of #{current_user.name}"
+%hr
 
-= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: 'form-horizontal', method: :put }) do |f|
-  = devise_error_messages!
-  %fieldset
-    %legend
-      Basic
-      %span.required-asterisk *
-    .form-group
-      = f.label 'Supervisor/TTF', { class: 'col-sm-2 control-label'}
-      .col-sm-10
-        = f.select :ttf_id, User.active.ttf.map{|u| [u.name, u.id]}, {}, { class: 'form-control' , required: true }
-    .form-group
-      = f.label :name, { class: 'col-sm-2 control-label'}
-      .col-sm-10
-        = f.text_field :name, { class: 'form-control' , required: true}
-    .form-group
-      = f.label :date_of_birth, { class: 'col-sm-2 control-label'}
-      .col-sm-10
-        = f.text_field :date_of_birth, { class: 'form-control date-picker' , required: true}
-    .form-group
-      = f.label :blood_group, { class: 'col-sm-2 control-label'}
-      .col-sm-10
-        = f.select :blood_group, User::BLOOD_GROUPS, {}, { class: 'form-control' , required: true}
-    .form-group
-      = f.label :joining_date, { class: 'col-sm-2 control-label' }
-      .col-sm-10
-        = f.text_field :joining_date, { class: 'form-control date-picker' , required: true}
-  %br
-  %fieldset
-    %legend
-      Contact Information
-      %span.required-asterisk *
-    .form-group
-      = f.label :personal_email, { class: 'col-sm-2 control-label'}
-      .col-sm-10
-        = f.email_field :personal_email, { class: 'form-control' , required: true,  pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$', title: 'Enter a valid email address!' }
-    .form-group
-      = f.label :present_address, { class: 'col-sm-2 control-label'}
-      .col-sm-10
-        = f.text_area :present_address, { class: 'form-control', required: true}
-    .form-group
-      = f.label :mobile_number, { class: 'col-sm-2 control-label'}
-      .col-sm-10
-        = f.text_field :mobile_number, { class: 'form-control', required: true, :pattern => '[0][1][3-9][0-9]{8}', :title => 'Enter a valid mobile number!'}
-    .form-group
-      = f.label :alternate_contact, { class: 'col-sm-2 control-label'}
-      .col-sm-10
-        = f.text_field :alternate_contact, { class: 'form-control', required: false, :pattern => '[0][1][3-9][0-9]{8}', :title => 'Enter a valid mobile number!'}
-    .form-group
-      = f.label :permanent_address, { class: 'col-sm-2 control-label'}
-      .col-sm-10
-        = f.text_area :permanent_address, { class: 'form-control', required: true}
-  %br
-  %fieldset
-    %legend
-      Last Degree
-      %span.required-asterisk *
-    .form-group
-      = f.label :last_degree, 'Name', { class: 'col-sm-2 control-label'}
-      .col-sm-10
-        = f.text_field :last_degree, { class: 'form-control', required: true}
-    .form-group
-      = f.label :last_university, 'University', { class: 'col-sm-2 control-label'}
-      .col-sm-10
-        = f.text_field :last_university, { class: 'form-control', required: true}
-    .form-group
-      = f.label :passing_year, 'Year', { class: 'col-sm-2 control-label'}
-      .col-sm-10
-        = f.text_field :passing_year, { class: 'form-control', required: true, :pattern => '[1-2][0-9]{3}', :title => 'Enter a valid year!'}
-  %br
-  %fieldset
-    %legend
-      Emergency Contact Person
-      %span.required-asterisk *
-    .form-group
-      = f.label :emergency_contact_person_name, 'Name', { class: 'col-sm-2 control-label'}
-      .col-sm-10
-        = f.text_field :emergency_contact_person_name, { class: 'form-control', required: true}
-    .form-group
-      = f.label :emergency_contact_person_relation, 'Relation', { class: 'col-sm-2 control-label'}
-      .col-sm-10
-        = f.text_field :emergency_contact_person_relation, { class: 'form-control', required: true}
-    .form-group
-      = f.label :emergency_contact_person_number, 'Number', { class: 'col-sm-2 control-label'}
-      .col-sm-10
-        = f.text_field :emergency_contact_person_number, { class: 'form-control', required: true, :pattern => '[0][1][3-9][0-9]{8}', :title => 'Enter a valid mobile number!'}
-  %br
-  %fieldset
-    %legend DBBL Bank Information (if exists)
-    .form-group
-      = f.label :bank_account_no, 'Account Number', { class: 'col-sm-2 control-label'}
-      .col-sm-10
-        = f.text_field :bank_account_no, { class: 'form-control'}
-  %br
-  %fieldset
-    %legend Upload Photo and Document
-    .form-group
-      = f.label :avatar, 'Image' , { class: 'col-sm-2 control-label'} do
-        = 'Image'
-        %span.required-asterisk *
-      - if f.object.avatar.url.present?
-        .col-sm-6
-          = f.file_field :avatar, { class: 'form-control', required: false}
-          %br/
-        .col-sm-4
-          .img-responsive.profile_image
-            = image_tag f.object.avatar.url(:medium)
-      - else
-        .col-sm-10
-          = f.file_field :avatar, { onchange: 'validateAvatar(this);', data: { max_file_size: 50.megabytes },  class: 'form-control', required: true}
-    .form-group
-      = f.label :resume, 'CV' , { class: 'col-sm-2 control-label' } do
-        = 'CV'
-        %span.required-asterisk *
-      .col-sm-10
-        - if @user.resume.present?
-          = link_to 'Current CV', @user.resume.url, { class: 'link', target: :_blank}
-          %br
-            = f.file_field :resume, { onchange: 'validateFiles(this);', data: { max_file_size: 50.megabytes },  class: 'form-control', required: false}
-        - else
-          = f.file_field :resume, { onchange: 'validateFiles(this);', data: { max_file_size: 50.megabytes },  class: 'form-control', required: true}
-    .form-group
-      = f.label :national_id, 'National ID / Birth Certificate' , { class: 'col-sm-2 control-label'} do
-        = 'National ID / Birth Certificate'
-        %span.required-asterisk *
-      .col-sm-10
-        - if @user.national_id.present?
-          = link_to 'Current NID / Birth Certificate', @user.national_id.url, { class: 'link', target: :_blank}
-          %br  
-            = f.file_field :national_id, { onchange: 'validateFiles(this);', data: { max_file_size: 50.megabytes },  class: 'form-control'}
-        - else
-          = f.file_field :national_id, { onchange: 'validateFiles(this);', data: { max_file_size: 50.megabytes },  class: 'form-control', required: true}
-    .form-group
-      = f.label :passport, 'Passport' , { class: 'col-sm-2 control-label'} do
-        = 'Passport'
-      .col-sm-10
-        - if @user.passport.present?
-          = link_to 'Current Passport', @user.passport.url, { class: 'link', target: :_blank}   
-          %br        
-        = f.file_field :passport, { onchange: 'validateFiles(this);', data: { max_file_size: 50.megabytes },  class: 'form-control'}
-  %br
-  .form-group
-    .col-sm-2.col-sm-10
-      = f.submit 'Submit',  class: 'btn btn-success'
+.row
+  = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: '', method: :put }) do |f|
+    = devise_error_messages!
+    
+    .card.mb-3
+      .card-header
+        Basic information
+        %span.text-danger *
+      .card-body
+        .row.mb-3
+          = f.label 'Supervisor/TTF', { class: 'col-sm-2 col-form-label'}
+          .col-sm-10
+            = f.select :ttf_id, User.active.ttf.map{|u| [u.name, u.id]}, {}, { class: 'form-select' , required: true }
+        .row.mb-3
+          = f.label :name, { class: 'col-sm-2 col-form-label' }
+          .col-sm-10
+            = f.text_field :name, { class: 'form-control' , required: true }
+        .row.mb-3
+          = f.label :date_of_birth, { class: 'col-sm-2 col-form-label' }
+          .col-sm-10
+            = f.text_field :date_of_birth, { class: 'form-control date-picker' , required: true}
+        .row.mb-3
+          = f.label :blood_group, { class: 'col-sm-2 col-form-label' }
+          .col-sm-10
+            = f.select :blood_group, User::BLOOD_GROUPS, {}, { class: 'form-control' , required: true}
+        .row.mb-3
+          = f.label :joining_date, { class: 'col-sm-2 col-form-label' }
+          .col-sm-10
+            = f.text_field :joining_date, { class: 'form-control date-picker' , required: true}
+    
+    .card.mb-3
+      .card-body
+        Contact information
+        %span.text-danger *
+
+      .card-body
+        .row.mb-3
+          = f.label :personal_email, { class: 'col-sm-2 col-form-label' }
+          .col-sm-10
+            = f.email_field :personal_email, { class: 'form-control' , required: true,  pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$', title: 'Enter a valid email address!' }
+        .row.mb-3
+          = f.label :present_address, { class: 'col-sm-2 col-form-label' }
+          .col-sm-10
+            = f.text_area :present_address, { class: 'form-control', required: true }
+        .row.mb-3
+          = f.label :mobile_number, { class: 'col-sm-2 col-form-label' }
+          .col-sm-10
+            = f.text_field :mobile_number, { class: 'form-control', required: true, :pattern => '[0][1][3-9][0-9]{8}', :title => 'Enter a valid mobile number!' }
+        .row.mb-3
+          = f.label :alternate_contact, { class: 'col-sm-2 col-form-label' }
+          .col-sm-10
+            = f.text_field :alternate_contact, { class: 'form-control', required: false, :pattern => '[0][1][3-9][0-9]{8}', :title => 'Enter a valid mobile number!' }
+        .row.mb-3
+          = f.label :permanent_address, { class: 'col-sm-2 col-form-label' }
+          .col-sm-10
+            = f.text_area :permanent_address, { class: 'form-control', required: true }
+    
+    .card.mb-3
+      .card-header
+        Last degree
+        %span.text-danger *
+      .card-body
+        .row.mb-3
+          = f.label :last_degree, 'Name', { class: 'col-sm-2 col-form-label' }
+          .col-sm-10
+            = f.text_field :last_degree, { class: 'form-control', required: true }
+        .row.mb-3
+          = f.label :last_university, 'University', { class: 'col-sm-2 col-form-label' }
+          .col-sm-10
+            = f.text_field :last_university, { class: 'form-control', required: true }
+        .row.mb-3
+          = f.label :passing_year, 'Year', { class: 'col-sm-2 col-form-label' }
+          .col-sm-10
+            = f.text_field :passing_year, { class: 'form-control', required: true, :pattern => '[1-2][0-9]{3}', :title => 'Enter a valid year!' }
+    
+    .card.mb-3
+      .card-header
+        Emergency contact person
+        %span.text-danger *
+
+      .card-body
+        .row.mb-3
+          = f.label :emergency_contact_person_name, 'Name', { class: 'col-sm-2 col-form-label' }
+          .col-sm-10
+            = f.text_field :emergency_contact_person_name, { class: 'form-control', required: true }
+        .row.mb-3
+          = f.label :emergency_contact_person_relation, 'Relation', { class: 'col-sm-2 col-form-label' }
+          .col-sm-10
+            = f.text_field :emergency_contact_person_relation, { class: 'form-control', required: true }
+        .row.mb-3
+          = f.label :emergency_contact_person_number, 'Number', { class: 'col-sm-2 col-form-label' }
+          .col-sm-10
+            = f.text_field :emergency_contact_person_number, { class: 'form-control', required: true, :pattern => '[0][1][3-9][0-9]{8}', :title => 'Enter a valid mobile number!'}
+    
+    .card.mb-3
+      .card-header
+        DBBL Bank Information (if exists)
+      
+      .card-body
+        .row.mb-3
+          = f.label :bank_account_no, 'Account Number', { class: 'col-sm-2 col-form-label' }
+          .col-sm-10
+            = f.text_field :bank_account_no, { class: 'form-control' }
+    
+    .card.mb-3
+      .card-header
+        Upload photo and document
+      
+      .card-body
+        .row.mb-3
+          = f.label :avatar, 'Image' , { class: 'col-sm-2 col-form-label' } do
+            = 'Image'
+            %span.text-danger *
+          - if f.object.avatar.url.present?
+            .col-sm-6
+              = f.file_field :avatar, { class: 'form-control', required: false }
+            .col-sm-4
+              .img-responsive.profile_image
+                = image_tag f.object.avatar.url(:medium)
+          - else
+            .col-sm-10
+              = f.file_field :avatar, { onchange: 'validateAvatar(this);', data: { max_file_size: 50.megabytes },  class: 'form-control', required: true}
+        .row.mb-3
+          = f.label :resume, 'CV' , { class: 'col-sm-2 col-form-label' } do
+            = 'CV'
+            %span.text-danger *
+          .col-sm-10
+            - if @user.resume.present?
+              = link_to 'Current CV', @user.resume.url, { class: 'link', target: :_blank}
+              %br
+                = f.file_field :resume, { onchange: 'validateFiles(this);', data: { max_file_size: 50.megabytes },  class: 'form-control', required: false}
+            - else
+              = f.file_field :resume, { onchange: 'validateFiles(this);', data: { max_file_size: 50.megabytes },  class: 'form-control', required: true}
+        .row.mb-3
+          = f.label :national_id, 'National ID / Birth Certificate' , { class: 'col-sm-2 col-form-label'} do
+            = 'National ID / Birth Certificate'
+            %span.text-danger *
+          .col-sm-10
+            - if @user.national_id.present?
+              = link_to 'Current NID / Birth certificate', @user.national_id.url, { class: 'link', target: :_blank}
+              %br  
+                = f.file_field :national_id, { onchange: 'validateFiles(this);', data: { max_file_size: 50.megabytes },  class: 'form-control'}
+            - else
+              = f.file_field :national_id, { onchange: 'validateFiles(this);', data: { max_file_size: 50.megabytes },  class: 'form-control', required: true}
+        .row.mb-3
+          = f.label :passport, 'Passport', { class: 'col-sm-2 col-form-label' } do
+            = 'Passport'
+          .col-sm-10
+            - if @user.passport.present?
+              = link_to 'Current Passport', @user.passport.url, { class: 'link', target: :_blank}   
+              %br        
+            = f.file_field :passport, { onchange: 'validateFiles(this);', data: { max_file_size: 50.megabytes },  class: 'form-control'}
+    .row.mb-3
+      .col-sm-2.col-sm-10
+        = f.submit 'Submit',  class: 'btn btn-success'
