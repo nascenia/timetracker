@@ -15,4 +15,21 @@ ActiveAdmin.register Timesheet do
   #   permitted
   # end
   
+  index do
+    column :id
+    column :task
+    column :description
+    column :date
+    column :hours
+    column :minutes
+    column  'Project' do |timesheet|
+      timesheet.project.present? ? timesheet.project.project_name : 'n/a'
+    end
+    column  'User' do |timesheet|
+      timesheet.user.present? ? timesheet.user.name : 'n/a'
+    end
+    column :created_at
+    column :updated_at
+    actions
+  end
 end

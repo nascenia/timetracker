@@ -5,7 +5,7 @@ ActiveAdmin.register KpiTemplate do
   #
   # Uncomment all parameters which should be permitted for assignment
   #
-  # permit_params :title, :description, :published
+  permit_params :title, :description, :published
   #
   # or
   #
@@ -15,4 +15,15 @@ ActiveAdmin.register KpiTemplate do
   #   permitted
   # end
   
+  action_item :kpi_item, only: :show do
+    link_to 'New KPI Item', new_admin_kpi_item_path
+  end
+
+  show do
+    default_main_content
+
+    div do
+      render 'kpi_item', { kpi: kpi_template }
+    end
+  end
 end

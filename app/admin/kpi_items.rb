@@ -5,7 +5,7 @@ ActiveAdmin.register KpiItem do
   #
   # Uncomment all parameters which should be permitted for assignment
   #
-  # permit_params :title, :description, :kpi_template_id
+  permit_params :title, :description, :kpi_template_id
   #
   # or
   #
@@ -15,4 +15,25 @@ ActiveAdmin.register KpiItem do
   #   permitted
   # end
   
+  form do |f|
+    f.inputs "KPI items" do
+      f.input :kpi_template
+      f.input :title
+      f.input :description
+    end
+    f.actions
+  end
+
+  index do
+    column  :id
+    column  'KPI Template' do |kpi_item|
+      "#{kpi_item.kpi_template.title}"
+    end
+    column  :title
+    column  :description
+    
+    column  :created_at
+    column  :updated_at
+    actions
+  end
 end
