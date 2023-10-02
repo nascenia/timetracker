@@ -206,7 +206,7 @@ class ProjectsController < ApplicationController
   def create
     if current_user.has_admin_privilege?
       @project = Project.create(project_params)
-      user_ids = params[:user_ids].split(',')
+      user_ids = params[:project][:users].reject{|id| id == "0"}
       user_ids.each do |uid|
         u = User.find uid
         @project.users << u
