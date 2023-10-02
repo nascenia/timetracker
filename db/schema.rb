@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_02_113212) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_02_123108) do
   create_table "active_admin_comments", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body", size: :medium
@@ -315,6 +315,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_02_113212) do
     t.string "meta_viewport"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "fav_icon"
   end
 
   create_table "timesheets", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|

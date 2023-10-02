@@ -5,7 +5,9 @@ ActiveAdmin.register Setting do
   #
   # Uncomment all parameters which should be permitted for assignment
   #
-  permit_params :app_name, :organization_name, :organization_summary, :organization_logo, :organization_web_url, :copyright, :meta_author, :meta_title, :meta_description, :meta_keywords, :meta_viewport
+  permit_params :app_name, :organization_name, :organization_summary, :organization_logo, 
+                :organization_web_url, :fav_icon, :copyright, :meta_author, :meta_title, 
+                :meta_description, :meta_keywords, :meta_viewport
   #
   # or
   #
