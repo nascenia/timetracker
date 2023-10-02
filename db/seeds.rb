@@ -6,30 +6,30 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-#Salaat.create(waqt: 'Zohr', time: '1:30')
-#Salaat.create(waqt: 'Asor', time: '4:15')
-#Salaat.create(waqt: 'Magrib', time: '5:30')
-
-
 if HolidayScheme.count.zero?
+  p 'Creating holiday scheme ...'
   HolidayScheme.create([
     { name: 'Nascenia General', active: true, leave_year_id: 1 },
     { name: 'GJ and Biyeta', active: true, leave_year_id: 1 },
   ])
+  p 'Done'
 end 
 
 if Weekend.count.zero?
+  p 'Creating weekend...'
   Weekend.create([
     { name: 'Nascenia Core: Sat & Sun', off_days: nil },
     { name: 'Admin: Sat', off_days: nil },
     { name: 'Biyeta: Thu & Fri', off_days: nil }
   ])
+  p 'Done'
 end
 
 #Create present year and mark it as present
 if LeaveYear.count.zero?
-  p 'Creating LeaveYear...'
+  p 'Creating leave year...'
   LeaveYear.find_or_create_by(year: Date.today.year.to_s, present: true)
+  p 'Done'
 end
 
 if Designation.count.zero?
@@ -40,6 +40,7 @@ if Designation.count.zero?
     { team: 'Developer', title: 'Software Engineer', description: 'Software engineer', published: true },
     { team: 'Developer', title: 'Senior Software Engineer', description: 'Senior software engineer', published: true }
   ])
+  p 'Done'
 end
 
 if GoalCategory.count.zero?

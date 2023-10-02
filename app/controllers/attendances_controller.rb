@@ -5,8 +5,6 @@ class AttendancesController < ApplicationController
   layout 'timetracker'
 
   def index
-    # user = User.all.active.includes(:attendances).where('checkin_date >= ? AND checkin_date <= ? AND parent_id IS NULL',
-    # Date.today.at_beginning_of_month.strftime('%Y-%m-%d'), Date.today.strftime('%Y-%m-%d')).references(:attendances)
     @users = User.all.active
 
     respond_to do |format|
