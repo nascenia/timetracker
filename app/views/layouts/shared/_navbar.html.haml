@@ -3,8 +3,6 @@
     = link_to 'Monthly TT', attendances_path, class: 'nav-link'
   %li.nav-item{class: (params[:controller].eql?('users') || params[:controller].eql?('leaves') || params[:controller].eql?('leave_tracker')  || params[:controller].eql?('approval_chains')  || params[:controller].eql?('weekends')  || params[:controller].eql?('holiday_schemes')  || params[:controller].eql?('super_admin_leaves') ? 'active' : '')}
     = link_to 'My Leave', leave_tracker_path(current_user), class: 'nav-link'
-  %li.nav-item{class: (params[:controller].eql?('salaat_times') ? 'active' : '')}
-    = link_to 'Salaat time', salaat_times_path, class: 'nav-link'
 
   - if current_user.has_admin_privilege?
     %li.nav-item

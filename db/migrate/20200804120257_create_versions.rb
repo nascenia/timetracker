@@ -9,9 +9,9 @@ class CreateVersions < ActiveRecord::Migration[7.0]
   TEXT_BYTES = 1_073_741_823
 
   def change
-    create_table :versions, { options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci" } do |t|
-      t.string   :item_type, {:null=>false, :limit=>191}
-      t.integer  :item_id,   null: false
+    create_table :versions, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci" do |t|
+      t.string   :item_type, null: false, limit: 191
+      t.bigint   :item_id,   null: false
       t.string   :event,     null: false
       t.string   :whodunnit
       t.text     :object, limit: TEXT_BYTES
@@ -25,10 +25,12 @@ class CreateVersions < ActiveRecord::Migration[7.0]
       # the `created_at` column.
       # (https://dev.mysql.com/doc/refman/5.6/en/fractional-seconds.html)
       #
-      # MySQL users should also upgrade to rails 4.2, which is the first
+      # MySQL users should also upgrade to at least rails 4.2, which is the first
       # version of ActiveRecord with support for fractional seconds in MySQL.
       # (https://github.com/rails/rails/pull/14359)
       #
+      # MySQL users should use the following line for `created_at`
+      # t.datetime :created_at, limit: 6
       t.datetime :created_at
     end
     add_index :versions, %i(item_type item_id)

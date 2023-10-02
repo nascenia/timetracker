@@ -10,9 +10,6 @@
 #Salaat.create(waqt: 'Asor', time: '4:15')
 #Salaat.create(waqt: 'Magrib', time: '5:30')
 
-unless User.exists?(email: 'masud@nascenia.com')
-  User.create(name: 'Masud', email: "masud@nascenia.com", password: 'Admin@123', password_confirmation: 'Admin@123')
-end
 
 if HolidayScheme.count.zero?
   HolidayScheme.create([
@@ -52,5 +49,40 @@ if GoalCategory.count.zero?
     { title: 'Develop skills',              description: '', published: true },
     { title: 'Technical session',           description: '', published: true }
   ])
+  p 'Done'
+end
+
+if KpiTemplate.count.zero?
+  p 'Creating KPI template...'
+  KpiTemplate.create([
+    { title: 'Junior software engineer', description: 'for junior software engineers', published: true },
+    { title: 'Accounts and finance', description: 'For accounts and finance department', published: true },
+    { title: 'Human resource', description: 'For human resource team', published: true }
+  ])
+  p 'Done'
+end
+
+if ApprovalPath.count.zero?
+  p 'Creating approval path...'
+  ApprovalPath.create([
+    { name: 'CEO'},
+    { name: 'Business Development' },
+    { name: 'Human resource' }
+  ])
+  p 'Done'
+end
+
+unless User.exists?(email: 'masud@nascenia.com')
+  p 'Creating user...'
+  user = User.new(
+    name: 'Masud', 
+    email: "masud@nascenia.com", 
+    password: 'Admin@123', 
+    password_confirmation: 'Admin@123', 
+    employee_id: 'A0001')
+  user.holiday_scheme = HolidayScheme.first
+  user.approval_path = ApprovalPath.first
+  user.kpi_template = KpiTemplate.first
+  user.save!
   p 'Done'
 end

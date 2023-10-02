@@ -19,7 +19,7 @@ class DashboardController < ApplicationController
       end
     else
       flash[:warning] = 'Please fill up all your details to checking in.'
-      redirect_to edit_user_registration_path(current_user)
+      redirect_to edit_user_registration_path
     end
   end
 end

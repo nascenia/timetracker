@@ -1,8 +1,8 @@
 class User < ApplicationRecord
   belongs_to :approval_path
-  belongs_to :weekend
+  belongs_to :weekend, optional: true
   belongs_to :holiday_scheme
-  belongs_to :ttf, class_name: 'User'
+  belongs_to :ttf, class_name: 'User', optional: true
   belongs_to :kpi_template
   
   has_one :team, class_name: 'User', foreign_key: 'ttf_id'
@@ -574,6 +574,8 @@ class User < ApplicationRecord
 
   def update_pre_register_info
     pr = PreRegistration.find_by(company_email: self.email)
+    return if pr.nil?
+    
     pr.user = self
     pr.step_no = 3
     pr.save
