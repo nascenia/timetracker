@@ -1,216 +1,217 @@
 - pu_json = JSON.parse(@user.profile_update_json)
 
-.card.mb-3
-  .card-header 
-    %h2.fs-5 Basic information
+.row
+  .col-sm-8 
+    .card.mb-3
+      .card-header 
+        %h2.fs-5 Basic information
 
-  %table.table.table-bordered
-    - if current_user.has_admin_privilege?
-      %tr
-        %th Designation
-        %td= "-"
-    %tr
-      %th Photo
-      %td= image_tag @user.avatar.url(:large)
-    %tr
-      %th Supervisor/TTF
-      %td
-        - if pu_json['ttf_id'].present? && !@user.ttf_id.eql?(pu_json['ttf_id'].to_i)
-          %span= @user.ttf.name
-          %span= "->"
-          %span.text-danger= User.find(pu_json['ttf_id'].to_i).name
-        - else
-          = @user.ttf.name
-
-        - if current_user.id.eql?(@user.id)
-          = link_to 'Change supervisor/ttf', edit_user_registration_path(change_ttf: true)
-    %tr
-      %th Email
-      %td= @user.email
-    %tr
-      %th Mobile
-      %td
-        %a{:href =>"Tel:#{@user.mobile_number}"}
-          - if pu_json['mobile_number'].present? && !@user.mobile_number.eql?(pu_json['mobile_number'])
-            %span= @user.mobile_number
-            %span= "->"
-            %span.text-danger= pu_json['mobile_number']
-          - else
-            = @user.mobile_number
-          
-    %tr
-      %th University
-      %td
-        - if pu_json['last_university'].present? && !@user.last_university.eql?(pu_json['last_university'])
-          %span= @user.last_university
-          %span= "->"
-          %span.text-danger= pu_json['last_university']
-        - else
-          = @user.last_university
-    %tr
-      %th Last Degree
-      %td
-        - if pu_json['last_degree'].present? && !@user.last_degree.eql?(pu_json['last_degree'])
-          %span= @user.last_degree
-          %span= "->"
-          %span.text-danger= pu_json['last_degree']
-        - else
-          = @user.last_degree
-    %tr
-      %th Passing Year
-      %td
-        - if pu_json['passing_year'].present? && !@user.passing_year.eql?(pu_json['passing_year'])
-          %span= @user.passing_year
-          %span= "->"
-          %span.text-danger= pu_json['passing_year']
-        - else
-          = @user.passing_year
-    %tr
-      %th Blood Group
-      %td
-        - if pu_json['blood_group'].present? && !@user.blood_group.eql?(pu_json['blood_group'])
-          %span= @user.blood_group
-          %span= "->"
-          %span.text-danger= pu_json['blood_group']
-        - else
-          = @user.blood_group
-    %tr
-      %th Joining Date
-      %td
-        - if pu_json['joining_date'].present? && !@user.joining_date.strftime("%Y-%m-%d").eql?(pu_json['joining_date'])
-          %span= @user.joining_date
-          %span= "->"
-          %span.text-danger= pu_json['joining_date']
-        - else
-          = @user.joining_date
-
-- if current_user.has_admin_privilege?
-  .card.mb-3
-    .card-header
-      %h2.fs-5 Detail Information
-    
-    %table.table.table-bordered
-      %tr 
-        %th Alternate Contact
-        %td
-          %a{:href =>"Tel:#{@user.alternate_contact}"}
-          - if pu_json['alternate_contact'].present? && !@user.alternate_contact.eql?(pu_json['alternate_contact'])
-            %span= @user.alternate_contact
-            %span= "->"
-            %span.text-danger= pu_json['alternate_contact']
-          - else
-            = @user.alternate_contact
-      %tr 
-        %th Personal Mail
-        %td
-          - if pu_json['personal_email'].present? && !@user.personal_email.eql?(pu_json['personal_email'])
-            %span= @user.personal_email
-            %span= "->"
-            %span.text-danger= pu_json['personal_email']
-          - else
-            = @user.personal_email
-      %tr 
-        %th Emergency Contact
-        %td
-          - if pu_json['emergency_contact_person_name'].present? && !@user.emergency_contact_person_name.eql?(pu_json['emergency_contact_person_name'])
-            %span= @user.emergency_contact_person_name
-            %span= "->"
-            %span.text-danger= pu_json['emergency_contact_person_name']
-          - else
-            = @user.emergency_contact_person_name
-      %tr 
-        %th Relation
-        %td
-          - if pu_json['emergency_contact_person_relation'].present? && !@user.emergency_contact_person_relation.eql?(pu_json['emergency_contact_person_relation'])
-            %span= @user.emergency_contact_person_relation
-            %span= "->"
-            %span.text-danger= pu_json['emergency_contact_person_relation']
-          - else
-            = @user.emergency_contact_person_relation
-      %tr 
-        %th Mobile
-        %td
-          %a{:href =>"Tel:#{@user.emergency_contact_person_number}"}
-          - if pu_json['emergency_contact_person_number'].present? && !@user.emergency_contact_person_number.eql?(pu_json['emergency_contact_person_number'])
-            %span= @user.emergency_contact_person_number
-            %span= "->"
-            %span.text-danger= pu_json['emergency_contact_person_number']
-          - else
-            = @user.emergency_contact_person_number
-      %tr 
-        %th Present Address
-        %td
-          - if pu_json['present_address'].present? && !@user.present_address.eql?(pu_json['present_address'])
-            %span= @user.present_address
-            %span= "->"
-            %span.text-danger= pu_json['present_address']
-          - else
-            = @user.present_address
-      %tr 
-        %th Permanent Address
-        %td
-          - if pu_json['permanent_address'].present? && !@user.permanent_address.eql?(pu_json['permanent_address'])
-            %span= @user.permanent_address
-            %span= "->"
-            %span.text-danger= pu_json['permanent_address']
-          - else
-            = @user.permanent_address
-      %tr 
-        %th Date of Birth
-        %td
-          - if pu_json['date_of_birth'].present? && @user.date_of_birth.present? && !@user.date_of_birth.strftime("%Y-%m-%d").eql?(pu_json['date_of_birth'])
-            %span= @user.date_of_birth
-            %span= "->"
-            %span.text-danger= pu_json['date_of_birth']
-          - else
-            = @user.date_of_birth
-  
-  .card.mb-3
-    .card-header
-      %h2.fs-5 Document
-
-    %table.table.table-bordered
-      %tr
-        %th Bank Account No
-        %td
-          - if @user.bank_account_no.present?
-            - if pu_json['bank_account_no'].present? && !@user.bank_account_no.eql?(pu_json['bank_account_no'])
-              %span= @user.bank_account_no
+      %table.table.table-bordered
+        - if current_user.has_admin_privilege?
+          %tr
+            %th{width: '40%'} Designation
+            %td= "-"
+        %tr
+          %th{width: '40%'} Supervisor/TTF
+          %td
+            - if pu_json['ttf_id'].present? && !@user.ttf_id.eql?(pu_json['ttf_id'].to_i)
+              %span= @user.ttf.name
               %span= "->"
-              %span.text-danger= pu_json['bank_account_no']
+              %span.text-danger= User.find(pu_json['ttf_id'].to_i).name
             - else
-              = @user.bank_account_no
-          - else
-            N/A
-      %tr
-        %th NDA
-        %td
-          - if @nda_doc.present?
-            = link_to 'View', @nda_doc.url, {class: 'link', target: :_blank}
-          - else
-            N/A
-      %tr
-        %th CV
-        %td
-          - if @user.resume.present?
-            = link_to 'View', @user.resume.url, {class: 'link', target: :_blank}
-          - else
-            N/A
-      %tr
-        %th National ID/ Birth Certificate
-        %td
-          - if @user.national_id.present?
-            = link_to 'View', @user.national_id.url, {class: 'link', target: :_blank}
-          - else
-            N/A
-      %tr
-        %th Passport
-        %td
-          - if @user.passport.present?
-            = link_to 'View', @user.passport.url, {class: 'link', target: :_blank}
-          - else
-            N/A
-  
+              = @user.ttf.name
+
+            - if current_user.id.eql?(@user.id)
+              = link_to 'Change supervisor/ttf', edit_user_registration_path(change_ttf: true)
+        %tr
+          %th{width: '40%'} Email
+          %td= @user.email
+        %tr
+          %th Mobile
+          %td
+            %a{:href =>"Tel:#{@user.mobile_number}"}
+              - if pu_json['mobile_number'].present? && !@user.mobile_number.eql?(pu_json['mobile_number'])
+                %span= @user.mobile_number
+                %span= "->"
+                %span.text-danger= pu_json['mobile_number']
+              - else
+                = @user.mobile_number
+              
+        %tr
+          %th{width: '40%'} University
+          %td
+            - if pu_json['last_university'].present? && !@user.last_university.eql?(pu_json['last_university'])
+              %span= @user.last_university
+              %span= "->"
+              %span.text-danger= pu_json['last_university']
+            - else
+              = @user.last_university
+        %tr
+          %th{width: '40%'} Last Degree
+          %td
+            - if pu_json['last_degree'].present? && !@user.last_degree.eql?(pu_json['last_degree'])
+              %span= @user.last_degree
+              %span= "->"
+              %span.text-danger= pu_json['last_degree']
+            - else
+              = @user.last_degree
+        %tr
+          %th{width: '40%'} Passing Year
+          %td
+            - if pu_json['passing_year'].present? && !@user.passing_year.eql?(pu_json['passing_year'])
+              %span= @user.passing_year
+              %span= "->"
+              %span.text-danger= pu_json['passing_year']
+            - else
+              = @user.passing_year
+        %tr
+          %th{width: '40%'} Blood Group
+          %td
+            - if pu_json['blood_group'].present? && !@user.blood_group.eql?(pu_json['blood_group'])
+              %span= @user.blood_group
+              %span= "->"
+              %span.text-danger= pu_json['blood_group']
+            - else
+              = @user.blood_group
+        %tr
+          %th{width: '40%'} Joining Date
+          %td
+            - if pu_json['joining_date'].present? && !@user.joining_date.strftime("%Y-%m-%d").eql?(pu_json['joining_date'])
+              %span= @user.joining_date
+              %span= "->"
+              %span.text-danger= pu_json['joining_date']
+            - else
+              = @user.joining_date
+
+    - if current_user.has_admin_privilege?
+      .card.mb-3
+        .card-header
+          %h2.fs-5 Detail Information
+        
+        %table.table.table-bordered
+          %tr 
+            %th{width: '40%'} Alternate Contact
+            %td
+              %a{:href =>"Tel:#{@user.alternate_contact}"}
+              - if pu_json['alternate_contact'].present? && !@user.alternate_contact.eql?(pu_json['alternate_contact'])
+                %span= @user.alternate_contact
+                %span= "->"
+                %span.text-danger= pu_json['alternate_contact']
+              - else
+                = @user.alternate_contact
+          %tr 
+            %th{width: '40%'} Personal Mail
+            %td
+              - if pu_json['personal_email'].present? && !@user.personal_email.eql?(pu_json['personal_email'])
+                %span= @user.personal_email
+                %span= "->"
+                %span.text-danger= pu_json['personal_email']
+              - else
+                = @user.personal_email
+          %tr 
+            %th{width: '40%'} Emergency Contact
+            %td
+              - if pu_json['emergency_contact_person_name'].present? && !@user.emergency_contact_person_name.eql?(pu_json['emergency_contact_person_name'])
+                %span= @user.emergency_contact_person_name
+                %span= "->"
+                %span.text-danger= pu_json['emergency_contact_person_name']
+              - else
+                = @user.emergency_contact_person_name
+          %tr 
+            %th{width: '40%'} Relation
+            %td
+              - if pu_json['emergency_contact_person_relation'].present? && !@user.emergency_contact_person_relation.eql?(pu_json['emergency_contact_person_relation'])
+                %span= @user.emergency_contact_person_relation
+                %span= "->"
+                %span.text-danger= pu_json['emergency_contact_person_relation']
+              - else
+                = @user.emergency_contact_person_relation
+          %tr 
+            %th{width: '40%'} Mobile
+            %td
+              %a{:href =>"Tel:#{@user.emergency_contact_person_number}"}
+              - if pu_json['emergency_contact_person_number'].present? && !@user.emergency_contact_person_number.eql?(pu_json['emergency_contact_person_number'])
+                %span= @user.emergency_contact_person_number
+                %span= "->"
+                %span.text-danger= pu_json['emergency_contact_person_number']
+              - else
+                = @user.emergency_contact_person_number
+          %tr 
+            %th{width: '40%'} Present Address
+            %td
+              - if pu_json['present_address'].present? && !@user.present_address.eql?(pu_json['present_address'])
+                %span= @user.present_address
+                %span= "->"
+                %span.text-danger= pu_json['present_address']
+              - else
+                = @user.present_address
+          %tr 
+            %th{width: '40%'} Permanent Address
+            %td
+              - if pu_json['permanent_address'].present? && !@user.permanent_address.eql?(pu_json['permanent_address'])
+                %span= @user.permanent_address
+                %span= "->"
+                %span.text-danger= pu_json['permanent_address']
+              - else
+                = @user.permanent_address
+          %tr 
+            %th{width: '40%'} Date of Birth
+            %td
+              - if pu_json['date_of_birth'].present? && @user.date_of_birth.present? && !@user.date_of_birth.strftime("%Y-%m-%d").eql?(pu_json['date_of_birth'])
+                %span= @user.date_of_birth
+                %span= "->"
+                %span.text-danger= pu_json['date_of_birth']
+              - else
+                = @user.date_of_birth
+      
+      .card.mb-3
+        .card-header
+          %h2.fs-5 Document
+
+        %table.table.table-bordered
+          %tr
+            %th{width: '40%'} Bank Account No
+            %td
+              - if @user.bank_account_no.present?
+                - if pu_json['bank_account_no'].present? && !@user.bank_account_no.eql?(pu_json['bank_account_no'])
+                  %span= @user.bank_account_no
+                  %span= "->"
+                  %span.text-danger= pu_json['bank_account_no']
+                - else
+                  = @user.bank_account_no
+              - else
+                N/A
+          %tr
+            %th{width: '40%'} NDA
+            %td
+              - if @nda_doc.present?
+                = link_to 'View', @nda_doc.url, {class: 'link', target: :_blank}
+              - else
+                N/A
+          %tr
+            %th{width: '40%'} CV
+            %td
+              - if @user.resume.present?
+                = link_to 'View', @user.resume.url, {class: 'link', target: :_blank}
+              - else
+                N/A
+          %tr
+            %th{width: '40%'} National ID/ Birth Certificate
+            %td
+              - if @user.national_id.present?
+                = link_to 'View', @user.national_id.url, {class: 'link', target: :_blank}
+              - else
+                N/A
+          %tr
+            %th{width: '40%'} Passport
+            %td
+              - if @user.passport.present?
+                = link_to 'View', @user.passport.url, {class: 'link', target: :_blank}
+              - else
+                N/A
+  .col-sm-4
+    = image_tag @user.avatar.url(:large)
+
 - if @show_actions_to_admin
   .row
     = render partial: 'actions'
