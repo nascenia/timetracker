@@ -13,7 +13,8 @@
         .row.mb-3
           = f.label 'Supervisor/TTF', { class: 'col-sm-2 col-form-label'}
           .col-sm-10
-            = f.select :ttf_id, User.active.ttf.map{|u| [u.name, u.id]}, {}, { class: 'form-select' , required: true }
+            - ttf_ids = User.active.where.not(ttf_id: nil).map{|u| u.ttf_id}
+            = f.select :ttf_id, User.find(ttf_ids).map{|u| [u.name, u.id]}, {}, { class: 'form-select' , required: true }
         .row.mb-3
           = f.label :name, { class: 'col-sm-2 col-form-label' }
           .col-sm-10

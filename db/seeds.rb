@@ -99,3 +99,19 @@ unless User.exists?(email: 'masud@nascenia.com')
   user.save!
   p 'Done'
 end
+
+unless User.exists?(email: 'admin@nascenia.com')
+  p 'Creating user...'
+  user = User.new(
+    name: 'admin', 
+    email: "admin@nascenia.com", 
+    password: 'Admin@123', 
+    password_confirmation: 'Admin@123', 
+    employee_id: 'A0002')
+  user.holiday_scheme = HolidayScheme.first
+  user.approval_path = ApprovalPath.first
+  user.kpi_template = KpiTemplate.first
+  user.ttf = User.last
+  user.save!
+  p 'Done'
+end
