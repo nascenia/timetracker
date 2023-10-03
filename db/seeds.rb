@@ -73,7 +73,7 @@ if ApprovalPath.count.zero?
   p 'Done'
 end
 
-unless Setting.count.zero?
+if Setting.count.zero?
   p 'Creating setting...'
   Setting.create([
     app_name: 'timetracker',

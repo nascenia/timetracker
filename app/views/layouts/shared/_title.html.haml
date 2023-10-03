@@ -1,1 +1,4 @@
-%title= "#{@setting.organization_name} | #{@setting.app_name}"
+- unless @setting.nil?
+  %title= "#{@setting.organization_name} | #{@setting.app_name}"
+- else 
+  %title Timetracker

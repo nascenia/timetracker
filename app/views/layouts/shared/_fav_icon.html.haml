@@ -1,1 +1,4 @@
-= favicon_link_tag @setting.fav_icon.url(:small)
+- if @setting.present? && @setting.fav_icon.present?
+  = favicon_link_tag @setting.fav_icon.url(:small)
+- else
+  = favicon_link_tag ''
