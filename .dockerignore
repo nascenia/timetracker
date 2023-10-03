@@ -1,0 +1,58 @@
+# Ignore bundler config.
+.bundle
+.idea
+.idea/*
+.project
+.capistrano/
+.rspec
+.git
+.gitignore
+.env.prod
+.env.dev
+.DS_Store
+
+# Docker image build and release shell files
+build.sh
+release.sh
+run.sh
+build-web.sh
+
+Dockerfile
+docker-compose.yml
+README.md
+
+# Don't add public specifically mention the files and folder under public dir like below. Public is used to copy to web server
+public/uploads
+
+# Don't enable/add database.yml in the ignore list. It is required to precompile assets. 
+# config/application.yml
+# config/database.yml 
+config/sunspot.yml
+
+log/
+tmp/
+solr/
+out/
+spec/tmp
+
+# ignore the default SQLite database.
+db/*.sqlite3
+db/*.sqlite3-journal
+
+*.rbc
+**.orig
+capybara-*.html
+rerun.txt
+pickle-email-*.html
+
+# environment normalisation
+vendor/bundle
+vendor/ruby
+vendor/gems
+# if using bower-rails ignore default bower_components path bower.json files
+vendor/assets/bower_components
+*.bowerrc
+bower.json
+
+coverage/*
+node_modules

@@ -1,0 +1,32 @@
+version: '3'
+
+volumes: 
+  mysql_data: {}
+
+services:
+  db:
+    image: mysql:5.7
+    restart: always
+    env_file:
+      - .env.prod
+    ports:
+      - 3309:3306
+    volumes:
+      - mysql_data:/var/lib/mysql 
+
+  app:
+    image: nascenia/timetrackr:latest
+    restart: always
+    volumes:
+      # - .:/var/www/timetracker
+      - ./config/application.yml:/var/www/timetracker/config/application.yml
+      - ./config/database.yml:/var/www/timetracker/config/database.yml
+      - ./config/secrets.yml:/var/www/timetracker/config/secrets.yml
+      - ./public/uploads:/var/www/timetracker/public/uploads
+      - ./log/production.log:/var/www/timetracker/log/production.log
+    env_file:
+      - .env.prod
+    depends_on:
+      - db
+    expose:
+      - "3000"
