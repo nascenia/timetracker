@@ -73,6 +73,16 @@ if ApprovalPath.count.zero?
   p 'Done'
 end
 
+unless Setting.count.zero?
+  p 'Creating setting...'
+  Setting.create([
+    app_name: 'timetracker',
+    organization_name: 'Nascenia',
+    organization_summary: 'Software development company'
+  ])
+  p 'Done'
+end
+
 unless User.exists?(email: 'masud@nascenia.com')
   p 'Creating user...'
   user = User.new(
