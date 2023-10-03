@@ -1,6 +1,6 @@
 %html{:lang => "en"}
   %head
-    %title Nascenia | Time tracker
+    = render 'layouts/shared/title'
 
     %meta{:charset => "utf-8"}
     %meta{:http => {:equiv => "X-UA-Compatible"}, :content => "IE=edge"}
@@ -11,15 +11,14 @@
     = csrf_meta_tags
     = csp_meta_tag
 
-    = favicon_link_tag 'nascenia-logo-motif-only.png'
+    = render 'layouts/shared/fav_icon'
     = stylesheet_link_tag "application", "data-turbo-track": "reload"
     = javascript_importmap_tags
 
   %body
     %nav.navbar.navbar-expand-md.navbar-dark.fixed-top.bg-dark
       %div.container
-        %a{:class => 'navbar-brand', :href => "/"}
-          = image_tag 'logo.png', style: 'height: 35px; margin-top: 0px;'
+        = render 'layouts/shared/logo'
         %button.navbar-toggler{:type => "button", 'data-bs-toggle' => "collapse", 'data-bs-target' => "#navbarCollapse", 'aria-controls' => "navbarCollapse", 'aria-expanded' => "false", 'aria-label' => "Toggle navigation"}
           %span.navbar-toggler-icon
         
