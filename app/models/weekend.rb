@@ -6,7 +6,7 @@ class Weekend < ApplicationRecord
   include OffDays
 
   validates :name, presence: true
-  validates :off_days, presence: true
+  validates :off_days, presence: false
 
   def self.today?(user)
     user.weekend.off_days.map(&:capitalize).map(&:to_s).include? Date.today.strftime('%A') if user.weekend
