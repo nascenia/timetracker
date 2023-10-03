@@ -6,15 +6,6 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-if HolidayScheme.count.zero?
-  p 'Creating holiday scheme ...'
-  HolidayScheme.create([
-    { name: 'Nascenia General', active: true, leave_year_id: 1 },
-    { name: 'GJ and Biyeta', active: true, leave_year_id: 1 },
-  ])
-  p 'Done'
-end 
-
 if Weekend.count.zero?
   p 'Creating weekend...'
   Weekend.create([
@@ -31,6 +22,17 @@ if LeaveYear.count.zero?
   LeaveYear.find_or_create_by(year: Date.today.year.to_s, present: true)
   p 'Done'
 end
+
+if HolidayScheme.count.zero?
+  p 'Creating holiday scheme ...'
+  leave_year = LeaveYear.first
+
+  HolidayScheme.create([
+    { name: 'Nascenia General', active: true, leave_year: leave_year },
+    { name: 'GJ and Biyeta', active: true, leave_year: leave_year },
+  ])
+  p 'Done'
+end 
 
 if Designation.count.zero?
   p 'Creating employee designations...'
