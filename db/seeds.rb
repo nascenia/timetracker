@@ -96,6 +96,7 @@ unless User.exists?(email: 'masud@nascenia.com')
   user.holiday_scheme = HolidayScheme.first
   user.approval_path = ApprovalPath.first
   user.kpi_template = KpiTemplate.first
+  user.joining_date = Time.now
   user.save!
   p 'Done'
 end
@@ -112,6 +113,7 @@ unless User.exists?(email: 'admin@nascenia.com')
   user.approval_path = ApprovalPath.first
   user.kpi_template = KpiTemplate.first
   user.ttf = User.last
+  user.joining_date = Time.now
   user.save!
   p 'Done'
 end

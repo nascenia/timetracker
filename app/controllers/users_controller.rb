@@ -62,7 +62,7 @@ class UsersController < ApplicationController
       end
 
       hash_data[:profile_update_json] = nil
-      @user.update_attributes(hash_data) unless @user.profile_update_json.blank?
+      @user.update(hash_data) unless @user.profile_update_json.blank?
       @user.update_attribute(:registration_status, User::REGISTRATION_STATUS[:registered])
 
       flash[:warning] = 'User registration or profile data update request accepted'
