@@ -1,7 +1,7 @@
-class HardJob
+class CheckSidekiqjobsJob
   include Sidekiq::Job
 
   def perform(*args)
-    puts "This is hard job"
+    User.check_sidekiqjobs
   end
 end

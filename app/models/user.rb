@@ -470,7 +470,7 @@ class User < ApplicationRecord
     end
   end
 
-  def self.check_crontasks
+  def self.check_sidekiqjobs
     Rails.logger.info "#{Time.now}: Attempting Crontasks"
   end
 

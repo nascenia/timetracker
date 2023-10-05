@@ -1,5 +1,5 @@
 require 'test_helper'
-class HardJobTest < Minitest::Test
+class InitializeEveryLeaveJobTest < Minitest::Test
   def test_example
     skip "add some examples to (or delete) #{__FILE__}"
   end
