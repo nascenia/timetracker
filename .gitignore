@@ -53,3 +53,4 @@ VERSION
 release.sh
 staging.sh
 ssh.sh
+.env
