@@ -27,7 +27,7 @@
               = employee.blood_group
             - if current_user.has_admin_privilege?
               %td.bg-danger= employee.joining_date
-            -if employee.ttf_id?
+            -if employee.ttf_id? && employee.ttf.present?
               %td.bg-danger= employee.ttf.name
             -else
               %td.bg-danger= "N/A"
@@ -43,7 +43,7 @@
             %td= employee.blood_group
             - if current_user.has_admin_privilege?
               %td= employee.joining_date
-            -if employee.ttf_id?
+            -if employee.ttf_id? && employee.ttf.present?
               %td= employee.ttf.name
             -else
               %td= "N/A"

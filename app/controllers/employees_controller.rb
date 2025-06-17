@@ -4,14 +4,12 @@ class EmployeesController < ApplicationController
 
   def index
     @pending_employees_company_emails = PreRegistration.all.where(step_no: 0..3).pluck(:companyEmail)
-    @employees = User.all.order(name: :asc)
+    @employees = User.order(name: :asc).includes(:ttf)
 
     @employees = @employees.where('lower(name) LIKE ?', "%#{params[:name].strip.downcase}%") if params[:name].present?
     @employees = @employees.where('lower(email) LIKE ?', "%#{params[:email].strip.downcase}%") if params[:email].present?
-    logger.info "------------------------------------"
-    logger.info params
-    logger.info params[:employee_status]
-    logger.info params[:name]
+    
+    logger.info "Filtering employees with params: #{params.inspect}"
 
     if params[:employee_status].present?
       @employees = @employees.published if params[:employee_status] == '0'
