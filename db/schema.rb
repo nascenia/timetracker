@@ -11,9 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20221004063619) do
+ActiveRecord::Schema.define(version: 20240320000012) do
 
-  create_table "active_admin_comments", force: true do |t|
+  create_table "active_admin_comments", id: false, force: true do |t|
+    t.integer  "id"
     t.string   "namespace"
     t.text     "body"
     t.string   "resource_id",   null: false
@@ -28,7 +29,8 @@ ActiveRecord::Schema.define(version: 20221004063619) do
   add_index "active_admin_comments", ["namespace"], name: "index_active_admin_comments_on_namespace", using: :btree
   add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id", using: :btree
 
-  create_table "admin_users", force: true do |t|
+  create_table "admin_users", id: false, force: true do |t|
+    t.integer  "id"
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"
@@ -46,13 +48,15 @@ ActiveRecord::Schema.define(version: 20221004063619) do
   add_index "admin_users", ["email"], name: "index_admin_users_on_email", unique: true, using: :btree
   add_index "admin_users", ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
 
-  create_table "approval_paths", force: true do |t|
+  create_table "approval_paths", id: false, force: true do |t|
+    t.integer  "id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name",       null: false
   end
 
-  create_table "attendances", force: true do |t|
+  create_table "attendances", id: false, force: true do |t|
+    t.integer  "id"
     t.integer  "user_id"
     t.date     "checkin_date"
     t.time     "in_time"
@@ -65,7 +69,8 @@ ActiveRecord::Schema.define(version: 20221004063619) do
 
   add_index "attendances", ["user_id"], name: "index_attendances_on_user_id", using: :btree
 
-  create_table "comments", force: true do |t|
+  create_table "comments", id: false, force: true do |t|
+    t.integer  "id"
     t.text     "body"
     t.integer  "leave_id"
     t.integer  "user_id"
@@ -76,7 +81,8 @@ ActiveRecord::Schema.define(version: 20221004063619) do
   add_index "comments", ["leave_id"], name: "index_comments_on_leave_id", using: :btree
   add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
 
-  create_table "designations", force: true do |t|
+  create_table "designations", id: false, force: true do |t|
+    t.integer  "id"
     t.string   "team"
     t.string   "title"
     t.text     "description"
@@ -85,7 +91,8 @@ ActiveRecord::Schema.define(version: 20221004063619) do
     t.datetime "updated_at"
   end
 
-  create_table "exclusion_dates", force: true do |t|
+  create_table "exclusion_dates", id: false, force: true do |t|
+    t.integer  "id"
     t.date     "date",          null: false
     t.integer  "excluded_id"
     t.string   "excluded_type"
@@ -95,7 +102,8 @@ ActiveRecord::Schema.define(version: 20221004063619) do
 
   add_index "exclusion_dates", ["excluded_id", "excluded_type"], name: "index_exclusion_dates_on_excluded_id_and_excluded_type", using: :btree
 
-  create_table "goal_categories", force: true do |t|
+  create_table "goal_categories", id: false, force: true do |t|
+    t.integer  "id"
     t.string   "title"
     t.text     "description"
     t.boolean  "published"
@@ -103,7 +111,8 @@ ActiveRecord::Schema.define(version: 20221004063619) do
     t.datetime "updated_at"
   end
 
-  create_table "goals", force: true do |t|
+  create_table "goals", id: false, force: true do |t|
+    t.integer  "id"
     t.integer  "user_id"
     t.integer  "goal_category_id"
     t.integer  "reviewer_id"
@@ -121,7 +130,8 @@ ActiveRecord::Schema.define(version: 20221004063619) do
     t.datetime "updated_at"
   end
 
-  create_table "holiday_schemes", force: true do |t|
+  create_table "holiday_schemes", id: false, force: true do |t|
+    t.integer  "id"
     t.string   "name"
     t.boolean  "active",        default: false
     t.datetime "created_at"
@@ -131,7 +141,8 @@ ActiveRecord::Schema.define(version: 20221004063619) do
 
   add_index "holiday_schemes", ["leave_year_id"], name: "index_holiday_schemes_on_leave_year_id", using: :btree
 
-  create_table "holidays", force: true do |t|
+  create_table "holidays", id: false, force: true do |t|
+    t.integer  "id"
     t.string   "name"
     t.date     "date"
     t.datetime "created_at"
@@ -141,7 +152,8 @@ ActiveRecord::Schema.define(version: 20221004063619) do
 
   add_index "holidays", ["holiday_scheme_id"], name: "index_holidays_on_holiday_scheme_id", using: :btree
 
-  create_table "kpi_items", force: true do |t|
+  create_table "kpi_items", id: false, force: true do |t|
+    t.integer  "id"
     t.string   "title"
     t.text     "description"
     t.datetime "created_at"
@@ -151,7 +163,8 @@ ActiveRecord::Schema.define(version: 20221004063619) do
 
   add_index "kpi_items", ["kpi_template_id"], name: "index_kpi_items_on_kpi_template_id", using: :btree
 
-  create_table "kpi_templates", force: true do |t|
+  create_table "kpi_templates", id: false, force: true do |t|
+    t.integer  "id"
     t.string   "title"
     t.text     "description"
     t.boolean  "published"
@@ -159,7 +172,8 @@ ActiveRecord::Schema.define(version: 20221004063619) do
     t.datetime "updated_at"
   end
 
-  create_table "kpis", force: true do |t|
+  create_table "kpis", id: false, force: true do |t|
+    t.integer  "id"
     t.integer  "user_id"
     t.date     "start_date"
     t.date     "end_date"
@@ -173,7 +187,8 @@ ActiveRecord::Schema.define(version: 20221004063619) do
 
   add_index "kpis", ["user_id"], name: "index_kpis_on_user_id", using: :btree
 
-  create_table "leave_trackers", force: true do |t|
+  create_table "leave_trackers", id: false, force: true do |t|
+    t.integer  "id"
     t.integer  "user_id"
     t.integer  "yearly_casual_leave"
     t.integer  "yearly_medical_leave"
@@ -196,14 +211,16 @@ ActiveRecord::Schema.define(version: 20221004063619) do
 
   add_index "leave_trackers", ["user_id"], name: "index_leave_trackers_on_user_id", using: :btree
 
-  create_table "leave_years", force: true do |t|
+  create_table "leave_years", id: false, force: true do |t|
+    t.integer  "id"
     t.string   "year"
     t.boolean  "present"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "leaves", force: true do |t|
+  create_table "leaves", id: false, force: true do |t|
+    t.integer  "id"
     t.integer  "user_id"
     t.text     "reason"
     t.integer  "leave_type"
@@ -221,7 +238,8 @@ ActiveRecord::Schema.define(version: 20221004063619) do
   add_index "leaves", ["approval_path_id"], name: "index_leaves_on_approval_path_id", using: :btree
   add_index "leaves", ["user_id"], name: "index_leaves_on_user_id", using: :btree
 
-  create_table "path_chains", force: true do |t|
+  create_table "path_chains", id: false, force: true do |t|
+    t.integer  "id"
     t.integer  "approval_path_id"
     t.integer  "user_id",                      null: false
     t.integer  "priority",         default: 0, null: false
@@ -231,7 +249,8 @@ ActiveRecord::Schema.define(version: 20221004063619) do
 
   add_index "path_chains", ["approval_path_id"], name: "index_path_chains_on_approval_path_id", using: :btree
 
-  create_table "performance_categories", force: true do |t|
+  create_table "performance_categories", id: false, force: true do |t|
+    t.integer  "id"
     t.string   "title"
     t.text     "description"
     t.boolean  "published"
@@ -239,7 +258,8 @@ ActiveRecord::Schema.define(version: 20221004063619) do
     t.datetime "updated_at"
   end
 
-  create_table "pre_registrations", force: true do |t|
+  create_table "pre_registrations", id: false, force: true do |t|
+    t.integer  "id"
     t.string   "name"
     t.string   "joiningDate"
     t.string   "datetime"
@@ -269,7 +289,8 @@ ActiveRecord::Schema.define(version: 20221004063619) do
     t.integer  "leave_approval_path_id"
   end
 
-  create_table "projects", force: true do |t|
+  create_table "projects", id: false, force: true do |t|
+    t.integer  "id"
     t.string   "project_name"
     t.string   "description"
     t.boolean  "is_active"
@@ -280,9 +301,11 @@ ActiveRecord::Schema.define(version: 20221004063619) do
   create_table "projects_users", id: false, force: true do |t|
     t.integer "user_id",    null: false
     t.integer "project_id", null: false
+    t.integer "id"
   end
 
-  create_table "promotions", force: true do |t|
+  create_table "promotions", id: false, force: true do |t|
+    t.integer  "id"
     t.integer  "user_id"
     t.string   "designation"
     t.string   "start_date"
@@ -293,7 +316,8 @@ ActiveRecord::Schema.define(version: 20221004063619) do
 
   add_index "promotions", ["user_id"], name: "index_promotions_on_user_id", using: :btree
 
-  create_table "timesheets", force: true do |t|
+  create_table "timesheets", id: false, force: true do |t|
+    t.integer  "id"
     t.date     "date"
     t.text     "description"
     t.integer  "project_id"
@@ -310,7 +334,8 @@ ActiveRecord::Schema.define(version: 20221004063619) do
   add_index "timesheets", ["project_id"], name: "index_timesheets_on_project_id", using: :btree
   add_index "timesheets", ["user_id"], name: "index_timesheets_on_user_id", using: :btree
 
-  create_table "users", force: true do |t|
+  create_table "users", id: false, force: true do |t|
+    t.integer  "id"
     t.string   "email",                                        default: "",    null: false
     t.string   "encrypted_password",                           default: "",    null: false
     t.string   "reset_password_token"
@@ -356,33 +381,40 @@ ActiveRecord::Schema.define(version: 20221004063619) do
     t.text     "profile_update_json"
     t.string   "employee_id",                       limit: 16
     t.integer  "kpi_template_id"
+    t.string   "provider"
+    t.string   "uid"
+    t.string   "image"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["holiday_scheme_id"], name: "index_users_on_holiday_scheme_id", using: :btree
+  add_index "users", ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["weekend_id"], name: "index_users_on_weekend_id", using: :btree
 
-  create_table "versions", force: true do |t|
-    t.string   "item_type",      limit: 191,        null: false
-    t.integer  "item_id",                           null: false
-    t.string   "event",                             null: false
+  create_table "versions", id: false, force: true do |t|
+    t.integer  "id"
+    t.string   "item_type",      null: false
+    t.integer  "item_id",        null: false
+    t.string   "event",          null: false
     t.string   "whodunnit"
-    t.text     "object",         limit: 2147483647
+    t.text     "object"
     t.datetime "created_at"
     t.text     "object_changes"
   end
 
   add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
 
-  create_table "weekends", force: true do |t|
+  create_table "weekends", id: false, force: true do |t|
+    t.integer  "id"
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "off_days"
   end
 
-  create_table "whitelist_emails", force: true do |t|
+  create_table "whitelist_emails", id: false, force: true do |t|
+    t.integer  "id"
     t.string   "email"
     t.boolean  "published"
     t.datetime "created_at"
