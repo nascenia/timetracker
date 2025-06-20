@@ -143,6 +143,187 @@
           %br        
         = f.file_field :passport, { onchange: 'validateFiles(this);', data: { max_file_size: 50.megabytes },  class: 'form-control'}
   %br
+  %fieldset
+    %legend Face Recognition Setup
+    .form-group
+      .col-sm-2
+        %h5 Face Registration
+      .col-sm-10
+        - if current_user.face_encoding.present?
+          .alert.alert-success
+            %strong Face data registered!
+            %br
+            You can update your face data by clicking the button below.
+          %br
+        = button_tag 'Register/Update Face', type: 'button', class: 'btn btn-primary', id: 'register-face-btn', data: { toggle: 'modal', target: '#faceRegistrationModal' }
+        %br
+        %small.text-muted
+          This will capture your face for check-in/out using facial recognition.
+  %br
   .form-group
     .col-sm-2.col-sm-10
       = f.submit 'Submit',  class: 'btn btn-success'
+
+/ Face Registration Modal
+#faceRegistrationModal.modal.fade{tabindex: '-1', role: 'dialog', 'aria-labelledby': 'faceRegistrationModalLabel'}
+  .modal-dialog.modal-lg{role: 'document'}
+    .modal-content
+      .modal-header
+        %button.close{type: 'button', 'data-dismiss': 'modal', 'aria-label': 'Close'}
+          %span{'aria-hidden': 'true'} &times;
+        %h4.modal-title#faceRegistrationModalLabel Register Your Face
+      .modal-body
+        .row
+          .col-md-8
+            .video-container
+              %video#video{autoplay: true, muted: true, width: '100%', height: 'auto'}
+            .canvas-container{style: 'display: none;'}
+              %canvas#canvas{width: '640', height: '480'}
+            .text-center
+              %button#capture-btn.btn.btn-success{style: 'display: none;'} Capture Photo
+              %button#retake-btn.btn.btn-warning{style: 'display: none;'} Retake
+              %button#register-face-api-btn.btn.btn-primary{style: 'display: none;'} Register Face
+          .col-md-4
+            .instructions
+              %h5 Instructions:
+              %ol
+                %li Click "Start Camera" to begin
+                %li Position your face in the center of the frame
+                %li Ensure good lighting
+                %li Click "Capture Photo" when ready
+                %li Review the photo and click "Register Face"
+            .status-messages
+              #status-message.alert{style: 'display: none;'}
+      .modal-footer
+        %button.btn.btn-default{type: 'button', 'data-dismiss': 'modal'} Close
+        %button#start-camera-btn.btn.btn-primary{type: 'button'} Start Camera
+
+:javascript
+  $(document).ready(function() {
+    var video = document.getElementById('video');
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+    var stream = null;
+    var capturedImage = null;
+
+    // Start camera
+    $('#start-camera-btn').click(function() {
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ 
+          video: { 
+            width: { ideal: 640 },
+            height: { ideal: 480 },
+            facingMode: 'user'
+          } 
+        })
+        .then(function(mediaStream) {
+          stream = mediaStream;
+          video.srcObject = mediaStream;
+          video.play();
+          $('#start-camera-btn').hide();
+          $('#capture-btn').show();
+          showStatus('Camera started successfully!', 'success');
+        })
+        .catch(function(err) {
+          console.error('Error accessing camera:', err);
+          showStatus('Error accessing camera. Please check permissions.', 'danger');
+        });
+      } else {
+        showStatus('Camera not supported in this browser.', 'danger');
+      }
+    });
+
+    // Capture photo
+    $('#capture-btn').click(function() {
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      capturedImage = canvas.toDataURL('image/jpeg', 0.8);
+      
+      $('.video-container').hide();
+      $('.canvas-container').show();
+      $('#capture-btn').hide();
+      $('#retake-btn').show();
+      $('#register-face-api-btn').show();
+      
+      showStatus('Photo captured! Review and click "Register Face" to proceed.', 'info');
+    });
+
+    // Retake photo
+    $('#retake-btn').click(function() {
+      $('.video-container').show();
+      $('.canvas-container').hide();
+      $('#capture-btn').show();
+      $('#retake-btn').hide();
+      $('#register-face-api-btn').hide();
+      capturedImage = null;
+      showStatus('Ready to capture new photo.', 'info');
+    });
+
+    // Register face with API
+    $('#register-face-api-btn').click(function() {
+      if (!capturedImage) {
+        showStatus('No image captured. Please capture a photo first.', 'danger');
+        return;
+      }
+
+      showStatus('Processing face registration...', 'info');
+      $('#register-face-api-btn').prop('disabled', true);
+
+      // Send image to FastAPI service
+      $.ajax({
+        url: '/api/face/register',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          image: capturedImage,
+          user_id: #{current_user.id}
+        }),
+        success: function(response) {
+          if (response.success) {
+            showStatus('Face registered successfully!', 'success');
+            setTimeout(function() {
+              $('#faceRegistrationModal').modal('hide');
+              location.reload(); // Refresh to show updated status
+            }, 2000);
+          } else {
+            showStatus('Face registration failed: ' + response.error, 'danger');
+          }
+        },
+        error: function(xhr, status, error) {
+          showStatus('Error registering face: ' + error, 'danger');
+        },
+        complete: function() {
+          $('#register-face-api-btn').prop('disabled', false);
+        }
+      });
+    });
+
+    // Clean up when modal is closed
+    $('#faceRegistrationModal').on('hidden.bs.modal', function() {
+      if (stream) {
+        stream.getTracks().forEach(function(track) {
+          track.stop();
+        });
+        stream = null;
+      }
+      $('.video-container').show();
+      $('.canvas-container').hide();
+      $('#start-camera-btn').show();
+      $('#capture-btn').hide();
+      $('#retake-btn').hide();
+      $('#register-face-api-btn').hide();
+      capturedImage = null;
+      hideStatus();
+    });
+
+    function showStatus(message, type) {
+      $('#status-message')
+        .removeClass()
+        .addClass('alert alert-' + type)
+        .text(message)
+        .show();
+    }
+
+    function hideStatus() {
+      $('#status-message').hide();
+    }
+  });

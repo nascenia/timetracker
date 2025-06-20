@@ -119,5 +119,13 @@ Internal::Application.routes.draw do
     end
   end
   
+  # Face Recognition API routes
+  namespace :api do
+    namespace :face do
+      post :register
+      post :recognize
+    end
+  end
+  
   root :to => 'dashboard#index'
 end
