@@ -13,13 +13,33 @@
         %th Medical (hours)
     %tbody
       %tr
-        %th Accrued Leave
+        %th Yearly leave
+        %td= LeaveTracker::YEARLY_CASUAL_LEAVE
+        %td= LeaveTracker::YEARLY_MEDICAL_LEAVE
+      %tr
+        %th Accrued in this year
+        %td= @leave.user.leave_tracker.accrued_vacation_this_year if @leave.user.leave_tracker.present?
+        %td= @leave.user.leave_tracker.accrued_medical_this_year if @leave.user.leave_tracker.present?
+      %tr
+        %th Carried forwared leave
+        %td= @leave.user.leave_tracker.carried_forward_vacation if @leave.user.leave_tracker.present?
+        %td= @leave.user.leave_tracker.carried_forward_medical if @leave.user.leave_tracker.present?
+      %tr
+        %th Accrued in total
         %td= @leave.user.leave_tracker.accrued_vacation_total if @leave.user.leave_tracker.present?
         %td= @leave.user.leave_tracker.accrued_medical_total if @leave.user.leave_tracker.present?
       %tr
-        %th Consumed Leave
+        %th Awarded Leaves
+        %td= @leave.user.leave_tracker.awarded_leave if @leave.user.leave_tracker.present?
+        %td= 'N/A'
+      %tr
+        %th Comsumed eave
         %td= @leave.user.leave_tracker.consumed_vacation if @leave.user.leave_tracker.present?
         %td= @leave.user.leave_tracker.consumed_medical if @leave.user.leave_tracker.present?
+      %tr
+        %th Accrual balance
+        %td= @leave.user.leave_tracker.accrued_vacation_balance if @leave.user.leave_tracker.present?
+        %td= @leave.user.leave_tracker.accrued_medical_balance if @leave.user.leave_tracker.present?
 
 .panel.panel-default
   .panel-heading

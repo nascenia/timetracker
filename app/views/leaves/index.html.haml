@@ -18,7 +18,7 @@
         %th{:width => '10%'} Type
         %th{:width => '25%'} Description
         %th{:width => '15%'} Status
-        %th{:width => '5%'} Hours
+        %th{:width => '5%'} Duration (days)
         %th{:width => '22%'} Action
     %tbody
       - @leaves.each do |leave|
@@ -29,7 +29,7 @@
           %td= type_of(leave)
           %td= leave.reason
           %td= get_status(leave.status)
-          %td= leave.total_leave_hour
+          %td= leave_duration_in_days(leave)
           %td= link_to 'show', leave_path(leave)
 - else
   .alert.alert-info{:role => 'alert'}
