@@ -165,12 +165,12 @@
       = f.submit 'Submit',  class: 'btn btn-success'
 
 / Face Registration Modal
-#faceRegistrationModal.modal.fade{tabindex: '-1', role: 'dialog', 'aria-labelledby': 'faceRegistrationModalLabel'}
-  .modal-dialog.modal-lg{role: 'document'}
+#faceRegistrationModal.modal.fade{tabindex: '-1', :role => 'dialog', 'aria-labelledby' => 'faceRegistrationModalLabel'}
+  .modal-dialog.modal-lg{:role => 'document'}
     .modal-content
       .modal-header
-        %button.close{type: 'button', 'data-dismiss': 'modal', 'aria-label': 'Close'}
-          %span{'aria-hidden': 'true'} &times;
+        %button.close{type: 'button', 'data-dismiss' => 'modal', 'aria-label' => 'Close'}
+          %span{'aria-hidden' => 'true'} &times;
         %h4.modal-title#faceRegistrationModalLabel Register Your Face
       .modal-body
         .row
@@ -195,7 +195,7 @@
             .status-messages
               #status-message.alert{style: 'display: none;'}
       .modal-footer
-        %button.btn.btn-default{type: 'button', 'data-dismiss': 'modal'} Close
+        %button.btn.btn-default{type: 'button', 'data-dismiss' => 'modal'} Close
         %button#start-camera-btn.btn.btn-primary{type: 'button'} Start Camera
 
 :javascript
@@ -258,26 +258,27 @@
       showStatus('Ready to capture new photo.', 'info');
     });
 
-    // Register face with API
+    // Register face with API (send as file)
     $('#register-face-api-btn').click(function() {
       if (!capturedImage) {
         showStatus('No image captured. Please capture a photo first.', 'danger');
         return;
       }
-
       showStatus('Processing face registration...', 'info');
       $('#register-face-api-btn').prop('disabled', true);
-
-      // Send image to FastAPI service
-      $.ajax({
-        url: '/api/face/register',
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({
-          image: capturedImage,
-          user_id: #{current_user.id}
-        }),
-        success: function(response) {
+      // Send image as file to FastAPI service via Rails API
+      var userId = #{current_user.id};
+      var canvas = document.getElementById('canvas');
+      canvas.toBlob(function(blob) {
+        var formData = new FormData();
+        formData.append('image', blob, 'capture.jpg');
+        formData.append('user_id', userId);
+        fetch('/api/face/register', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(function(response) {
           if (response.success) {
             showStatus('Face registered successfully!', 'success');
             setTimeout(function() {
@@ -287,14 +288,14 @@
           } else {
             showStatus('Face registration failed: ' + response.error, 'danger');
           }
-        },
-        error: function(xhr, status, error) {
+        })
+        .catch(function(error) {
           showStatus('Error registering face: ' + error, 'danger');
-        },
-        complete: function() {
+        })
+        .finally(function() {
           $('#register-face-api-btn').prop('disabled', false);
-        }
-      });
+        });
+      }, 'image/jpeg', 0.8);
     });
 
     // Clean up when modal is closed

@@ -475,6 +475,7 @@ DEPENDENCIES
   jquery-rails
   letter_opener
   mini_magick
+  multipart-post
   mysql2
   omniauth
   omniauth-google-oauth2

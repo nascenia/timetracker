@@ -1,173 +1,90 @@
-from fastapi import FastAPI, HTTPException, Depends
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 import base64
 import numpy as np
+from fastapi import FastAPI, Request, UploadFile, File, Form
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from typing import List, Optional, Dict, Any
+from deepface import DeepFace
+from scipy.spatial.distance import cosine
 import cv2
-import face_recognition
+import io
+from PIL import Image
 import json
-from typing import Optional
-import os
+from fastapi.responses import JSONResponse
 
-app = FastAPI(title="Face Recognition API", version="1.0.0")
+app = FastAPI()
 
-# Enable CORS for Rails app
+# Allow CORS for local dev
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],  # Add your Rails app URL
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# In-memory storage for face encodings (in production, use a database)
-face_encodings_db = {}
-
-class FaceRegistrationRequest(BaseModel):
-    image: str  # base64 encoded image
+class RegisterRequest(BaseModel):
+    image: str
     user_id: int
 
-class FaceRecognitionRequest(BaseModel):
-    image: str  # base64 encoded image
+class RecognizeUser(BaseModel):
+    user_id: int
+    face_encoding: List[float]
 
-class FaceRegistrationResponse(BaseModel):
-    success: bool
-    face_encoding: Optional[str] = None
-    error: Optional[str] = None
+class RecognizeRequest(BaseModel):
+    image: str
+    users: List[RecognizeUser]
+    debug: Optional[bool] = False
 
-class FaceRecognitionResponse(BaseModel):
-    success: bool
-    user_id: Optional[int] = None
-    confidence: Optional[float] = None
-    error: Optional[str] = None
 
-def base64_to_image(base64_string: str):
-    """Convert base64 string to OpenCV image"""
+@app.post("/register_face")
+async def register_face(image: UploadFile = File(...), user_id: int = Form(...)):
     try:
-        # Remove data URL prefix if present
-        if base64_string.startswith('data:image'):
-            base64_string = base64_string.split(',')[1]
-        
-        # Decode base64
-        image_data = base64.b64decode(base64_string)
-        nparr = np.frombuffer(image_data, np.uint8)
-        image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        
-        # Convert BGR to RGB (face_recognition expects RGB)
-        image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        return image_rgb
+        img_bytes = await image.read()
+        img = Image.open(io.BytesIO(img_bytes)).convert("RGB")
+        np_img = np.array(img)
+        embedding_objs = DeepFace.represent(img_path=np_img, model_name="Facenet", enforce_detection=True)
+        if not embedding_objs or 'embedding' not in embedding_objs[0]:
+            return JSONResponse({"success": False, "error": "No face detected"})
+        embedding = embedding_objs[0]['embedding']
+        if isinstance(embedding, np.ndarray):
+            embedding = embedding.tolist()
+        return JSONResponse({"success": True, "face_encoding": embedding})
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Invalid image data: {str(e)}")
+        return JSONResponse({"success": False, "error": str(e)})
 
-def image_to_base64(encoding: np.ndarray) -> str:
-    """Convert numpy array to base64 string"""
-    return base64.b64encode(encoding.tobytes()).decode('utf-8')
-
-def base64_to_encoding(base64_string: str) -> np.ndarray:
-    """Convert base64 string back to numpy array"""
-    data = base64.b64decode(base64_string)
-    return np.frombuffer(data, dtype=np.float64)
-
-@app.post("/register_face", response_model=FaceRegistrationResponse)
-async def register_face(request: FaceRegistrationRequest):
-    """Register a new face encoding for a user"""
+@app.post("/recognize_face")
+async def recognize_face(image: UploadFile = File(...), users: str = Form(...), debug: bool = Form(False)):
     try:
-        # Convert base64 image to OpenCV format
-        image = base64_to_image(request.image)
-        
-        # Detect faces in the image
-        face_locations = face_recognition.face_locations(image)
-        
-        if not face_locations:
-            return FaceRegistrationResponse(
-                success=False,
-                error="No face detected in the image"
-            )
-        
-        if len(face_locations) > 1:
-            return FaceRegistrationResponse(
-                success=False,
-                error="Multiple faces detected. Please use an image with only one face"
-            )
-        
-        # Extract face encoding
-        face_encodings = face_recognition.face_encodings(image, face_locations)
-        face_encoding = face_encodings[0]
-        
-        # Store the encoding
-        face_encodings_db[request.user_id] = image_to_base64(face_encoding)
-        
-        return FaceRegistrationResponse(
-            success=True,
-            face_encoding=image_to_base64(face_encoding)
-        )
-        
-    except Exception as e:
-        return FaceRegistrationResponse(
-            success=False,
-            error=f"Error processing face: {str(e)}"
-        )
-
-@app.post("/recognize_face", response_model=FaceRecognitionResponse)
-async def recognize_face(request: FaceRecognitionRequest):
-    """Recognize a face and return the user ID"""
-    try:
-        # Convert base64 image to OpenCV format
-        image = base64_to_image(request.image)
-        
-        # Detect faces in the image
-        face_locations = face_recognition.face_locations(image)
-        
-        if not face_locations:
-            return FaceRecognitionResponse(
-                success=False,
-                error="No face detected in the image"
-            )
-        
-        # Extract face encoding from the image
-        face_encodings = face_recognition.face_encodings(image, face_locations)
-        unknown_face_encoding = face_encodings[0]
-        
-        # Compare with stored encodings
-        best_match = None
-        best_confidence = 0.0
-        
-        for user_id, stored_encoding_b64 in face_encodings_db.items():
-            stored_encoding = base64_to_encoding(stored_encoding_b64)
-            
-            # Compare faces
-            matches = face_recognition.compare_faces([stored_encoding], unknown_face_encoding, tolerance=0.6)
-            face_distances = face_recognition.face_distance([stored_encoding], unknown_face_encoding)
-            
-            if matches[0]:
-                confidence = 1.0 - face_distances[0]
-                if confidence > best_confidence:
-                    best_confidence = confidence
-                    best_match = user_id
-        
-        if best_match and best_confidence > 0.6:  # Confidence threshold
-            return FaceRecognitionResponse(
-                success=True,
-                user_id=best_match,
-                confidence=float(best_confidence)
-            )
+        img_bytes = await image.read()
+        img = Image.open(io.BytesIO(img_bytes)).convert("RGB")
+        np_img = np.array(img)
+        user_list = json.loads(users)
+        min_dist = float('inf')
+        matched_user = None
+        distances = []
+        input_objs = DeepFace.represent(img_path=np_img, model_name="Facenet", enforce_detection=True)
+        if not input_objs or 'embedding' not in input_objs[0]:
+            return JSONResponse({"success": False, "error": "No face detected"})
+        input_embedding = input_objs[0]['embedding']
+        if isinstance(input_embedding, np.ndarray):
+            input_embedding = input_embedding.tolist()
+        for user in user_list:
+            dist = cosine(input_embedding, user['face_encoding'])
+            distances.append({"user_id": user['user_id'], "distance": float(dist)})
+            if dist < 0.4 and dist < min_dist:
+                min_dist = dist
+                matched_user = user
+        response = {}
+        if matched_user:
+            response = {"success": True, "user_id": matched_user['user_id'], "confidence": 1 - min_dist}
         else:
-            return FaceRecognitionResponse(
-                success=False,
-                error="Face not recognized"
-            )
-        
+            response = {"success": False, "error": "Face not recognized"}
+        if debug:
+            response["debug"] = {
+                "input_embedding": input_embedding,
+                "distances": distances
+            }
+        return JSONResponse(response)
     except Exception as e:
-        return FaceRecognitionResponse(
-            success=False,
-            error=f"Error recognizing face: {str(e)}"
-        )
-
-@app.get("/health")
-async def health_check():
-    """Health check endpoint"""
-    return {"status": "healthy", "registered_faces": len(face_encodings_db)}
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000) 
+        return JSONResponse({"success": False, "error": str(e)})

@@ -47,6 +47,8 @@ Internal::Application.routes.draw do
     collection do
       get :monthly_summary
       get :download
+      get :face_check_in
+      post :face_check_in_submit
     end
   end
   resources :timesheets do

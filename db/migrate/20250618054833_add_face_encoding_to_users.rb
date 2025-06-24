@@ -1,5 +1,5 @@
 class AddFaceEncodingToUsers < ActiveRecord::Migration
   def change
-    add_column :users, :face_encoding, :text
+    change_column :users, :face_encoding, :json
   end
 end

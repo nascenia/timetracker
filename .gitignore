@@ -6,7 +6,7 @@ fastapi_service/venv/
 # Ignore omniauth
 /config/initializers/omniauth.rb
 config/mailer_conf.yml
-
+__pycache__/
 # Ignore the default SQLite database.
 /db/*.sqlite3
 /db/*.sqlite3-journal

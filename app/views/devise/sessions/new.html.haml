@@ -21,5 +21,194 @@
       .form-group
         = f.submit 'Sign In', class: 'btn btn-primary btn-block'
 
+// Face Check-In Button
+.text-center
+  %button#face-checkin-btn.btn.btn-success{type: 'button', style: 'margin-top: 20px;'}
+    Face Check-In (with Camera)
+
+// Face Check-In Modal
+#faceCheckInModal.modal.fade{tabindex: '-1', :role => 'dialog', 'aria-labelledby' => 'faceCheckInModalLabel'}
+  .modal-dialog.modal-lg{:role => 'document'}
+    .modal-content
+      .modal-header
+        %button.close{type: 'button', 'data-dismiss' => 'modal', 'aria-label' => 'Close'}
+          %span{'aria-hidden' => 'true'} &times;
+        %h4.modal-title#faceCheckInModalLabel Face Check-In
+      .modal-body
+        .row
+          .col-md-8
+            .video-container
+              %video#face-video{autoplay: true, muted: true, width: '100%', height: 'auto'}
+            .canvas-container{style: 'display: none;'}
+              %canvas#face-canvas{width: '640', height: '480'}
+            .text-center
+              %button#face-capture-btn.btn.btn-success{style: 'display: none;'} Capture Photo
+              %button#face-retake-btn.btn.btn-warning{style: 'display: none;'} Retake
+              %button#face-recognize-btn.btn.btn-primary{style: 'display: none;'} Check In
+          .col-md-4
+            .instructions
+              %h5 Instructions:
+              %ol
+                %li Click "Start Camera" to begin
+                %li Position your face in the center of the frame
+                %li Ensure good lighting
+                %li Click "Capture Photo" when ready
+                %li Click "Check In" to proceed
+            .status-messages
+              #face-status-message.alert{style: 'display: none;'}
+      .modal-footer
+        %button.btn.btn-default{type: 'button', 'data-dismiss' => 'modal'} Close
+        %button#face-start-camera-btn.btn.btn-primary{type: 'button'} Start Camera
+
+:javascript
+  $(document).ready(function() {
+    var video = document.getElementById('face-video');
+    var canvas = document.getElementById('face-canvas');
+    var ctx = canvas.getContext('2d');
+    var stream = null;
+    var capturedImage = null;
+
+    // Show modal on button click
+    $('#face-checkin-btn').click(function() {
+      $('#faceCheckInModal').modal('show');
+    });
+
+    // Start camera
+    $('#face-start-camera-btn').click(function() {
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ 
+          video: { 
+            width: { ideal: 640 },
+            height: { ideal: 480 },
+            facingMode: 'user'
+          } 
+        })
+        .then(function(mediaStream) {
+          stream = mediaStream;
+          video.srcObject = mediaStream;
+          video.play();
+          $('#face-start-camera-btn').hide();
+          $('#face-capture-btn').show();
+          showFaceStatus('Camera started successfully!', 'success');
+        })
+        .catch(function(err) {
+          console.error('Error accessing camera:', err);
+          showFaceStatus('Error accessing camera. Please check permissions.', 'danger');
+        });
+      } else {
+        showFaceStatus('Camera not supported in this browser.', 'danger');
+      }
+    });
+
+    // Capture photo
+    $('#face-capture-btn').click(function() {
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      capturedImage = canvas.toDataURL('image/jpeg', 0.8);
+      $('.video-container').hide();
+      $('.canvas-container').show();
+      $('#face-capture-btn').hide();
+      $('#face-retake-btn').show();
+      $('#face-recognize-btn').show();
+      showFaceStatus('Photo captured! Click "Check In" to proceed.', 'info');
+    });
+
+    // Retake photo
+    $('#face-retake-btn').click(function() {
+      $('.video-container').show();
+      $('.canvas-container').hide();
+      $('#face-capture-btn').show();
+      $('#face-retake-btn').hide();
+      $('#face-recognize-btn').hide();
+      capturedImage = null;
+      showFaceStatus('Ready to capture new photo.', 'info');
+    });
+
+    // Recognize face and check in (send as file)
+    $('#face-recognize-btn').click(function() {
+      if (!capturedImage) {
+        showFaceStatus('No image captured. Please capture a photo first.', 'danger');
+        return;
+      }
+      showFaceStatus('Processing face recognition...', 'info');
+      $('#face-recognize-btn').prop('disabled', true);
+      var canvas = document.getElementById('face-canvas');
+      canvas.toBlob(function(blob) {
+        var formData = new FormData();
+        formData.append('image', blob, 'capture.jpg');
+        // No user_id needed for recognition
+        fetch('/api/face/recognize', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(function(response) {
+          if (response.success && response.user_id) {
+            // Now, check in this user via Rails
+            $.ajax({
+              url: '/attendances/face_check_in_submit',
+              method: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify({ user_id: response.user_id }),
+              xhrFields: { withCredentials: true },
+              success: function(attendanceResp) {
+                if (attendanceResp.success) {
+                  showFaceStatus('Check-in successful! Welcome, ' + response.user_name + '.', 'success');
+                  setTimeout(function() {
+                    $('#faceCheckInModal').modal('hide');
+                    location.reload();
+                  }, 2000);
+                } else {
+                  showFaceStatus('Check-in failed: ' + (attendanceResp.error || 'Unknown error'), 'danger');
+                }
+              },
+              error: function(xhr, status, error) {
+                showFaceStatus('Error checking in: ' + error, 'danger');
+              },
+              complete: function() {
+                $('#face-recognize-btn').prop('disabled', false);
+              }
+            });
+          } else {
+            showFaceStatus('Face not recognized: ' + (response.error || 'Unknown error'), 'danger');
+            $('#face-recognize-btn').prop('disabled', false);
+          }
+        })
+        .catch(function(error) {
+          showFaceStatus('Error recognizing face: ' + error, 'danger');
+          $('#face-recognize-btn').prop('disabled', false);
+        });
+      }, 'image/jpeg', 0.8);
+    });
+
+    // Clean up when modal is closed
+    $('#faceCheckInModal').on('hidden.bs.modal', function() {
+      if (stream) {
+        stream.getTracks().forEach(function(track) {
+          track.stop();
+        });
+        stream = null;
+      }
+      $('.video-container').show();
+      $('.canvas-container').hide();
+      $('#face-start-camera-btn').show();
+      $('#face-capture-btn').hide();
+      $('#face-retake-btn').hide();
+      $('#face-recognize-btn').hide();
+      capturedImage = null;
+      hideFaceStatus();
+    });
+
+    function showFaceStatus(message, type) {
+      $('#face-status-message')
+        .removeClass()
+        .addClass('alert alert-' + type)
+        .text(message)
+        .show();
+    }
+    function hideFaceStatus() {
+      $('#face-status-message').hide();
+    }
+  });
+
 .text-center.custom-font
   %p Start timers and easily manage your existing time entries in just one tap.
