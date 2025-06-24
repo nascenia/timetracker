@@ -21,7 +21,7 @@
         %td= @leave.user.leave_tracker.accrued_vacation_this_year if @leave.user.leave_tracker.present?
         %td= @leave.user.leave_tracker.accrued_medical_this_year if @leave.user.leave_tracker.present?
       %tr
-        %th Carried forwared leave
+        %th Carried forwarded leave
         %td= @leave.user.leave_tracker.carried_forward_vacation if @leave.user.leave_tracker.present?
         %td= @leave.user.leave_tracker.carried_forward_medical if @leave.user.leave_tracker.present?
       %tr
@@ -33,7 +33,7 @@
         %td= @leave.user.leave_tracker.awarded_leave if @leave.user.leave_tracker.present?
         %td= 'N/A'
       %tr
-        %th Comsumed eave
+        %th Consumed leave
         %td= @leave.user.leave_tracker.consumed_vacation if @leave.user.leave_tracker.present?
         %td= @leave.user.leave_tracker.consumed_medical if @leave.user.leave_tracker.present?
       %tr
