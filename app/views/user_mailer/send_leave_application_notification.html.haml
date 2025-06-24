@@ -14,22 +14,14 @@
                 %td{:style => "font-weight: bold; border: 1px solid #e9e9e9; padding: 6px; width: 180px;"} Leave Type
                 %td{:style => "border: 1px solid #e9e9e9; padding: 6px;"}= @leave.get_leave_type_in_string
               %tr
-                %td{:style => "font-weight: bold; border: 1px solid #e9e9e9; padding: 6px;"}
-                  - if @leave.start_date == @leave.end_date
-                    Leave Date
-                  - else
-                    Leave Duration
-                %td{:style => "border: 1px solid #e9e9e9; padding: 6px;"}
-                  - if @leave.start_date == @leave.end_date
-                    = @leave.start_date.strftime('%d %b %Y')
-                    - if @leave.half_day == Leave::FULL_DAY
-                      (Full Day)
-                    - else
-                      (Half Day)
-                  - else
-                    = @leave.start_date.strftime('%d %b %Y')
-                    to
-                    = @leave.end_date.strftime('%d %b %Y')
+                %td{:style => "font-weight: bold; border: 1px solid #e9e9e9; padding: 6px;"} Start Date
+                %td{:style => "border: 1px solid #e9e9e9; padding: 6px;"}= @leave.start_date.strftime('%d %b %Y')
+              %tr
+                %td{:style => "font-weight: bold; border: 1px solid #e9e9e9; padding: 6px;"} End Date
+                %td{:style => "border: 1px solid #e9e9e9; padding: 6px;"}= @leave.end_date.strftime('%d %b %Y')
+              %tr
+                %td{:style => "font-weight: bold; border: 1px solid #e9e9e9; padding: 6px;"} Duration (Days)
+                %td{:style => "border: 1px solid #e9e9e9; padding: 6px;"}= leave_duration_in_days(@leave)
               %tr
                 %td{:style => "font-weight: bold; border: 1px solid #e9e9e9; padding: 6px;"} Accrual Balance
                 %td{:style => "border: 1px solid #e9e9e9; padding: 6px;"}
