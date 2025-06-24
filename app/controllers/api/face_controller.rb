@@ -83,6 +83,7 @@ class Api::FaceController < ApplicationController
       
       if recognition_result && recognition_result[:user_id]
         user = User.find(recognition_result[:user_id])
+        Rails.logger.info "Face recognition: matched user=#{user.name}, confidence=#{recognition_result[:confidence]}"
         render json: { 
           success: true, 
           user_id: user.id,

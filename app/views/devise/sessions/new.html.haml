@@ -1,3 +1,6 @@
+- content_for :head do
+  %meta{name: "viewport", content: "width=device-width, initial-scale=1"}
+
 .text-center.custom-font
   %h1 Nascenia Time & Leave Tracker
   %p Time & Leave tracking made smart!
@@ -36,16 +39,16 @@
         %h4.modal-title#faceCheckInModalLabel Face Check-In
       .modal-body
         .row
-          .col-md-8
-            .video-container
-              %video#face-video{autoplay: true, muted: true, width: '100%', height: 'auto'}
-            .canvas-container{style: 'display: none;'}
-              %canvas#face-canvas{width: '640', height: '480'}
+          .col-xs-12.col-md-8
+            .video-container.text-center{style: 'width: 100%; max-width: 400px; margin: 0 auto;'}
+              %video#face-video{autoplay: true, muted: true, playsinline: true, style: 'width: 100%; height: auto; border-radius: 8px; background: #222;'}
+            .canvas-container.text-center{style: 'display: none; width: 100%; max-width: 400px; margin: 0 auto;'}
+              %canvas#face-canvas{width: '400', height: '300', style: 'width: 100%; height: auto; border-radius: 8px; background: #222;'}
             .text-center
-              %button#face-capture-btn.btn.btn-success{style: 'display: none;'} Capture Photo
-              %button#face-retake-btn.btn.btn-warning{style: 'display: none;'} Retake
-              %button#face-recognize-btn.btn.btn-primary{style: 'display: none;'} Check In
-          .col-md-4
+              %button#face-capture-btn.btn.btn-success.btn-block{style: 'display: none; margin-top: 10px; font-size: 1.2em; padding: 10px;'} Capture Photo
+              %button#face-retake-btn.btn.btn-warning.btn-block{style: 'display: none; margin-top: 10px; font-size: 1.2em; padding: 10px;'} Retake
+              %button#face-recognize-btn.btn.btn-primary.btn-block{style: 'display: none; margin-top: 10px; font-size: 1.2em; padding: 10px;'} Check In
+          .col-xs-12.col-md-4
             .instructions
               %h5 Instructions:
               %ol
@@ -58,7 +61,7 @@
               #face-status-message.alert{style: 'display: none;'}
       .modal-footer
         %button.btn.btn-default{type: 'button', 'data-dismiss' => 'modal'} Close
-        %button#face-start-camera-btn.btn.btn-primary{type: 'button'} Start Camera
+        %button#face-start-camera-btn.btn.btn-primary.btn-block{type: 'button', style: 'font-size: 1.2em; padding: 10px;'} Start Camera
 
 :javascript
   $(document).ready(function() {
@@ -67,6 +70,12 @@
     var ctx = canvas.getContext('2d');
     var stream = null;
     var capturedImage = null;
+
+    // Dynamically set canvas size to match video stream's real size
+    video.addEventListener('loadedmetadata', function() {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+    });
 
     // Show modal on button click
     $('#face-checkin-btn').click(function() {
@@ -102,6 +111,7 @@
 
     // Capture photo
     $('#face-capture-btn').click(function() {
+      // Always draw at native resolution
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       capturedImage = canvas.toDataURL('image/jpeg', 0.8);
       $('.video-container').hide();
