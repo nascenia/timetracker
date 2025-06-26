@@ -43,7 +43,7 @@ async def register_face(image: UploadFile = File(...), user_id: int = Form(...))
         img_bytes = await image.read()
         img = Image.open(io.BytesIO(img_bytes)).convert("RGB")
         np_img = np.array(img)
-        embedding_objs = DeepFace.represent(img_path=np_img, model_name="Facenet", enforce_detection=True)
+        embedding_objs = DeepFace.represent(img_path=np_img, model_name="Facenet", enforce_detection=True, detector_backend="retinaface")
         if not embedding_objs or 'embedding' not in embedding_objs[0]:
             return JSONResponse({"success": False, "error": "No face detected"})
         embedding = embedding_objs[0]['embedding']
@@ -63,7 +63,7 @@ async def recognize_face(image: UploadFile = File(...), users: str = Form(...), 
         min_dist = float('inf')
         matched_user = None
         distances = []
-        input_objs = DeepFace.represent(img_path=np_img, model_name="Facenet", enforce_detection=True)
+        input_objs = DeepFace.represent(img_path=np_img, model_name="Facenet", enforce_detection=True, detector_backend="retinaface")
         if not input_objs or 'embedding' not in input_objs[0]:
             return JSONResponse({"success": False, "error": "No face detected"})
         input_embedding = input_objs[0]['embedding']
@@ -72,7 +72,7 @@ async def recognize_face(image: UploadFile = File(...), users: str = Form(...), 
         for user in user_list:
             dist = cosine(input_embedding, user['face_encoding'])
             distances.append({"user_id": user['user_id'], "distance": float(dist)})
-            if dist < 0.4 and dist < min_dist:
+            if dist < 0.3 and dist < min_dist:
                 min_dist = dist
                 matched_user = user
         response = {}

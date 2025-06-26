@@ -180,9 +180,7 @@
             .canvas-container.text-center{style: 'display: none; width: 100%; max-width: 400px; margin: 0 auto;'}
               %canvas#canvas{width: '400', height: '300', style: 'width: 100%; height: auto; border-radius: 8px; background: #222;'}
             .text-center
-              %button#capture-btn.btn.btn-success.btn-block{style: 'display: none; margin-top: 10px; font-size: 1.2em; padding: 10px;'} Capture Photo
-              %button#retake-btn.btn.btn-warning.btn-block{style: 'display: none; margin-top: 10px; font-size: 1.2em; padding: 10px;'} Retake
-              %button#register-face-api-btn.btn.btn-primary.btn-block{style: 'display: none; margin-top: 10px; font-size: 1.2em; padding: 10px;'} Register Face
+              #auto-face-status-message.alert{style: 'display: none; margin-top: 10px;'}
           .col-xs-12.col-md-4
             .instructions
               %h5 Instructions:
@@ -190,146 +188,170 @@
                 %li Click "Start Camera" to begin
                 %li Position your face in the center of the frame
                 %li Ensure good lighting
-                %li Click "Capture Photo" when ready
-                %li Review the photo and click "Register Face"
+                %li Look straight at the camera
+                %li The photo will be captured automatically when ready
             .status-messages
               #status-message.alert{style: 'display: none;'}
       .modal-footer
         %button.btn.btn-default{type: 'button', 'data-dismiss' => 'modal'} Close
         %button#start-camera-btn.btn.btn-primary.btn-block{type: 'button', style: 'font-size: 1.2em; padding: 10px;'} Start Camera
 
-:javascript
-  $(document).ready(function() {
-    var video = document.getElementById('video');
-    var canvas = document.getElementById('canvas');
-    var ctx = canvas.getContext('2d');
-    var stream = null;
-    var capturedImage = null;
-
-    // Dynamically set canvas size to match video stream's real size
-    video.addEventListener('loadedmetadata', function() {
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-    });
-
-    // Start camera
-    $('#start-camera-btn').click(function() {
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ 
-          video: { 
-            width: { ideal: 640 },
-            height: { ideal: 480 },
-            facingMode: 'user'
-          } 
-        })
-        .then(function(mediaStream) {
-          stream = mediaStream;
-          video.srcObject = mediaStream;
-          video.play();
-          $('#start-camera-btn').hide();
-          $('#capture-btn').show();
-          showStatus('Camera started successfully!', 'success');
-        })
-        .catch(function(err) {
-          console.error('Error accessing camera:', err);
-          showStatus('Error accessing camera. Please check permissions.', 'danger');
-        });
-      } else {
-        showStatus('Camera not supported in this browser.', 'danger');
-      }
-    });
-
-    // Capture photo
-    $('#capture-btn').click(function() {
-      // Always draw at native resolution
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      capturedImage = canvas.toDataURL('image/jpeg', 0.8);
-      $('.video-container').hide();
-      $('.canvas-container').show();
-      $('#capture-btn').hide();
-      $('#retake-btn').show();
-      $('#register-face-api-btn').show();
-      showStatus('Photo captured! Review and click "Register Face" to proceed.', 'info');
-    });
-
-    // Retake photo
-    $('#retake-btn').click(function() {
-      $('.video-container').show();
-      $('.canvas-container').hide();
-      $('#capture-btn').show();
-      $('#retake-btn').hide();
-      $('#register-face-api-btn').hide();
-      capturedImage = null;
-      showStatus('Ready to capture new photo.', 'info');
-    });
-
-    // Register face with API (send as file)
-    $('#register-face-api-btn').click(function() {
-      if (!capturedImage) {
-        showStatus('No image captured. Please capture a photo first.', 'danger');
-        return;
-      }
-      showStatus('Processing face registration...', 'info');
-      $('#register-face-api-btn').prop('disabled', true);
-      // Send image as file to FastAPI service via Rails API
-      var userId = #{current_user.id};
+:plain
+  <script type="module">
+    import * as vision from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js";
+    window.vision = vision;
+    $(document).ready(function() {
+      var video = document.getElementById('video');
       var canvas = document.getElementById('canvas');
-      canvas.toBlob(function(blob) {
-        var formData = new FormData();
-        formData.append('image', blob, 'capture.jpg');
-        formData.append('user_id', userId);
-        fetch('/api/face/register', {
-          method: 'POST',
-          body: formData
-        })
-        .then(response => response.json())
-        .then(function(response) {
-          if (response.success) {
-            showStatus('Face registered successfully!', 'success');
-            setTimeout(function() {
-              $('#faceRegistrationModal').modal('hide');
-              location.reload(); // Refresh to show updated status
-            }, 2000);
-          } else {
-            showStatus('Face registration failed: ' + response.error, 'danger');
-          }
-        })
-        .catch(function(error) {
-          showStatus('Error registering face: ' + error, 'danger');
-        })
-        .finally(function() {
-          $('#register-face-api-btn').prop('disabled', false);
-        });
-      }, 'image/jpeg', 0.8);
-    });
+      var ctx = canvas.getContext('2d');
+      var stream = null;
+      var autoCaptureActive = false;
+      var faceLandmarker = null;
+      var lastVideoTime = -1;
+      var userId = #{current_user.id};
 
-    // Clean up when modal is closed
-    $('#faceRegistrationModal').on('hidden.bs.modal', function() {
-      if (stream) {
-        stream.getTracks().forEach(function(track) {
-          track.stop();
+      async function loadFaceLandmarker() {
+        const visionWasm = await vision.FilesetResolver.forVisionTasks(
+          'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm'
+        );
+        faceLandmarker = await vision.FaceLandmarker.createFromOptions(visionWasm, {
+          baseOptions: { modelAssetPath: 'https://storage.googleapis.com/mediapipe-assets/face_landmarker.task' },
+          runningMode: 'VIDEO',
+          numFaces: 1,
+          minFaceDetectionConfidence: 0.8,
+          minFacePresenceConfidence: 0.8,
+          minTrackingConfidence: 0.8
         });
-        stream = null;
       }
-      $('.video-container').show();
-      $('.canvas-container').hide();
-      $('#start-camera-btn').show();
-      $('#capture-btn').hide();
-      $('#retake-btn').hide();
-      $('#register-face-api-btn').hide();
-      capturedImage = null;
-      hideStatus();
+
+      function showAutoFaceStatus(message, type) {
+        $('#auto-face-status-message')
+          .removeClass()
+          .addClass('alert alert-' + type)
+          .text(message)
+          .show();
+      }
+      function hideAutoFaceStatus() {
+        $('#auto-face-status-message').hide();
+      }
+
+      async function startAutoCapture() {
+        if (!faceLandmarker) await loadFaceLandmarker();
+        autoCaptureActive = true;
+        showAutoFaceStatus('Align your face to the camera. Waiting for a clear, straight face...', 'info');
+        requestAnimationFrame(autoCaptureLoop);
+      }
+
+      async function autoCaptureLoop() {
+        if (!autoCaptureActive) return;
+        if (video.readyState < 2) {
+          requestAnimationFrame(autoCaptureLoop);
+          return;
+        }
+        if (!faceLandmarker) {
+          requestAnimationFrame(autoCaptureLoop);
+          return;
+        }
+        if (video.currentTime === lastVideoTime) {
+          requestAnimationFrame(autoCaptureLoop);
+          return;
+        }
+        lastVideoTime = video.currentTime;
+        const results = faceLandmarker.detectForVideo(video, performance.now());
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        if (results.faceLandmarks && results.faceLandmarks.length > 0) {
+          // Check if face is straight and centered
+          const landmarks = results.faceLandmarks[0];
+          const leftEye = landmarks[33];
+          const rightEye = landmarks[263];
+          const noseTip = landmarks[1];
+          const eyeDiffY = Math.abs(leftEye.y - rightEye.y);
+          const minEyeX = Math.min(leftEye.x, rightEye.x);
+          const maxEyeX = Math.max(leftEye.x, rightEye.x);
+          const noseBetweenEyes = (noseTip.x > minEyeX && noseTip.x < maxEyeX);
+          const faceCentered = Math.abs(noseTip.x - 0.5) < 0.1;
+          if (eyeDiffY < 0.03 && noseBetweenEyes && faceCentered) {
+            showAutoFaceStatus('Face detected and aligned! Capturing...', 'success');
+            autoCaptureActive = false;
+            setTimeout(captureAndSubmit, 500);
+            return;
+          } else {
+            showAutoFaceStatus('Please look straight at the camera and center your face.', 'warning');
+          }
+        } else {
+          showAutoFaceStatus('No face detected. Please align your face.', 'danger');
+        }
+        requestAnimationFrame(autoCaptureLoop);
+      }
+
+      function captureAndSubmit() {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob(function(blob) {
+          var formData = new FormData();
+          formData.append('image', blob, 'capture.jpg');
+          formData.append('user_id', userId);
+          fetch('/api/face/register', {
+            method: 'POST',
+            body: formData
+          })
+          .then(response => response.json())
+          .then(function(response) {
+            if (response.success) {
+              showAutoFaceStatus('Face registered successfully!', 'success');
+              setTimeout(function() {
+                $('#faceRegistrationModal').modal('hide');
+                location.reload();
+              }, 2000);
+            } else {
+              showAutoFaceStatus('Face registration failed: ' + response.error, 'danger');
+              autoCaptureActive = true;
+              requestAnimationFrame(autoCaptureLoop);
+            }
+          })
+          .catch(function(error) {
+            showAutoFaceStatus('Error registering face: ' + error, 'danger');
+            autoCaptureActive = true;
+            requestAnimationFrame(autoCaptureLoop);
+          });
+        }, 'image/jpeg', 0.8);
+      }
+
+      $('#start-camera-btn').click(function() {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          navigator.mediaDevices.getUserMedia({ 
+            video: { 
+              width: { ideal: 640 },
+              height: { ideal: 480 },
+              facingMode: 'user'
+            } 
+          })
+          .then(function(mediaStream) {
+            stream = mediaStream;
+            video.srcObject = mediaStream;
+            video.play();
+            $('#start-camera-btn').hide();
+            startAutoCapture();
+          })
+          .catch(function(err) {
+            showAutoFaceStatus('Error accessing camera. Please check permissions.', 'danger');
+          });
+        } else {
+          showAutoFaceStatus('Camera not supported in this browser.', 'danger');
+        }
+      });
+
+      $('#faceRegistrationModal').on('hidden.bs.modal', function() {
+        if (stream) {
+          stream.getTracks().forEach(function(track) {
+            track.stop();
+          });
+          stream = null;
+        }
+        $('.video-container').show();
+        $('.canvas-container').hide();
+        $('#start-camera-btn').show();
+        autoCaptureActive = false;
+        hideAutoFaceStatus();
+      });
     });
-
-    function showStatus(message, type) {
-      $('#status-message')
-        .removeClass()
-        .addClass('alert alert-' + type)
-        .text(message)
-        .show();
-    }
-
-    function hideStatus() {
-      $('#status-message').hide();
-    }
-  });
+  </script>
