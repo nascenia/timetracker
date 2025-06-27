@@ -29,10 +29,14 @@ class Api::FaceController < ApplicationController
       
       # Call FastAPI service to process face and get encoding
       face_encoding = call_fastapi_register(image_file, user_id)
-      
+      device_type = params[:device_type]
       if face_encoding
-        # Update user's face encoding
-        user.update(face_encoding: face_encoding)
+        # Update user's face encoding in the correct column
+        if device_type == 'mb'
+          user.update(face_encoding_mb: face_encoding)
+        else
+          user.update(face_encoding_pc: face_encoding)
+        end
         render json: { success: true, message: 'Face registered successfully' }
       else
         render json: { success: false, error: 'Failed to process face image' }, status: :unprocessable_entity
@@ -49,14 +53,18 @@ class Api::FaceController < ApplicationController
     begin
       # Extract image file from request
       image_file = params[:image]
+      device_type = params[:device_type] || 'pc'  # Default to pc if not specified
       
       # Validate parameters
       unless image_file.present?
         return render json: { success: false, error: 'Missing image data' }, status: :bad_request
       end
 
-      # Gather all users with a face_encoding
-      users_with_encoding = User.where.not(face_encoding: [nil, '']).pluck(:id, :face_encoding)
+      # Determine which column to use based on device type
+      encoding_column = device_type == 'mb' ? 'face_encoding_mb' : 'face_encoding_pc'
+      
+      # Gather all users with a face_encoding in the appropriate column
+      users_with_encoding = User.where.not(encoding_column => [nil, '']).pluck(:id, encoding_column)
       user_list = users_with_encoding.map do |id, encoding|
         arr = if encoding.is_a?(Array)
           encoding

@@ -3,6 +3,9 @@
     Employee Details
 %br
 
+%div#device-type-indicator(style='font-weight: bold; color: #007bff; margin-bottom: 10px;')
+  Detecting device...
+
 = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: 'form-horizontal', method: :put }) do |f|
   = devise_error_messages!
   %fieldset
@@ -149,7 +152,7 @@
       .col-sm-2
         %h5 Face Registration
       .col-sm-10
-        - if current_user.face_encoding.present?
+        - if current_user.face_encoding_pc.present?
           .alert.alert-success
             %strong Face data registered!
             %br
@@ -175,12 +178,17 @@
       .modal-body
         .row
           .col-xs-12.col-md-8
-            .video-container.text-center{style: 'width: 100%; max-width: 400px; margin: 0 auto;'}
-              %video#video{autoplay: true, muted: true, playsinline: true, style: 'width: 100%; height: auto; border-radius: 8px; background: #222;'}
-            .canvas-container.text-center{style: 'display: none; width: 100%; max-width: 400px; margin: 0 auto;'}
-              %canvas#canvas{width: '400', height: '300', style: 'width: 100%; height: auto; border-radius: 8px; background: #222;'}
+            .video-container.text-center{style: 'width: 100%; max-width: 200px; margin: 0 auto;'}
+              %video#video{autoplay: true, muted: true, playsinline: true, style: 'width: 100%; height: auto; aspect-ratio: 1 / 1; border-radius: 50%; object-fit: cover; background: #222; box-shadow: 0 0 0 4px #fff, 0 0 8px 0 #888;'}
+            .canvas-container.text-center{style: 'display: none; width: 100%; max-width: 200px; margin: 0 auto;'}
+              %canvas#canvas{width: '200', height: '200', style: 'width: 100%; height: auto; aspect-ratio: 1 / 1; border-radius: 50%; object-fit: cover; background: #222; box-shadow: 0 0 0 4px #fff, 0 0 8px 0 #888;'}
             .text-center
               #auto-face-status-message.alert{style: 'display: none; margin-top: 10px;'}
+              %button#capture-photo-btn.btn.btn-primary{type: 'button', style: 'margin: 10px 5px;'} Capture
+              %button#retake-photo-btn.btn.btn-warning{type: 'button', style: 'margin: 10px 5px; display: none;'} Retake
+              %button#next-photo-btn.btn.btn-info{type: 'button', style: 'margin: 10px 5px; display: none;'} Take Next Photo
+              %button#see-best-shot-btn.btn.btn-secondary{type: 'button', style: 'margin: 10px 5px; display: none;'} See Best Shot
+              %button#register-face-btn-modal.btn.btn-success{type: 'button', style: 'margin: 10px 5px; display: none;'} Register Face
           .col-xs-12.col-md-4
             .instructions
               %h5 Instructions:
@@ -205,23 +213,28 @@
       var canvas = document.getElementById('canvas');
       var ctx = canvas.getContext('2d');
       var stream = null;
-      var autoCaptureActive = false;
-      var faceLandmarker = null;
-      var lastVideoTime = -1;
       var userId = #{current_user.id};
+      var photoTaken = false;
+      var capturedPhotos = [];
+      var faceLandmarker = null;
+      var lastCaptureData = null;
+      var maxPhotos = 3;
+      var deviceType = isMobileDevice() ? 'mb' : 'pc';
 
       async function loadFaceLandmarker() {
-        const visionWasm = await vision.FilesetResolver.forVisionTasks(
-          'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm'
-        );
-        faceLandmarker = await vision.FaceLandmarker.createFromOptions(visionWasm, {
-          baseOptions: { modelAssetPath: 'https://storage.googleapis.com/mediapipe-assets/face_landmarker.task' },
-          runningMode: 'VIDEO',
-          numFaces: 1,
-          minFaceDetectionConfidence: 0.8,
-          minFacePresenceConfidence: 0.8,
-          minTrackingConfidence: 0.8
-        });
+        if (!faceLandmarker) {
+          const visionWasm = await vision.FilesetResolver.forVisionTasks(
+            'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm'
+          );
+          faceLandmarker = await vision.FaceLandmarker.createFromOptions(visionWasm, {
+            baseOptions: { modelAssetPath: 'https://storage.googleapis.com/mediapipe-assets/face_landmarker.task' },
+            runningMode: 'IMAGE',
+            numFaces: 1,
+            minFaceDetectionConfidence: 0.8,
+            minFacePresenceConfidence: 0.8,
+            minTrackingConfidence: 0.8
+          });
+        }
       }
 
       function showAutoFaceStatus(message, type) {
@@ -235,85 +248,34 @@
         $('#auto-face-status-message').hide();
       }
 
-      async function startAutoCapture() {
-        if (!faceLandmarker) await loadFaceLandmarker();
-        autoCaptureActive = true;
-        showAutoFaceStatus('Align your face to the camera. Waiting for a clear, straight face...', 'info');
-        requestAnimationFrame(autoCaptureLoop);
+      function showVideo() {
+        $('.video-container').show();
+        $('.canvas-container').hide();
+        $('#capture-photo-btn').show();
+        $('#retake-photo-btn').hide();
+        $('#next-photo-btn').hide();
+        $('#see-best-shot-btn').hide();
+        $('#register-face-btn-modal').hide();
+        photoTaken = false;
       }
-
-      async function autoCaptureLoop() {
-        if (!autoCaptureActive) return;
-        if (video.readyState < 2) {
-          requestAnimationFrame(autoCaptureLoop);
-          return;
+      function showCanvas() {
+        $('.video-container').hide();
+        $('.canvas-container').show();
+        $('#capture-photo-btn').hide();
+        $('#retake-photo-btn').show();
+        if (capturedPhotos.length < maxPhotos - 1) {
+          $('#next-photo-btn').show();
+          $('#see-best-shot-btn').hide();
+          $('#register-face-btn-modal').hide();
+        } else if (capturedPhotos.length === maxPhotos - 1) {
+          $('#next-photo-btn').hide();
+          $('#see-best-shot-btn').show();
+          $('#register-face-btn-modal').show();
         }
-        if (!faceLandmarker) {
-          requestAnimationFrame(autoCaptureLoop);
-          return;
-        }
-        if (video.currentTime === lastVideoTime) {
-          requestAnimationFrame(autoCaptureLoop);
-          return;
-        }
-        lastVideoTime = video.currentTime;
-        const results = faceLandmarker.detectForVideo(video, performance.now());
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        if (results.faceLandmarks && results.faceLandmarks.length > 0) {
-          // Check if face is straight and centered
-          const landmarks = results.faceLandmarks[0];
-          const leftEye = landmarks[33];
-          const rightEye = landmarks[263];
-          const noseTip = landmarks[1];
-          const eyeDiffY = Math.abs(leftEye.y - rightEye.y);
-          const minEyeX = Math.min(leftEye.x, rightEye.x);
-          const maxEyeX = Math.max(leftEye.x, rightEye.x);
-          const noseBetweenEyes = (noseTip.x > minEyeX && noseTip.x < maxEyeX);
-          const faceCentered = Math.abs(noseTip.x - 0.5) < 0.1;
-          if (eyeDiffY < 0.03 && noseBetweenEyes && faceCentered) {
-            showAutoFaceStatus('Face detected and aligned! Capturing...', 'success');
-            autoCaptureActive = false;
-            setTimeout(captureAndSubmit, 500);
-            return;
-          } else {
-            showAutoFaceStatus('Please look straight at the camera and center your face.', 'warning');
-          }
-        } else {
-          showAutoFaceStatus('No face detected. Please align your face.', 'danger');
-        }
-        requestAnimationFrame(autoCaptureLoop);
+        photoTaken = true;
       }
-
-      function captureAndSubmit() {
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        canvas.toBlob(function(blob) {
-          var formData = new FormData();
-          formData.append('image', blob, 'capture.jpg');
-          formData.append('user_id', userId);
-          fetch('/api/face/register', {
-            method: 'POST',
-            body: formData
-          })
-          .then(response => response.json())
-          .then(function(response) {
-            if (response.success) {
-              showAutoFaceStatus('Face registered successfully!', 'success');
-              setTimeout(function() {
-                $('#faceRegistrationModal').modal('hide');
-                location.reload();
-              }, 2000);
-            } else {
-              showAutoFaceStatus('Face registration failed: ' + response.error, 'danger');
-              autoCaptureActive = true;
-              requestAnimationFrame(autoCaptureLoop);
-            }
-          })
-          .catch(function(error) {
-            showAutoFaceStatus('Error registering face: ' + error, 'danger');
-            autoCaptureActive = true;
-            requestAnimationFrame(autoCaptureLoop);
-          });
-        }, 'image/jpeg', 0.8);
+      function updateStatusCounter() {
+        showAutoFaceStatus('Photo ' + (capturedPhotos.length + 1) + ' of ' + maxPhotos, 'info');
       }
 
       $('#start-camera-btn').click(function() {
@@ -330,7 +292,9 @@
             video.srcObject = mediaStream;
             video.play();
             $('#start-camera-btn').hide();
-            startAutoCapture();
+            showVideo();
+            updateStatusCounter();
+            hideAutoFaceStatus();
           })
           .catch(function(err) {
             showAutoFaceStatus('Error accessing camera. Please check permissions.', 'danger');
@@ -340,6 +304,228 @@
         }
       });
 
+      $('#capture-photo-btn').click(async function() {
+        // Get actual displayed size of video element
+        const displayWidth = video.clientWidth;
+        const displayHeight = video.clientHeight;
+
+        // Set canvas resolution to match displayed size (adjust for high-DPI screens)
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = displayWidth * dpr;
+        canvas.height = displayHeight * dpr;
+        canvas.style.width = `${displayWidth}px`;
+        canvas.style.height = `${displayHeight}px`;
+
+        // Calculate video's intrinsic aspect ratio
+        const videoRatio = video.videoWidth / video.videoHeight;
+        const displayRatio = displayWidth / displayHeight;
+
+        // Determine source cropping coordinates
+        let sx, sy, sw, sh;
+
+        if (videoRatio > displayRatio) {
+            // Video is wider than display: crop left/right
+            sw = video.videoHeight * displayRatio;
+            sh = video.videoHeight;
+            sx = (video.videoWidth - sw) / 2;
+            sy = 0;
+        } else {
+            // Video is taller than display: crop top/bottom
+            sw = video.videoWidth;
+            sh = video.videoWidth / displayRatio;
+            sx = 0;
+            sy = (video.videoHeight - sh) / 2;
+        }
+
+        // Draw only the visible portion of the video
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(
+            video, 
+            sx, sy, sw, sh,          // Source rectangle (cropped portion)
+            0, 0, canvas.width, canvas.height  // Destination (full canvas)
+        );
+        // Save the image data for later
+        lastCaptureData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        showCanvas();
+        hideAutoFaceStatus();
+      });
+
+      $('#retake-photo-btn').click(function() {
+        lastCaptureData = null;
+        showVideo();
+        updateStatusCounter();
+        hideAutoFaceStatus();
+      });
+
+      $('#next-photo-btn').click(function() {
+        if (lastCaptureData) {
+          // Store the photo as a dataURL for later
+          var tempCanvas = document.createElement('canvas');
+          tempCanvas.width = canvas.width;
+          tempCanvas.height = canvas.height;
+          tempCanvas.getContext('2d').putImageData(lastCaptureData, 0, 0);
+          capturedPhotos.push(tempCanvas.toDataURL('image/jpeg', 1));
+          lastCaptureData = null;
+        }
+        if (capturedPhotos.length < maxPhotos) {
+          showVideo();
+          updateStatusCounter();
+          hideAutoFaceStatus();
+        }
+      });
+
+      $('#see-best-shot-btn').click(async function() {
+        await loadFaceLandmarker();
+        if (lastCaptureData && capturedPhotos.length < maxPhotos) {
+          // Accept the last photo if not already accepted
+          var tempCanvas = document.createElement('canvas');
+          tempCanvas.width = canvas.width;
+          tempCanvas.height = canvas.height;
+          tempCanvas.getContext('2d').putImageData(lastCaptureData, 0, 0);
+          capturedPhotos.push(tempCanvas.toDataURL('image/jpeg', 1));
+        }
+        if (capturedPhotos.length !== maxPhotos) {
+          showAutoFaceStatus('Please capture all 3 photos.', 'warning');
+          return;
+        }
+        // Find the best photo using MediaPipe FaceLandmarker
+        let bestScore = -Infinity;
+        let bestIndex = 0;
+        for (let i = 0; i < capturedPhotos.length; i++) {
+          let img = new window.Image();
+          img.src = capturedPhotos[i];
+          await new Promise(resolve => { img.onload = resolve; });
+          let tempCanvas = document.createElement('canvas');
+          tempCanvas.width = canvas.width;
+          tempCanvas.height = canvas.height;
+          let tempCtx = tempCanvas.getContext('2d');
+          tempCtx.drawImage(img, 0, 0, tempCanvas.width, tempCanvas.height);
+          let results = faceLandmarker.detect(tempCanvas);
+          let score = 0;
+          if (results.faceLandmarks && results.faceLandmarks.length > 0) {
+            const landmarks = results.faceLandmarks[0];
+            const leftEye = landmarks[33];
+            const rightEye = landmarks[263];
+            const noseTip = landmarks[1];
+            const eyeDiffY = Math.abs(leftEye.y - rightEye.y);
+            const minEyeX = Math.min(leftEye.x, rightEye.x);
+            const maxEyeX = Math.max(leftEye.x, rightEye.x);
+            const noseBetweenEyes = (noseTip.x > minEyeX && noseTip.x < maxEyeX);
+            const faceCentered = Math.abs(noseTip.x - 0.5) < 0.1;
+            score = 1 - eyeDiffY;
+            if (noseBetweenEyes) score += 1;
+            if (faceCentered) score += 1;
+            let imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+            let sharpness = 0;
+            for (let j = 0; j < imageData.data.length; j += 4) {
+              sharpness += Math.abs(imageData.data[j] - imageData.data[j+1]) + Math.abs(imageData.data[j] - imageData.data[j+2]);
+            }
+            score += sharpness / (imageData.data.length * 2);
+          }
+          if (score > bestScore) {
+            bestScore = score;
+            bestIndex = i;
+          }
+        }
+        // Show the best photo in the canvas
+        let bestImg = new window.Image();
+        bestImg.src = capturedPhotos[bestIndex];
+        await new Promise(resolve => { bestImg.onload = resolve; });
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(bestImg, 0, 0, canvas.width, canvas.height);
+        showAutoFaceStatus('Best shot selected and shown!', 'success');
+      });
+
+      $('#register-face-btn-modal').click(async function() {
+        if (lastCaptureData && capturedPhotos.length < maxPhotos) {
+          // Accept the last photo if not already accepted
+          var tempCanvas = document.createElement('canvas');
+          tempCanvas.width = canvas.width;
+          tempCanvas.height = canvas.height;
+          tempCanvas.getContext('2d').putImageData(lastCaptureData, 0, 0);
+          capturedPhotos.push(tempCanvas.toDataURL('image/jpeg', 1));
+        }
+        if (capturedPhotos.length !== maxPhotos) {
+          showAutoFaceStatus('Please capture all 3 photos.', 'warning');
+          return;
+        }
+        await loadFaceLandmarker();
+        // Find the best photo using MediaPipe FaceLandmarker
+        let bestScore = -Infinity;
+        let bestIndex = 0;
+        for (let i = 0; i < capturedPhotos.length; i++) {
+          let img = new window.Image();
+          img.src = capturedPhotos[i];
+          await new Promise(resolve => { img.onload = resolve; });
+          let tempCanvas = document.createElement('canvas');
+          tempCanvas.width = canvas.width;
+          tempCanvas.height = canvas.height;
+          let tempCtx = tempCanvas.getContext('2d');
+          tempCtx.drawImage(img, 0, 0, tempCanvas.width, tempCanvas.height);
+          let imageBitmap = tempCanvas;
+          let results = faceLandmarker.detect(tempCanvas);
+          let score = 0;
+          if (results.faceLandmarks && results.faceLandmarks.length > 0) {
+            // Score: prefer straight, centered, sharp faces
+            const landmarks = results.faceLandmarks[0];
+            const leftEye = landmarks[33];
+            const rightEye = landmarks[263];
+            const noseTip = landmarks[1];
+            const eyeDiffY = Math.abs(leftEye.y - rightEye.y);
+            const minEyeX = Math.min(leftEye.x, rightEye.x);
+            const maxEyeX = Math.max(leftEye.x, rightEye.x);
+            const noseBetweenEyes = (noseTip.x > minEyeX && noseTip.x < maxEyeX);
+            const faceCentered = Math.abs(noseTip.x - 0.5) < 0.1;
+            score = 1 - eyeDiffY;
+            if (noseBetweenEyes) score += 1;
+            if (faceCentered) score += 1;
+            // Sharpness: use edge detection (simple Laplacian)
+            let imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+            let sharpness = 0;
+            for (let j = 0; j < imageData.data.length; j += 4) {
+              sharpness += Math.abs(imageData.data[j] - imageData.data[j+1]) + Math.abs(imageData.data[j] - imageData.data[j+2]);
+            }
+            score += sharpness / (imageData.data.length * 2);
+          }
+          if (score > bestScore) {
+            bestScore = score;
+            bestIndex = i;
+          }
+        }
+        // Convert best photo dataURL to blob
+        function dataURLtoBlob(dataurl) {
+          var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1], bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+          while(n--){
+            u8arr[n] = bstr.charCodeAt(n);
+          }
+          return new Blob([u8arr], {type:mime});
+        }
+        var bestPhotoBlob = dataURLtoBlob(capturedPhotos[bestIndex]);
+        var formData = new FormData();
+        formData.append('image', bestPhotoBlob, 'capture.jpg');
+        formData.append('user_id', userId);
+        formData.append('device_type', deviceType);
+        fetch('/api/face/register', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(function(response) {
+          if (response.success) {
+            showAutoFaceStatus('Face registered successfully!', 'success');
+            setTimeout(function() {
+              $('#faceRegistrationModal').modal('hide');
+              location.reload();
+            }, 2000);
+          } else {
+            showAutoFaceStatus('Face registration failed: ' + response.error, 'danger');
+          }
+        })
+        .catch(function(error) {
+          showAutoFaceStatus('Error registering face: ' + error, 'danger');
+        });
+      });
+
       $('#faceRegistrationModal').on('hidden.bs.modal', function() {
         if (stream) {
           stream.getTracks().forEach(function(track) {
@@ -347,11 +533,23 @@
           });
           stream = null;
         }
-        $('.video-container').show();
-        $('.canvas-container').hide();
         $('#start-camera-btn').show();
-        autoCaptureActive = false;
+        showVideo();
+        capturedPhotos = [];
+        lastCaptureData = null;
+        updateStatusCounter();
         hideAutoFaceStatus();
       });
+    });
+
+    // Device detection
+    function isMobileDevice() {
+      return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      var indicator = document.getElementById('device-type-indicator');
+      if (indicator) {
+        indicator.textContent = isMobileDevice() ? 'phone' : 'computer';
+      }
     });
   </script>

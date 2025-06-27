@@ -40,14 +40,16 @@
       .modal-body
         .row
           .col-xs-12.col-md-8
-            .video-container.text-center{style: 'width: 100%; max-width: 400px; margin: 0 auto;'}
-              %video#face-video{autoplay: true, muted: true, playsinline: true, style: 'width: 100%; height: auto; border-radius: 8px; background: #222;'}
-            .canvas-container.text-center{style: 'display: none; width: 100%; max-width: 400px; margin: 0 auto;'}
-              %canvas#face-canvas{width: '400', height: '300', style: 'width: 100%; height: auto; border-radius: 8px; background: #222;'}
+            .video-container.text-center{style: 'width: 100%; max-width: 200px; margin: 0 auto;'}
+              %video#face-video{autoplay: true, muted: true, playsinline: true, style: 'width: 100%; height: auto; border-radius: 50%; aspect-ratio: 1 / 1; object-fit: cover; background: #222; box-shadow: 0 0 0 4px #fff, 0 0 8px 0 #888;'}
+            .canvas-container.text-center{style: 'display: none; width: 100%; max-width: 200px; margin: 0 auto;'}
+              %canvas#face-canvas{width: '200', height: '200', style: 'width: 100%; height: auto; border-radius: 50%; aspect-ratio: 1 / 1; object-fit: cover; background: #222; box-shadow: 0 0 0 4px #fff, 0 0 8px 0 #888;'}
             .text-center
               // Removed manual capture/retake/recognize buttons
             .text-center
               #auto-face-status-message.alert{style: 'display: none; margin-top: 10px;'}
+              #pose-feedback.alert{style: 'display: none; margin-top: 10px;'}
+              #countdown-feedback.alert{style: 'display: none; margin-top: 10px; font-size: 1.2em; font-weight: bold;'}
           .col-xs-12.col-md-4
             .instructions
               %h5 Instructions:
@@ -79,6 +81,12 @@
       var autoCaptureActive = false;
       var faceLandmarker = null;
       var lastVideoTime = -1;
+      var deviceType = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'mb' : 'pc';
+      var countdownActive = false;
+      var countdownValue = 3;
+      var poseReady = false;
+      var poseHoldTime = 0;
+      var requiredHoldTime = 30; // frames at 30fps = 1 second
 
       async function loadFaceLandmarker() {
         const visionWasm = await vision.FilesetResolver.forVisionTasks(
@@ -105,10 +113,88 @@
         $('#auto-face-status-message').hide();
       }
 
+      function showPoseFeedback(message, type) {
+        $('#pose-feedback')
+          .removeClass()
+          .addClass('alert alert-' + type)
+          .text(message)
+          .show();
+      }
+      function hidePoseFeedback() {
+        $('#pose-feedback').hide();
+      }
+
+      function showCountdownFeedback(message, type) {
+        $('#countdown-feedback')
+          .removeClass()
+          .addClass('alert alert-' + type)
+          .text(message)
+          .show();
+      }
+      function hideCountdownFeedback() {
+        $('#countdown-feedback').hide();
+      }
+
+      function startCountdown() {
+        if (countdownActive) return;
+        countdownActive = true;
+        countdownValue = 3;
+        showCountdownFeedback('Hold your pose! Starting countdown...', 'info');
+        
+        var countdownInterval = setInterval(function() {
+          if (countdownValue > 0) {
+            showCountdownFeedback('Hold still! ' + countdownValue + '...', 'warning');
+            countdownValue--;
+          } else {
+            clearInterval(countdownInterval);
+            showCountdownFeedback('Click!', 'success');
+            setTimeout(function() {
+              if (poseReady) {
+                captureAndSubmit();
+              } else {
+                countdownActive = false;
+                showPoseFeedback('Pose lost during countdown. Please adjust your position.', 'danger');
+              }
+            }, 500);
+          }
+        }, 1000);
+      }
+
+      function checkPoseQuality(landmarks) {
+        if (!landmarks || landmarks.length === 0) return false;
+        
+        const face = landmarks[0];
+        const leftEye = face[33];
+        const rightEye = face[263];
+        const noseTip = face[1];
+        const leftEyeCorner = face[33];
+        const rightEyeCorner = face[263];
+        
+        // Check if face is straight (eyes level)
+        const eyeDiffY = Math.abs(leftEye.y - rightEye.y);
+        if (eyeDiffY > 0.03) return false;
+        
+        // Check if nose is between eyes
+        const minEyeX = Math.min(leftEye.x, rightEye.x);
+        const maxEyeX = Math.max(leftEye.x, rightEye.x);
+        const noseBetweenEyes = (noseTip.x > minEyeX && noseTip.x < maxEyeX);
+        if (!noseBetweenEyes) return false;
+        
+        // Check if face is centered
+        const faceCentered = Math.abs(noseTip.x - 0.5) < 0.1;
+        if (!faceCentered) return false;
+        
+        // Check if face is at good distance (not too close/far)
+        const faceSize = Math.abs(leftEye.x - rightEye.x);
+        if (faceSize < 0.15 || faceSize > 0.4) return false;
+        
+        return true;
+      }
+
       async function startAutoCapture() {
         if (!faceLandmarker) await loadFaceLandmarker();
         autoCaptureActive = true;
-        showAutoFaceStatus('Align your face to the camera. Waiting for a clear, straight face...', 'info');
+        showPoseFeedback('Position your face in the center. Look straight at the camera.', 'info');
         requestAnimationFrame(autoCaptureLoop);
       }
 
@@ -127,38 +213,74 @@
           return;
         }
         lastVideoTime = video.currentTime;
+        
         const results = faceLandmarker.detectForVideo(video, performance.now());
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
         if (results.faceLandmarks && results.faceLandmarks.length > 0) {
-          // Check if face is straight and centered
-          const landmarks = results.faceLandmarks[0];
-          const leftEye = landmarks[33];
-          const rightEye = landmarks[263];
-          const noseTip = landmarks[1];
-          const eyeDiffY = Math.abs(leftEye.y - rightEye.y);
-          const minEyeX = Math.min(leftEye.x, rightEye.x);
-          const maxEyeX = Math.max(leftEye.x, rightEye.x);
-          const noseBetweenEyes = (noseTip.x > minEyeX && noseTip.x < maxEyeX);
-          const faceCentered = Math.abs(noseTip.x - 0.5) < 0.1;
-          if (eyeDiffY < 0.03 && noseBetweenEyes && faceCentered) {
-            showAutoFaceStatus('Face detected and aligned! Capturing...', 'success');
-            autoCaptureActive = false;
-            setTimeout(captureAndSubmit, 500);
-            return;
+          const poseQuality = checkPoseQuality(results.faceLandmarks);
+          
+          if (poseQuality) {
+            if (!poseReady) {
+              poseReady = true;
+              poseHoldTime = 0;
+              showPoseFeedback('Perfect pose! Hold still...', 'success');
+            }
+            poseHoldTime++;
+            
+            if (poseHoldTime >= requiredHoldTime && !countdownActive) {
+              startCountdown();
+            }
           } else {
-            showAutoFaceStatus('Please look straight at the camera and center your face.', 'warning');
+            if (poseReady) {
+              poseReady = false;
+              poseHoldTime = 0;
+              countdownActive = false;
+              hideCountdownFeedback();
+              showPoseFeedback('Pose lost. Please adjust your position.', 'warning');
+            } else {
+              showPoseFeedback('Adjust your face: center it, look straight, keep eyes level.', 'info');
+            }
           }
         } else {
-          showAutoFaceStatus('No face detected. Please align your face.', 'danger');
+          if (poseReady) {
+            poseReady = false;
+            poseHoldTime = 0;
+            countdownActive = false;
+            hideCountdownFeedback();
+          }
+          showPoseFeedback('No face detected. Please position your face in the camera view.', 'danger');
         }
+        
         requestAnimationFrame(autoCaptureLoop);
       }
 
       function captureAndSubmit() {
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const videoEl  = document.querySelector('video');
+        const canvasEl = document.querySelector('canvas');
+        const ctx      = canvasEl.getContext('2d');
+
+        // 1. set canvas size to match the *intrinsic* video size
+        //    (video.videoWidth / video.videoHeight is the aspect ratio)
+        canvasEl.width  = videoEl.videoWidth;
+        canvasEl.height = videoEl.videoHeight;
+
+        // 2. draw at full resolution, no stretching
+        ctx.drawImage(videoEl, 0, 0);
+
+        // 3. pause & swap views
+        videoEl.pause();
+        document.querySelector('.video-container').style.display  = 'none';
+        document.querySelector('.canvas-container').style.display = 'block';
         canvas.toBlob(function(blob) {
           var formData = new FormData();
           formData.append('image', blob, 'capture.jpg');
+          formData.append('device_type', deviceType);
+          
+          showAutoFaceStatus('Finding a match...', 'info');
+          hidePoseFeedback();
+          hideCountdownFeedback();
+          
           fetch('/api/face/recognize', {
             method: 'POST',
             body: formData
@@ -182,26 +304,70 @@
                     }, 2000);
                   } else {
                     showAutoFaceStatus('Check-in failed: ' + (attendanceResp.error || 'Unknown error'), 'danger');
+                    // Reset for retry
+                    setTimeout(function() {
+                      poseReady = false;
+                      poseHoldTime = 0;
+                      countdownActive = false;
+                      hideAutoFaceStatus();
+                      showPoseFeedback('Please try again. Position your face in the center.', 'info');
+                      if (video && video.srcObject) {
+                        video.play();
+                      }
+                      $('.video-container').show();
+                      $('.canvas-container').hide();
+                    }, 3000);
                   }
                 },
                 error: function(xhr, status, error) {
                   showAutoFaceStatus('Error checking in: ' + error, 'danger');
-                },
-                complete: function() {
-                  autoCaptureActive = true;
-                  requestAnimationFrame(autoCaptureLoop);
+                  // Reset for retry
+                  setTimeout(function() {
+                    poseReady = false;
+                    poseHoldTime = 0;
+                    countdownActive = false;
+                    hideAutoFaceStatus();
+                    showPoseFeedback('Please try again. Position your face in the center.', 'info');
+                    if (video && video.srcObject) {
+                      video.play();
+                    }
+                    $('.video-container').show();
+                    $('.canvas-container').hide();
+                  }, 3000);
                 }
               });
             } else {
-              showAutoFaceStatus('Face not recognized: ' + (response.error || 'Unknown error'), 'danger');
-              autoCaptureActive = true;
-              requestAnimationFrame(autoCaptureLoop);
+              showAutoFaceStatus('Face not recognized. Please try again.', 'danger');
+              // Reset for retry
+              setTimeout(function() {
+                poseReady = false;
+                poseHoldTime = 0;
+                countdownActive = false;
+                hideAutoFaceStatus();
+                showPoseFeedback('No match found. Please adjust your pose and try again.', 'warning');
+                if (video && video.srcObject) {
+                  video.play();
+                }
+                $('.video-container').show();
+                $('.canvas-container').hide();
+              }, 3000);
             }
           })
           .catch(function(error) {
             showAutoFaceStatus('Error recognizing face: ' + error, 'danger');
-            autoCaptureActive = true;
-            requestAnimationFrame(autoCaptureLoop);
+            // Reset for retry
+            setTimeout(function() {
+              poseReady = false;
+              poseHoldTime = 0;
+              countdownActive = false;
+              hideAutoFaceStatus();
+              showPoseFeedback('Please try again. Position your face in the center.', 'info');
+              if (video && video.srcObject) {
+                video.play();
+              }
+              $('.video-container').show();
+              $('.canvas-container').hide();
+            }, 3000);
           });
         }, 'image/jpeg', 0.8);
       }
@@ -241,7 +407,15 @@
         $('.canvas-container').hide();
         $('#face-start-camera-btn').show();
         autoCaptureActive = false;
+        poseReady = false;
+        poseHoldTime = 0;
+        countdownActive = false;
         hideAutoFaceStatus();
+        hidePoseFeedback();
+        hideCountdownFeedback();
+        if (video && video.srcObject) {
+          video.play();
+        }
       });
     });
   </script>
