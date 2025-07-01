@@ -126,52 +126,6 @@ class AttendancesController < ApplicationController
     end
   end
 
-  # POST /attendances/face_check_in_submit
-  skip_before_action :authenticate_user!, only: [:face_check_in_submit]
-  
-  def face_check_in_submit
-    begin
-      user_id = params[:user_id] || (request.body.present? ? JSON.parse(request.body.read)["user_id"] : nil)
-      user = User.find_by(id: user_id)
-      unless user
-        return render json: { success: false, error: 'User not found' }, status: :not_found
-      end
-
-      # Sign in the user (Devise)
-      sign_in(user)
-
-      today = Date.today
-      attendance = user.attendances.where(checkin_date: today).last
-      if user.all_information_provided?
-        if attendance.present?
-          if attendance.out_time.present?
-            # Already checked out, create new check-in
-            Attendance.create_attendance(user.id, attendance)
-            message = 'Checked in again.'
-          else
-            # Already checked in, do nothing or check out
-            attendance.out_time = Time.now.to_s(:time)
-            attendance.save!
-            total_hours = ((attendance.out_time.to_time - attendance.in_time.to_time) / 1.hour).round(2)
-            attendance.total_hours = total_hours
-            attendance.save!
-            message = 'Checked out.'
-          end
-        else
-          Attendance.create_attendance(user.id, nil)
-          Attendance.add_missing_checkout_hours(user)
-          message = 'Checked in.'
-        end
-        render json: { success: true, message: message, user_id: user.id, user_name: user.name }
-      else
-        render json: { success: false, error: 'Please fill up all your details before checking in.' }, status: :unprocessable_entity
-      end
-    rescue => e
-      Rails.logger.error "Face check-in error: #{e.message}"
-      render json: { success: false, error: 'Internal server error' }, status: :internal_server_error
-    end
-  end
-
   private
     def set_attendance
       unless params[:id] == 'invalid'

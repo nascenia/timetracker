@@ -126,6 +126,7 @@ Internal::Application.routes.draw do
     namespace :face do
       post :register
       post :recognize
+      post :sign_in_user
     end
   end
   

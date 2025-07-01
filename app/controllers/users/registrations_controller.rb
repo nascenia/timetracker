@@ -28,8 +28,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       :resume,
       :national_id,
       :passport,
-      :bank_account_no,
-      :face_encoding)
+      :bank_account_no)
   end
 
   def update_resource(resource, params)

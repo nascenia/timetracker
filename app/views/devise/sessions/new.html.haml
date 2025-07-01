@@ -290,53 +290,25 @@
           .then(response => response.json())
           .then(function(response) {
             if (response.success && response.user_id) {
-              // Now, check in this user via Rails
-              $.ajax({
-                url: '/attendances/face_check_in_submit',
+              // Sign in the user via new endpoint, then redirect to dashboard
+              fetch('/api/face/sign_in_user', {
                 method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ user_id: response.user_id }),
-                xhrFields: { withCredentials: true },
-                success: function(attendanceResp) {
-                  if (attendanceResp.success) {
-                    showAutoFaceStatus('Check-in successful! Welcome, ' + response.user_name + '.', 'success');
-                    setTimeout(function() {
-                      $('#faceCheckInModal').modal('hide');
-                      location.reload();
-                    }, 2000);
-                  } else {
-                    showAutoFaceStatus('Check-in failed: ' + (attendanceResp.error || 'Unknown error'), 'danger');
-                    // Reset for retry
-                    setTimeout(function() {
-                      poseReady = false;
-                      poseHoldTime = 0;
-                      countdownActive = false;
-                      hideAutoFaceStatus();
-                      showPoseFeedback('Please try again. Position your face in the center.', 'info');
-                      if (video && video.srcObject) {
-                        video.play();
-                      }
-                      $('.video-container').show();
-                      $('.canvas-container').hide();
-                    }, 3000);
-                  }
-                },
-                error: function(xhr, status, error) {
-                  showAutoFaceStatus('Error checking in: ' + error, 'danger');
-                  // Reset for retry
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: response.user_id })
+              })
+              .then(res => res.json())
+              .then(function(signInResp) {
+                if (signInResp.success && signInResp.redirect_path) {
+                  showAutoFaceStatus('Signed in successfully! Welcome, ' + response.user_name + '.', 'success');
                   setTimeout(function() {
-                    poseReady = false;
-                    poseHoldTime = 0;
-                    countdownActive = false;
-                    hideAutoFaceStatus();
-                    showPoseFeedback('Please try again. Position your face in the center.', 'info');
-                    if (video && video.srcObject) {
-                      video.play();
-                    }
-                    $('.video-container').show();
-                    $('.canvas-container').hide();
-                  }, 3000);
+                    window.location.href = signInResp.redirect_path;
+                  }, 1000);
+                } else {
+                  showAutoFaceStatus('Sign in failed: ' + (signInResp.error || 'Unknown error'), 'danger');
                 }
+              })
+              .catch(function(error) {
+                showAutoFaceStatus('Error signing in: ' + error, 'danger');
               });
             } else {
               showAutoFaceStatus('Face not recognized. Please try again.', 'danger');

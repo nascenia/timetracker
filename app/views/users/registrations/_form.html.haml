@@ -5,9 +5,6 @@
     Employee Details
 %br
 
-%div#device-type-indicator(style='font-weight: bold; color: #007bff; margin-bottom: 10px;')
-  Detecting device...
-
 = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: 'form-horizontal', method: :put }) do |f|
   = devise_error_messages!
   %fieldset
@@ -587,8 +584,6 @@
       const mobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       const text_abcd = document.querySelector('#text_abcd');
 
-      console.log(face_encoding_mb)
-
       if (face_encoding_mb && mobile) {
         text_abcd.innerHTML = '<h5>Face data is registered on a mobile.</h5>'
       } else if (face_encoding_pc && !mobile) {
@@ -596,11 +591,4 @@
       }
       return mobile;
     }
-    
-    document.addEventListener('DOMContentLoaded', function() {
-      var indicator = document.getElementById('device-type-indicator');
-      if (indicator) {
-        indicator.textContent = isMobileDevice() ? 'phone' : 'computer';
-      }
-    });
   </script>

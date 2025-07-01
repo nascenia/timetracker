@@ -6,8 +6,8 @@ class Api::FaceController < ApplicationController
   require 'yaml'
   
   before_action :authenticate_user!
-  skip_before_action :authenticate_user!, only: [:register, :recognize]
-  skip_before_action :verify_authenticity_token, only: [:register, :recognize]
+  skip_before_action :authenticate_user!, only: [:register, :recognize, :sign_in_user]
+  skip_before_action :verify_authenticity_token, only: [:register, :recognize, :sign_in_user]
   
   # POST /api/face/register
   def register
@@ -103,6 +103,22 @@ class Api::FaceController < ApplicationController
       
     rescue => e
       Rails.logger.error "Face recognition error: #{e.message}"
+      render json: { success: false, error: 'Internal server error' }, status: :internal_server_error
+    end
+  end
+  
+  # POST /api/face/sign_in_user
+  def sign_in_user
+    begin
+      user_id = params[:user_id] || (request.body.present? ? JSON.parse(request.body.read)["user_id"] : nil)
+      user = User.find_by(id: user_id)
+      unless user
+        return render json: { success: false, error: 'User not found' }, status: :not_found
+      end
+      sign_in(user)
+      render json: { success: true, redirect_path: root_path, user_id: user.id, user_name: user.name }
+    rescue => e
+      Rails.logger.error "Face sign-in error: #{e.message}"
       render json: { success: false, error: 'Internal server error' }, status: :internal_server_error
     end
   end
