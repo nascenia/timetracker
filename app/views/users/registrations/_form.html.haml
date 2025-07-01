@@ -1,3 +1,5 @@
+= hidden_field_tag :face_encoding_pc, current_user.face_encoding_pc.present?
+= hidden_field_tag :face_encoding_mb, current_user.face_encoding_mb.present?
 %h2
   %b
     Employee Details
@@ -152,12 +154,7 @@
       .col-sm-2
         %h5 Face Registration
       .col-sm-10
-        - if current_user.face_encoding_pc.present?
-          .alert.alert-success
-            %strong Face data registered!
-            %br
-            You can update your face data by clicking the button below.
-          %br
+        %div#text_abcd 
         = button_tag 'Register/Update Face', type: 'button', class: 'btn btn-primary', id: 'register-face-btn', data: { toggle: 'modal', target: '#faceRegistrationModal' }
         %br
         %small.text-muted
@@ -177,19 +174,23 @@
         %h4.modal-title#faceRegistrationModalLabel Register Your Face
       .modal-body
         .row
-          .col-xs-12.col-md-8
-            .video-container.text-center{style: 'width: 100%; max-width: 200px; margin: 0 auto;'}
-              %video#video{autoplay: true, muted: true, playsinline: true, style: 'width: 100%; height: auto; aspect-ratio: 1 / 1; border-radius: 50%; object-fit: cover; background: #222; box-shadow: 0 0 0 4px #fff, 0 0 8px 0 #888;'}
-            .canvas-container.text-center{style: 'display: none; width: 100%; max-width: 200px; margin: 0 auto;'}
-              %canvas#canvas{width: '200', height: '200', style: 'width: 100%; height: auto; aspect-ratio: 1 / 1; border-radius: 50%; object-fit: cover; background: #222; box-shadow: 0 0 0 4px #fff, 0 0 8px 0 #888;'}
-            .text-center
+          .col-xs-12
+            / Centered container for camera and buttons
+            .camera-container.text-center
+              .video-container{style: 'width: 100%; max-width: 200px; margin: 0 auto;'}
+                %video#video{autoplay: true, muted: true, playsinline: true, style: 'width: 100%; height: auto; aspect-ratio: 1 / 1; border-radius: 50%; object-fit: cover; background: #222; box-shadow: 0 0 0 4px #fff, 0 0 8px 0 #888;'}
+              .canvas-container.text-center{style: 'display: none; width: 100%; max-width: 200px; margin: 0 auto;'}
+                %canvas#canvas{width: '200', height: '200', style: 'width: 100%; height: auto; aspect-ratio: 1 / 1; border-radius: 50%; object-fit: cover; background: #222; box-shadow: 0 0 0 4px #fff, 0 0 8px 0 #888;'}
               #auto-face-status-message.alert{style: 'display: none; margin-top: 10px;'}
-              %button#capture-photo-btn.btn.btn-primary{type: 'button', style: 'margin: 10px 5px;'} Capture
-              %button#retake-photo-btn.btn.btn-warning{type: 'button', style: 'margin: 10px 5px; display: none;'} Retake
-              %button#next-photo-btn.btn.btn-info{type: 'button', style: 'margin: 10px 5px; display: none;'} Take Next Photo
-              %button#see-best-shot-btn.btn.btn-secondary{type: 'button', style: 'margin: 10px 5px; display: none;'} See Best Shot
-              %button#register-face-btn-modal.btn.btn-success{type: 'button', style: 'margin: 10px 5px; display: none;'} Register Face
-          .col-xs-12.col-md-4
+              .button-container
+                %button#capture-photo-btn.btn.btn-primary{type: 'button', style: 'margin: 10px 5px; display: none;'} Capture
+                %button#retake-photo-btn.btn.btn-warning{type: 'button', style: 'margin: 10px 5px; display: none;'} Retake
+                %button#start-over-btn.btn.btn-danger{type: 'button', style: 'margin: 10px 5px; display: none;'} Start Over
+                %button#next-photo-btn.btn.btn-info{type: 'button', style: 'margin: 10px 5px; display: none;'} Take Next Photo
+                %button#see-best-shot-btn.btn.btn-secondary{type: 'button', style: 'margin: 10px 5px; display: none;'} See Best Shot
+                %button#register-face-btn-modal.btn.btn-success{type: 'button', style: 'margin: 10px 5px; display: none;'} Register Face
+        .row
+          .col-xs-12.col-md-8.col-md-offset-2
             .instructions
               %h5 Instructions:
               %ol
@@ -197,7 +198,6 @@
                 %li Position your face in the center of the frame
                 %li Ensure good lighting
                 %li Look straight at the camera
-                %li The photo will be captured automatically when ready
             .status-messages
               #status-message.alert{style: 'display: none;'}
       .modal-footer
@@ -251,8 +251,14 @@
       function showVideo() {
         $('.video-container').show();
         $('.canvas-container').hide();
-        $('#capture-photo-btn').show();
+        // Only show capture button if camera is running (stream exists)
+        if (stream) {
+          $('#capture-photo-btn').show();
+        } else {
+          $('#capture-photo-btn').hide();
+        }
         $('#retake-photo-btn').hide();
+        $('#start-over-btn').hide();
         $('#next-photo-btn').hide();
         $('#see-best-shot-btn').hide();
         $('#register-face-btn-modal').hide();
@@ -262,16 +268,33 @@
         $('.video-container').hide();
         $('.canvas-container').show();
         $('#capture-photo-btn').hide();
-        $('#retake-photo-btn').show();
+        
         if (capturedPhotos.length < maxPhotos - 1) {
+          // Still taking photos - show retake and next
+          $('#retake-photo-btn').show();
+          $('#start-over-btn').hide();
           $('#next-photo-btn').show();
           $('#see-best-shot-btn').hide();
           $('#register-face-btn-modal').hide();
         } else if (capturedPhotos.length === maxPhotos - 1) {
+          // All photos taken - show retake and see best shot
+          $('#retake-photo-btn').show();
+          $('#start-over-btn').hide();
           $('#next-photo-btn').hide();
           $('#see-best-shot-btn').show();
           $('#register-face-btn-modal').show();
         }
+        photoTaken = true;
+      }
+      function showBestShotView() {
+        $('.video-container').hide();
+        $('.canvas-container').show();
+        $('#capture-photo-btn').hide();
+        $('#retake-photo-btn').hide();
+        $('#start-over-btn').show();
+        $('#next-photo-btn').hide();
+        $('#see-best-shot-btn').hide();
+        $('#register-face-btn-modal').show();
         photoTaken = true;
       }
       function updateStatusCounter() {
@@ -295,6 +318,8 @@
             showVideo();
             updateStatusCounter();
             hideAutoFaceStatus();
+            // Explicitly show capture button after camera starts
+            $('#capture-photo-btn').show();
           })
           .catch(function(err) {
             showAutoFaceStatus('Error accessing camera. Please check permissions.', 'danger');
@@ -351,6 +376,15 @@
       });
 
       $('#retake-photo-btn').click(function() {
+        lastCaptureData = null;
+        showVideo();
+        updateStatusCounter();
+        hideAutoFaceStatus();
+      });
+
+      $('#start-over-btn').click(function() {
+        // Reset all photos and start over
+        capturedPhotos = [];
         lastCaptureData = null;
         showVideo();
         updateStatusCounter();
@@ -433,6 +467,7 @@
         await new Promise(resolve => { bestImg.onload = resolve; });
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(bestImg, 0, 0, canvas.width, canvas.height);
+        showBestShotView();
         showAutoFaceStatus('Best shot selected and shown!', 'success');
       });
 
@@ -539,13 +574,29 @@
         lastCaptureData = null;
         updateStatusCounter();
         hideAutoFaceStatus();
+        // Ensure capture button is hidden when modal is reset
+        $('#capture-photo-btn').hide();
+        $('#start-over-btn').hide();
       });
     });
 
     // Device detection
     function isMobileDevice() {
-      return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const face_encoding_pc = document.querySelector('[name="face_encoding_pc"]').value === "true";
+      const face_encoding_mb = document.querySelector('[name="face_encoding_mb"]').value === "true";
+      const mobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const text_abcd = document.querySelector('#text_abcd');
+
+      console.log(face_encoding_mb)
+
+      if (face_encoding_mb && mobile) {
+        text_abcd.innerHTML = '<h5>Face data is registered on a mobile.</h5>'
+      } else if (face_encoding_pc && !mobile) {
+        text_abcd.innerHTML = '<h5>Face data is registered on a computer.</h5>'
+      }
+      return mobile;
     }
+    
     document.addEventListener('DOMContentLoaded', function() {
       var indicator = document.getElementById('device-type-indicator');
       if (indicator) {

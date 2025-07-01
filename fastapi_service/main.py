@@ -72,7 +72,7 @@ async def recognize_face(image: UploadFile = File(...), users: str = Form(...), 
         for user in user_list:
             dist = cosine(input_embedding, user['face_encoding'])
             #distances.append({"user_id": user['user_id'], "distance": float(dist)})
-            if dist < 0.2 and dist < min_dist:
+            if dist < 0.3 and dist < min_dist:
                 min_dist = dist
                 matched_user = user
         response = {}

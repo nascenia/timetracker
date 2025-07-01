@@ -29,7 +29,7 @@
   %button#face-checkin-btn.btn.btn-success{type: 'button', style: 'margin-top: 20px;'}
     Face Check-In (with Camera)
 
-// Face Check-In Modal
+/ Face Check-In Modal
 #faceCheckInModal.modal.fade{tabindex: '-1', :role => 'dialog', 'aria-labelledby' => 'faceCheckInModalLabel'}
   .modal-dialog.modal-lg{:role => 'document'}
     .modal-content
@@ -39,18 +39,20 @@
         %h4.modal-title#faceCheckInModalLabel Face Check-In
       .modal-body
         .row
-          .col-xs-12.col-md-8
-            .video-container.text-center{style: 'width: 100%; max-width: 200px; margin: 0 auto;'}
-              %video#face-video{autoplay: true, muted: true, playsinline: true, style: 'width: 100%; height: auto; border-radius: 50%; aspect-ratio: 1 / 1; object-fit: cover; background: #222; box-shadow: 0 0 0 4px #fff, 0 0 8px 0 #888;'}
-            .canvas-container.text-center{style: 'display: none; width: 100%; max-width: 200px; margin: 0 auto;'}
-              %canvas#face-canvas{width: '200', height: '200', style: 'width: 100%; height: auto; border-radius: 50%; aspect-ratio: 1 / 1; object-fit: cover; background: #222; box-shadow: 0 0 0 4px #fff, 0 0 8px 0 #888;'}
-            .text-center
-              // Removed manual capture/retake/recognize buttons
-            .text-center
+          .col-xs-12
+            / Centered container for camera and status messages
+            .camera-container.text-center
+              .video-container{style: 'width: 100%; max-width: 200px; margin: 0 auto;'}
+                %video#face-video{autoplay: true, muted: true, playsinline: true, style: 'width: 100%; height: auto; border-radius: 50%; aspect-ratio: 1 / 1; object-fit: cover; background: #222; box-shadow: 0 0 0 4px #fff, 0 0 8px 0 #888;'}
+              .canvas-container.text-center{style: 'display: none; width: 100%; max-width: 200px; margin: 0 auto;'}
+                %canvas#face-canvas{width: '200', height: '200', style: 'width: 100%; height: auto; border-radius: 50%; aspect-ratio: 1 / 1; object-fit: cover; background: #222; box-shadow: 0 0 0 4px #fff, 0 0 8px 0 #888;'}
+              / Status messages centered below camera
               #auto-face-status-message.alert{style: 'display: none; margin-top: 10px;'}
               #pose-feedback.alert{style: 'display: none; margin-top: 10px;'}
               #countdown-feedback.alert{style: 'display: none; margin-top: 10px; font-size: 1.2em; font-weight: bold;'}
-          .col-xs-12.col-md-4
+        
+        .row
+          .col-xs-12.col-md-8.col-md-offset-2
             .instructions
               %h5 Instructions:
               %ol

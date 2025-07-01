@@ -54,7 +54,6 @@ class Api::FaceController < ApplicationController
       # Extract image file from request
       image_file = params[:image]
       device_type = params[:device_type] || 'pc'  # Default to pc if not specified
-      
       # Validate parameters
       unless image_file.present?
         return render json: { success: false, error: 'Missing image data' }, status: :bad_request
