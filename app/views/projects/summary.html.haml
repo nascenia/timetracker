@@ -9,6 +9,8 @@
   = link_to 'Download monthly report', monthly_report_projects_path(start_date: params[:project][:start_date], end_date: params[:project][:end_date], format: 'xls')
   |
   = link_to 'Switch to old view', show_all_projects_path(selected_index: 2, start_date: 7.days.ago.strftime('%Y/%m/%d'), end_date: Time.now.strftime('%Y/%m/%d'))
+  |
+  = button_tag 'Show Advanced Options', id: 'toggle-advanced-options', class: '', type: 'button'
 
 .row
   %table.table.table-bordered#projects-summary
