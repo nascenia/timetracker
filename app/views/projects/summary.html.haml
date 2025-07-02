@@ -25,10 +25,10 @@
         %tr
           %td= summary[:user_name]
           %td= summary[:total_hours]
-          %td
+          %td{style: 'display: flex; gap: 2px; flex-wrap: wrap; align-items: center;'}
             - summary[:projects].each do |project|
               - percentage = (100 * (project[:hours].to_f / summary[:total_hours].to_f)).round(2)
-              %span{style: 'border: 1px solid gray; padding: 5px;'}= "#{project[:name]} #{percentage}% (#{project[:hours]})"
+              %div{style: 'border: 1px solid gray; padding: 5px; display: inline-block;'}= "#{project[:name]} #{percentage}% (#{project[:hours]})"
 
 :javascript
 
