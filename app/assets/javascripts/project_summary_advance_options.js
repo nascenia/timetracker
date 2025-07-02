@@ -1,7 +1,6 @@
 document.addEventListener("turbolinks:load", function () {
   const $table = $("#projects-summary");
 
-  // Destroy if already initialized (but DO NOT empty tbody)
   if ($.fn.DataTable.isDataTable($table)) {
     $table.DataTable().destroy();
   }
@@ -18,8 +17,8 @@ document.addEventListener("turbolinks:load", function () {
     select: { style: "multi+shift" },
   });
 
-  // Filtering logic
-  $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+  function projectSummaryTableFilter(settings, data, dataIndex) {
+    if (settings.nTable !== $table[0]) return true;
     if (rowState > 0) {
       const tr = dataTable.row(dataIndex).node();
       return rowState === 1
@@ -27,12 +26,12 @@ document.addEventListener("turbolinks:load", function () {
         : $(tr).hasClass("selected");
     }
     return true;
-  });
+  }
 
-  // Remove old controls if Turbolinks reloaded the page
+  $.fn.dataTable.ext.search.push(projectSummaryTableFilter);
+
   $("#advanced-options").remove();
 
-  // Create new control container
   $table
     .parent()
     .append("<div id='advanced-options' style='display:none;'></div>");
@@ -50,13 +49,11 @@ document.addEventListener("turbolinks:load", function () {
     "<button id='clear-selection-button'>Clear Selection</button>"
   );
 
-  // Handle X toggle
   $table.on("click", "td span.hideRow", function () {
     $(this).closest("tr").toggleClass("selected");
     return false;
   });
 
-  // Toggle advanced options + Xs
   $("#toggle-advanced-options")
     .off("click")
     .on("click", function () {
@@ -80,7 +77,6 @@ document.addEventListener("turbolinks:load", function () {
       }
     });
 
-  // Advanced filter buttons
   $("#show-selected-button").on("click", function () {
     rowState = 1;
     dataTable.draw();
@@ -105,4 +101,15 @@ document.addEventListener("turbolinks:load", function () {
     dataTable.draw();
     return false;
   });
+});
+
+document.addEventListener("turbolinks:before-cache", function () {
+  const $table = $("#projects-summary");
+  if ($.fn.DataTable.isDataTable($table)) {
+    $table.DataTable().destroy();
+  }
+
+  $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(
+    (fn) => fn !== projectSummaryTableFilter
+  );
 });

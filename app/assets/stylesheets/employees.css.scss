@@ -1,4 +1,4 @@
-.content-info{
+.content-info {
   margin-top: 10px;
   padding: 5px;
   padding-left: 25px;
@@ -7,31 +7,31 @@
   overflow-wrap: break-word;
 }
 
-.container_accept_or_reject{
+.container_accept_or_reject {
   margin-top: 20px;
   .btn.btn-block {
     margin: 10px 0px;
   }
 }
 
-.img-responsive.profile_image{
+.img-responsive.profile_image {
   img {
     width: 100%;
     height: auto;
   }
 }
 
-.dt-top-left{
+.dt-top-left {
   padding: 10px;
 }
 
-.dataTables_filter{
+.dataTables_filter {
   float: left;
   display: inline-block;
   margin-top: 0 !important;
 }
 
-.dataTables_filter input{
+.dataTables_filter input {
   border: 1px solid #ccc;
   border-radius: 4px;
   padding: 6px 12px;
@@ -41,7 +41,7 @@
   margin-right: 20px;
 }
 
-.employee-info-filter{
+.employee-info-filter {
   border: 1px solid #ccc;
   border-radius: 4px;
   padding: 6px 12px;
@@ -53,10 +53,15 @@
   margin-right: 10px;
 }
 
-.employee-filter-form{
-    float: left;
+.employee-filter-form {
+  float: left;
 }
 
-.DTTT_button{
+.DTTT_button {
+  float: right;
+}
+
+#toggle-employees-advanced-options {
+  margin-right: 13px;
   float: right;
 }

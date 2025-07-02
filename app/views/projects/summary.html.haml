@@ -10,7 +10,7 @@
   |
   = link_to 'Switch to old view', show_all_projects_path(selected_index: 2, start_date: 7.days.ago.strftime('%Y/%m/%d'), end_date: Time.now.strftime('%Y/%m/%d'))
   |
-  = button_tag 'Show Advanced Options', id: 'toggle-advanced-options', class: '', type: 'button'
+  = button_tag 'Show Advanced Options', id: 'toggle-advanced-options', class: 'btn btn-primary', type: 'button'
 
 .row
   %table.table.table-bordered#projects-summary
@@ -32,20 +32,5 @@
 
 :javascript
 
-  $(document).ready(function() {
 
-    var dataTable = $('#projects-summary').DataTable({
-      lengthChange: false,
-      pageLength: 100,
-      dom: '<"dt-top-left"Tf>lrtip',
-      buttons: ['print']
-    });
-
-    $(document).on("turbolinks:before-cache", function() {
-      if (dataTable !== null) {
-        dataTable.destroy();
-        dataTable = null;
-      }
-    });
-  });
   
