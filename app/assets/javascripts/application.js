@@ -12,3 +12,5 @@
 //= require bootstrap-datepicker.config.js
 //= require pre_registrations.js.erb
 //= require users.js
+//= require project_summary_advance_options.js
+//= require employees_advance_options.js

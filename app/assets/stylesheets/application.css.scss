@@ -12,6 +12,7 @@
  *= require multi-select.css.erb
  *= require shared
  *= require pre_registrations.css.scss
+ *= require projects.css.scss
  */
 
 @import "bootstrap-sprockets";
@@ -19,18 +20,17 @@
 @import "font-awesome-sprockets";
 @import "font-awesome";
 
-
-.notice{
+.notice {
   padding: 15px;
   font-size: 16px;
   font-weight: bold;
 }
 
-.required-asterisk{
+.required-asterisk {
   color: red;
 }
 
-.lebel-nonbold{
+.lebel-nonbold {
   color: black !important;
   font-size: small;
   font-weight: normal !important;
