@@ -65,7 +65,7 @@ document.addEventListener("turbolinks:load", function () {
           const $cell = $(this).find("td:eq(2)");
           if ($cell.find("span.hideRow").length === 0) {
             $cell.append(
-              "<span class='hideRow advanced-control' style='float:right;'><a>X</a></span>"
+              "<span class='hideRow advanced-control' style='margin-left: auto; display: flex; align-items: center;'><a>X</a></span>"
             );
           }
         });
