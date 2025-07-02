@@ -75,7 +75,7 @@
             <td><%= timesheet.task %></td>
             <td><%= timesheet.ticket_number %></td>
             <td><%= timesheet.ticket_link %></td>
-            <td><%= timesheet.description%></td>
+            <td><%= simple_format(timesheet.description)%></td>
             <td> <%= link_to 'Edit', edit_timesheet_path(timesheet) %> </td>
             <% last_date = timesheet.date%>
         </tr>
