@@ -43,7 +43,7 @@
             / Centered container for camera and status messages
             .camera-container.text-center
               .video-container{style: 'width: 100%; max-width: 200px; margin: 0 auto;'}
-                %video#face-video{autoplay: true, muted: true, playsinline: true, style: 'width: 100%; height: auto; border-radius: 50%; aspect-ratio: 1 / 1; object-fit: cover; background: #222; box-shadow: 0 0 0 4px #fff, 0 0 8px 0 #888;'}
+                %video#face-video{autoplay: true, muted: true, playsinline: true, style: 'width: 100%; height: auto; border-radius: 50%; aspect-ratio: 1 / 1; object-fit: cover; background: #222; box-shadow: 0 0 0 4px #fff, 0 0 8px 0 #888; transform: scaleX(-1);'}
               .canvas-container.text-center{style: 'display: none; width: 100%; max-width: 200px; margin: 0 auto;'}
                 %canvas#face-canvas{width: '200', height: '200', style: 'width: 100%; height: auto; border-radius: 50%; aspect-ratio: 1 / 1; object-fit: cover; background: #222; box-shadow: 0 0 0 4px #fff, 0 0 8px 0 #888;'}
               / Status messages centered below camera
@@ -217,7 +217,11 @@
         lastVideoTime = video.currentTime;
         
         const results = faceLandmarker.detectForVideo(video, performance.now());
+        ctx.save();
+        ctx.translate(canvas.width, 0);
+        ctx.scale(-1, 1);
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        ctx.restore();
         
         if (results.faceLandmarks && results.faceLandmarks.length > 0) {
           const poseQuality = checkPoseQuality(results.faceLandmarks);
@@ -268,7 +272,11 @@
         canvasEl.height = videoEl.videoHeight;
 
         // 2. draw at full resolution, no stretching
-        ctx.drawImage(videoEl, 0, 0);
+        ctx.save();
+        ctx.translate(canvasEl.width, 0);
+        ctx.scale(-1, 1);
+        ctx.drawImage(videoEl, 0, 0, canvasEl.width, canvasEl.height);
+        ctx.restore();
 
         // 3. pause & swap views
         videoEl.pause();
@@ -343,9 +351,287 @@
               $('.canvas-container').hide();
             }, 3000);
           });
-        }, 'image/jpeg', 0.8);
+        }, 'image/jpeg', 1);
       }
 
+      // --- LIVENESS CHALLENGE LOGIC ---
+      const LIVENESS_ACTIONS = [
+        { name: 'blink', label: 'Blink your eyes' },
+        { name: 'look_left', label: 'Look LEFT' },
+        { name: 'look_right', label: 'Look RIGHT' },
+        { name: 'look_up', label: 'Look UP' },
+        { name: 'look_down', label: 'Look DOWN' },
+        { name: 'smile', label: 'Smile' }
+      ];
+      let livenessSequence = [];
+      let livenessStep = 0;
+      let livenessActive = false;
+      let livenessPassed = false;
+      let livenessTimeout = null;
+      let livenessTries = 0;
+      let livenessMaxTries = 2;
+      let countdownTimer = null;
+      // Neutral state tracking
+      let waitingForNeutral = false;
+      let wasNeutral = false;
+      
+      function randomLivenessSequence() {
+        let shuffled = LIVENESS_ACTIONS.sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, 3); // 3 random actions
+      }
+      function showLivenessInstruction(text) {
+        showPoseFeedback(text, 'info');
+      }
+      function showLivenessStatus(text, type) {
+        showAutoFaceStatus(text, type);
+      }
+      function resetLiveness() {
+        livenessActive = false;
+        livenessPassed = false;
+        livenessStep = 0;
+        livenessTries++;
+        wasNeutral = false;
+        waitingForNeutral = false;
+        if (livenessTries > livenessMaxTries) {
+          showLivenessStatus('Liveness failed too many times. Please refresh and try again.', 'danger');
+          $('#face-start-camera-btn').show();
+          return;
+        }
+        livenessSequence = randomLivenessSequence();
+        showLivenessInstruction('Liveness check: ' + livenessSequence[0].label);
+        showLivenessStatus('Please follow the instructions.', 'info');
+        livenessActive = true;
+      }
+      function detectBlink(landmarks) {
+        // EAR (eye aspect ratio) for blink detection
+        function getEAR(idx) {
+          const p0 = landmarks[idx[0]], p1 = landmarks[idx[1]], p2 = landmarks[idx[2]], p3 = landmarks[idx[3]], p4 = landmarks[idx[4]], p5 = landmarks[idx[5]];
+          const vertical = Math.hypot(p1.y - p5.y, p1.x - p5.x) + Math.hypot(p2.y - p4.y, p2.x - p4.x);
+          const horizontal = 2 * Math.hypot(p0.y - p3.y, p0.x - p3.x);
+          return vertical / horizontal;
+        }
+        const leftEAR = getEAR([33, 159, 145, 133, 153, 154]);
+        const rightEAR = getEAR([263, 386, 374, 362, 380, 381]);
+        //console.log('leftEAR:', leftEAR, 'rightEAR:', rightEAR);
+        //increase value to tight
+        return leftEAR < 0.33 && rightEAR < 0.33;
+      }
+      function detectLookLeft(landmarks) {
+        // User's left is screen right, so flip logic
+        // increase value to tight
+        return landmarks[1].x > 0.68; 
+      }
+      function detectLookRight(landmarks) {
+        // User's right is screen left, so flip logic
+        // decrease value to tight
+        return landmarks[1].x < 0.32;
+      }
+      function detectLookUp(landmarks) {
+        //console.log('nose y for look up:', landmarks[1].y);
+        //decrease to tight
+        return landmarks[1].y < 0.35;
+      }
+      function detectLookDown(landmarks) {
+        //console.log('nose y for look down:', landmarks[1].y);
+        //increase to tight
+        return landmarks[1].y > 0.70;
+      }
+      function detectSmile(landmarks) {
+        const left = landmarks[61], right = landmarks[291];
+        const top = landmarks[0], bottom = landmarks[17];
+        const center = landmarks[13]; // mouth center
+        const width = Math.hypot(left.x - right.x, left.y - right.y);
+        const height = Math.hypot(top.x - bottom.x, top.y - bottom.y);
+        // Smile if mouth is wide AND both corners are above the center
+        const cornersUp = (left.y < center.y) && (right.y < center.y);
+        //increase value to tight 
+        return (width / height > 2) && cornersUp;
+      }
+      function detectLivenessAction(action, landmarks) {
+        switch(action) {
+          case 'blink': return detectBlink(landmarks);
+          case 'look_left': return detectLookLeft(landmarks);
+          case 'look_right': return detectLookRight(landmarks);
+          case 'look_up': return detectLookUp(landmarks);
+          case 'look_down': return detectLookDown(landmarks);
+          case 'smile': return detectSmile(landmarks);
+          default: return false;
+        }
+      }
+      function isNeutral(action, landmarks) {
+        switch(action) {
+          case 'blink': return !detectBlink(landmarks);
+          case 'look_left': return !detectLookLeft(landmarks);
+          case 'look_right': return !detectLookRight(landmarks);
+          case 'look_up': return !detectLookUp(landmarks);
+          case 'look_down': return !detectLookDown(landmarks);
+          case 'smile': return !detectSmile(landmarks);
+          default: return true;
+        }
+      }
+      async function livenessLoop() {
+        if (!livenessActive) return;
+        if (video.readyState < 2) {
+          requestAnimationFrame(livenessLoop);
+          return;
+        }
+        if (!faceLandmarker) {
+          requestAnimationFrame(livenessLoop);
+          return;
+        }
+        const results = faceLandmarker.detectForVideo(video, performance.now());
+        if (results.faceLandmarks && results.faceLandmarks.length > 0) {
+          const landmarks = results.faceLandmarks[0];
+          const currentAction = livenessSequence[livenessStep];
+          // Neutral state logic
+          if (waitingForNeutral) {
+            if (isNeutral(currentAction.name, landmarks)) {
+              wasNeutral = true;
+              waitingForNeutral = false;
+              showLivenessStatus('Now perform: ' + currentAction.label, 'info');
+            } else {
+              showLivenessStatus('Return to neutral before performing the action.', 'warning');
+            }
+          } else if (!wasNeutral) {
+            // First time for this action, require neutral
+            waitingForNeutral = true;
+            showLivenessStatus('Return to neutral before performing the action.', 'warning');
+          } else {
+            // Only accept if transitioned from neutral to action
+            if (detectLivenessAction(currentAction.name, landmarks)) {
+              showLivenessStatus('Action detected: ' + currentAction.label, 'success');
+              livenessStep++;
+              wasNeutral = false;
+              waitingForNeutral = false;
+              if (livenessStep < livenessSequence.length) {
+                setTimeout(() => {
+                  showLivenessInstruction('Next: ' + livenessSequence[livenessStep].label);
+                  showLivenessStatus('Please follow the instructions.', 'info');
+                }, 1000);
+              } else {
+                livenessActive = false;
+                livenessPassed = true;
+                showLivenessStatus('Liveness check passed! Stay still for photo...', 'success');
+                showLivenessInstruction('');
+                setTimeout(() => startCountdownForPhoto(), 1000);
+                return;
+              }
+            }
+          }
+        } else {
+          showLivenessStatus('No face detected. Please center your face.', 'warning');
+        }
+        if (livenessActive) requestAnimationFrame(livenessLoop);
+      }
+      function startCountdownForPhoto() {
+        let count = 3;
+        showCountdownFeedback('Stay still! Photo in ' + count + '...', 'info');
+        countdownTimer = setInterval(() => {
+          count--;
+          if (count > 0) {
+            showCountdownFeedback('Stay still! Photo in ' + count + '...', 'info');
+          } else {
+            clearInterval(countdownTimer);
+            showCountdownFeedback('Click!', 'success');
+            setTimeout(() => {
+              hideCountdownFeedback();
+              captureAndSubmitLiveness();
+            }, 500);
+          }
+        }, 1000);
+      }
+      function captureAndSubmitLiveness() {
+        // Use the same logic as captureAndSubmit, but no pose/straightness checks
+        const videoEl  = document.querySelector('video');
+        const canvasEl = document.querySelector('canvas');
+        const ctx      = canvasEl.getContext('2d');
+        canvasEl.width  = videoEl.videoWidth;
+        canvasEl.height = videoEl.videoHeight;
+        ctx.save();
+        ctx.translate(canvasEl.width, 0);
+        ctx.scale(-1, 1);
+        ctx.drawImage(videoEl, 0, 0, canvasEl.width, canvasEl.height);
+        ctx.restore();
+        videoEl.pause();
+        document.querySelector('.video-container').style.display  = 'none';
+        document.querySelector('.canvas-container').style.display = 'block';
+        canvas.toBlob(function(blob) {
+          var formData = new FormData();
+          formData.append('image', blob, 'capture.jpg');
+          formData.append('device_type', deviceType);
+          showAutoFaceStatus('Finding a match...', 'info');
+          hidePoseFeedback();
+          hideCountdownFeedback();
+          fetch('/api/face/recognize', {
+            method: 'POST',
+            body: formData
+          })
+          .then(response => response.json())
+          .then(function(response) {
+            if (response.success && response.user_id) {
+              fetch('/api/face/sign_in_user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: response.user_id })
+              })
+              .then(res => res.json())
+              .then(function(signInResp) {
+                if (signInResp.success && signInResp.redirect_path) {
+                  showAutoFaceStatus('Signed in successfully! Welcome, ' + response.user_name + '.', 'success');
+                  setTimeout(function() {
+                    window.location.href = signInResp.redirect_path;
+                  }, 1000);
+                } else {
+                  showAutoFaceStatus('Sign in failed: ' + (signInResp.error || 'Unknown error'), 'danger');
+                  setTimeout(() => restartLivenessProcess(), 2000);
+                }
+              })
+              .catch(function(error) {
+                showAutoFaceStatus('Error signing in: ' + error, 'danger');
+                setTimeout(() => restartLivenessProcess(), 2000);
+              });
+            } else {
+              showAutoFaceStatus('Face not recognized. Please try again.', 'danger');
+              setTimeout(() => restartLivenessProcess(), 2000);
+            }
+          })
+          .catch(function(error) {
+            showAutoFaceStatus('Error recognizing face: ' + error, 'danger');
+            setTimeout(() => restartLivenessProcess(), 2000);
+          });
+        }, 'image/jpeg', 1);
+      }
+      function restartLivenessProcess() {
+        $('.video-container').show();
+        $('.canvas-container').hide();
+        $('#face-start-camera-btn').show();
+        hideAutoFaceStatus();
+        hidePoseFeedback();
+        hideCountdownFeedback();
+        livenessTries = 0;
+        livenessStep = 0;
+        livenessActive = false;
+        livenessPassed = false;
+        if (video && video.srcObject) {
+          video.play();
+        }
+        // Automatically restart after a short delay
+        setTimeout(() => {
+          $('#face-start-camera-btn').hide();
+          if (!faceLandmarker) {
+            loadFaceLandmarker().then(() => {
+              resetLiveness();
+              livenessLoop();
+            });
+          } else {
+            resetLiveness();
+            livenessLoop();
+          }
+        }, 1200); // 1.2s delay for user to see feedback
+      }
+      // --- END LIVENESS CHALLENGE LOGIC ---
+
+      // Replace startAutoCapture with liveness challenge
       $('#face-start-camera-btn').click(function() {
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
           navigator.mediaDevices.getUserMedia({ 
@@ -360,7 +646,15 @@
             video.srcObject = mediaStream;
             video.play();
             $('#face-start-camera-btn').hide();
-            startAutoCapture();
+            if (!faceLandmarker) {
+              loadFaceLandmarker().then(() => {
+                resetLiveness();
+                livenessLoop();
+              });
+            } else {
+              resetLiveness();
+              livenessLoop();
+            }
           })
           .catch(function(err) {
             showAutoFaceStatus('Error accessing camera. Please check permissions.', 'danger');
@@ -369,7 +663,7 @@
           showAutoFaceStatus('Camera not supported in this browser.', 'danger');
         }
       });
-
+      // On modal close, reset everything
       $('#faceCheckInModal').on('hidden.bs.modal', function() {
         if (stream) {
           stream.getTracks().forEach(function(track) {
@@ -387,6 +681,10 @@
         hideAutoFaceStatus();
         hidePoseFeedback();
         hideCountdownFeedback();
+        livenessActive = false;
+        livenessPassed = false;
+        livenessStep = 0;
+        livenessTries = 0;
         if (video && video.srcObject) {
           video.play();
         }
