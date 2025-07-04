@@ -64,6 +64,7 @@ class Api::FaceController < ApplicationController
       
       # Gather all users with a face_encoding in the appropriate column
       users_with_encoding = User.where.not(encoding_column => [nil, '']).pluck(:id, encoding_column)
+      Rails.logger.info "number of users with encoding: #{users_with_encoding.count}"
       user_list = users_with_encoding.map do |id, encoding|
         arr = if encoding.is_a?(Array)
           encoding

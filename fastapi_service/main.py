@@ -1,4 +1,3 @@
-import base64
 import numpy as np
 from fastapi import FastAPI, Request, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
@@ -6,7 +5,6 @@ from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 from deepface import DeepFace
 from scipy.spatial.distance import cosine
-import cv2
 import io
 from PIL import Image
 import json
@@ -71,6 +69,7 @@ async def recognize_face(image: UploadFile = File(...), users: str = Form(...), 
             input_embedding = input_embedding.tolist()
         for user in user_list:
             dist = cosine(input_embedding, user['face_encoding'])
+            #print(f'user_id: {user["user_id"]}, distance: {dist}')
             #distances.append({"user_id": user['user_id'], "distance": float(dist)})
             if dist < 0.3 and dist < min_dist:
                 min_dist = dist

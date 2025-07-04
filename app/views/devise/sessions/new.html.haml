@@ -89,6 +89,8 @@
       var poseReady = false;
       var poseHoldTime = 0;
       var requiredHoldTime = 30; // frames at 30fps = 1 second
+      let recognitionInProgress = false; // Prevent multiple recognitions
+      let livenessLoopActive = false; // Prevent multiple liveness loops
 
       async function loadFaceLandmarker() {
         const visionWasm = await vision.FilesetResolver.forVisionTasks(
@@ -308,6 +310,14 @@
               .then(function(signInResp) {
                 if (signInResp.success && signInResp.redirect_path) {
                   showAutoFaceStatus('Signed in successfully! Welcome, ' + response.user_name + '.', 'success');
+                  // Stop all loops and video after successful sign-in
+                  livenessActive = false;
+                  livenessLoopActive = false;
+                  recognitionInProgress = false;
+                  if (stream) {
+                    stream.getTracks().forEach(function(track) { track.stop(); });
+                    stream = null;
+                  }
                   setTimeout(function() {
                     window.location.href = signInResp.redirect_path;
                   }, 1000);
@@ -424,12 +434,12 @@
       function detectLookRight(landmarks) {
         // User's right is screen left, so flip logic
         // decrease value to tight
-        return landmarks[1].x < 0.32;
+        return landmarks[1].x < 0.34;
       }
       function detectLookUp(landmarks) {
         //console.log('nose y for look up:', landmarks[1].y);
         //decrease to tight
-        return landmarks[1].y < 0.35;
+        return landmarks[1].y < 0.37;
       }
       function detectLookDown(landmarks) {
         //console.log('nose y for look down:', landmarks[1].y);
@@ -470,7 +480,7 @@
         }
       }
       async function livenessLoop() {
-        if (!livenessActive) return;
+        if (!livenessActive || !livenessLoopActive) return;
         if (video.readyState < 2) {
           requestAnimationFrame(livenessLoop);
           return;
@@ -510,6 +520,7 @@
                 }, 1000);
               } else {
                 livenessActive = false;
+                livenessLoopActive = false;
                 livenessPassed = true;
                 showLivenessStatus('Liveness check passed! Stay still for photo...', 'success');
                 showLivenessInstruction('');
@@ -521,7 +532,7 @@
         } else {
           showLivenessStatus('No face detected. Please center your face.', 'warning');
         }
-        if (livenessActive) requestAnimationFrame(livenessLoop);
+        if (livenessActive && livenessLoopActive) requestAnimationFrame(livenessLoop);
       }
       function startCountdownForPhoto() {
         let count = 3;
@@ -541,6 +552,8 @@
         }, 1000);
       }
       function captureAndSubmitLiveness() {
+        if (recognitionInProgress) return;
+        recognitionInProgress = true;
         // Use the same logic as captureAndSubmit, but no pose/straightness checks
         const videoEl  = document.querySelector('video');
         const canvasEl = document.querySelector('canvas');
@@ -568,6 +581,7 @@
           })
           .then(response => response.json())
           .then(function(response) {
+            recognitionInProgress = false;
             if (response.success && response.user_id) {
               fetch('/api/face/sign_in_user', {
                 method: 'POST',
@@ -596,6 +610,7 @@
             }
           })
           .catch(function(error) {
+            recognitionInProgress = false;
             showAutoFaceStatus('Error recognizing face: ' + error, 'danger');
             setTimeout(() => restartLivenessProcess(), 2000);
           });
@@ -612,6 +627,8 @@
         livenessStep = 0;
         livenessActive = false;
         livenessPassed = false;
+        livenessLoopActive = false;
+        recognitionInProgress = false;
         if (video && video.srcObject) {
           video.play();
         }
@@ -621,10 +638,12 @@
           if (!faceLandmarker) {
             loadFaceLandmarker().then(() => {
               resetLiveness();
+              livenessLoopActive = true;
               livenessLoop();
             });
           } else {
             resetLiveness();
+            livenessLoopActive = true;
             livenessLoop();
           }
         }, 1200); // 1.2s delay for user to see feedback
@@ -649,10 +668,12 @@
             if (!faceLandmarker) {
               loadFaceLandmarker().then(() => {
                 resetLiveness();
+                livenessLoopActive = true;
                 livenessLoop();
               });
             } else {
               resetLiveness();
+              livenessLoopActive = true;
               livenessLoop();
             }
           })
@@ -685,6 +706,8 @@
         livenessPassed = false;
         livenessStep = 0;
         livenessTries = 0;
+        livenessLoopActive = false;
+        recognitionInProgress = false;
         if (video && video.srcObject) {
           video.play();
         }
