@@ -69,648 +69,134 @@
 
 :plain
   <script type="module">
-    import * as vision from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js";
-    window.vision = vision;
     $(document).ready(function() {
-      // Ensure the Face Check-In button opens the modal
-      $('#face-checkin-btn').click(function() {
-        $('#faceCheckInModal').modal('show');
-      });
-      var video = document.getElementById('face-video');
-      var canvas = document.getElementById('face-canvas');
-      var ctx = canvas.getContext('2d');
-      var stream = null;
-      var autoCaptureActive = false;
-      var faceLandmarker = null;
-      var lastVideoTime = -1;
-      var deviceType = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'mb' : 'pc';
-      var countdownActive = false;
-      var countdownValue = 3;
-      var poseReady = false;
-      var poseHoldTime = 0;
-      var requiredHoldTime = 30; // frames at 30fps = 1 second
-      let recognitionInProgress = false; // Prevent multiple recognitions
-      let livenessLoopActive = false; // Prevent multiple liveness loops
+      let video = document.getElementById('face-video');
+      let stream = null;
+      let canvas = document.createElement('canvas');
+      let ctx = canvas.getContext('2d');
+      const FRAME_COUNT = 5;
+      const CAPTURE_INTERVAL = 200; // ms (5 frames in 1 second)
+      const COUNTDOWN_SECONDS = 5;
+      let frames = [];
+      let deviceType = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'mb' : 'pc';
 
-      async function loadFaceLandmarker() {
-        const visionWasm = await vision.FilesetResolver.forVisionTasks(
-          'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm'
-        );
-        faceLandmarker = await vision.FaceLandmarker.createFromOptions(visionWasm, {
-          baseOptions: { modelAssetPath: 'https://storage.googleapis.com/mediapipe-assets/face_landmarker.task' },
-          runningMode: 'VIDEO',
-          numFaces: 1,
-          minFaceDetectionConfidence: 0.8,
-          minFacePresenceConfidence: 0.8,
-          minTrackingConfidence: 0.8
-        });
+      function showStatus(msg, type='info') {
+        $('#auto-face-status-message').removeClass().addClass('alert alert-' + type).text(msg).show();
       }
-
-      function showAutoFaceStatus(message, type) {
-        $('#auto-face-status-message')
-          .removeClass()
-          .addClass('alert alert-' + type)
-          .text(message)
-          .show();
-      }
-      function hideAutoFaceStatus() {
+      function hideStatus() {
         $('#auto-face-status-message').hide();
       }
-
-      function showPoseFeedback(message, type) {
-        $('#pose-feedback')
-          .removeClass()
-          .addClass('alert alert-' + type)
-          .text(message)
-          .show();
-      }
-      function hidePoseFeedback() {
-        $('#pose-feedback').hide();
-      }
-
-      function showCountdownFeedback(message, type) {
-        $('#countdown-feedback')
-          .removeClass()
-          .addClass('alert alert-' + type)
-          .text(message)
-          .show();
-      }
-      function hideCountdownFeedback() {
-        $('#countdown-feedback').hide();
-      }
-
-      function startCountdown() {
-        if (countdownActive) return;
-        countdownActive = true;
-        countdownValue = 3;
-        showCountdownFeedback('Hold your pose! Starting countdown...', 'info');
-        
-        var countdownInterval = setInterval(function() {
-          if (countdownValue > 0) {
-            showCountdownFeedback('Hold still! ' + countdownValue + '...', 'warning');
-            countdownValue--;
-          } else {
-            clearInterval(countdownInterval);
-            showCountdownFeedback('Click!', 'success');
-            setTimeout(function() {
-              if (poseReady) {
-                captureAndSubmit();
-              } else {
-                countdownActive = false;
-                showPoseFeedback('Pose lost during countdown. Please adjust your position.', 'danger');
-              }
-            }, 500);
-          }
-        }, 1000);
-      }
-
-      function checkPoseQuality(landmarks) {
-        if (!landmarks || landmarks.length === 0) return false;
-        
-        const face = landmarks[0];
-        const leftEye = face[33];
-        const rightEye = face[263];
-        const noseTip = face[1];
-        const leftEyeCorner = face[33];
-        const rightEyeCorner = face[263];
-        
-        // Check if face is straight (eyes level)
-        const eyeDiffY = Math.abs(leftEye.y - rightEye.y);
-        if (eyeDiffY > 0.03) return false;
-        
-        // Check if nose is between eyes
-        const minEyeX = Math.min(leftEye.x, rightEye.x);
-        const maxEyeX = Math.max(leftEye.x, rightEye.x);
-        const noseBetweenEyes = (noseTip.x > minEyeX && noseTip.x < maxEyeX);
-        if (!noseBetweenEyes) return false;
-        
-        // Check if face is centered
-        const faceCentered = Math.abs(noseTip.x - 0.5) < 0.1;
-        if (!faceCentered) return false;
-        
-        // Check if face is at good distance (not too close/far)
-        const faceSize = Math.abs(leftEye.x - rightEye.x);
-        if (faceSize < 0.15 || faceSize > 0.4) return false;
-        
-        return true;
-      }
-
-      async function startAutoCapture() {
-        if (!faceLandmarker) await loadFaceLandmarker();
-        autoCaptureActive = true;
-        showPoseFeedback('Position your face in the center. Look straight at the camera.', 'info');
-        requestAnimationFrame(autoCaptureLoop);
-      }
-
-      async function autoCaptureLoop() {
-        if (!autoCaptureActive) return;
-        if (video.readyState < 2) {
-          requestAnimationFrame(autoCaptureLoop);
-          return;
-        }
-        if (!faceLandmarker) {
-          requestAnimationFrame(autoCaptureLoop);
-          return;
-        }
-        if (video.currentTime === lastVideoTime) {
-          requestAnimationFrame(autoCaptureLoop);
-          return;
-        }
-        lastVideoTime = video.currentTime;
-        
-        const results = faceLandmarker.detectForVideo(video, performance.now());
-        ctx.save();
-        ctx.translate(canvas.width, 0);
-        ctx.scale(-1, 1);
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        ctx.restore();
-        
-        if (results.faceLandmarks && results.faceLandmarks.length > 0) {
-          const poseQuality = checkPoseQuality(results.faceLandmarks);
-          
-          if (poseQuality) {
-            if (!poseReady) {
-              poseReady = true;
-              poseHoldTime = 0;
-              showPoseFeedback('Perfect pose! Hold still...', 'success');
-            }
-            poseHoldTime++;
-            
-            if (poseHoldTime >= requiredHoldTime && !countdownActive) {
-              startCountdown();
-            }
-          } else {
-            if (poseReady) {
-              poseReady = false;
-              poseHoldTime = 0;
-              countdownActive = false;
-              hideCountdownFeedback();
-              showPoseFeedback('Pose lost. Please adjust your position.', 'warning');
-            } else {
-              showPoseFeedback('Adjust your face: center it, look straight, keep eyes level.', 'info');
-            }
-          }
-        } else {
-          if (poseReady) {
-            poseReady = false;
-            poseHoldTime = 0;
-            countdownActive = false;
-            hideCountdownFeedback();
-          }
-          showPoseFeedback('No face detected. Please position your face in the camera view.', 'danger');
-        }
-        
-        requestAnimationFrame(autoCaptureLoop);
-      }
-
-      function captureAndSubmit() {
-        const videoEl  = document.querySelector('video');
-        const canvasEl = document.querySelector('canvas');
-        const ctx      = canvasEl.getContext('2d');
-
-        // 1. set canvas size to match the *intrinsic* video size
-        //    (video.videoWidth / video.videoHeight is the aspect ratio)
-        canvasEl.width  = videoEl.videoWidth;
-        canvasEl.height = videoEl.videoHeight;
-
-        // 2. draw at full resolution, no stretching
-        ctx.save();
-        ctx.translate(canvasEl.width, 0);
-        ctx.scale(-1, 1);
-        ctx.drawImage(videoEl, 0, 0, canvasEl.width, canvasEl.height);
-        ctx.restore();
-
-        // 3. pause & swap views
-        videoEl.pause();
-        document.querySelector('.video-container').style.display  = 'none';
-        document.querySelector('.canvas-container').style.display = 'block';
-        canvas.toBlob(function(blob) {
-          var formData = new FormData();
-          formData.append('image', blob, 'capture.jpg');
-          formData.append('device_type', deviceType);
-          
-          showAutoFaceStatus('Finding a match...', 'info');
-          hidePoseFeedback();
-          hideCountdownFeedback();
-          
-          fetch('/api/face/recognize', {
-            method: 'POST',
-            body: formData
-          })
-          .then(response => response.json())
-          .then(function(response) {
-            if (response.success && response.user_id) {
-              // Sign in the user via new endpoint, then redirect to dashboard
-              fetch('/api/face/sign_in_user', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: response.user_id })
-              })
-              .then(res => res.json())
-              .then(function(signInResp) {
-                if (signInResp.success && signInResp.redirect_path) {
-                  showAutoFaceStatus('Signed in successfully! Welcome, ' + response.user_name + '.', 'success');
-                  // Stop all loops and video after successful sign-in
-                  livenessActive = false;
-                  livenessLoopActive = false;
-                  recognitionInProgress = false;
-                  if (stream) {
-                    stream.getTracks().forEach(function(track) { track.stop(); });
-                    stream = null;
-                  }
-                  setTimeout(function() {
-                    window.location.href = signInResp.redirect_path;
-                  }, 1000);
-                } else {
-                  showAutoFaceStatus('Sign in failed: ' + (signInResp.error || 'Unknown error'), 'danger');
-                }
-              })
-              .catch(function(error) {
-                showAutoFaceStatus('Error signing in: ' + error, 'danger');
-              });
-            } else {
-              showAutoFaceStatus('Face not recognized. Please try again.', 'danger');
-              // Reset for retry
-              setTimeout(function() {
-                poseReady = false;
-                poseHoldTime = 0;
-                countdownActive = false;
-                hideAutoFaceStatus();
-                showPoseFeedback('No match found. Please adjust your pose and try again.', 'warning');
-                if (video && video.srcObject) {
-                  video.play();
-                }
-                $('.video-container').show();
-                $('.canvas-container').hide();
-              }, 3000);
-            }
-          })
-          .catch(function(error) {
-            showAutoFaceStatus('Error recognizing face: ' + error, 'danger');
-            // Reset for retry
-            setTimeout(function() {
-              poseReady = false;
-              poseHoldTime = 0;
-              countdownActive = false;
-              hideAutoFaceStatus();
-              showPoseFeedback('Please try again. Position your face in the center.', 'info');
-              if (video && video.srcObject) {
-                video.play();
-              }
-              $('.video-container').show();
-              $('.canvas-container').hide();
-            }, 3000);
-          });
-        }, 'image/jpeg', 1);
-      }
-
-      // --- LIVENESS CHALLENGE LOGIC ---
-      const LIVENESS_ACTIONS = [
-        { name: 'blink', label: 'Blink your eyes' },
-        { name: 'look_left', label: 'Look LEFT' },
-        { name: 'look_right', label: 'Look RIGHT' },
-        { name: 'look_up', label: 'Look UP' },
-        { name: 'look_down', label: 'Look DOWN' },
-        { name: 'smile', label: 'Smile' }
-      ];
-      let livenessSequence = [];
-      let livenessStep = 0;
-      let livenessActive = false;
-      let livenessPassed = false;
-      let livenessTimeout = null;
-      let livenessTries = 0;
-      let livenessMaxTries = 2;
-      let countdownTimer = null;
-      // Neutral state tracking
-      let waitingForNeutral = false;
-      let wasNeutral = false;
-      
-      function randomLivenessSequence() {
-        let shuffled = LIVENESS_ACTIONS.sort(() => 0.5 - Math.random());
-        return shuffled.slice(0, 3); // 3 random actions
-      }
-      function showLivenessInstruction(text) {
-        showPoseFeedback(text, 'info');
-      }
-      function showLivenessStatus(text, type) {
-        showAutoFaceStatus(text, type);
-      }
-      function resetLiveness() {
-        livenessActive = false;
-        livenessPassed = false;
-        livenessStep = 0;
-        livenessTries++;
-        wasNeutral = false;
-        waitingForNeutral = false;
-        if (livenessTries > livenessMaxTries) {
-          showLivenessStatus('Liveness failed too many times. Please refresh and try again.', 'danger');
-          $('#face-start-camera-btn').show();
-          return;
-        }
-        livenessSequence = randomLivenessSequence();
-        showLivenessInstruction('Liveness check: ' + livenessSequence[0].label);
-        showLivenessStatus('Please follow the instructions.', 'info');
-        livenessActive = true;
-      }
-      function detectBlink(landmarks) {
-        // EAR (eye aspect ratio) for blink detection
-        function getEAR(idx) {
-          const p0 = landmarks[idx[0]], p1 = landmarks[idx[1]], p2 = landmarks[idx[2]], p3 = landmarks[idx[3]], p4 = landmarks[idx[4]], p5 = landmarks[idx[5]];
-          const vertical = Math.hypot(p1.y - p5.y, p1.x - p5.x) + Math.hypot(p2.y - p4.y, p2.x - p4.x);
-          const horizontal = 2 * Math.hypot(p0.y - p3.y, p0.x - p3.x);
-          return vertical / horizontal;
-        }
-        const leftEAR = getEAR([33, 159, 145, 133, 153, 154]);
-        const rightEAR = getEAR([263, 386, 374, 362, 380, 381]);
-        //console.log('leftEAR:', leftEAR, 'rightEAR:', rightEAR);
-        //increase value to tight
-        return leftEAR < 0.33 && rightEAR < 0.33;
-      }
-      function detectLookLeft(landmarks) {
-        // User's left is screen right, so flip logic
-        // increase value to tight
-        return landmarks[1].x > 0.68; 
-      }
-      function detectLookRight(landmarks) {
-        // User's right is screen left, so flip logic
-        // decrease value to tight
-        return landmarks[1].x < 0.34;
-      }
-      function detectLookUp(landmarks) {
-        //console.log('nose y for look up:', landmarks[1].y);
-        //decrease to tight
-        return landmarks[1].y < 0.37;
-      }
-      function detectLookDown(landmarks) {
-        //console.log('nose y for look down:', landmarks[1].y);
-        //increase to tight
-        return landmarks[1].y > 0.70;
-      }
-      function detectSmile(landmarks) {
-        const left = landmarks[61], right = landmarks[291];
-        const top = landmarks[0], bottom = landmarks[17];
-        const center = landmarks[13]; // mouth center
-        const width = Math.hypot(left.x - right.x, left.y - right.y);
-        const height = Math.hypot(top.x - bottom.x, top.y - bottom.y);
-        // Smile if mouth is wide AND both corners are above the center
-        const cornersUp = (left.y < center.y) && (right.y < center.y);
-        //increase value to tight 
-        return (width / height > 2) && cornersUp;
-      }
-      function detectLivenessAction(action, landmarks) {
-        switch(action) {
-          case 'blink': return detectBlink(landmarks);
-          case 'look_left': return detectLookLeft(landmarks);
-          case 'look_right': return detectLookRight(landmarks);
-          case 'look_up': return detectLookUp(landmarks);
-          case 'look_down': return detectLookDown(landmarks);
-          case 'smile': return detectSmile(landmarks);
-          default: return false;
-        }
-      }
-      function isNeutral(action, landmarks) {
-        switch(action) {
-          case 'blink': return !detectBlink(landmarks);
-          case 'look_left': return !detectLookLeft(landmarks);
-          case 'look_right': return !detectLookRight(landmarks);
-          case 'look_up': return !detectLookUp(landmarks);
-          case 'look_down': return !detectLookDown(landmarks);
-          case 'smile': return !detectSmile(landmarks);
-          default: return true;
-        }
-      }
-      async function livenessLoop() {
-        if (!livenessActive || !livenessLoopActive) return;
-        if (video.readyState < 2) {
-          requestAnimationFrame(livenessLoop);
-          return;
-        }
-        if (!faceLandmarker) {
-          requestAnimationFrame(livenessLoop);
-          return;
-        }
-        const results = faceLandmarker.detectForVideo(video, performance.now());
-        if (results.faceLandmarks && results.faceLandmarks.length > 0) {
-          const landmarks = results.faceLandmarks[0];
-          const currentAction = livenessSequence[livenessStep];
-          // Neutral state logic
-          if (waitingForNeutral) {
-            if (isNeutral(currentAction.name, landmarks)) {
-              wasNeutral = true;
-              waitingForNeutral = false;
-              showLivenessStatus('Now perform: ' + currentAction.label, 'info');
-            } else {
-              showLivenessStatus('Return to neutral before performing the action.', 'warning');
-            }
-          } else if (!wasNeutral) {
-            // First time for this action, require neutral
-            waitingForNeutral = true;
-            showLivenessStatus('Return to neutral before performing the action.', 'warning');
-          } else {
-            // Only accept if transitioned from neutral to action
-            if (detectLivenessAction(currentAction.name, landmarks)) {
-              showLivenessStatus('Action detected: ' + currentAction.label, 'success');
-              livenessStep++;
-              wasNeutral = false;
-              waitingForNeutral = false;
-              if (livenessStep < livenessSequence.length) {
-                setTimeout(() => {
-                  showLivenessInstruction('Next: ' + livenessSequence[livenessStep].label);
-                  showLivenessStatus('Please follow the instructions.', 'info');
-                }, 1000);
-              } else {
-                livenessActive = false;
-                livenessLoopActive = false;
-                livenessPassed = true;
-                showLivenessStatus('Liveness check passed! Stay still for photo...', 'success');
-                showLivenessInstruction('');
-                setTimeout(() => startCountdownForPhoto(), 1000);
-                return;
-              }
-            }
-          }
-        } else {
-          showLivenessStatus('No face detected. Please center your face.', 'warning');
-        }
-        if (livenessActive && livenessLoopActive) requestAnimationFrame(livenessLoop);
-      }
-      function startCountdownForPhoto() {
-        let count = 3;
-        showCountdownFeedback('Stay still! Photo in ' + count + '...', 'info');
-        countdownTimer = setInterval(() => {
-          count--;
-          if (count > 0) {
-            showCountdownFeedback('Stay still! Photo in ' + count + '...', 'info');
-          } else {
-            clearInterval(countdownTimer);
-            showCountdownFeedback('Click!', 'success');
-            setTimeout(() => {
-              hideCountdownFeedback();
-              captureAndSubmitLiveness();
-            }, 500);
-          }
-        }, 1000);
-      }
-      function captureAndSubmitLiveness() {
-        if (recognitionInProgress) return;
-        recognitionInProgress = true;
-        // Use the same logic as captureAndSubmit, but no pose/straightness checks
-        const videoEl  = document.querySelector('video');
-        const canvasEl = document.querySelector('canvas');
-        const ctx      = canvasEl.getContext('2d');
-        canvasEl.width  = videoEl.videoWidth;
-        canvasEl.height = videoEl.videoHeight;
-        ctx.save();
-        ctx.translate(canvasEl.width, 0);
-        ctx.scale(-1, 1);
-        ctx.drawImage(videoEl, 0, 0, canvasEl.width, canvasEl.height);
-        ctx.restore();
-        videoEl.pause();
-        document.querySelector('.video-container').style.display  = 'none';
-        document.querySelector('.canvas-container').style.display = 'block';
-        canvas.toBlob(function(blob) {
-          var formData = new FormData();
-          formData.append('image', blob, 'capture.jpg');
-          formData.append('device_type', deviceType);
-          showAutoFaceStatus('Finding a match...', 'info');
-          hidePoseFeedback();
-          hideCountdownFeedback();
-          fetch('/api/face/recognize', {
-            method: 'POST',
-            body: formData
-          })
-          .then(response => response.json())
-          .then(function(response) {
-            recognitionInProgress = false;
-            if (response.success && response.user_id) {
-              fetch('/api/face/sign_in_user', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: response.user_id })
-              })
-              .then(res => res.json())
-              .then(function(signInResp) {
-                if (signInResp.success && signInResp.redirect_path) {
-                  showAutoFaceStatus('Signed in successfully! Welcome, ' + response.user_name + '.', 'success');
-                  setTimeout(function() {
-                    window.location.href = signInResp.redirect_path;
-                  }, 1000);
-                } else {
-                  showAutoFaceStatus('Sign in failed: ' + (signInResp.error || 'Unknown error'), 'danger');
-                  setTimeout(() => restartLivenessProcess(), 2000);
-                }
-              })
-              .catch(function(error) {
-                showAutoFaceStatus('Error signing in: ' + error, 'danger');
-                setTimeout(() => restartLivenessProcess(), 2000);
-              });
-            } else {
-              showAutoFaceStatus('Face not recognized. Please try again.', 'danger');
-              setTimeout(() => restartLivenessProcess(), 2000);
-            }
-          })
-          .catch(function(error) {
-            recognitionInProgress = false;
-            showAutoFaceStatus('Error recognizing face: ' + error, 'danger');
-            setTimeout(() => restartLivenessProcess(), 2000);
-          });
-        }, 'image/jpeg', 1);
-      }
-      function restartLivenessProcess() {
+      function resetModal() {
         $('.video-container').show();
         $('.canvas-container').hide();
         $('#face-start-camera-btn').show();
-        hideAutoFaceStatus();
-        hidePoseFeedback();
-        hideCountdownFeedback();
-        livenessTries = 0;
-        livenessStep = 0;
-        livenessActive = false;
-        livenessPassed = false;
-        livenessLoopActive = false;
-        recognitionInProgress = false;
-        if (video && video.srcObject) {
-          video.play();
-        }
-        // Automatically restart after a short delay
-        setTimeout(() => {
-          $('#face-start-camera-btn').hide();
-          if (!faceLandmarker) {
-            loadFaceLandmarker().then(() => {
-              resetLiveness();
-              livenessLoopActive = true;
-              livenessLoop();
-            });
-          } else {
-            resetLiveness();
-            livenessLoopActive = true;
-            livenessLoop();
-          }
-        }, 1200); // 1.2s delay for user to see feedback
+        hideStatus();
+        if (video && video.srcObject) video.play();
       }
-      // --- END LIVENESS CHALLENGE LOGIC ---
-
-      // Replace startAutoCapture with liveness challenge
-      $('#face-start-camera-btn').click(function() {
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-          navigator.mediaDevices.getUserMedia({ 
-            video: { 
-              width: { ideal: 640 },
-              height: { ideal: 480 },
-              facingMode: 'user'
-            } 
-          })
-          .then(function(mediaStream) {
-            stream = mediaStream;
-            video.srcObject = mediaStream;
-            video.play();
-            $('#face-start-camera-btn').hide();
-            if (!faceLandmarker) {
-              loadFaceLandmarker().then(() => {
-                resetLiveness();
-                livenessLoopActive = true;
-                livenessLoop();
-              });
-            } else {
-              resetLiveness();
-              livenessLoopActive = true;
-              livenessLoop();
-            }
-          })
-          .catch(function(err) {
-            showAutoFaceStatus('Error accessing camera. Please check permissions.', 'danger');
-          });
-        } else {
-          showAutoFaceStatus('Camera not supported in this browser.', 'danger');
+      async function startCamera() {
+        if (stream) return;
+        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+        video.srcObject = stream;
+        video.play();
+      }
+      function setCanvasSize() {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+      }
+      async function countdown(seconds) {
+        for (let i = seconds; i > 0; i--) {
+          showStatus(`Get ready! Liveness check will start in ${i}...`, 'info');
+          await new Promise(res => setTimeout(res, 1000));
+      }
+      }
+      async function captureFrames() {
+        frames = [];
+        setCanvasSize();
+        for (let i = 0; i < FRAME_COUNT; i++) {
+          ctx.save();
+          ctx.translate(canvas.width, 0);
+          ctx.scale(-1, 1); // Non-mirrored
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          ctx.restore();
+          let blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 1));
+          frames.push(blob);
+          showStatus(`Capturing liveness video... (${i+1}/${FRAME_COUNT})`, 'info');
+          await new Promise(res => setTimeout(res, CAPTURE_INTERVAL));
         }
-      });
-      // On modal close, reset everything
-      $('#faceCheckInModal').on('hidden.bs.modal', function() {
+      }
+      async function sendLivenessAndRecognition(frames) {
+        showStatus('Checking liveness and face...', 'info');
+        let formData = new FormData();
+        frames.forEach((frame, idx) => formData.append('frames[]', frame, `frame${idx}.jpg`));
+        formData.append('device_type', deviceType);
+        let response = await fetch('/api/face/liveness_and_recognition', { method: 'POST', body: formData });
+        return await response.json();
+      }
+      async function runLivenessAndRecognition() {
+        try {
+          await startCamera();
+          showStatus('Position your face in the center. Ensure good lighting.', 'info');
+          await new Promise(res => setTimeout(res, 1000));
+          await countdown(COUNTDOWN_SECONDS);
+          await captureFrames();
+          let result = await sendLivenessAndRecognition(frames);
+          if (result.success && result.user_id) {
+            showStatus('Signed in successfully! Welcome, ' + (result.user_name || '') + '.', 'success');
+            fetch('/api/face/sign_in_user', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ user_id: result.user_id })
+            })
+            .then(res => res.json())
+            .then(data => {
+              if (data.success) {
+                window.location.href = data.redirect_path || '/';
+              } else {
+                // handle error
+              }
+            });
+          } else if (result.is_live === false) {
+            showStatus('Liveness check failed. Please try again.', 'danger');
+            setTimeout(() => restartProcess(), 2500);
+          } else {
+            showStatus('Face not recognized. Please try again.', 'danger');
+            setTimeout(() => restartProcess(), 2500);
+          }
+        } catch (e) {
+          showStatus('Error: ' + e, 'danger');
+          setTimeout(() => restartProcess(), 2500);
+        }
+      }
+      function restartProcess() {
         if (stream) {
-          stream.getTracks().forEach(function(track) {
-            track.stop();
-          });
+          stream.getTracks().forEach(track => track.stop());
           stream = null;
         }
+        frames = [];
+        hideStatus();
+        $('#face-start-camera-btn').show();
+                $('.video-container').show();
+                $('.canvas-container').hide();
+        if (video && video.srcObject) video.pause();
+      }
+      $('#face-start-camera-btn').click(function() {
+            $('#face-start-camera-btn').hide();
+        runLivenessAndRecognition();
+          });
+      $('#faceCheckInModal').on('hidden.bs.modal', function() {
+        if (stream) {
+          stream.getTracks().forEach(track => track.stop());
+          stream = null;
+        }
+        frames = [];
+        hideStatus();
+        $('#face-start-camera-btn').show();
         $('.video-container').show();
         $('.canvas-container').hide();
-        $('#face-start-camera-btn').show();
-        autoCaptureActive = false;
-        poseReady = false;
-        poseHoldTime = 0;
-        countdownActive = false;
-        hideAutoFaceStatus();
-        hidePoseFeedback();
-        hideCountdownFeedback();
-        livenessActive = false;
-        livenessPassed = false;
-        livenessStep = 0;
-        livenessTries = 0;
-        livenessLoopActive = false;
-        recognitionInProgress = false;
-        if (video && video.srcObject) {
-          video.play();
-        }
+        if (video && video.srcObject) video.pause();
+      });
+      $('#face-checkin-btn').click(function() {
+        $('#faceCheckInModal').modal('show');
       });
     });
   </script>

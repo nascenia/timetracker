@@ -127,6 +127,7 @@ Internal::Application.routes.draw do
       post :register
       post :recognize
       post :sign_in_user
+      post :liveness_and_recognition
     end
   end
   

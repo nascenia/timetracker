@@ -10,6 +10,7 @@ from PIL import Image
 import json
 from fastapi.responses import JSONResponse
 
+
 app = FastAPI()
 
 # Allow CORS for local dev
@@ -20,6 +21,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 class RegisterRequest(BaseModel):
     image: str
@@ -51,6 +53,7 @@ async def register_face(image: UploadFile = File(...), user_id: int = Form(...))
     except Exception as e:
         return JSONResponse({"success": False, "error": str(e)})
 
+'''
 @app.post("/recognize_face")
 async def recognize_face(image: UploadFile = File(...), users: str = Form(...), debug: bool = Form(False)):
     try:
@@ -79,11 +82,95 @@ async def recognize_face(image: UploadFile = File(...), users: str = Form(...), 
             response = {"success": True, "user_id": matched_user['user_id'], "confidence": 1 - min_dist}
         else:
             response = {"success": False, "error": "Face not recognized"}
-        if debug:
-            response["debug"] = {
-                "input_embedding": input_embedding,
-                "distances": distances
-            }
+
         return JSONResponse(response)
     except Exception as e:
+        return JSONResponse({"success": False, "error": str(e)})
+'''
+@app.post("/liveness_and_recognition")
+async def liveness_and_recognition(
+    frames: List[UploadFile] = File(...),
+    users: str = Form(...),  # JSON string: [{user_id, face_encoding: [float, ...]}, ...]
+    device_type: Optional[str] = Form('pc')
+):
+    # Debug: Print info about received frames
+    print(f"[DEBUG] Received {len(frames)} frames.")
+
+    live_scores = []
+    antispoof_scores = []
+    imgs = []
+    total_score = 0.0
+    pictures = 0
+    for idx, frame in enumerate(frames):
+        img_bytes = await frame.read()
+        img = Image.open(io.BytesIO(img_bytes)).convert("RGB")
+        np_img = np.array(img)
+        
+        try:
+            faces = DeepFace.extract_faces(img_path=np_img, anti_spoofing=True)
+            if faces and "is_real" in faces[0]:
+                is_live = faces[0]["is_real"]
+                score = faces[0]["antispoof_score"]
+                print(f'score: {score}')
+                total_score += score
+                pictures += 1
+            else:
+                is_live = False
+                score = 0.0
+            print(f"Frame {idx} liveness: {is_live}, antispoof_score: {score}")
+            live_scores.append(1 if is_live else 0)
+            antispoof_scores.append(score)
+            imgs.append(np_img)
+        except Exception as e:
+            print(f"error: {e=}")
+            live_scores.append(0)
+            antispoof_scores.append(0.0)
+            imgs.append(np_img)
+    avg_score = float(np.mean(live_scores))
+    avg_antispoof = float(np.mean(antispoof_scores))
+    is_live = avg_score > 0.5  # You can tune this threshold
+    print(f"total_AVG: {total_score/pictures}")
+    print(f"antispoof avg: {avg_antispoof}")
+    if not is_live or len(imgs) < 3:
+        print("FAKE!!!")
+        return JSONResponse({"success": False, "liveness_score": avg_score, "antispoof_score": avg_antispoof, "is_live": False, "error": "Liveness check failed"})
+    print("LIVE!!!")
+    
+    # 2. Face recognition (use 3rd frame, index 2)
+    try:
+        np_img = imgs[2]
+        user_list = json.loads(users)
+        embedding_objs = DeepFace.represent(np_img, model_name="ArcFace", enforce_detection=True)
+        input_embedding = embedding_objs[0]['embedding']
+        if isinstance(input_embedding, np.ndarray):
+            input_embedding = input_embedding.tolist()
+        min_dist = float('inf')
+        matched_user = None
+        for user in user_list:
+            dist = cosine(input_embedding, user['face_encoding'])
+            print(f"user: {user['user_id']} dist: {dist}")
+            if dist < 0.4 and dist < min_dist:
+                min_dist = dist
+                matched_user = user
+        if matched_user:
+            print(f"MATCH!!!, mathed user: {matched_user['user_id']}")
+            return JSONResponse({
+                "success": True,
+                "user_id": matched_user['user_id'],
+                "confidence": 1 - min_dist,
+                "liveness_score": avg_score,
+                "antispoof_score": avg_antispoof,
+                "is_live": True
+            })
+        else:
+            print("NO MATCH")
+            return JSONResponse({
+                "success": False,
+                "liveness_score": avg_score,
+                "antispoof_score": avg_antispoof,
+                "is_live": True,
+                "error": "Face not recognized"
+            })
+    except Exception as e:
+        print(f"error in recognition: {e=}")
         return JSONResponse({"success": False, "error": str(e)})
