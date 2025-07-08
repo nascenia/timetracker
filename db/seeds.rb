@@ -54,3 +54,42 @@ if GoalCategory.count.zero?
   ])
   p 'Done'
 end
+
+
+# unless PreRegistration.exists?(companyEmail: 'reazuddin@nascenia.com')
+#   PreRegistration.create!(
+#     name: 'Reaz Uddin',
+#     companyEmail: 'reazuddin@nascenia.com',
+#     employee_id: 'A9999',
+#     weekend_id: 1,
+#     holiday_scheme_id: 1,
+#     personalEmail: 'reazuddin2598@gmail.com',
+#     contactNumber: '0123456789',
+#     joiningDate: Date.today,
+#     ttf_id: 1,
+#     leave_approval_path_id: 1,
+#     designation: 1,
+#     step_no: 2
+#   )
+# end
+
+# unless User.exists?(email: 'reazuddin@nascenia.com')
+#   pre_registration = PreRegistration.find_by(companyEmail: 'reazuddin@nascenia.com')
+#   user = User.create!(
+#     name: pre_registration.name,
+#     email: pre_registration.companyEmail,
+#     weekend_id: pre_registration.weekend_id,
+#     holiday_scheme_id: pre_registration.holiday_scheme_id,
+#     personal_email: pre_registration.personalEmail,
+#     mobile_number: pre_registration.contactNumber,
+#     joining_date: pre_registration.joiningDate,
+#     role:3,
+#     employee_id: pre_registration.employee_id,
+#     approval_path_id: pre_registration.leave_approval_path_id,
+#     password: 'Admin@123',
+#     password_confirmation: 'Admin@123',
+#     registration_status:2
+
+#   )
+#   pre_registration.update(user_id: user.id, step_no: 4)
+# end

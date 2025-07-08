@@ -91,9 +91,10 @@ class LeavesController < ApplicationController
 
   def approve
     if current_user.try(:has_admin_privilege?)
+      @leave.remove_unannounced_for_same_date
       @leave.update_attributes(status: Leave::ACCEPTED, pending_at: 0)
       @leave.user.leave_tracker.update_leave_tracker(@leave)
-      @leave.remove_unannounced_for_same_date
+      @leave.user.leave_tracker.update_leave_tracker_daily()
       UserMailer.send_approval_or_rejection_notification(@leave).deliver
       UserMailer.send_approval_or_rejection_notification_to_hr(@leave).deliver
     else
@@ -108,6 +109,7 @@ class LeavesController < ApplicationController
 
         @leave.update_attributes(status: Leave::ACCEPTED, pending_at: 0)
         @leave.user.leave_tracker.update_leave_tracker(@leave)
+        @leave.user.leave_tracker.update_leave_tracker_daily()
         UserMailer.send_approval_or_rejection_notification(@leave).deliver
         UserMailer.send_approval_or_rejection_notification_to_hr(@leave).deliver
       else

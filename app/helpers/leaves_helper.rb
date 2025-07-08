@@ -54,4 +54,14 @@ module LeavesHelper
   def has_co_worker?
     has_owned_paths? || current_user.role == User::SUPER_TTF || current_user.role == User::TTF
   end
+
+  def leave_duration_in_days(leave)
+    return leave.hour / 8.0 if leave.leave_type == Leave::AWARDED && leave.hour.present?
+    hours = leave.total_leave_hour.to_f
+    if leave.half_day != 0 && hours <= 8.0
+      0.5
+    else
+      (hours / 8.0).ceil
+    end
+  end
 end

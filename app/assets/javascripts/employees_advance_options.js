@@ -1,55 +1,4 @@
-- if current_user.has_admin_privilege?
-  = render partial: 'admin_filter'
-.panel.panel-default
-  = button_tag 'Show Advanced Options', id: 'toggle-employees-advanced-options', class: 'btn btn-primary', type: 'button'
-  %table.table.table-bordered.table-hover#employee-info-table
-    %thead
-      %tr
-        %th{:width => '25%'} Name
-        %th{:width => '25%'} Email
-        %th{:width => '15%'} Contact Number
-        %th{:width => '5%'} Blood Group
-        - if current_user.has_admin_privilege?
-          %th{:width => '10%'} Joining Date
-        %th{:width => '20%'} TTF
-    %tbody.word-break
-      - @employees.each do |employee|
-        - if @pending_employees_company_emails.include?(employee.email) and current_user.has_admin_privilege?
-          %tr
-            %td.bg-danger= link_to employee.name, employee_path(employee)
-            %td.bg-danger= employee.email
-            - if employee.mobile_number.present?
-              %td.bg-danger
-                %a{:href =>"Tel:#{employee.mobile_number}"}= employee.mobile_number
-            - else
-              %td.bg-danger= 'N/A'
-            %td.bg-danger
-              = employee.blood_group
-            - if current_user.has_admin_privilege?
-              %td.bg-danger= employee.joining_date
-            -if employee.ttf_id?
-              %td.bg-danger= employee.ttf.name
-            -else
-              %td.bg-danger= "N/A"
-        - else
-          %tr
-            %td= link_to employee.name, employee_path(employee)
-            %td= employee.email
-            - if employee.mobile_number.present?
-              %td
-                %a{:href =>"Tel:#{employee.mobile_number}"}= employee.mobile_number
-            - else
-              %td= 'N/A'
-            %td= employee.blood_group
-            - if current_user.has_admin_privilege?
-              %td= employee.joining_date
-            -if employee.ttf_id?
-              %td= employee.ttf.name
-            -else
-              %td= "N/A"
-
-:javascript
-  document.addEventListener("turbolinks:load", function () {
+document.addEventListener("turbolinks:load", function () {
   const $table = $("#employee-info-table");
 
   // Destroy if already initialized (but DO NOT empty tbody)
@@ -174,16 +123,16 @@
     dataTable.draw();
     return false;
   });
-  });
+});
 
-  // Clean up DataTable and filter before Turbolinks caches the page
-  document.addEventListener("turbolinks:before-cache", function () {
-    const $table = $("#employee-info-table");
-    if ($.fn.DataTable.isDataTable($table)) {
-      $table.DataTable().destroy();
-    }
-    // Remove the filter
-    $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(
-      (fn) => fn !== employeeTableFilter
-    );
-  });
+// Clean up DataTable and filter before Turbolinks caches the page
+document.addEventListener("turbolinks:before-cache", function () {
+  const $table = $("#employee-info-table");
+  if ($.fn.DataTable.isDataTable($table)) {
+    $table.DataTable().destroy();
+  }
+  // Remove the filter
+  $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(
+    (fn) => fn !== employeeTableFilter
+  );
+});
