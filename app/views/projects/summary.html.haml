@@ -9,6 +9,8 @@
   = link_to 'Download monthly report', monthly_report_projects_path(start_date: params[:project][:start_date], end_date: params[:project][:end_date], format: 'xls')
   |
   = link_to 'Switch to old view', show_all_projects_path(selected_index: 2, start_date: 7.days.ago.strftime('%Y/%m/%d'), end_date: Time.now.strftime('%Y/%m/%d'))
+  |
+  = button_tag 'Show Advanced Options', id: 'toggle-advanced-options', class: 'btn btn-primary', type: 'button'
 
 .row
   %table.table.table-bordered#projects-summary
@@ -23,27 +25,134 @@
         %tr
           %td= summary[:user_name]
           %td= summary[:total_hours]
-          %td
+          %td{style: 'display: flex; gap: 2px; flex-wrap: wrap; align-items: center;'}
             - summary[:projects].each do |project|
               - percentage = (100 * (project[:hours].to_f / summary[:total_hours].to_f)).round(2)
-              %span{style: 'border: 1px solid gray; padding: 5px;'}= "#{project[:name]} #{percentage}% (#{project[:hours]})"
+              %div{style: 'border: 1px solid gray; padding: 5px; display: inline-block;'}= "#{project[:name]} #{percentage}% (#{project[:hours]})"
 
 :javascript
+  var rowState = 0;
+  var advancedVisible = false;
+  var dataTable;
 
-  $(document).ready(function() {
+  function projectSummaryTableFilter(settings, data, dataIndex) {
+    if (settings.nTable !== $("#projects-summary")[0]) return true;
+    if (rowState > 0) {
+      var tr = dataTable.row(dataIndex).node();
+      if (rowState === 1) {
+        return !$(tr).hasClass("selected");
+      } else {
+        return $(tr).hasClass("selected");
+      }
+    }
+    return true;
+  }
 
-    var dataTable = $('#projects-summary').DataTable({
+  document.addEventListener("turbolinks:load", function () {
+    var $table = $("#projects-summary");
+
+    if ($.fn.DataTable.isDataTable($table)) {
+      $table.DataTable().destroy();
+    }
+
+    rowState = 0;
+    advancedVisible = false;
+
+    dataTable = $table.DataTable({
       lengthChange: false,
       pageLength: 100,
       dom: '<"dt-top-left"Tf>lrtip',
-      buttons: ['print']
+      buttons: ["print"],
+      select: { style: "multi+shift" },
     });
 
-    $(document).on("turbolinks:before-cache", function() {
-      if (dataTable !== null) {
-        dataTable.destroy();
-        dataTable = null;
-      }
+    $.fn.dataTable.ext.search.push(projectSummaryTableFilter);
+
+    $("#advanced-options").remove();
+
+    $table
+      .parent()
+      .append("<div id='advanced-options' style='display:none;'></div>");
+
+    $("#advanced-options").append(
+      "<button id='show-selected-button'>Show Selected</button> "
+    );
+    $("#advanced-options").append(
+      "<button id='show-deleted-button'>Show Deleted</button> "
+    );
+    $("#advanced-options").append(
+      "<button id='show-all-button'>Restore Deleted</button> "
+    );
+    $("#advanced-options").append(
+      "<button id='clear-selection-button'>Clear Selection</button>"
+    );
+
+    $table.on("click", "td span.hideRow", function () {
+      $(this).closest("tr").toggleClass("selected");
+      return false;
+    });
+
+    $("#toggle-advanced-options")
+      .off("click")
+      .on("click", function () {
+        advancedVisible = !advancedVisible;
+
+        if (advancedVisible) {
+          $("#advanced-options").show();
+          $table.find("tbody tr").each(function () {
+            var $cell = $(this).find("td:last");
+            if ($cell.find("span.hideRow").length === 0) {
+              $cell.append(
+                "<span class='hideRow advanced-control' style='margin-left: auto; display: flex; align-items: center;'><a>X</a></span>"
+              );
+            }
+          });
+          $(this).text("Hide Advanced Options");
+        } else {
+          $("#advanced-options").hide();
+          $table.find("span.hideRow").remove();
+          $(this).text("Show Advanced Options");
+        }
+      });
+
+    $("#show-selected-button").on("click", function () {
+      rowState = 1;
+      dataTable.draw();
+      return false;
+    });
+
+    $("#show-deleted-button").on("click", function () {
+      rowState = 2;
+      dataTable.draw();
+      return false;
+    });
+
+    $("#show-all-button").on("click", function () {
+      rowState = 0;
+      dataTable.draw();
+      return false;
+    });
+
+    $("#clear-selection-button").on("click", function () {
+      rowState = 0;
+      $table.find("tr").removeClass("selected");
+      dataTable.draw();
+      return false;
     });
   });
-  
+
+  document.addEventListener("turbolinks:before-cache", function () {
+    var $table = $("#projects-summary");
+    if ($.fn.DataTable.isDataTable($table)) {
+      $table.DataTable().destroy();
+    }
+
+    var newSearch = [];
+    for (var i = 0; i < $.fn.dataTable.ext.search.length; i++) {
+      var fn = $.fn.dataTable.ext.search[i];
+      if (fn !== projectSummaryTableFilter) {
+        newSearch.push(fn);
+      }
+    }
+    $.fn.dataTable.ext.search = newSearch;
+  });

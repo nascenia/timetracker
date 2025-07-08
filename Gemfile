@@ -41,7 +41,7 @@ gem 'capistrano', '2.14.2', group: :development
 gem 'rvm-capistrano', '1.2.7', require: false
 
 # Use debugger
-gem 'activeadmin', github: 'activeadmin'
+gem 'activeadmin', '~> 1.0.0.pre1'
 
 group :test, :development do
   gem 'factory_girl_rails', '~> 4.7.0'

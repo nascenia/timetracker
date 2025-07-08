@@ -1,6 +1,7 @@
 # :nodoc:
 class UserMailer < ActionMailer::Base
   add_template_helper ApplicationHelper
+  add_template_helper LeavesHelper
 
   default from: 'Leave Tracker | Nascenia <leave.nascenia@gmail.com>'
 
