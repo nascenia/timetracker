@@ -75,7 +75,7 @@
       let canvas = document.createElement('canvas');
       let ctx = canvas.getContext('2d');
       const FRAME_COUNT = 5;
-      const CAPTURE_INTERVAL = 200; // ms (5 frames in 1 second)
+      const CAPTURE_INTERVAL = 100; // ms (5 frames in 1 second)
       const COUNTDOWN_SECONDS = 5;
       let frames = [];
       let deviceType = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'mb' : 'pc';
@@ -141,20 +141,11 @@
           await captureFrames();
           let result = await sendLivenessAndRecognition(frames);
           if (result.success && result.user_id) {
-            showStatus('Signed in successfully! Welcome, ' + (result.user_name || '') + '.', 'success');
-            fetch('/api/face/sign_in_user', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ user_id: result.user_id })
-            })
-            .then(res => res.json())
-            .then(data => {
-              if (data.success) {
-                window.location.href = data.redirect_path || '/';
-              } else {
-                // handle error
-              }
-            });
+            //showStatus('Signed in successfully! Welcome, ' + (result.user_name || '') + '.', 'success');
+            // Redirect to home/dashboard after a short delay (optional)
+            //setTimeout(function() {
+              window.location.href = '/'; // or your dashboard path
+            //}, 1000); // 1 second delay for user to see the message
           } else if (result.is_live === false) {
             showStatus('Liveness check failed. Please try again.', 'danger');
             setTimeout(() => restartProcess(), 2500);

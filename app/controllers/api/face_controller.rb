@@ -20,7 +20,7 @@ class Api::FaceController < ApplicationController
       unless image_file.present? && user_id.present?
         return render json: { success: false, error: 'Missing image or user_id' }, status: :bad_request
       end
-      
+
       # Find user
       user = User.find(user_id)
       unless user == current_user
@@ -28,7 +28,7 @@ class Api::FaceController < ApplicationController
       end
       
       # Call FastAPI service to process face and get encoding
-      face_encoding = call_fastapi_register(image_file, user_id)
+      face_encoding = call_fastapi_register(image_file)
       device_type = params[:device_type]
       if face_encoding
         # Update user's face encoding in the correct column
@@ -143,13 +143,11 @@ class Api::FaceController < ApplicationController
       result = call_fastapi_liveness_and_recognition(frames, user_list, device_type)
       if result && result['success'] && result['user_id']
         user = User.find(result['user_id'])
+        sign_in(user)
         render json: {
           success: true,
           user_id: user.id,
           user_name: user.name,
-          confidence: result['confidence'],
-          liveness_score: result['liveness_score'],
-          is_live: result['is_live']
         }
       else
         render json: result || { success: false, error: 'Recognition or liveness failed' }, status: :unprocessable_entity
@@ -162,7 +160,7 @@ class Api::FaceController < ApplicationController
   
   private
   
-  def call_fastapi_register(image_file, user_id)
+  def call_fastapi_register(image_file)
     fastapi_url = ENV['FASTAPI_URL'] || 'http://localhost:8000'
     uri = URI("#{fastapi_url}/register_face")
     
@@ -170,7 +168,7 @@ class Api::FaceController < ApplicationController
       uri.path,
       {
         'image' => UploadIO.new(image_file.tempfile, image_file.content_type, image_file.original_filename),
-        'user_id' => user_id.to_s
+        #'user_id' => user_id.to_s
       }
     )
     request['Authorization'] = "Bearer #{ENV['FASTAPI_API_KEY']}" if ENV['FASTAPI_API_KEY']

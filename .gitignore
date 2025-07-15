@@ -2,7 +2,10 @@
 path/
 # Ignore bundler config.
 /.bundle
+
+Silent-Face-Anti-Spoofing/
 fastapi_service/venv/
+fastapi_service/weights/
 fastapi_service/test_face.jpg
 fastapi_service/test.py
 fastapi_service/__pycache__
