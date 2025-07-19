@@ -5,10 +5,19 @@ path/
 
 Silent-Face-Anti-Spoofing/
 fastapi_service/venv/
+fastapi_service/fastapi_service.log
 fastapi_service/weights/
 fastapi_service/test_face.jpg
 fastapi_service/test.py
-fastapi_service/__pycache__
+
+fastapi_service/__pycache__/
+fastapi_service/**/*.pyc
+fastapi_service/**/*.pyo
+fastapi_service/**/*.pyd
+fastapi_service/face_db.sqlite3
+fastapi_service/*.log
+fastapi_service/alembic/versions/__pycache__/
+
 # Ignore omniauth
 /config/initializers/omniauth.rb
 config/mailer_conf.yml

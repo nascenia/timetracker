@@ -124,9 +124,6 @@ Internal::Application.routes.draw do
   # Face Recognition API routes
   namespace :api do
     namespace :face do
-      post :register
-      post :recognize
-      post :sign_in_user
       post :liveness_and_recognition
     end
   end

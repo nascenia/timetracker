@@ -1,5 +1,3 @@
-= hidden_field_tag :face_encoding_pc, current_user.face_encoding_pc.present?
-= hidden_field_tag :face_encoding_mb, current_user.face_encoding_mb.present?
 %h2
   %b
     Employee Details
@@ -183,8 +181,6 @@
                 %button#capture-photo-btn.btn.btn-primary{type: 'button', style: 'margin: 10px 5px; display: none;'} Capture
                 %button#retake-photo-btn.btn.btn-warning{type: 'button', style: 'margin: 10px 5px; display: none;'} Retake
                 %button#start-over-btn.btn.btn-danger{type: 'button', style: 'margin: 10px 5px; display: none;'} Start Over
-                %button#next-photo-btn.btn.btn-info{type: 'button', style: 'margin: 10px 5px; display: none;'} Take Next Photo
-                %button#see-best-shot-btn.btn.btn-secondary{type: 'button', style: 'margin: 10px 5px; display: none;'} See Best Shot
                 %button#register-face-btn-modal.btn.btn-success{type: 'button', style: 'margin: 10px 5px; display: none;'} Register Face
         .row
           .col-xs-12.col-md-8.col-md-offset-2
@@ -192,9 +188,10 @@
               %h5 Instructions:
               %ol
                 %li Click "Start Camera" to begin
-                %li Position your face in the center of the frame
-                %li Ensure good lighting
-                %li Look straight at the camera
+                %li Bring your face close so it fills the circle
+                %li Ensure good lighting and look straight at the camera
+                %li Click 'Capture' to take your photo manually
+                %li#glasses-instruction(style='display:none;') You are on a computer, please remove your glasses
             .status-messages
               #status-message.alert{style: 'display: none;'}
       .modal-footer
@@ -203,8 +200,6 @@
 
 :plain
   <script type="module">
-    import * as vision from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js";
-    window.vision = vision;
     $(document).ready(function() {
       var video = document.getElementById('video');
       var canvas = document.getElementById('canvas');
@@ -212,27 +207,10 @@
       var stream = null;
       var userId = #{current_user.id};
       var photoTaken = false;
-      var capturedPhotos = [];
+      var capturedPhoto = null;
       var faceLandmarker = null;
       var lastCaptureData = null;
-      var maxPhotos = 3;
       var deviceType = isMobileDevice() ? 'mb' : 'pc';
-
-      async function loadFaceLandmarker() {
-        if (!faceLandmarker) {
-          const visionWasm = await vision.FilesetResolver.forVisionTasks(
-            'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm'
-          );
-          faceLandmarker = await vision.FaceLandmarker.createFromOptions(visionWasm, {
-            baseOptions: { modelAssetPath: 'https://storage.googleapis.com/mediapipe-assets/face_landmarker.task' },
-            runningMode: 'IMAGE',
-            numFaces: 1,
-            minFaceDetectionConfidence: 0.8,
-            minFacePresenceConfidence: 0.8,
-            minTrackingConfidence: 0.8
-          });
-        }
-      }
 
       function showAutoFaceStatus(message, type) {
         $('#auto-face-status-message')
@@ -248,7 +226,6 @@
       function showVideo() {
         $('.video-container').show();
         $('.canvas-container').hide();
-        // Only show capture button if camera is running (stream exists)
         if (stream) {
           $('#capture-photo-btn').show();
         } else {
@@ -256,8 +233,6 @@
         }
         $('#retake-photo-btn').hide();
         $('#start-over-btn').hide();
-        $('#next-photo-btn').hide();
-        $('#see-best-shot-btn').hide();
         $('#register-face-btn-modal').hide();
         photoTaken = false;
       }
@@ -265,39 +240,11 @@
         $('.video-container').hide();
         $('.canvas-container').show();
         $('#capture-photo-btn').hide();
-        
-        if (capturedPhotos.length < maxPhotos - 1) {
-          // Still taking photos - show retake and next
-          $('#retake-photo-btn').show();
-          $('#start-over-btn').hide();
-          $('#next-photo-btn').show();
-          $('#see-best-shot-btn').hide();
-          $('#register-face-btn-modal').hide();
-        } else if (capturedPhotos.length === maxPhotos - 1) {
-          // All photos taken - show retake and see best shot
-          $('#retake-photo-btn').show();
-          $('#start-over-btn').hide();
-          $('#next-photo-btn').hide();
-          $('#see-best-shot-btn').show();
-          $('#register-face-btn-modal').show();
-        }
-        photoTaken = true;
-      }
-      function showBestShotView() {
-        $('.video-container').hide();
-        $('.canvas-container').show();
-        $('#capture-photo-btn').hide();
-        $('#retake-photo-btn').hide();
-        $('#start-over-btn').show();
-        $('#next-photo-btn').hide();
-        $('#see-best-shot-btn').hide();
+        $('#retake-photo-btn').show();
+        $('#start-over-btn').hide();
         $('#register-face-btn-modal').show();
         photoTaken = true;
       }
-      function updateStatusCounter() {
-        showAutoFaceStatus('Photo ' + (capturedPhotos.length + 1) + ' of ' + maxPhotos, 'info');
-      }
-
       $('#start-camera-btn').click(function() {
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
           navigator.mediaDevices.getUserMedia({ 
@@ -313,9 +260,7 @@
             video.play();
             $('#start-camera-btn').hide();
             showVideo();
-            updateStatusCounter();
             hideAutoFaceStatus();
-            // Explicitly show capture button after camera starts
             $('#capture-photo-btn').show();
           })
           .catch(function(err) {
@@ -327,39 +272,27 @@
       });
 
       $('#capture-photo-btn').click(async function() {
-        // Get actual displayed size of video element
         const displayWidth = video.clientWidth;
         const displayHeight = video.clientHeight;
-
-        // Set canvas resolution to match displayed size (adjust for high-DPI screens)
         const dpr = window.devicePixelRatio || 1;
         canvas.width = displayWidth * dpr;
         canvas.height = displayHeight * dpr;
         canvas.style.width = `${displayWidth}px`;
         canvas.style.height = `${displayHeight}px`;
-
-        // Calculate video's intrinsic aspect ratio
         const videoRatio = video.videoWidth / video.videoHeight;
         const displayRatio = displayWidth / displayHeight;
-
-        // Determine source cropping coordinates
         let sx, sy, sw, sh;
-
         if (videoRatio > displayRatio) {
-            // Video is wider than display: crop left/right
             sw = video.videoHeight * displayRatio;
             sh = video.videoHeight;
             sx = (video.videoWidth - sw) / 2;
             sy = 0;
         } else {
-            // Video is taller than display: crop top/bottom
             sw = video.videoWidth;
             sh = video.videoWidth / displayRatio;
             sx = 0;
             sy = (video.videoHeight - sh) / 2;
         }
-
-        // Draw only the visible portion of the video
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.save();
         ctx.translate(canvas.width, 0);
@@ -370,165 +303,39 @@
             0, 0, canvas.width, canvas.height  // Destination (full canvas)
         );
         ctx.restore();
-        // Save the image data for later
         lastCaptureData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        // Save the image data for later
+        var tempCanvas = document.createElement('canvas');
+        tempCanvas.width = canvas.width;
+        tempCanvas.height = canvas.height;
+        tempCanvas.getContext('2d').putImageData(lastCaptureData, 0, 0);
+        capturedPhoto = tempCanvas.toDataURL('image/jpeg', 1);
         showCanvas();
         hideAutoFaceStatus();
       });
 
       $('#retake-photo-btn').click(function() {
         lastCaptureData = null;
+        capturedPhoto = null;
         showVideo();
-        updateStatusCounter();
         hideAutoFaceStatus();
       });
 
       $('#start-over-btn').click(function() {
-        // Reset all photos and start over
-        capturedPhotos = [];
+        capturedPhoto = null;
         lastCaptureData = null;
         showVideo();
-        updateStatusCounter();
         hideAutoFaceStatus();
-      });
-
-      $('#next-photo-btn').click(function() {
-        if (lastCaptureData) {
-          // Store the photo as a dataURL for later
-          var tempCanvas = document.createElement('canvas');
-          tempCanvas.width = canvas.width;
-          tempCanvas.height = canvas.height;
-          tempCanvas.getContext('2d').putImageData(lastCaptureData, 0, 0);
-          capturedPhotos.push(tempCanvas.toDataURL('image/jpeg', 1));
-          lastCaptureData = null;
-        }
-        if (capturedPhotos.length < maxPhotos) {
-          showVideo();
-          updateStatusCounter();
-          hideAutoFaceStatus();
-        }
-      });
-
-      $('#see-best-shot-btn').click(async function() {
-        await loadFaceLandmarker();
-        if (lastCaptureData && capturedPhotos.length < maxPhotos) {
-          // Accept the last photo if not already accepted
-          var tempCanvas = document.createElement('canvas');
-          tempCanvas.width = canvas.width;
-          tempCanvas.height = canvas.height;
-          tempCanvas.getContext('2d').putImageData(lastCaptureData, 0, 0);
-          capturedPhotos.push(tempCanvas.toDataURL('image/jpeg', 1));
-        }
-        if (capturedPhotos.length !== maxPhotos) {
-          showAutoFaceStatus('Please capture all 3 photos.', 'warning');
-          return;
-        }
-        // Find the best photo using MediaPipe FaceLandmarker
-        let bestScore = -Infinity;
-        let bestIndex = 0;
-        for (let i = 0; i < capturedPhotos.length; i++) {
-          let img = new window.Image();
-          img.src = capturedPhotos[i];
-          await new Promise(resolve => { img.onload = resolve; });
-          let tempCanvas = document.createElement('canvas');
-          tempCanvas.width = canvas.width;
-          tempCanvas.height = canvas.height;
-          let tempCtx = tempCanvas.getContext('2d');
-          tempCtx.drawImage(img, 0, 0, tempCanvas.width, tempCanvas.height);
-          let results = faceLandmarker.detect(tempCanvas);
-          let score = 0;
-          if (results.faceLandmarks && results.faceLandmarks.length > 0) {
-            const landmarks = results.faceLandmarks[0];
-            const leftEye = landmarks[33];
-            const rightEye = landmarks[263];
-            const noseTip = landmarks[1];
-            const eyeDiffY = Math.abs(leftEye.y - rightEye.y);
-            const minEyeX = Math.min(leftEye.x, rightEye.x);
-            const maxEyeX = Math.max(leftEye.x, rightEye.x);
-            const noseBetweenEyes = (noseTip.x > minEyeX && noseTip.x < maxEyeX);
-            const faceCentered = Math.abs(noseTip.x - 0.5) < 0.1;
-            score = 1 - eyeDiffY;
-            if (noseBetweenEyes) score += 1;
-            if (faceCentered) score += 1;
-            let imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
-            let sharpness = 0;
-            for (let j = 0; j < imageData.data.length; j += 4) {
-              sharpness += Math.abs(imageData.data[j] - imageData.data[j+1]) + Math.abs(imageData.data[j] - imageData.data[j+2]);
-            }
-            score += sharpness / (imageData.data.length * 2);
-          }
-          if (score > bestScore) {
-            bestScore = score;
-            bestIndex = i;
-          }
-        }
-        // Show the best photo in the canvas
-        let bestImg = new window.Image();
-        bestImg.src = capturedPhotos[bestIndex];
-        await new Promise(resolve => { bestImg.onload = resolve; });
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(bestImg, 0, 0, canvas.width, canvas.height);
-        showBestShotView();
-        showAutoFaceStatus('Best shot selected and shown!', 'success');
+        $('#capture-photo-btn').hide();
+        $('#start-over-btn').hide();
       });
 
       $('#register-face-btn-modal').click(async function() {
-        if (lastCaptureData && capturedPhotos.length < maxPhotos) {
-          // Accept the last photo if not already accepted
-          var tempCanvas = document.createElement('canvas');
-          tempCanvas.width = canvas.width;
-          tempCanvas.height = canvas.height;
-          tempCanvas.getContext('2d').putImageData(lastCaptureData, 0, 0);
-          capturedPhotos.push(tempCanvas.toDataURL('image/jpeg', 1));
-        }
-        if (capturedPhotos.length !== maxPhotos) {
-          showAutoFaceStatus('Please capture all 3 photos.', 'warning');
+        if (!capturedPhoto) {
+          showAutoFaceStatus('Please capture a photo first.', 'warning');
           return;
         }
-        await loadFaceLandmarker();
-        // Find the best photo using MediaPipe FaceLandmarker
-        let bestScore = -Infinity;
-        let bestIndex = 0;
-        for (let i = 0; i < capturedPhotos.length; i++) {
-          let img = new window.Image();
-          img.src = capturedPhotos[i];
-          await new Promise(resolve => { img.onload = resolve; });
-          let tempCanvas = document.createElement('canvas');
-          tempCanvas.width = canvas.width;
-          tempCanvas.height = canvas.height;
-          let tempCtx = tempCanvas.getContext('2d');
-          tempCtx.drawImage(img, 0, 0, tempCanvas.width, tempCanvas.height);
-          let imageBitmap = tempCanvas;
-          let results = faceLandmarker.detect(tempCanvas);
-          let score = 0;
-          if (results.faceLandmarks && results.faceLandmarks.length > 0) {
-            // Score: prefer straight, centered, sharp faces
-            const landmarks = results.faceLandmarks[0];
-            const leftEye = landmarks[33];
-            const rightEye = landmarks[263];
-            const noseTip = landmarks[1];
-            const eyeDiffY = Math.abs(leftEye.y - rightEye.y);
-            const minEyeX = Math.min(leftEye.x, rightEye.x);
-            const maxEyeX = Math.max(leftEye.x, rightEye.x);
-            const noseBetweenEyes = (noseTip.x > minEyeX && noseTip.x < maxEyeX);
-            const faceCentered = Math.abs(noseTip.x - 0.5) < 0.1;
-            score = 1 - eyeDiffY;
-            if (noseBetweenEyes) score += 1;
-            if (faceCentered) score += 1;
-            // Sharpness: use edge detection (simple Laplacian)
-            let imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
-            let sharpness = 0;
-            for (let j = 0; j < imageData.data.length; j += 4) {
-              sharpness += Math.abs(imageData.data[j] - imageData.data[j+1]) + Math.abs(imageData.data[j] - imageData.data[j+2]);
-            }
-            score += sharpness / (imageData.data.length * 2);
-          }
-          if (score > bestScore) {
-            bestScore = score;
-            bestIndex = i;
-          }
-        }
-        // Convert best photo dataURL to blob
+        // Convert dataURL to blob
         function dataURLtoBlob(dataurl) {
           var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1], bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
           while(n--){
@@ -536,12 +343,12 @@
           }
           return new Blob([u8arr], {type:mime});
         }
-        var bestPhotoBlob = dataURLtoBlob(capturedPhotos[bestIndex]);
+        var photoBlob = dataURLtoBlob(capturedPhoto);
         var formData = new FormData();
-        formData.append('image', bestPhotoBlob, 'capture.jpg');
+        formData.append('image', photoBlob, 'capture.jpg');
         formData.append('user_id', userId);
         formData.append('device_type', deviceType);
-        fetch('/api/face/register', {
+        fetch('https://f1c9723925a9.ngrok-free.app/register_face', {
           method: 'POST',
           body: formData
         })
@@ -571,28 +378,28 @@
         }
         $('#start-camera-btn').show();
         showVideo();
-        capturedPhotos = [];
+        capturedPhoto = null;
         lastCaptureData = null;
-        updateStatusCounter();
         hideAutoFaceStatus();
-        // Ensure capture button is hidden when modal is reset
         $('#capture-photo-btn').hide();
         $('#start-over-btn').hide();
       });
+
+      // Device detection for glasses instruction
+      function showGlassesInstruction() {
+        if (!isMobileDevice()) {
+          $('#glasses-instruction').show();
+        } else {
+          $('#glasses-instruction').hide();
+        }
+      }
+      showGlassesInstruction();
     });
 
     // Device detection
     function isMobileDevice() {
-      const face_encoding_pc = document.querySelector('[name="face_encoding_pc"]').value === "true";
-      const face_encoding_mb = document.querySelector('[name="face_encoding_mb"]').value === "true";
       const mobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      const text_abcd = document.querySelector('#text_abcd');
-
-      if (face_encoding_mb && mobile) {
-        text_abcd.innerHTML = '<h5>Face data is registered on a mobile.</h5>'
-      } else if (face_encoding_pc && !mobile) {
-        text_abcd.innerHTML = '<h5>Face data is registered on a computer.</h5>'
-      }
       return mobile;
     }
+  </script>
   </script>

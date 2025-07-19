@@ -57,10 +57,10 @@
               %h5 Instructions:
               %ol
                 %li Click "Start Camera" to begin
-                %li Position your face in the center of the frame
-                %li Ensure good lighting
-                %li Look straight at the camera
-                %li The photo will be captured automatically when ready
+                %li Bring your face close so it fills the circle
+                %li Ensure good lighting and look straight at the camera
+                %li After 3 seconds countdown photos will be captured automatically
+                %li#face-glasses-instruction(style='display:none;') Please take off your glasses
             .status-messages
               #face-status-message.alert{style: 'display: none;'}
       .modal-footer
@@ -76,7 +76,7 @@
       let ctx = canvas.getContext('2d');
       const FRAME_COUNT = 5;
       const CAPTURE_INTERVAL = 100; // ms (5 frames in 1 second)
-      const COUNTDOWN_SECONDS = 5;
+      const COUNTDOWN_SECONDS = 3;
       let frames = [];
       let deviceType = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'mb' : 'pc';
 
@@ -124,33 +124,27 @@
           await new Promise(res => setTimeout(res, CAPTURE_INTERVAL));
         }
       }
-      async function sendLivenessAndRecognition(frames) {
-        showStatus('Checking liveness and face...', 'info');
-        let formData = new FormData();
-        frames.forEach((frame, idx) => formData.append('frames[]', frame, `frame${idx}.jpg`));
-        formData.append('device_type', deviceType);
-        let response = await fetch('/api/face/liveness_and_recognition', { method: 'POST', body: formData });
-        return await response.json();
-      }
-      async function runLivenessAndRecognition() {
+      async function runLivenessAndRecognitionUnified() {
         try {
           await startCamera();
           showStatus('Position your face in the center. Ensure good lighting.', 'info');
           await new Promise(res => setTimeout(res, 1000));
           await countdown(COUNTDOWN_SECONDS);
           await captureFrames();
-          let result = await sendLivenessAndRecognition(frames);
+
+          showStatus('Checking liveness and recognizing face...', 'info');
+          let formData = new FormData();
+          frames.forEach((frame, idx) => formData.append('frames[]', frame, `frame${idx}.jpg`));
+          formData.append('device_type', deviceType);
+          let response = await fetch('/api/face/liveness_and_recognition', { method: 'POST', body: formData });
+          let result = await response.json();
           if (result.success && result.user_id) {
-            //showStatus('Signed in successfully! Welcome, ' + (result.user_name || '') + '.', 'success');
-            // Redirect to home/dashboard after a short delay (optional)
-            //setTimeout(function() {
-              window.location.href = '/'; // or your dashboard path
-            //}, 1000); // 1 second delay for user to see the message
-          } else if (result.is_live === false) {
-            showStatus('Liveness check failed. Please try again.', 'danger');
-            setTimeout(() => restartProcess(), 2500);
+            showStatus('✅ Liveness check passed and face recognized!' + (result.user_name ? (' For ' + result.user_name) : ''), 'success');
+            setTimeout(function() {
+              window.location.href = '/';
+            }, 500);
           } else {
-            showStatus('Face not recognized. Please try again.', 'danger');
+            showStatus('❌ ' + (result.error || 'Liveness or recognition failed.'), 'danger');
             setTimeout(() => restartProcess(), 2500);
           }
         } catch (e) {
@@ -170,10 +164,11 @@
                 $('.canvas-container').hide();
         if (video && video.srcObject) video.pause();
       }
+      // Update button click handler to use the new function
       $('#face-start-camera-btn').click(function() {
-            $('#face-start-camera-btn').hide();
-        runLivenessAndRecognition();
-          });
+        $('#face-start-camera-btn').hide();
+        runLivenessAndRecognitionUnified();
+      });
       $('#faceCheckInModal').on('hidden.bs.modal', function() {
         if (stream) {
           stream.getTracks().forEach(track => track.stop());
@@ -189,6 +184,10 @@
       $('#face-checkin-btn').click(function() {
         $('#faceCheckInModal').modal('show');
       });
+      // Show glasses instruction for PC only
+      if (deviceType === 'pc') {
+        $('#face-glasses-instruction').show();
+      }
     });
   </script>
 
