@@ -149,11 +149,12 @@
       .col-sm-2
         %h5 Face Registration
       .col-sm-10
-        %div#text_abcd 
-        = button_tag 'Register/Update Face', type: 'button', class: 'btn btn-primary', id: 'register-face-btn', data: { toggle: 'modal', target: '#faceRegistrationModal' }
-        %br
-        %small.text-muted
-          This will capture your face for check-in/out using facial recognition.
+        - if defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip)
+          %div#text_abcd 
+          = button_tag 'Register/Update Face', type: 'button', class: 'btn btn-primary', id: 'register-face-btn', data: { toggle: 'modal', target: '#faceRegistrationModal' }
+          %br
+          %small.text-muted
+            This will capture your face for check-in/out using facial recognition.
   %br
   .form-group
     .col-sm-2.col-sm-10
@@ -191,7 +192,7 @@
                 %li Bring your face close so it fills the circle
                 %li Ensure good lighting and look straight at the camera
                 %li Click 'Capture' to take your photo manually
-                %li#glasses-instruction(style='display:none;') You are on a computer, please remove your glasses
+                %li#glasses-instruction(style='display:none;') Please remove your glasses
             .status-messages
               #status-message.alert{style: 'display: none;'}
       .modal-footer

@@ -19,6 +19,43 @@ import asyncio
 from db import AsyncSessionLocal  # Make sure async_session is your sessionmaker
 import time
 import logging
+import sqlite3
+from datetime import datetime
+import ipaddress
+
+# Custom SQLite logging handler
+class SQLiteHandler(logging.Handler):
+    def __init__(self, db_path):
+        logging.Handler.__init__(self)
+        self.db_path = db_path
+        self._ensure_table()
+
+    def _ensure_table(self):
+        conn = sqlite3.connect(self.db_path)
+        c = conn.cursor()
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS fastapi_logs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                level TEXT,
+                message TEXT
+            )
+        ''')
+        conn.commit()
+        conn.close()
+
+    def emit(self, record):
+        try:
+            msg = self.format(record)
+            conn = sqlite3.connect(self.db_path)
+            c = conn.cursor()
+            c.execute(
+                "INSERT INTO fastapi_logs (level, message) VALUES (?, ?)",
+                (record.levelname, msg)
+            )
+            conn.commit()
+            conn.close()
+        except Exception:
+            self.handleError(record)
 
 # Set up logger
 logger = logging.getLogger("fastapi_service")
@@ -27,6 +64,14 @@ file_handler = logging.FileHandler("fastapi_service.log")
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
+
+# Use the correct path for the SQLite DB (same directory as main.py)
+import os
+db_path = os.path.join(os.path.dirname(__file__), "face_db.sqlite3")
+sqlite_handler = SQLiteHandler(db_path)
+sqlite_handler.setLevel(logging.INFO)
+sqlite_handler.setFormatter(formatter)
+logger.addHandler(sqlite_handler)
 
 # Global cache for user embeddings
 user_embeddings_cache = {"pc": {}, "mb": {}}
@@ -51,8 +96,8 @@ app = FastAPI()
 # Allow CORS for local dev
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=[""],
+    #allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
