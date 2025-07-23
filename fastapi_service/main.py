@@ -95,7 +95,7 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://yourdomain.com",  # Production domain
+        "http://timetracker.nascenia.com/",  # Production domain
         "http://localhost:8000",  # Local development
         "http://127.0.0.1:8000"   # Local development
     ],
