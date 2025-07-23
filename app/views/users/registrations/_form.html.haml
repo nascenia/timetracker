@@ -349,7 +349,7 @@
         formData.append('image', photoBlob, 'capture.jpg');
         formData.append('user_id', userId);
         formData.append('device_type', deviceType);
-        fetch('https://f1c9723925a9.ngrok-free.app/register_face', {
+        fetch('http://localhost:8000/register_face', {
           method: 'POST',
           body: formData
         })

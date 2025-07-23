@@ -2,12 +2,11 @@ import numpy as np
 from fastapi import FastAPI, Request, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import List, Optional, Dict, Any
+from typing import List, Optional
 from deepface import DeepFace
 from scipy.spatial.distance import cosine
 import io
 from PIL import Image
-import json
 from fastapi.responses import JSONResponse
 from deepface.models.spoofing.FasNet import Fasnet, crop, Compose, ToTensor
 from fastapi import FastAPI, UploadFile, File, Form, Depends
@@ -20,8 +19,7 @@ from db import AsyncSessionLocal  # Make sure async_session is your sessionmaker
 import time
 import logging
 import sqlite3
-from datetime import datetime
-import ipaddress
+
 
 # Custom SQLite logging handler
 class SQLiteHandler(logging.Handler):
@@ -96,7 +94,11 @@ app = FastAPI()
 # Allow CORS for local dev
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[""],
+    allow_origins=[
+        "https://yourdomain.com",  # Production domain
+        "http://localhost:8000",  # Local development
+        "http://127.0.0.1:8000"   # Local development
+    ],
     #allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -116,9 +118,6 @@ class RecognizeRequest(BaseModel):
     users: List[RecognizeUser]
     debug: Optional[bool] = False
 
-
-import os
-os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
 @app.on_event("startup")
 async def startup_event():

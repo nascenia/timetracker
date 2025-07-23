@@ -90,6 +90,3 @@ fastapi_service/.coverage
 fastapi_service/coverage.xml
 fastapi_service/htmlcov/
 
-# Docker files (if not using Docker)
-fastapi_service/.dockerignore
-fastapi_service/Dockerfile
