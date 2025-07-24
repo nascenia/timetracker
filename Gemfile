@@ -7,7 +7,6 @@ gem 'bootstrap-sass', '~> 3.3.4.1'
 gem 'carrierwave', '~> 1.0'
 gem 'coffee-rails', '~> 4.0.0'
 gem 'devise'
-gem 'dotenv-rails'
 gem 'fog'
 gem 'font-awesome-sass'
 gem 'haml'
@@ -25,7 +24,6 @@ gem 'sass-rails', '~> 4.0.0'
 gem 'therubyracer'
 gem 'turbolinks'
 gem 'uglifier', '>= 1.3.0'
-gem 'multipart-post'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
@@ -43,7 +41,7 @@ gem 'capistrano', '2.14.2', group: :development
 gem 'rvm-capistrano', '1.2.7', require: false
 
 # Use debugger
-gem 'activeadmin', '~> 1.0.0.pre1'
+gem 'activeadmin', '1.0.0.pre4'
 
 group :test, :development do
   gem 'factory_girl_rails', '~> 4.7.0'
