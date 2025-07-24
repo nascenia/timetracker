@@ -97,7 +97,8 @@ app.add_middleware(
     allow_origins=[
         "http://timetracker.nascenia.com/",  # Production domain
         "http://localhost:8000",  # Local development
-        "http://127.0.0.1:8000"   # Local development
+        "http://127.0.0.1:8000",   # Local development
+        "http://127.0.0.1:3000"
     ],
     #allow_credentials=True,
     allow_methods=["*"],
