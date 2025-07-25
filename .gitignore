@@ -1,21 +1,8 @@
+fastapi_service/
 .DS_Store
 path/
 # Ignore bundler config.
 /.bundle
-
-Silent-Face-Anti-Spoofing/
-fastapi_service/venv/
-fastapi_service/fastapi_service.log
-fastapi_service/weights/
-fastapi_service/test_face.jpg
-fastapi_service/test.py
-
-fastapi_service/__pycache__/
-fastapi_service/**/*.pyc
-fastapi_service/**/*.pyo
-fastapi_service/**/*.pyd
-fastapi_service/*.log
-fastapi_service/alembic/versions/__pycache__/
 
 # Ignore omniauth
 /config/initializers/omniauth.rb
@@ -68,25 +55,3 @@ release.sh
 staging.sh
 ssh.sh
 .env
-
-
-
-fastapi_service/.venv/
-
-# OS-specific files
-fastapi_service/.DS_Store
-
-# Environment variables/secrets
-fastapi_service/.env
-fastapi_service/.env.*
-
-# Jupyter notebook checkpoints
-fastapi_service/.ipynb_checkpoints/
-
-# Test and type-checking output
-fastapi_service/.pytest_cache/
-fastapi_service/.mypy_cache/
-fastapi_service/.coverage
-fastapi_service/coverage.xml
-fastapi_service/htmlcov/
-
