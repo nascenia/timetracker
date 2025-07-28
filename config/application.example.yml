@@ -1,6 +1,6 @@
 default: &default
   ip_whitelist: ['192.168.1.1', '192.168.1.2', '127.0.0.1']
-  admins: ['admin@example.com']
+  admins: ['admin@example.com', 'imran.saimun@bdipo.com', 'masud@example.com']
   domain_whitelist: ['nascenia.com', 'bdipo.com']
   email_whitelist: ['xxx@gmail.com', 'xxxx@gmail.com']
   year_range:
@@ -22,6 +22,7 @@ default: &default
     domain: 'gmail.com'
     email: ''
     password: ''
+  face_check_in_api: 'http://localhost:8000/liveness_and_recognition'
 
 development:
   <<: *default

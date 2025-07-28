@@ -22,7 +22,7 @@
                   Supervisor/TTF
               .col-md-4
                 %h5
-                  = @user.ttf.present? ? @user.ttf.name : 'Not assigned'
+                  = @user.ttf.name
               - if current_user.id.eql?(@user.id)
                 .col-md-4
                   %h5= link_to 'Change supervisor/ttf', edit_user_registration_path(change_ttf: true)

@@ -567,32 +567,6 @@ class User < ActiveRecord::Base
     super_admin? || admin?
   end
 
-  def face_encoding_array
-    return [] if face_encoding.blank?
-    if face_encoding.is_a?(Array)
-      face_encoding
-    elsif face_encoding.is_a?(String)
-      begin
-        # Try JSON first
-        arr = JSON.parse(face_encoding)
-        return arr if arr.is_a?(Array)
-      rescue
-        # Try YAML as fallback
-        begin
-          arr = YAML.safe_load(face_encoding)
-          return arr if arr.is_a?(Array)
-        rescue
-          return []
-        end
-      end
-    else
-      []
-    end
-  end
-
-  def face_encoding_array=(arr)
-    self.face_encoding = arr
-  end
   
   private
 

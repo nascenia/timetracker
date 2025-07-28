@@ -34,18 +34,17 @@ class Api::FaceController < ApplicationController
         render json: result || { success: false, error: 'Recognition or liveness failed' }, status: :unprocessable_entity
       end
     rescue => e
-      Rails.logger.error "Liveness+Recognition error: #{e.message}"
       render json: { success: false, error: 'Internal server error' }, status: :internal_server_error
     end
   end
   
   
 
+  private
+
   def call_fastapi_liveness_and_recognition(frames, device_type)
-    fastapi_url = ENV['FASTAPI_URL'] || 'http://localhost:8000'
-    uri = URI("#{fastapi_url}/liveness_and_recognition")
-    require 'net/http/post/multipart'
-    require 'json'
+    face_check_in_api = CONFIG['face_check_in_api']
+    uri = URI(face_check_in_api)
     files = {}
     files["frames"] = frames.map do |frame|
       UploadIO.new(frame.tempfile, frame.content_type, frame.original_filename)
@@ -62,11 +61,7 @@ class Api::FaceController < ApplicationController
     response = http.request(request)
     if response.code == '200'
       JSON.parse(response.body)
-    else
-      Rails.logger.error "FastAPI liveness_and_recognition error: #{response.code} - #{response.body}"
-      nil
     end
   end
 
 end
- 

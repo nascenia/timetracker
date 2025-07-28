@@ -11,9 +11,7 @@
 #Salaat.create(waqt: 'Magrib', time: '5:30')
 
 unless User.exists?(email: 'masud@nascenia.com')
-  User.skip_callback(:create, :after, :update_pre_register_info)
   User.create(name: 'Masud', email: "masud@nascenia.com", password: 'Admin@123', password_confirmation: 'Admin@123')
-  User.set_callback(:create, :after, :update_pre_register_info)
 end
 
 if HolidayScheme.count.zero?

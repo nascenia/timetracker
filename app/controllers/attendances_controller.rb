@@ -126,7 +126,6 @@ class AttendancesController < ApplicationController
     end
   end
 
-  helper_method :office_ip?
 
   private
     def set_attendance
@@ -151,7 +150,4 @@ class AttendancesController < ApplicationController
       end
     end
 
-    def office_ip?
-      request.remote_ip.present? && Attendance::IP_WHITELIST.include?(request.remote_ip)
-    end
 end
