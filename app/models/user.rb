@@ -567,7 +567,6 @@ class User < ActiveRecord::Base
     super_admin? || admin?
   end
 
-  
   private
 
   def update_pre_register_info
@@ -586,6 +585,5 @@ class User < ActiveRecord::Base
     user.approval_path_id = pr.leave_approval_path_id
     user.ttf_id = pr.ttf_id
     user.save
-  end
-  
+  end  
 end

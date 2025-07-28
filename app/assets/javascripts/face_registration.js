@@ -217,4 +217,3 @@ $(document).on('click', '#register-face-btn', function() {
     initialized = false;
   });
 });
- 

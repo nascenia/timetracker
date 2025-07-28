@@ -126,7 +126,6 @@ class AttendancesController < ApplicationController
     end
   end
 
-
   private
     def set_attendance
       unless params[:id] == 'invalid'
@@ -149,5 +148,4 @@ class AttendancesController < ApplicationController
         end
       end
     end
-
 end

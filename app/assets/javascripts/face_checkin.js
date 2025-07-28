@@ -117,4 +117,5 @@ $(document).ready(function() {
   if (deviceType === 'pc') {
     $('#face-glasses-instruction').show();
   }
-}); 
+});
+ 
