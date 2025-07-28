@@ -12,7 +12,7 @@ class EmployeesController < ApplicationController
     logger.info params
     logger.info params[:employee_status]
     logger.info params[:name]
-    
+
     if params[:employee_status].present?
       @employees = @employees.published if params[:employee_status] == '0'
       @employees = @employees.active if params[:employee_status] == '1'

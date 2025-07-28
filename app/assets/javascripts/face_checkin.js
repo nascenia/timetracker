@@ -118,4 +118,3 @@ $(document).ready(function() {
     $('#face-glasses-instruction').show();
   }
 });
- 

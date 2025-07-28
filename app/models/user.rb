@@ -585,5 +585,5 @@ class User < ActiveRecord::Base
     user.approval_path_id = pr.leave_approval_path_id
     user.ttf_id = pr.ttf_id
     user.save
-  end  
+  end
 end
