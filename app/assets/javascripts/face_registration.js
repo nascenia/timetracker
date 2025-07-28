@@ -4,7 +4,7 @@ $(document).on('click', '#register-face-btn', function() {
   var video, canvas, ctx, stream, userId, photoTaken, capturedPhoto, faceLandmarker, lastCaptureData, deviceType;
 
   function isMobileDevice() {
-    const mobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    var mobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     return mobile;
   }
 
@@ -99,16 +99,16 @@ $(document).on('click', '#register-face-btn', function() {
 
   // Capture photo
   $(document).off('click.faceRegCapture').on('click.faceRegCapture', '#capture-photo-btn', function() {
-    const displayWidth = video.clientWidth;
-    const displayHeight = video.clientHeight;
-    const dpr = window.devicePixelRatio || 1;
+    var displayWidth = video.clientWidth;
+    var displayHeight = video.clientHeight;
+    var dpr = window.devicePixelRatio || 1;
     canvas.width = displayWidth * dpr;
     canvas.height = displayHeight * dpr;
-    canvas.style.width = `${displayWidth}px`;
-    canvas.style.height = `${displayHeight}px`;
-    const videoRatio = video.videoWidth / video.videoHeight;
-    const displayRatio = displayWidth / displayHeight;
-    let sx, sy, sw, sh;
+    canvas.style.width = displayWidth + 'px';
+    canvas.style.height = displayHeight + 'px';
+    var videoRatio = video.videoWidth / video.videoHeight;
+    var displayRatio = displayWidth / displayHeight;
+    var sx, sy, sw, sh;
     if (videoRatio > displayRatio) {
         sw = video.videoHeight * displayRatio;
         sh = video.videoHeight;
@@ -182,7 +182,7 @@ $(document).on('click', '#register-face-btn', function() {
       method: 'POST',
       body: formData
     })
-    .then(response => response.json())
+    .then(function(response) { return response.json(); })
     .then(function(response) {
       if (response.success) {
         showAutoFaceStatus('Face registered successfully!', 'success');
