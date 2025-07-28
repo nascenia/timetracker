@@ -143,6 +143,58 @@
           %br        
         = f.file_field :passport, { onchange: 'validateFiles(this);', data: { max_file_size: 50.megabytes },  class: 'form-control'}
   %br
+  %fieldset
+    %legend Face Recognition Setup
+    .form-group
+      .col-sm-2
+        %h5 Face Registration
+      .col-sm-10
+        - if defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip)
+          %div#text_abcd 
+          = button_tag 'Register/Update Face', type: 'button', class: 'btn btn-primary', id: 'register-face-btn', data: { toggle: 'modal', target: '#faceRegistrationModal', user_id: current_user.id }
+          %br
+          %small.text-muted
+            This will capture your face for check-in/out using facial recognition.
+  %br
   .form-group
     .col-sm-2.col-sm-10
       = f.submit 'Submit',  class: 'btn btn-success'
+
+/ Face Registration Modal
+#faceRegistrationModal.modal.fade{tabindex: '-1', :role => 'dialog', 'aria-labelledby' => 'faceRegistrationModalLabel'}
+  .modal-dialog.modal-lg{:role => 'document'}
+    .modal-content
+      .modal-header
+        %button.close{type: 'button', 'data-dismiss' => 'modal', 'aria-label' => 'Close'}
+          %span{'aria-hidden' => 'true'} &times;
+        %h4.modal-title#faceRegistrationModalLabel Register Your Face
+      .modal-body
+        .row
+          .col-xs-12
+            / Centered container for camera and buttons
+            .camera-container.text-center
+              .video-container{style: 'width: 100%; max-width: 200px; margin: 0 auto;'}
+                %video#video{autoplay: true, muted: true, playsinline: true, style: 'width: 100%; height: auto; aspect-ratio: 1 / 1; border-radius: 50%; object-fit: cover; background: #222; box-shadow: 0 0 0 4px #fff, 0 0 8px 0 #888; transform: scaleX(-1);'}
+              .canvas-container.text-center{style: 'display: none; width: 100%; max-width: 200px; margin: 0 auto;'}
+                %canvas#canvas{width: '200', height: '200', style: 'width: 100%; height: auto; aspect-ratio: 1 / 1; border-radius: 50%; object-fit: cover; background: #222; box-shadow: 0 0 0 4px #fff, 0 0 8px 0 #888;'}
+              #auto-face-status-message.alert{style: 'display: none; margin-top: 10px;'}
+              .button-container
+                %button#capture-photo-btn.btn.btn-primary{type: 'button', style: 'margin: 10px 5px; display: none;'} Capture
+                %button#retake-photo-btn.btn.btn-warning{type: 'button', style: 'margin: 10px 5px; display: none;'} Retake
+                %button#start-over-btn.btn.btn-danger{type: 'button', style: 'margin: 10px 5px; display: none;'} Start Over
+                %button#register-face-btn-modal.btn.btn-success{type: 'button', style: 'margin: 10px 5px; display: none;'} Register Face
+        .row
+          .col-xs-12.col-md-8.col-md-offset-2
+            .instructions
+              %h5 Instructions:
+              %ol
+                %li Click "Start Camera" to begin
+                %li Bring your face close so it fills the circle
+                %li Ensure good lighting and look straight at the camera
+                %li Click 'Capture' to take your photo manually
+                %li#glasses-instruction(style='display:none;') Please remove your glasses
+            .status-messages
+              #status-message.alert{style: 'display: none;'}
+      .modal-footer
+        %button.btn.btn-default{type: 'button', 'data-dismiss' => 'modal'} Close
+        %button#start-camera-btn.btn.btn-primary.btn-block{type: 'button', style: 'font-size: 1.2em; padding: 10px;'} Start Camera

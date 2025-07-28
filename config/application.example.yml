@@ -22,6 +22,7 @@ default: &default
     domain: 'gmail.com'
     email: ''
     password: ''
+  face_check_in_api: 'http://localhost:8000/liveness_and_recognition'
 
 development:
   <<: *default

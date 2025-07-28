@@ -12,3 +12,5 @@
 //= require bootstrap-datepicker.config.js
 //= require pre_registrations.js.erb
 //= require users.js
+//= require face_checkin
+//= require face_registration

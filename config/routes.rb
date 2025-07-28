@@ -47,6 +47,8 @@ Internal::Application.routes.draw do
     collection do
       get :monthly_summary
       get :download
+      get :face_check_in
+      post :face_check_in_submit
     end
   end
   resources :timesheets do
@@ -116,6 +118,13 @@ Internal::Application.routes.draw do
     end
     collection do
       get   :review
+    end
+  end
+  
+  # Face Recognition API routes
+  namespace :api do
+    namespace :face do
+      post :liveness_and_recognition
     end
   end
   
