@@ -68,4 +68,5 @@ class Api::FaceController < ApplicationController
     end
   end
 
-end 
+end
+ 
