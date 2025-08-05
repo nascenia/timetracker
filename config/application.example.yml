@@ -23,6 +23,6 @@ default: &default
     email: ''
     password: ''
   face_check_in_api: 'http://localhost:8000/liveness_and_recognition'
-
+  face_registration_api: 'http://localhost:8000/register_face'
 development:
   <<: *default

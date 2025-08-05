@@ -125,6 +125,7 @@ Internal::Application.routes.draw do
   namespace :api do
     namespace :face do
       post :liveness_and_recognition
+      post :register_face 
     end
   end
   

@@ -178,7 +178,7 @@ $(document).on('click', '#register-face-btn', function() {
     formData.append('image', photoBlob, 'capture.jpg');
     formData.append('user_id', userId);
     formData.append('device_type', deviceType);
-    fetch('http://127.0.0.1:8000/register_face', {
+    fetch('/api/face/register_face', {
       method: 'POST',
       body: formData
     })

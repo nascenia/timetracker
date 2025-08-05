@@ -6,10 +6,8 @@ class Api::FaceController < ApplicationController
   require 'yaml'
   
   before_action :authenticate_user!
-  skip_before_action :authenticate_user!, only: [:liveness_and_recognition]
-  skip_before_action :verify_authenticity_token, only: [:liveness_and_recognition]
-  
-  
+  skip_before_action :authenticate_user!, only: [:liveness_and_recognition, :register_face]
+  skip_before_action :verify_authenticity_token, only: [:liveness_and_recognition, :register_face]
   
   # POST /api/face/liveness_and_recognition
   def liveness_and_recognition
@@ -38,7 +36,26 @@ class Api::FaceController < ApplicationController
     end
   end
   
-  
+  def register_face
+    begin
+      # Validate input
+      unless params[:image].present? && params[:user_id].present?
+        return render json: { success: false, error: 'Missing required parameters' }, status: :bad_request
+      end
+
+      # Prepare data for FastAPI
+      result = call_fastapi_register_face(params[:image], params[:user_id], params[:device_type])
+
+      if result && result['success']
+        render json: { success: true }
+      else
+        render json: result || { success: false, error: 'Face registration failed' }, status: :unprocessable_entity
+      end
+    rescue => e
+      Rails.logger.error "Face registration error: #{e.message}"
+      render json: { success: false, error: 'Internal server error' }, status: :internal_server_error
+    end
+  end
 
   private
 
@@ -59,6 +76,24 @@ class Api::FaceController < ApplicationController
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = (uri.scheme == 'https')
     response = http.request(request)
+    if response.code == '200'
+      JSON.parse(response.body)
+    end
+  end
+
+  def call_fastapi_register_face(image, user_id, device_type)
+    uri = URI(CONFIG['face_registration_api'])
+    form_data = {
+      'image' => UploadIO.new(image.tempfile, image.content_type, image.original_filename),
+      'user_id' => user_id,
+      'device_type' => device_type
+    }
+    request = Net::HTTP::Post::Multipart.new(uri.path, form_data)
+  
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = (uri.scheme == 'https')
+    response = http.request(request)
+  
     if response.code == '200'
       JSON.parse(response.body)
     end
