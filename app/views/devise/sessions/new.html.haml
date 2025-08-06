@@ -25,7 +25,7 @@
 - if defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip)
   .text-center
     %button#face-checkin-btn.btn.btn-success{type: 'button', style: 'margin-top: 20px;'}
-      Face Check-In (with Camera)
+      Sign in with Face ID
 
 / Face Check-In Modal
 #faceCheckInModal.modal.fade{tabindex: '-1', :role => 'dialog', 'aria-labelledby' => 'faceCheckInModalLabel'}
