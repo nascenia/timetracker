@@ -93,7 +93,11 @@ $(document).ready(function() {
         if (result.success && result.user_id) {
           showStatus('✅ Liveness check passed and face recognized!' + (result.user_name ? (' For ' + result.user_name) : ''), 'success');
           setTimeout(function() {
-            window.location.href = '/';
+            if (typeof window.onFaceCheckinSuccess === 'function') {
+              window.onFaceCheckinSuccess();
+            } else {
+              window.location.href = '/';
+            }
           }, 500);
         } else {
           showStatus('❌ ' + (result.error || 'Liveness or recognition failed.'), 'danger');
