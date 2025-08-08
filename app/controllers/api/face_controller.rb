@@ -19,7 +19,7 @@ class Api::FaceController < ApplicationController
         return render json: { success: false, error: 'Missing or insufficient frames' }, status: :bad_request
       end
       # Call FastAPI service for liveness and recognition
-      result = call_fastapi_liveness_and_recognition(frames, device_type)
+      result = call_fastapi_liveness_and_recognition(frames, device_type, (current_user ? current_user.id : nil))
       if result && result['success'] && result['user_id']
         user = User.find(result['user_id'])
         sign_in(user)
@@ -59,7 +59,7 @@ class Api::FaceController < ApplicationController
 
   private
 
-  def call_fastapi_liveness_and_recognition(frames, device_type)
+  def call_fastapi_liveness_and_recognition(frames, device_type, user_id = nil)
     face_check_in_api = CONFIG['face_check_in_api']
     uri = URI(face_check_in_api)
     files = {}
@@ -69,7 +69,8 @@ class Api::FaceController < ApplicationController
     request = Net::HTTP::Post::Multipart.new(
       uri.path,
       files.merge({
-        'device_type' => device_type
+        'device_type' => device_type,
+        'user_id' => user_id
       })
     )
     request['Authorization'] = "Bearer #{ENV['FASTAPI_API_KEY']}" if ENV['FASTAPI_API_KEY']
