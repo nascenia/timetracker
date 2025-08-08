@@ -3,7 +3,7 @@ ActiveAdmin.register User do
   permit_params :email, :name, :is_active, :role, :ttf_id, :sttf_id, :kpi_template_id, :personal_email, :present_address, :mobile_number,
                 :alternate_contact, :permanent_address, :date_of_birth, :last_degree, :last_university, :passing_year,
                 :emergency_contact_person_name, :emergency_contact_person_relation, :emergency_contact_person_number,
-                :blood_group, :joining_date, :resignation_date, :is_published, :employee_id
+                :blood_group, :joining_date, :resignation_date, :is_published, :employee_id, :face_recognition_required
 
   remove_filter :attendances, :leaves, :leave_tracker
   controller do
@@ -65,7 +65,8 @@ ActiveAdmin.register User do
       end
     end
     column :is_active
-    actions
+    column :face_recognition_required
+    actions defaults: true
   end
 
   show do
@@ -74,6 +75,7 @@ ActiveAdmin.register User do
       row :email
       row :name
       row :is_active
+      row :face_recognition_required
       row :role
       row :ttf_id
       row :sttf_id
@@ -101,6 +103,7 @@ ActiveAdmin.register User do
       f.input :email
       f.input :name
       f.input :is_active
+      f.input :face_recognition_required, label: 'Require Facial Recognition'
       f.input :role, as: :select, collection: User::ROLES
       f.input :ttf_id, as: :select, collection: User.active.ttf
       #f.input :sttf_id, as: :select, collection: User.super_ttf
@@ -122,5 +125,13 @@ ActiveAdmin.register User do
       f.input :is_published, input_html: { value: true }, as: :hidden
     end
     f.actions
+  end
+
+  # Admin quick toggle for facial recognition requirement per user
+  member_action :toggle_face_recognition, method: :put do
+    user = User.find(params[:id])
+    user.update(face_recognition_required: !user.face_recognition_required?)
+    notice = user.face_recognition_required? ? 'Facial recognition enabled' : 'Facial recognition disabled'
+    redirect_to(request.referer.present? ? request.referer : admin_users_path, notice: notice)
   end
 end

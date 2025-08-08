@@ -1,4 +1,8 @@
 class User < ActiveRecord::Base
+  # Whether the user must use facial recognition for check-in/out
+  def face_recognition_required?
+    self[:face_recognition_required] != false
+  end
   #
   # File Uploaders
   #
