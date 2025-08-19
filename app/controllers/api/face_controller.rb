@@ -15,7 +15,7 @@ class Api::FaceController < ApplicationController
       # Extract frames (array of images) and device_type
       frames = Array.wrap(params[:frames])
       device_type = params[:device_type] || 'pc'
-      unless frames.present? && frames.size == 5
+      unless frames.present? && frames.size == 3
         return render json: { success: false, error: 'Missing or insufficient frames' }, status: :bad_request
       end
       # Call FastAPI service for liveness and recognition

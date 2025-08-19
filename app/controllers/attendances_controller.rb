@@ -37,19 +37,27 @@ class AttendancesController < ApplicationController
   def create
     unless !restrict_access?
       @user = current_user
-      attendance = @user.attendances.where(checkin_date: Time.now.strftime('%y-%m-%d')).last
+      attendance = @user.attendances.where(checkin_date: Date.today).last
+      # If facial recognition flow passed an initial click timestamp, use that as in_time
+      initial_click_time =
+        if params[:initial_click_time_ms].present?
+          # Epoch milliseconds from browser; rely on server OS timezone
+          Time.at(params[:initial_click_time_ms].to_i / 1000.0)
+        else
+          params[:initial_click_time]
+        end
 
       flash[:notice] = 'Successfully checked in.'
 
       if @user.all_information_provided?
         if attendance.present?
           if attendance.out_time.present?
-            Attendance.create_attendance(@user.id, attendance)
+            Attendance.create_attendance(@user.id, attendance, initial_click_time)
           else
             flash[:notice] = 'You are already checked in.'
           end
         else
-          Attendance.create_attendance(@user.id, nil)
+          Attendance.create_attendance(@user.id, nil, initial_click_time)
           Attendance.add_missing_checkout_hours(@user)
         end
       else

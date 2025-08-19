@@ -3,7 +3,7 @@ $(document).ready(function() {
   var stream = null;
   var canvas = document.createElement('canvas');
   var ctx = canvas.getContext('2d');
-  var FRAME_COUNT = 5;
+  var FRAME_COUNT = 3;
   var CAPTURE_INTERVAL = 100; // ms (5 frames in 1 second)
   var COUNTDOWN_SECONDS = 3;
   var frames = [];
@@ -24,11 +24,21 @@ $(document).ready(function() {
     if (video && video.srcObject) video.play();
   }
   function startCamera() {
-    if (stream) return Promise.resolve();
+    // Always re-acquire the current video element in case DOM was replaced (e.g., Turbolinks)
+    video = document.getElementById('face-video');
+    if (stream) {
+      if (video) {
+        video.srcObject = stream;
+        return video.play().catch(function() {});
+      }
+      return Promise.resolve();
+    }
     return navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } }).then(function(mediaStream) {
       stream = mediaStream;
-      video.srcObject = stream;
-      video.play();
+      if (video) {
+        video.srcObject = stream;
+        return video.play();
+      }
     });
   }
   function setCanvasSize() {
@@ -119,13 +129,23 @@ $(document).ready(function() {
     $('#face-start-camera-btn').show();
     $('.video-container').show();
     $('.canvas-container').hide();
-    if (video && video.srcObject) video.pause();
+    if (video) {
+      try { video.pause(); } catch (e) {}
+      try { video.srcObject = null; } catch (e) {}
+    }
   }
-  // Update button click handler to use the new function
-  $('#face-start-camera-btn').click(function() {
+  // Use delegated handler to survive DOM replacements
+  $(document).on('click', '#face-start-camera-btn', function() {
     $('#face-start-camera-btn').hide();
     runLivenessAndRecognitionUnified();
   });
+  // Ensure fresh references and UI every time the modal opens
+  $('#faceCheckInModal').on('shown.bs.modal', function() {
+    // Re-grab DOM elements after potential partial page updates
+    video = document.getElementById('face-video');
+    resetModal();
+  });
+
   $('#faceCheckInModal').on('hidden.bs.modal', function() {
     if (stream) {
       stream.getTracks().forEach(function(track) { track.stop(); });
@@ -136,7 +156,10 @@ $(document).ready(function() {
     $('#face-start-camera-btn').show();
     $('.video-container').show();
     $('.canvas-container').hide();
-    if (video && video.srcObject) video.pause();
+    if (video) {
+      try { video.pause(); } catch (e) {}
+      try { video.srcObject = null; } catch (e) {}
+    }
   });
   $('#face-checkin-btn').click(function() {
     $('#faceCheckInModal').modal('show');

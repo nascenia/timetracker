@@ -110,12 +110,72 @@
   });
 
   $(document).ready(function() {
+    // Countdown state for Face Check-In
+    var checkinCountdownInterval = null;
+    var checkinCountdownDeadline = null; // epoch ms
+    var checkinInitialClickIso = null;   // ISO8601 string
+
+    function formatTimeLeft(ms) {
+      var totalSeconds = Math.max(0, Math.floor(ms / 1000));
+      var minutes = Math.floor(totalSeconds / 60);
+      var seconds = totalSeconds % 60;
+      return (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds);
+    }
+
+    function startCheckinCountdown() {
+      // 2 minutes from now
+      checkinCountdownDeadline = Date.now() + (2 * 60 * 1000);
+      $('#countdown-feedback').removeClass().addClass('alert alert-info').text('Time left: 02:00').show();
+      if (checkinCountdownInterval) { clearInterval(checkinCountdownInterval); }
+      checkinCountdownInterval = setInterval(function() {
+        var msLeft = checkinCountdownDeadline - Date.now();
+        if (msLeft <= 0) {
+          clearInterval(checkinCountdownInterval);
+          checkinCountdownInterval = null;
+          $('#countdown-feedback').removeClass().addClass('alert alert-danger').text('⏰ Time expired. Please click Check In again.');
+          // Also stop camera via existing modal close logic
+          setTimeout(function() { try { $('#faceCheckInModal').modal('hide'); } catch(e) {} }, 1200);
+        } else {
+          var text = 'Time left: ' + formatTimeLeft(msLeft);
+          var $el = $('#countdown-feedback');
+          if (msLeft <= 30 * 1000) {
+            $el.removeClass().addClass('alert alert-warning').text(text);
+          } else {
+            $el.removeClass().addClass('alert alert-info').text(text);
+          }
+        }
+      }, 500);
+    }
+
+    function clearCheckinCountdown() {
+      if (checkinCountdownInterval) { clearInterval(checkinCountdownInterval); checkinCountdownInterval = null; }
+      checkinCountdownDeadline = null;
+      $('#countdown-feedback').hide();
+    }
+
     // Check In logic
     if ($('#face-checkin-dashboard-btn').length > 0) {
       $('#face-checkin-dashboard-btn').click(function() {
+        // Record the initial click time (used as in_time on server)
+        var checkinInitialClickMs = Date.now();
+        checkinInitialClickIso = new Date(checkinInitialClickMs).toISOString();
+        startCheckinCountdown();
         window.onFaceCheckinSuccess = function() {
-          $('#faceCheckInModal').modal('hide');
-          $('#real-checkin-btn').click();
+          // Allow success only within countdown window
+          if (checkinCountdownDeadline && Date.now() <= checkinCountdownDeadline) {
+            // Ensure the real check-in POST includes the initial click time
+            var $real = $('#real-checkin-btn');
+            var baseHref = ($real.attr('href') || '/attendances').split('?')[0];
+            // Send both ISO string and epoch ms; server prefers ms
+            var params = 'initial_click_time=' + encodeURIComponent(checkinInitialClickIso) + '&initial_click_time_ms=' + checkinInitialClickMs;
+            var newHref = baseHref + '?' + params;
+            $real.attr('href', newHref);
+            $('#faceCheckInModal').modal('hide');
+            $real.click();
+          } else {
+            $('#countdown-feedback').removeClass().addClass('alert alert-danger').text('⏰ Time expired. Please click Check In again.');
+            setTimeout(function() { try { $('#faceCheckInModal').modal('hide'); } catch(e) {} }, 800);
+          }
         };
         $('#faceCheckInModal').modal('show');
       });
@@ -130,4 +190,9 @@
         $('#faceCheckInModal').modal('show');
       });
     }
+
+    // When modal closes, clear countdown state
+    $('#faceCheckInModal').on('hidden.bs.modal', function() {
+      clearCheckinCountdown();
+    });
   });
