@@ -33,7 +33,7 @@ $(document).ready(function() {
       }
       return Promise.resolve();
     }
-    return navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } }).then(function(mediaStream) {
+    return navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } } }).then(function(mediaStream) {
       stream = mediaStream;
       if (video) {
         video.srcObject = stream;
@@ -75,7 +75,7 @@ $(document).ready(function() {
             showStatus('Capturing liveness video... (' + (i+1) + '/' + FRAME_COUNT + ')', 'info');
             i++;
             setTimeout(function() { resolve(captureNext()); }, CAPTURE_INTERVAL);
-          }, 'image/jpeg', 1);
+          }, 'image/jpeg', 0.8);
         });
       } else {
         return Promise.resolve();
@@ -115,8 +115,16 @@ $(document).ready(function() {
         }
       })
       .catch(function(e) {
-        showStatus('Error: ' + e, 'danger');
-        setTimeout(function() { restartProcess(); }, 2500);
+        var errorMessage = 'An unexpected error occurred.';
+        if (e.name === 'NotAllowedError' || e.name === 'PermissionDeniedError') {
+          errorMessage = 'Camera access was denied. Please enable camera permissions in your browser settings.';
+        } else if (e.name === 'NotFoundError' || e.name === 'DevicesNotFoundError') {
+          errorMessage = 'No camera was found on your device.';
+        } else if (e.message) {
+          errorMessage = e.message;
+        }
+        showStatus('❌ Error: ' + errorMessage, 'danger');
+        setTimeout(function() { restartProcess(); }, 3000);
       });
   }
   function restartProcess() {
