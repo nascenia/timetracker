@@ -4,8 +4,8 @@ $(document).ready(function() {
   var canvas = document.createElement('canvas');
   var ctx = canvas.getContext('2d');
   var FRAME_COUNT = 3;
-  var CAPTURE_INTERVAL = 100; // ms (5 frames in 1 second)
-  var COUNTDOWN_SECONDS = 3;
+  var CAPTURE_INTERVAL = 100;
+  var COUNTDOWN_SECONDS = 2;
   var frames = [];
   var deviceType = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'mb' : 'pc';
 

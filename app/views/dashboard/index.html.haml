@@ -15,22 +15,34 @@
     .col-sm-3
       - if @attendance.present? && @attendance.out_time.blank?
         = link_to 'Check In', attendances_path, :method => :post, :class => "btn btn-block btn-bottom-margin #{is_checked_in? @attendance}"
-      - elsif defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip) && current_user.face_recognition_required?
-        = link_to 'Check In', attendances_path, :method => :post, :id => 'real-checkin-btn', :style => 'display:none;', :class => "btn btn-block btn-bottom-margin #{is_checked_in? @attendance}"
-        = button_tag 'Check In', type: 'button', id: 'face-checkin-dashboard-btn', class: "btn btn-block btn-bottom-margin btn-success", :style => 'margin: 0;'
       - else
-        = link_to 'Check In', attendances_path, :method => :post, :class => "btn btn-block btn-bottom-margin #{is_checked_in? @attendance}"
-
+        - if current_user.face_recognition_required?
+          - if defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip) && request.user_agent =~ /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
+            = link_to 'Check In', attendances_path, :method => :post, :id => 'real-checkin-btn', :style => 'display:none;', :class => "btn btn-block btn-bottom-margin #{is_checked_in? @attendance}"
+            = button_tag 'Check In', type: 'button', id: 'face-checkin-dashboard-btn', class: "btn btn-block btn-bottom-margin btn-success", :style => 'margin: 0;'
+          - else
+            = link_to 'Check In', '#', :class => "btn btn-block btn-bottom-margin btn-success disabled", :title => "Face recognition check-in only available from whitelisted IPs on a mobile device.", :disabled => true
+        - else
+          - if defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip)
+            = link_to 'Check In', attendances_path, :method => :post, :class => "btn btn-block btn-bottom-margin #{is_checked_in? @attendance}"
+          - else
+            = link_to 'Check In', '#', :class => "btn btn-block btn-bottom-margin btn-success disabled", :title => "Check-in only available from whitelisted IPs.", :disabled => true
     - unless @attendance.nil?
       .col-sm-3
-        - if defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip) && current_user.face_recognition_required?
-          = link_to 'Check Out', attendance_path(@attendance), :method => :put, :id => 'real-checkout-btn', :style => 'display:none;', :class => "btn btn-block #{is_checked_out? @attendance}"
-          = button_tag 'Check Out', type: 'button', id: 'face-checkout-dashboard-btn', class: "btn btn-block #{is_checked_out? @attendance}" , :style => 'margin: 0;'
+        - if current_user.face_recognition_required?
+          - if defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip) && request.user_agent =~ /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
+            = link_to 'Check Out', attendance_path(@attendance), :method => :put, :id => 'real-checkout-btn', :style => 'display:none;', :class => "btn btn-block #{is_checked_out? @attendance}"
+            = button_tag 'Check Out', type: 'button', id: 'face-checkout-dashboard-btn', class: "btn btn-block #{is_checked_out? @attendance}" , :style => 'margin: 0;'
+          - else
+            = link_to 'Check Out', '#', :class => "btn btn-block #{is_checked_out? @attendance} disabled", :title => "Face recognition check-out only available from whitelisted IPs on a mobile device.", :disabled => true
         - else
-          = link_to 'Check Out', attendance_path(@attendance), :method => :put, :class => "btn btn-block #{is_checked_out? @attendance}"
+          - if defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip)
+            = link_to 'Check Out', attendance_path(@attendance), :method => :put, :class => "btn btn-block #{is_checked_out? @attendance}"
+          - else
+            = link_to 'Check Out', '#', :class => "btn btn-block #{is_checked_out? @attendance} disabled", :title => "Check-out only available from whitelisted IPs.", :disabled => true
 
 / Face Check-In Modal (copied from devise/sessions/new.html.haml)
-- if defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip) && current_user.face_recognition_required?
+- if current_user.face_recognition_required? && defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip) && request.user_agent =~ /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
   #faceCheckInModal.modal.fade{tabindex: '-1', :role => 'dialog', 'aria-labelledby' => 'faceCheckInModalLabel'}
     .modal-dialog.modal-lg{:role => 'document'}
       .modal-content

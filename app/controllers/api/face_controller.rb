@@ -21,12 +21,12 @@ class Api::FaceController < ApplicationController
       # Call FastAPI service for liveness and recognition
       result = call_fastapi_liveness_and_recognition(frames, device_type, (current_user ? current_user.id : nil))
       if result && result['success'] && result['user_id']
-        user = User.find(result['user_id'])
-        sign_in(user)
+        session[:face_verified] = true
+
         render json: {
           success: true,
-          user_id: user.id,
-          user_name: user.name,
+          user_id: current_user.id,
+          user_name: current_user.name,
         }
       else
         render json: result || { success: false, error: 'Recognition or liveness failed' }, status: :unprocessable_entity
