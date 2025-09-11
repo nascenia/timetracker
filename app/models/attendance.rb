@@ -59,14 +59,14 @@ class Attendance < ActiveRecord::Base
             if in_time_override.is_a?(Time)
               in_time_override
             else
-              Time.parse(in_time_override.to_s)
+              Time.zone.parse(in_time_override.to_s)
             end
-          (time_obj || Time.now).to_s(:time)
+          (time_obj || Time.zone.now).to_s(:time)
         else
-          Time.now.to_s(:time)
+          Time.zone.now.to_s(:time)
         end
       rescue
-        Time.now.to_s(:time)
+        Time.zone.now.to_s(:time)
       end
 
     self.create(

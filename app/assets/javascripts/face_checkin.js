@@ -51,7 +51,7 @@ $(document).ready(function() {
       if (i > 0) {
         showStatus('Get ready! Liveness check will start in ' + i + '...', 'info');
         i--;
-        return new Promise(function(res) { setTimeout(function() { res(next()); }, 1000); });
+        return new Promise(function(res) { setTimeout(function() { res(next()); }, 500); });
       } else {
         return Promise.resolve();
       }
@@ -83,11 +83,11 @@ $(document).ready(function() {
     }
     return captureNext();
   }
-  function runLivenessAndRecognitionUnified() {
+  function runLivenessAndRecognitionUnified(actionType, initialClickTimeMs) {
     startCamera()
       .then(function() {
         showStatus('Position your face in the center. Ensure good lighting.', 'info');
-        return new Promise(function(res) { setTimeout(res, 1000); });
+        return new Promise(function(res) { setTimeout(res, 500); });
       })
       .then(function() { return countdown(COUNTDOWN_SECONDS); })
       .then(function() { return captureFrames(); })
@@ -96,21 +96,31 @@ $(document).ready(function() {
         var formData = new FormData();
         frames.forEach(function(frame, idx) { formData.append('frames[]', frame, 'frame' + idx + '.jpg'); });
         formData.append('device_type', deviceType);
+        formData.append('action_type', actionType);
+        if (initialClickTimeMs) {
+          formData.append('initial_click_time_ms', initialClickTimeMs);
+        }
         return fetch('/api/face/liveness_and_recognition', { method: 'POST', body: formData });
       })
       .then(function(response) { return response.json(); })
       .then(function(result) {
-        if (result.success && result.user_id) {
-          showStatus('✅ Liveness check passed and face recognized!' + (result.user_name ? (' For ' + result.user_name) : ''), 'success');
+        if (result.success) {
+          if (result.action === 'redirect') {
+            window.location.href = result.url;
+            return; // Stop further execution
+          }
+          // Show message only if it exists (for check-in)
+          if (result.message) {
+            showStatus('✅ ' + result.message + (result.user_name ? (' For ' + result.user_name) : ''), 'success');
+          }
+          // Reload to reflect state change, with a delay if a message was shown
           setTimeout(function() {
-            if (typeof window.onFaceCheckinSuccess === 'function') {
-              window.onFaceCheckinSuccess();
-            } else {
-              window.location.href = '/';
-            }
-          }, 500);
+            window.location.reload();
+          }, result.message ? 500 : 0);
         } else {
-          showStatus('❌ ' + (result.error || 'Liveness or recognition failed.'), 'danger');
+          // Generic error handling
+          var errorMessage = '❌ ' + (result.error || 'Liveness or recognition failed.');
+          showStatus(errorMessage, 'danger');
           setTimeout(function() { restartProcess(); }, 2500);
         }
       })
@@ -142,11 +152,18 @@ $(document).ready(function() {
       try { video.srcObject = null; } catch (e) {}
     }
   }
-  // Use delegated handler to survive DOM replacements
+  
   $(document).on('click', '#face-start-camera-btn', function() {
-    $('#face-start-camera-btn').hide();
-    runLivenessAndRecognitionUnified();
+    var modal = $('#faceCheckInModal');
+    var actionType = modal.data('action-type');
+    var initialClickTimeMs = modal.data('initial-click-time-ms');
+
+    if (actionType) {
+      $(this).hide();
+      runLivenessAndRecognitionUnified(actionType, initialClickTimeMs);
+    }
   });
+
   // Ensure fresh references and UI every time the modal opens
   $('#faceCheckInModal').on('shown.bs.modal', function() {
     // Re-grab DOM elements after potential partial page updates
