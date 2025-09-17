@@ -7,7 +7,6 @@ $(document).ready(function() {
   var CAPTURE_INTERVAL = 100;
   var COUNTDOWN_SECONDS = 2;
   var frames = [];
-  var deviceType = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'mb' : 'pc';
 
   function showStatus(msg, type) {
     if (type === undefined) { type = 'info'; }
@@ -51,7 +50,7 @@ $(document).ready(function() {
       if (i > 0) {
         showStatus('Get ready! Liveness check will start in ' + i + '...', 'info');
         i--;
-        return new Promise(function(res) { setTimeout(function() { res(next()); }, 500); });
+        return new Promise(function(res) { setTimeout(function() { res(next()); }, 200); });
       } else {
         return Promise.resolve();
       }
@@ -87,7 +86,7 @@ $(document).ready(function() {
     startCamera()
       .then(function() {
         showStatus('Position your face in the center. Ensure good lighting.', 'info');
-        return new Promise(function(res) { setTimeout(res, 500); });
+        return new Promise(function(res) { setTimeout(res, 200); });
       })
       .then(function() { return countdown(COUNTDOWN_SECONDS); })
       .then(function() { return captureFrames(); })
@@ -95,7 +94,6 @@ $(document).ready(function() {
         showStatus('Checking liveness and recognizing face...', 'info');
         var formData = new FormData();
         frames.forEach(function(frame, idx) { formData.append('frames[]', frame, 'frame' + idx + '.jpg'); });
-        formData.append('device_type', deviceType);
         formData.append('action_type', actionType);
         if (initialClickTimeMs) {
           formData.append('initial_click_time_ms', initialClickTimeMs);
@@ -116,12 +114,12 @@ $(document).ready(function() {
           // Reload to reflect state change, with a delay if a message was shown
           setTimeout(function() {
             window.location.reload();
-          }, result.message ? 500 : 0);
+          }, result.message ? 200 : 0);
         } else {
           // Generic error handling
           var errorMessage = '❌ ' + (result.error || 'Liveness or recognition failed.');
           showStatus(errorMessage, 'danger');
-          setTimeout(function() { restartProcess(); }, 2500);
+          setTimeout(function() { restartProcess(); }, 1000);
         }
       })
       .catch(function(e) {
@@ -134,7 +132,7 @@ $(document).ready(function() {
           errorMessage = e.message;
         }
         showStatus('❌ Error: ' + errorMessage, 'danger');
-        setTimeout(function() { restartProcess(); }, 3000);
+        setTimeout(function() { restartProcess(); }, 1000);
       });
   }
   function restartProcess() {
@@ -189,8 +187,4 @@ $(document).ready(function() {
   $('#face-checkin-btn').click(function() {
     $('#faceCheckInModal').modal('show');
   });
-  // Show glasses instruction for PC only
-  if (deviceType === 'pc') {
-    $('#face-glasses-instruction').show();
-  }
 });

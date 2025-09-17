@@ -121,6 +121,8 @@ Internal::Application.routes.draw do
     end
   end
   
+  resources :face_verification_report, only: [:index]
+
   # Face Recognition API routes
   namespace :api do
     namespace :face do

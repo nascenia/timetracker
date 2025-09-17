@@ -1,0 +1,57 @@
+.row
+  - if @error
+    .alert.alert-danger= @error
+  - else
+    %table.table.table-hover.table-bordered#face-recognition-table
+      %thead
+        %tr
+          %th Timestamp
+          %th Name
+          %th Face Similarity
+          %th Liveness Score
+          %th Spoof Score
+          %th Status
+          %th Reference
+      %tbody
+        - @checkins.each do |checkin|
+          - user = @users[checkin['user_id']]
+          %tr
+            %td= Time.parse(checkin['created_at']).strftime('%Y-%m-%d %H:%M:%S') if checkin['created_at']
+            %td= user ? user.name : 'Unknown'
+            - if checkin['face_similarity'] == 0 && checkin['liveness_score'] == 0 && checkin['spoof_score'] == 0
+              %td Not Applicable
+              %td
+              %td
+              %td
+              %td
+            - else
+              %td= "%.2f" % checkin['face_similarity']
+              %td= "%.2f" % checkin['liveness_score']
+              %td= "%.2f" % checkin['spoof_score']
+              %td= checkin['status'] ? 'Success' : 'Fail'
+              %td
+                - if checkin['attendance_id'].present?
+                  = link_to 'View Attendance', attendance_path(checkin['attendance_id'])
+
+    .text-center
+      - if @page > 1
+        = link_to 'Previous', face_verification_report_index_path(page: @page - 1), class: 'btn btn-default'
+      - if @has_next_page
+        = link_to 'Next', face_verification_report_index_path(page: @page + 1), class: 'btn btn-default'
+
+:javascript
+  $(document).ready(function() {
+    var dataTable = $('#face-recognition-table').DataTable({
+      lengthChange: false,
+      pageLength: 100,
+      paging: false, // Disable DataTables pagination, using custom pagination
+      dom: 'T<"clear">lfrtip',
+      buttons: ['print']
+    });
+    $(document).on("turbolinks:before-cache", function() {
+      if (dataTable !== null) {
+        dataTable.destroy();
+        dataTable = null;
+      }
+    });
+  });

@@ -12,9 +12,13 @@ class Api::FaceController < ApplicationController
   # POST /api/face/liveness_and_recognition
   def liveness_and_recognition
     begin
-      # Extract frames, device_type, and action
+      # IP Whitelist Check
+      unless Attendance::IP_WHITELIST.include?(request.remote_ip)
+        return render json: { success: false, error: 'Check-in or out is restricted from outside office.' }, status: :forbidden
+      end
+
+      # Extract frames and action
       frames = Array.wrap(params[:frames])
-      device_type = params[:device_type] || 'pc'
       action_type = params[:action_type] # 'checkin' or 'checkout'
       initial_click_time_ms = params[:initial_click_time_ms]
 
@@ -23,20 +27,21 @@ class Api::FaceController < ApplicationController
       end
 
       # Call FastAPI service for liveness and recognition
-      result = call_fastapi_liveness_and_recognition(frames, device_type, current_user.id)
+      result = call_fastapi_liveness_and_recognition(frames, current_user.id)
 
       if result && result['success'] && result['user_id'].to_s == current_user.id.to_s
         # Face verified, now perform the attendance action securely
         begin
           message = ''
+          attendance = nil
           if action_type == 'checkin'
             # Logic adapted from AttendancesController#create
-            attendance = current_user.attendances.where(checkin_date: Date.today).last
-            if attendance.present? && attendance.out_time.blank?
+            existing_attendance = current_user.attendances.where(checkin_date: Date.today).last
+            if existing_attendance.present? && existing_attendance.out_time.blank?
               message = 'You are already checked in.'
             else
               initial_click_time = initial_click_time_ms.present? ? Time.zone.at(initial_click_time_ms.to_i / 1000.0) : Time.zone.now
-              Attendance.create_attendance(current_user.id, attendance, initial_click_time)
+              attendance = Attendance.create_attendance(current_user.id, existing_attendance, initial_click_time)
               message = 'Successfully checked in.'
             end
           elsif action_type == 'checkout'
@@ -50,22 +55,35 @@ class Api::FaceController < ApplicationController
                 attendance.update(total_hours: total_hours)
                 message = nil # No message on successful checkout
               else
-                # Redirect to timesheet page if not filled
+                # Timesheet is not filled. Set session flags to remember the checkout intent.
+                session[:is_from_checkout] = 1
+                session[:attendence_id] = attendance.id
+                # Instruct the client to redirect to the timesheet page.
                 return render json: { success: true, action: 'redirect', url: new_timesheet_path }
               end
             else
               message = 'You have not checked in today.'
             end
           end
+
+          # If an attendance record was created or updated, notify the FastAPI service
+          if attendance && attendance.id.present?
+            log_id = result['log_id']
+            Rails.logger.info "log id: #{log_id}  attendance_id: #{attendance.id}"
+            call_update_attendance_api(log_id, attendance.id)
+          end
+
           render json: { success: true, message: message, user_name: current_user.name }
         rescue => e
           Rails.logger.error "Attendance action failed after face verification: #{e.message}"
           render json: { success: false, error: 'Could not record attendance. Please try again.' }, status: :internal_server_error
         end
       else
+        Rails.logger.error "Recognition or liveness failed. Result: #{result.inspect}"
         render json: result || { success: false, error: 'Recognition or liveness failed' }, status: :unprocessable_entity
       end
     rescue => e
+      Rails.logger.error "internal server Error: #{e.message}"
       render json: { success: false, error: 'Internal server error' }, status: :internal_server_error
     end
   end
@@ -78,7 +96,7 @@ class Api::FaceController < ApplicationController
       end
 
       # Prepare data for FastAPI
-      result = call_fastapi_register_face(params[:image], params[:user_id], params[:device_type])
+      result = call_fastapi_register_face(params[:image], params[:user_id])
 
       if result && result['success']
         render json: { success: true }
@@ -93,7 +111,7 @@ class Api::FaceController < ApplicationController
 
   private
 
-  def call_fastapi_liveness_and_recognition(frames, device_type, user_id = nil)
+  def call_fastapi_liveness_and_recognition(frames, user_id = nil)
     face_check_in_api = CONFIG['face_check_in_api']
     uri = URI(face_check_in_api)
     files = {}
@@ -103,7 +121,6 @@ class Api::FaceController < ApplicationController
     request = Net::HTTP::Post::Multipart.new(
       uri.path,
       files.merge({
-        'device_type' => device_type,
         'user_id' => user_id
       })
     )
@@ -116,12 +133,11 @@ class Api::FaceController < ApplicationController
     end
   end
 
-  def call_fastapi_register_face(image, user_id, device_type)
+  def call_fastapi_register_face(image, user_id)
     uri = URI(CONFIG['face_registration_api'])
     form_data = {
       'image' => UploadIO.new(image.tempfile, image.content_type, image.original_filename),
       'user_id' => user_id,
-      'device_type' => device_type
     }
     request = Net::HTTP::Post::Multipart.new(uri.path, form_data)
   
@@ -132,6 +148,26 @@ class Api::FaceController < ApplicationController
     if response.code == '200'
       JSON.parse(response.body)
     end
+  end
+
+  def call_update_attendance_api(log_id, attendance_id)
+    uri = URI("http://localhost:8000/update_attendance")
+    request = Net::HTTP::Post.new(uri)
+    request.body = { log_id: log_id, attendance_id: attendance_id }.to_json
+    request['Content-Type'] = 'application/json'
+
+    http = Net::HTTP.new(uri.host, uri.port)
+    response = http.request(request)
+
+    if response.code == '200'
+      JSON.parse(response.body)
+    else
+      Rails.logger.error "Failed to update attendance: #{response.body}"
+      nil
+    end
+  rescue => e
+    Rails.logger.error "Error calling update_attendance API: #{e.message}"
+    nil
   end
 
 end
