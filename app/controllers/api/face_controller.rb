@@ -12,6 +12,7 @@ class Api::FaceController < ApplicationController
   # POST /api/face/liveness_and_recognition
   def liveness_and_recognition
     begin
+      initial_click_time = Time.zone.now
       # IP Whitelist Check
       unless Attendance::IP_WHITELIST.include?(request.remote_ip)
         return render json: { success: false, error: 'Check-in or out is restricted from outside office.' }, status: :forbidden
@@ -20,7 +21,6 @@ class Api::FaceController < ApplicationController
       # Extract frames and action
       frames = Array.wrap(params[:frames])
       action_type = params[:action_type] # 'checkin' or 'checkout'
-      initial_click_time_ms = params[:initial_click_time_ms]
 
       unless frames.present? && frames.size == 3 && ['checkin', 'checkout'].include?(action_type)
         return render json: { success: false, error: 'Missing or invalid parameters' }, status: :bad_request
@@ -40,7 +40,6 @@ class Api::FaceController < ApplicationController
             if existing_attendance.present? && existing_attendance.out_time.blank?
               message = 'You are already checked in.'
             else
-              initial_click_time = initial_click_time_ms.present? ? Time.zone.at(initial_click_time_ms.to_i / 1000.0) : Time.zone.now
               attendance = Attendance.create_attendance(current_user.id, existing_attendance, initial_click_time)
               message = 'Successfully checked in.'
             end

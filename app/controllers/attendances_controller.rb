@@ -46,27 +46,19 @@ class AttendancesController < ApplicationController
 
       
 
-      attendance = @user.attendances.where(checkin_date: Date.today).last
-      # If facial recognition flow passed an initial click timestamp, use that as in_time
-      initial_click_time =
-        if params[:initial_click_time_ms].present?
-          # Epoch milliseconds from browser; rely on server OS timezone
-          Time.at(params[:initial_click_time_ms].to_i / 1000.0)
-        else
-          params[:initial_click_time]
-        end
+      attendance = @user.attendances.where(checkin_date: Time.now.strftime('%y-%m-%d')).last
 
       flash[:notice] = 'Successfully checked in.'
 
       if @user.all_information_provided?
         if attendance.present?
           if attendance.out_time.present?
-            Attendance.create_attendance(@user.id, attendance, initial_click_time)
+            Attendance.create_attendance(@user.id, attendance)
           else
             flash[:notice] = 'You are already checked in.'
           end
         else
-          Attendance.create_attendance(@user.id, nil, initial_click_time)
+          Attendance.create_attendance(@user.id, nil)
           Attendance.add_missing_checkout_hours(@user)
         end
       else
@@ -107,7 +99,7 @@ class AttendancesController < ApplicationController
       else
         if @attendance.user_id == current_user.id
           if @today_entry
-            @attendance.out_time = Time.zone.now.to_s(:time)
+            @attendance.out_time = Time.now.to_s(:time)
             @attendance.save!
             total_hours = ((@attendance.out_time.to_time - @attendance.in_time.to_time) / 1.hour).round(2)
             @attendance.total_hours = total_hours

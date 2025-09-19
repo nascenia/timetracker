@@ -16,7 +16,7 @@
         - @checkins.each do |checkin|
           - user = @users[checkin['user_id']]
           %tr
-            %td= Time.parse(checkin['created_at']).strftime('%Y-%m-%d %H:%M:%S') if checkin['created_at']
+            %td= Time.parse(checkin['created_at']).strftime('%Y-%m-%d %I:%M:%S %p') if checkin['created_at']
             %td= user ? user.name : 'Unknown'
             - if checkin['face_similarity'] == 0 && checkin['liveness_score'] == 0 && checkin['spoof_score'] == 0
               %td Not Applicable
@@ -25,9 +25,9 @@
               %td
               %td
             - else
-              %td= "%.2f" % checkin['face_similarity']
-              %td= "%.2f" % checkin['liveness_score']
-              %td= "%.2f" % checkin['spoof_score']
+              %td= "%.2f%%" % (checkin['face_similarity'] * 100)
+              %td= "%.2f%%" % (checkin['liveness_score'] * 100)
+              %td= "%.2f%%" % (checkin['spoof_score'] * 100)
               %td= checkin['status'] ? 'Success' : 'Fail'
               %td
                 - if checkin['attendance_id'].present?
@@ -46,7 +46,8 @@
       pageLength: 100,
       paging: false, // Disable DataTables pagination, using custom pagination
       dom: 'T<"clear">lfrtip',
-      buttons: ['print']
+      buttons: ['print'],
+      order: [[0, 'desc']]
     });
     $(document).on("turbolinks:before-cache", function() {
       if (dataTable !== null) {

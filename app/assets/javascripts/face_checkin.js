@@ -82,7 +82,7 @@ $(document).ready(function() {
     }
     return captureNext();
   }
-  function runLivenessAndRecognitionUnified(actionType, initialClickTimeMs) {
+  function runLivenessAndRecognitionUnified(actionType) {
     startCamera()
       .then(function() {
         showStatus('Position your face in the center. Ensure good lighting.', 'info');
@@ -95,9 +95,6 @@ $(document).ready(function() {
         var formData = new FormData();
         frames.forEach(function(frame, idx) { formData.append('frames[]', frame, 'frame' + idx + '.jpg'); });
         formData.append('action_type', actionType);
-        if (initialClickTimeMs) {
-          formData.append('initial_click_time_ms', initialClickTimeMs);
-        }
         return fetch('/api/face/liveness_and_recognition', { method: 'POST', body: formData });
       })
       .then(function(response) { return response.json(); })
@@ -154,11 +151,10 @@ $(document).ready(function() {
   $(document).on('click', '#face-start-camera-btn', function() {
     var modal = $('#faceCheckInModal');
     var actionType = modal.data('action-type');
-    var initialClickTimeMs = modal.data('initial-click-time-ms');
 
     if (actionType) {
       $(this).hide();
-      runLivenessAndRecognitionUnified(actionType, initialClickTimeMs);
+      runLivenessAndRecognitionUnified(actionType);
     }
   });
 
