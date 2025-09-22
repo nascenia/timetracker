@@ -4,6 +4,7 @@ class Api::FaceController < ApplicationController
   require 'uri'
   require 'json'
   require 'yaml'
+  include AttendanceApiUpdatable
   
   before_action :authenticate_user!
   #skip_before_action :authenticate_user!, only: [:liveness_and_recognition, :register_face]
@@ -57,6 +58,7 @@ class Api::FaceController < ApplicationController
                 # Timesheet is not filled. Set session flags to remember the checkout intent.
                 session[:is_from_checkout] = 1
                 session[:attendence_id] = attendance.id
+                session[:log_id] = result['log_id']
                 # Instruct the client to redirect to the timesheet page.
                 return render json: { success: true, action: 'redirect', url: new_timesheet_path }
               end
@@ -148,25 +150,4 @@ class Api::FaceController < ApplicationController
       JSON.parse(response.body)
     end
   end
-
-  def call_update_attendance_api(log_id, attendance_id)
-    uri = URI("http://127.0.0.1:8000/update_attendance")
-    request = Net::HTTP::Post.new(uri)
-    request.body = { log_id: log_id, attendance_id: attendance_id }.to_json
-    request['Content-Type'] = 'application/json'
-
-    http = Net::HTTP.new(uri.host, uri.port)
-    response = http.request(request)
-
-    if response.code == '200'
-      JSON.parse(response.body)
-    else
-      Rails.logger.error "Failed to update attendance: #{response.body}"
-      nil
-    end
-  rescue => e
-    Rails.logger.error "Error calling update_attendance API: #{e.message}"
-    nil
-  end
-
 end

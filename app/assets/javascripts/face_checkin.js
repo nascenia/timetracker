@@ -126,7 +126,7 @@ $(document).ready(function() {
         } else if (e.name === 'NotFoundError' || e.name === 'DevicesNotFoundError') {
           errorMessage = 'No camera was found on your device.';
         } else if (e.message) {
-          errorMessage = e.message;
+          errorMessage = "An unexpected error occurred.";
         }
         showStatus('❌ Error: ' + errorMessage, 'danger');
         setTimeout(function() { restartProcess(); }, 500);
