@@ -33,17 +33,30 @@
                 - if checkin['attendance_id'].present?
                   = link_to 'View Attendance', attendance_path(checkin['attendance_id'])
 
-    .text-center
-      - if @page > 1
-        = link_to 'Previous', face_verification_report_index_path(page: @page - 1), class: 'btn btn-default'
-      - if @has_next_page
-        = link_to 'Next', face_verification_report_index_path(page: @page + 1), class: 'btn btn-default'
+    .row
+      .col-md-4
+        - if @checkins.present?
+          - limit = 20
+          - start_entry = (@page - 1) * limit + 1
+          - end_entry = (@page - 1) * limit + @checkins.length
+          .page_entries_info
+            Showing entries
+            %b= start_entry
+            to
+            %b= end_entry
+      .col-md-4.text-center
+        - if @page > 1
+          = link_to 'Previous', face_verification_report_index_path(page: @page - 1), class: 'btn btn-default'
+        - if @has_next_page
+          = link_to 'Next', face_verification_report_index_path(page: @page + 1), class: 'btn btn-default'
+      .col-md-4
 
 :javascript
   $(document).ready(function() {
     var dataTable = $('#face-recognition-table').DataTable({
       lengthChange: false,
       pageLength: 100,
+      info: false,
       paging: false, // Disable DataTables pagination, using custom pagination
       dom: 'T<"clear">lfrtip',
       buttons: ['print'],

@@ -127,7 +127,7 @@ class Api::FaceController < ApplicationController
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = (uri.scheme == 'https')
     response = http.request(request)
-    if response.code == '200'
+    if response.body.present?
       JSON.parse(response.body)
     end
   end
@@ -144,13 +144,13 @@ class Api::FaceController < ApplicationController
     http.use_ssl = (uri.scheme == 'https')
     response = http.request(request)
   
-    if response.code == '200'
+    if response.body.present?
       JSON.parse(response.body)
     end
   end
 
   def call_update_attendance_api(log_id, attendance_id)
-    uri = URI("http://localhost:8000/update_attendance")
+    uri = URI("http://127.0.0.1:8000/update_attendance")
     request = Net::HTTP::Post.new(uri)
     request.body = { log_id: log_id, attendance_id: attendance_id }.to_json
     request['Content-Type'] = 'application/json'

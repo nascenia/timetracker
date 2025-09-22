@@ -116,7 +116,7 @@ $(document).ready(function() {
           // Generic error handling
           var errorMessage = '❌ ' + (result.error || 'Liveness or recognition failed.');
           showStatus(errorMessage, 'danger');
-          setTimeout(function() { restartProcess(); }, 1000);
+          setTimeout(function() { restartProcess(); }, 500);
         }
       })
       .catch(function(e) {
@@ -129,7 +129,7 @@ $(document).ready(function() {
           errorMessage = e.message;
         }
         showStatus('❌ Error: ' + errorMessage, 'danger');
-        setTimeout(function() { restartProcess(); }, 1000);
+        setTimeout(function() { restartProcess(); }, 500);
       });
   }
   function restartProcess() {
