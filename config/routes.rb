@@ -6,6 +6,8 @@ Internal::Application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
+  post '/admin/dashboard/toggle_face_recognition', to: 'admin/dashboard#toggle_face_recognition', as: :toggle_face_recognition_admin_dashboard
+
   resources :approval_chains do
     member do
       get   :remove

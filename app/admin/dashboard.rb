@@ -2,7 +2,27 @@ ActiveAdmin.register_page "Dashboard" do
 
   menu priority: 1, label: proc{ I18n.t("active_admin.dashboard") }
 
+  page_action :toggle_face_recognition, :method => :post do
+    enable = params[:enable] == 'true'
+    User.update_all(face_recognition_required: enable)
+    redirect_to admin_dashboard_path, notice: "Face recognition has been #{enable ? 'enabled' : 'disabled'} for all users."
+  end
+
   content title: proc{ I18n.t("active_admin.dashboard") } do
+    panel "Face Recognition" do
+      div do
+        para "Enable or disable face recognition for all users."
+        div style: "margin-top: 10px;" do
+          a :href => toggle_face_recognition_admin_dashboard_path(:enable => true), "data-method" => :post, :class => "button" do
+            "Enable Face Recognition for All"
+          end
+          a :href => toggle_face_recognition_admin_dashboard_path(:enable => false), "data-method" => :post, :class => "button", :style => "margin-left: 10px;" do
+            "Disable Face Recognition for All"
+          end
+        end
+      end
+    end
+
     div class: "blank_slate_container", id: "dashboard_default_message" do
       span class: "blank_slate" do
         span I18n.t("active_admin.dashboard_welcome.welcome")
