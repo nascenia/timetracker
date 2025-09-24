@@ -44,8 +44,6 @@ class AttendancesController < ApplicationController
         redirect_to(:back) and return
       end
 
-      
-
       attendance = @user.attendances.where(checkin_date: Time.now.strftime('%y-%m-%d')).last
 
       flash[:notice] = 'Successfully checked in.'
@@ -81,7 +79,6 @@ class AttendancesController < ApplicationController
         flash[:alert] = 'You must use face verification to check out.'
         redirect_to(:back) and return
       end
-      
 
       if params[:id] == 'invalid'
         flash[:notice] = 'You did not log in today! Please log in first!'

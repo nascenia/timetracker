@@ -5,7 +5,7 @@ module AttendanceApiUpdatable
   private
 
   def call_update_attendance_api(log_id, attendance_id)
-    uri = URI("http://127.0.0.1:8000/update_attendance")
+    uri = URI(CONFIG['update_attendance_api'])
     request = Net::HTTP::Post.new(uri)
     request.body = { log_id: log_id, attendance_id: attendance_id }.to_json
     request['Content-Type'] = 'application/json'

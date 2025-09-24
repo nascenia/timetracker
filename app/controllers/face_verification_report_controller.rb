@@ -8,7 +8,7 @@ class FaceVerificationReportController < ApplicationController
     skip = (@page - 1) * limit
 
     begin
-      response = HTTParty.get("http://127.0.0.1:8000/all_checkins/?skip=#{skip}&limit=#{limit}")
+      response = HTTParty.get("#{URI(CONFIG['face_score_api'])}/?skip=#{skip}&limit=#{limit}")
       if response.success?
         @checkins = JSON.parse(response.body)
         user_ids = @checkins.map { |c| c['user_id'] }.uniq
