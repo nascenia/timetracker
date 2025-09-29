@@ -9,11 +9,17 @@ class Api::FaceController < ApplicationController
   before_action :authenticate_user!
   #skip_before_action :authenticate_user!, only: [:liveness_and_recognition, :register_face]
   skip_before_action :verify_authenticity_token, only: [:liveness_and_recognition, :register_face]
-  
+
   # POST /api/face/liveness_and_recognition
   def liveness_and_recognition
     begin
-      initial_click_time = Time.zone.now
+      action_type = params[:action_type] # 'checkin' or 'checkout'
+      if action_type == 'checkin'
+        check_in_time = session[:check_in_time]
+        if check_in_time.nil? || (Time.zone.now - Time.parse(check_in_time.to_s) > 2.minutes)
+          return render json: { success: false, error: 'Check-in time expired. Please try again.' }, status: :bad_request
+        end
+      end
       # IP Whitelist Check
       unless Attendance::IP_WHITELIST.include?(request.remote_ip)
         return render json: { success: false, error: 'Check-in or out is restricted from outside office.' }, status: :forbidden
@@ -21,7 +27,6 @@ class Api::FaceController < ApplicationController
 
       # Extract frames and action
       frames = Array.wrap(params[:frames])
-      action_type = params[:action_type] # 'checkin' or 'checkout'
 
       unless frames.present? && frames.size == 3 && ['checkin', 'checkout'].include?(action_type)
         return render json: { success: false, error: 'Missing or invalid parameters' }, status: :bad_request
@@ -41,7 +46,8 @@ class Api::FaceController < ApplicationController
             if existing_attendance.present? && existing_attendance.out_time.blank?
               message = 'You are already checked in.'
             else
-              attendance = Attendance.create_attendance(current_user.id, existing_attendance, initial_click_time)
+              attendance = Attendance.create_attendance(current_user.id, existing_attendance, check_in_time)
+              session.delete(:check_in_time)
               message = 'Successfully checked in.'
             end
           elsif action_type == 'checkout'

@@ -13,7 +13,7 @@ Internal::Application.routes.draw do
       get   :remove
       post  :assign
     end
-    collection do 
+    collection do
       get   :ttf_own
       post  :create_chain
     end
@@ -49,8 +49,7 @@ Internal::Application.routes.draw do
     collection do
       get :monthly_summary
       get :download
-      get :face_check_in
-      post :face_check_in_submit
+      post :store_check_in_time
     end
   end
   resources :timesheets do
@@ -129,7 +128,7 @@ Internal::Application.routes.draw do
   namespace :api do
     namespace :face do
       post :liveness_and_recognition
-      post :register_face 
+      post :register_face
     end
   end
   

@@ -71,7 +71,7 @@
                   %li Bring your face close so it fills the circle
                   %li Ensure good lighting and look straight at the camera
                   %li After 2 seconds countdown photos will be captured automatically
-                  %li For better accuracy, please use your phone instead of a PC.
+                  %li For better accuracy, please use your phone instead of a PC
                   %li#face-glasses-instruction(style='display:none;') Please take off your glasses
               .status-messages
                 #face-status-message.alert{style: 'display: none;'}
@@ -121,16 +121,55 @@
   });
 
   $(document).ready(function() {
+    var countdownTimer;
     // Set action type on the modal before showing it
     $('#face-checkin-dashboard-btn').on('click', function() {
-      $('#faceCheckInModal')
-        .data('action-type', 'checkin')
-        .modal('show');
+      $.ajax({
+        url: "/attendances/store_check_in_time",
+        type: "POST",
+        success: function(msg) {
+          $('#faceCheckInModal')
+            .data('action-type', 'checkin')
+            .modal('show');
+        }
+      });
     });
 
     $('#face-checkout-dashboard-btn').on('click', function() {
       $('#faceCheckInModal')
         .data('action-type', 'checkout')
         .modal('show');
+    });
+
+    $('#faceCheckInModal').on('shown.bs.modal', function (e) {
+      if ($('#faceCheckInModal').data('action-type') == 'checkin') {
+        var twoMinutes = 60 * 2,
+            display = $('#countdown-feedback');
+        display.show();
+        startTimer(twoMinutes, display);
+      }
+    });
+
+    function startTimer(duration, display) {
+      var timer = duration, minutes, seconds;
+      countdownTimer = setInterval(function () {
+        minutes = parseInt(timer / 60, 10)
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.text("Time left: " + minutes + ":" + seconds);
+
+        if (--timer < 0) {
+          clearInterval(countdownTimer);
+          $('#faceCheckInModal').modal('hide');
+        }
+      }, 1000);
+    }
+
+    $('#faceCheckInModal').on('hidden.bs.modal', function () {
+      clearInterval(countdownTimer);
+      $('#countdown-feedback').hide();
     });
   });

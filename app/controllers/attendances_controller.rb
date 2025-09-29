@@ -121,6 +121,11 @@ class AttendancesController < ApplicationController
     end
   end
 
+  def store_check_in_time
+    session[:check_in_time] = Time.now
+    render json: { success: true }
+  end
+ 
   def monthly_summary
     @selected = { month: params[:user][:month], year: params[:user][:year] }
     @user = User.find params[:user][:id]
