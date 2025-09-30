@@ -356,9 +356,11 @@ ActiveRecord::Schema.define(version: 20221004063619) do
     t.text     "profile_update_json"
     t.string   "employee_id",                       limit: 16
     t.integer  "kpi_template_id"
+    t.boolean  "face_recognition_required",                    default: true,  null: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["face_recognition_required"], name: "index_users_on_face_recognition_required", using: :btree
   add_index "users", ["holiday_scheme_id"], name: "index_users_on_holiday_scheme_id", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["weekend_id"], name: "index_users_on_weekend_id", using: :btree

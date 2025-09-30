@@ -3,11 +3,10 @@ $(document).ready(function() {
   var stream = null;
   var canvas = document.createElement('canvas');
   var ctx = canvas.getContext('2d');
-  var FRAME_COUNT = 5;
-  var CAPTURE_INTERVAL = 100; // ms (5 frames in 1 second)
-  var COUNTDOWN_SECONDS = 3;
+  var FRAME_COUNT = 3;
+  var CAPTURE_INTERVAL = 100;
+  var COUNTDOWN_SECONDS = 2;
   var frames = [];
-  var deviceType = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'mb' : 'pc';
 
   function showStatus(msg, type) {
     if (type === undefined) { type = 'info'; }
@@ -24,11 +23,21 @@ $(document).ready(function() {
     if (video && video.srcObject) video.play();
   }
   function startCamera() {
-    if (stream) return Promise.resolve();
-    return navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } }).then(function(mediaStream) {
+    // Always re-acquire the current video element in case DOM was replaced (e.g., Turbolinks)
+    video = document.getElementById('face-video');
+    if (stream) {
+      if (video) {
+        video.srcObject = stream;
+        return video.play().catch(function() {});
+      }
+      return Promise.resolve();
+    }
+    return navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } } }).then(function(mediaStream) {
       stream = mediaStream;
-      video.srcObject = stream;
-      video.play();
+      if (video) {
+        video.srcObject = stream;
+        return video.play();
+      }
     });
   }
   function setCanvasSize() {
@@ -41,7 +50,7 @@ $(document).ready(function() {
       if (i > 0) {
         showStatus('Get ready! Liveness check will start in ' + i + '...', 'info');
         i--;
-        return new Promise(function(res) { setTimeout(function() { res(next()); }, 1000); });
+        return new Promise(function(res) { setTimeout(function() { res(next()); }, 200); });
       } else {
         return Promise.resolve();
       }
@@ -65,7 +74,7 @@ $(document).ready(function() {
             showStatus('Capturing liveness video... (' + (i+1) + '/' + FRAME_COUNT + ')', 'info');
             i++;
             setTimeout(function() { resolve(captureNext()); }, CAPTURE_INTERVAL);
-          }, 'image/jpeg', 1);
+          }, 'image/jpeg', 0.8);
         });
       } else {
         return Promise.resolve();
@@ -73,11 +82,11 @@ $(document).ready(function() {
     }
     return captureNext();
   }
-  function runLivenessAndRecognitionUnified() {
+  function runLivenessAndRecognitionUnified(actionType) {
     startCamera()
       .then(function() {
         showStatus('Position your face in the center. Ensure good lighting.', 'info');
-        return new Promise(function(res) { setTimeout(res, 1000); });
+        return new Promise(function(res) { setTimeout(res, 200); });
       })
       .then(function() { return countdown(COUNTDOWN_SECONDS); })
       .then(function() { return captureFrames(); })
@@ -85,24 +94,42 @@ $(document).ready(function() {
         showStatus('Checking liveness and recognizing face...', 'info');
         var formData = new FormData();
         frames.forEach(function(frame, idx) { formData.append('frames[]', frame, 'frame' + idx + '.jpg'); });
-        formData.append('device_type', deviceType);
+        formData.append('action_type', actionType);
         return fetch('/api/face/liveness_and_recognition', { method: 'POST', body: formData });
       })
       .then(function(response) { return response.json(); })
       .then(function(result) {
-        if (result.success && result.user_id) {
-          showStatus('✅ Liveness check passed and face recognized!' + (result.user_name ? (' For ' + result.user_name) : ''), 'success');
+        if (result.success) {
+          if (result.action === 'redirect') {
+            window.location.href = result.url;
+            return; // Stop further execution
+          }
+          // Show message only if it exists (for check-in)
+          if (result.message) {
+            showStatus('✅ ' + result.message + (result.user_name ? (' For ' + result.user_name) : ''), 'success');
+          }
+          // Reload to reflect state change, with a delay if a message was shown
           setTimeout(function() {
-            window.location.href = '/';
-          }, 500);
+            window.location.reload();
+          }, result.message ? 200 : 0);
         } else {
-          showStatus('❌ ' + (result.error || 'Liveness or recognition failed.'), 'danger');
-          setTimeout(function() { restartProcess(); }, 2500);
+          // Generic error handling
+          var errorMessage = '❌ ' + (result.error || 'Liveness or recognition failed.');
+          showStatus(errorMessage, 'danger');
+          setTimeout(function() { restartProcess(); }, 500);
         }
       })
       .catch(function(e) {
-        showStatus('Error: ' + e, 'danger');
-        setTimeout(function() { restartProcess(); }, 2500);
+        var errorMessage = 'An unexpected error occurred.';
+        if (e.name === 'NotAllowedError' || e.name === 'PermissionDeniedError') {
+          errorMessage = 'Camera access was denied. Please enable camera permissions in your browser settings.';
+        } else if (e.name === 'NotFoundError' || e.name === 'DevicesNotFoundError') {
+          errorMessage = 'No camera was found on your device.';
+        } else if (e.message) {
+          errorMessage = "An unexpected error occurred.";
+        }
+        showStatus('❌ Error: ' + errorMessage, 'danger');
+        setTimeout(function() { restartProcess(); }, 500);
       });
   }
   function restartProcess() {
@@ -115,13 +142,29 @@ $(document).ready(function() {
     $('#face-start-camera-btn').show();
     $('.video-container').show();
     $('.canvas-container').hide();
-    if (video && video.srcObject) video.pause();
+    if (video) {
+      try { video.pause(); } catch (e) {}
+      try { video.srcObject = null; } catch (e) {}
+    }
   }
-  // Update button click handler to use the new function
-  $('#face-start-camera-btn').click(function() {
-    $('#face-start-camera-btn').hide();
-    runLivenessAndRecognitionUnified();
+  
+  $(document).on('click', '#face-start-camera-btn', function() {
+    var modal = $('#faceCheckInModal');
+    var actionType = modal.data('action-type');
+
+    if (actionType) {
+      $(this).hide();
+      runLivenessAndRecognitionUnified(actionType);
+    }
   });
+
+  // Ensure fresh references and UI every time the modal opens
+  $('#faceCheckInModal').on('shown.bs.modal', function() {
+    // Re-grab DOM elements after potential partial page updates
+    video = document.getElementById('face-video');
+    resetModal();
+  });
+
   $('#faceCheckInModal').on('hidden.bs.modal', function() {
     if (stream) {
       stream.getTracks().forEach(function(track) { track.stop(); });
@@ -132,13 +175,12 @@ $(document).ready(function() {
     $('#face-start-camera-btn').show();
     $('.video-container').show();
     $('.canvas-container').hide();
-    if (video && video.srcObject) video.pause();
+    if (video) {
+      try { video.pause(); } catch (e) {}
+      try { video.srcObject = null; } catch (e) {}
+    }
   });
   $('#face-checkin-btn').click(function() {
     $('#faceCheckInModal').modal('show');
   });
-  // Show glasses instruction for PC only
-  if (deviceType === 'pc') {
-    $('#face-glasses-instruction').show();
-  }
 });

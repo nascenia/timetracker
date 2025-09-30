@@ -6,12 +6,14 @@ Internal::Application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
+  post '/admin/dashboard/toggle_face_recognition', to: 'admin/dashboard#toggle_face_recognition', as: :toggle_face_recognition_admin_dashboard
+
   resources :approval_chains do
     member do
       get   :remove
       post  :assign
     end
-    collection do 
+    collection do
       get   :ttf_own
       post  :create_chain
     end
@@ -47,8 +49,7 @@ Internal::Application.routes.draw do
     collection do
       get :monthly_summary
       get :download
-      get :face_check_in
-      post :face_check_in_submit
+      post :store_check_in_time
     end
   end
   resources :timesheets do
@@ -121,11 +122,13 @@ Internal::Application.routes.draw do
     end
   end
   
+  resources :face_verification_report, only: [:index]
+
   # Face Recognition API routes
   namespace :api do
     namespace :face do
       post :liveness_and_recognition
-      post :register_face 
+      post :register_face
     end
   end
   

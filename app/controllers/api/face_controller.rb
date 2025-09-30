@@ -4,34 +4,93 @@ class Api::FaceController < ApplicationController
   require 'uri'
   require 'json'
   require 'yaml'
+  include AttendanceApiUpdatable
   
   before_action :authenticate_user!
-  skip_before_action :authenticate_user!, only: [:liveness_and_recognition, :register_face]
+  #skip_before_action :authenticate_user!, only: [:liveness_and_recognition, :register_face]
   skip_before_action :verify_authenticity_token, only: [:liveness_and_recognition, :register_face]
-  
+
   # POST /api/face/liveness_and_recognition
   def liveness_and_recognition
     begin
-      # Extract frames (array of images) and device_type
-      frames = Array.wrap(params[:frames])
-      device_type = params[:device_type] || 'pc'
-      unless frames.present? && frames.size == 5
-        return render json: { success: false, error: 'Missing or insufficient frames' }, status: :bad_request
+      action_type = params[:action_type] # 'checkin' or 'checkout'
+      if action_type == 'checkin'
+        check_in_time = session[:check_in_time]
+        if check_in_time.nil? || (Time.zone.now - Time.parse(check_in_time.to_s) > 2.minutes)
+          return render json: { success: false, error: 'Check-in time expired. Please try again.' }, status: :bad_request
+        end
       end
+      # IP Whitelist Check
+      unless Attendance::IP_WHITELIST.include?(request.remote_ip)
+        return render json: { success: false, error: 'Check-in or out is restricted from outside office.' }, status: :forbidden
+      end
+
+      # Extract frames and action
+      frames = Array.wrap(params[:frames])
+
+      unless frames.present? && frames.size == 3 && ['checkin', 'checkout'].include?(action_type)
+        return render json: { success: false, error: 'Missing or invalid parameters' }, status: :bad_request
+      end
+
       # Call FastAPI service for liveness and recognition
-      result = call_fastapi_liveness_and_recognition(frames, device_type)
-      if result && result['success'] && result['user_id']
-        user = User.find(result['user_id'])
-        sign_in(user)
-        render json: {
-          success: true,
-          user_id: user.id,
-          user_name: user.name,
-        }
+      result = call_fastapi_liveness_and_recognition(frames, current_user.id)
+
+      if result && result['success'] && result['user_id'].to_s == current_user.id.to_s
+        # Face verified, now perform the attendance action securely
+        begin
+          message = ''
+          attendance = nil
+          if action_type == 'checkin'
+            # Logic adapted from AttendancesController#create
+            existing_attendance = current_user.attendances.where(checkin_date: Date.today).last
+            if existing_attendance.present? && existing_attendance.out_time.blank?
+              message = 'You are already checked in.'
+            else
+              attendance = Attendance.create_attendance(current_user.id, existing_attendance, check_in_time)
+              session.delete(:check_in_time)
+              message = 'Successfully checked in.'
+            end
+          elsif action_type == 'checkout'
+            # Logic adapted from AttendancesController#update
+            attendance = current_user.attendances.where(checkin_date: Date.today, out_time: nil).last
+            if attendance
+              # Ensure timesheet is filled if required (simplified check)
+              if Timesheet.where(user_id: current_user.id, date: Date.today).exists?
+                attendance.update(out_time: Time.zone.now.to_s(:time))
+                total_hours = ((attendance.out_time.to_time - attendance.in_time.to_time) / 1.hour).round(2)
+                attendance.update(total_hours: total_hours)
+                message = nil # No message on successful checkout
+              else
+                # Timesheet is not filled. Set session flags to remember the checkout intent.
+                session[:is_from_checkout] = 1
+                session[:attendence_id] = attendance.id
+                session[:log_id] = result['log_id']
+                # Instruct the client to redirect to the timesheet page.
+                return render json: { success: true, action: 'redirect', url: new_timesheet_path }
+              end
+            else
+              message = 'You have not checked in today.'
+            end
+          end
+
+          # If an attendance record was created or updated, notify the FastAPI service
+          if attendance && attendance.id.present?
+            log_id = result['log_id']
+            Rails.logger.info "log id: #{log_id}  attendance_id: #{attendance.id}"
+            call_update_attendance_api(log_id, attendance.id)
+          end
+
+          render json: { success: true, message: message, user_name: current_user.name }
+        rescue => e
+          Rails.logger.error "Attendance action failed after face verification: #{e.message}"
+          render json: { success: false, error: 'Could not record attendance. Please try again.' }, status: :internal_server_error
+        end
       else
+        Rails.logger.error "Recognition or liveness failed. Result: #{result.inspect}"
         render json: result || { success: false, error: 'Recognition or liveness failed' }, status: :unprocessable_entity
       end
     rescue => e
+      Rails.logger.error "internal server Error: #{e.message}"
       render json: { success: false, error: 'Internal server error' }, status: :internal_server_error
     end
   end
@@ -44,7 +103,7 @@ class Api::FaceController < ApplicationController
       end
 
       # Prepare data for FastAPI
-      result = call_fastapi_register_face(params[:image], params[:user_id], params[:device_type])
+      result = call_fastapi_register_face(params[:image], params[:user_id])
 
       if result && result['success']
         render json: { success: true }
@@ -59,7 +118,7 @@ class Api::FaceController < ApplicationController
 
   private
 
-  def call_fastapi_liveness_and_recognition(frames, device_type)
+  def call_fastapi_liveness_and_recognition(frames, user_id = nil)
     face_check_in_api = CONFIG['face_check_in_api']
     uri = URI(face_check_in_api)
     files = {}
@@ -69,24 +128,23 @@ class Api::FaceController < ApplicationController
     request = Net::HTTP::Post::Multipart.new(
       uri.path,
       files.merge({
-        'device_type' => device_type
+        'user_id' => user_id
       })
     )
     request['Authorization'] = "Bearer #{ENV['FASTAPI_API_KEY']}" if ENV['FASTAPI_API_KEY']
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = (uri.scheme == 'https')
     response = http.request(request)
-    if response.code == '200'
+    if response.body.present?
       JSON.parse(response.body)
     end
   end
 
-  def call_fastapi_register_face(image, user_id, device_type)
+  def call_fastapi_register_face(image, user_id)
     uri = URI(CONFIG['face_registration_api'])
     form_data = {
       'image' => UploadIO.new(image.tempfile, image.content_type, image.original_filename),
       'user_id' => user_id,
-      'device_type' => device_type
     }
     request = Net::HTTP::Post::Multipart.new(uri.path, form_data)
   
@@ -94,9 +152,8 @@ class Api::FaceController < ApplicationController
     http.use_ssl = (uri.scheme == 'https')
     response = http.request(request)
   
-    if response.code == '200'
+    if response.body.present?
       JSON.parse(response.body)
     end
   end
-
 end

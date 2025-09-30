@@ -13,13 +13,71 @@
 
   .row
     .col-sm-3
-      = link_to  'Check In', attendances_path, :method => :post,
-      :class => "btn btn-block btn-bottom-margin #{is_checked_in? @attendance}"
-
+      - if @attendance.present? && @attendance.out_time.blank?
+        = link_to 'Check In', attendances_path, :method => :post, :class => "btn btn-block btn-bottom-margin #{is_checked_in? @attendance}"
+      - else
+        - if current_user.face_recognition_required?
+          - if defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip)
+            = button_tag 'Check In', type: 'button', id: 'face-checkin-dashboard-btn', class: "btn btn-block btn-bottom-margin btn-success", style: 'margin: 0;'
+          - else
+            = link_to 'Check In', '#', :class => "btn btn-block btn-bottom-margin btn-success disabled", :title => "Face recognition check-in only available from office network on a mobile device.", :disabled => true
+        - else
+          - if defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip)
+            = link_to 'Check In', attendances_path, :method => :post, :class => "btn btn-block btn-bottom-margin #{is_checked_in? @attendance}"
+          - else
+            = link_to 'Check In', '#', :class => "btn btn-block btn-bottom-margin btn-success disabled", :title => "Check-in only available from office network.", :disabled => true
     - unless @attendance.nil?
       .col-sm-3
-        = link_to  'Check Out', attendance_path(@attendance), :method => :put,
-        :class => "btn btn-block #{is_checked_out? @attendance}"
+        - if current_user.face_recognition_required?
+          - if defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip)
+            = button_tag 'Check Out', type: 'button', id: 'face-checkout-dashboard-btn', class: "btn btn-block #{is_checked_out? @attendance}", style: 'margin: 0;'
+          - else
+            = link_to 'Check Out', '#', :class => "btn btn-block #{is_checked_out? @attendance} disabled", :title => "Face recognition check-out only available from office network on a mobile device.", :disabled => true
+        - else
+          - if defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip)
+            = link_to 'Check Out', attendance_path(@attendance), :method => :put, :class => "btn btn-block #{is_checked_out? @attendance}"
+          - else
+            = link_to 'Check Out', '#', :class => "btn btn-block #{is_checked_out? @attendance} disabled", :title => "Check-out only available from office network.", :disabled => true
+
+/ Face Check-In Modal (copied from devise/sessions/new.html.haml)
+- if current_user.face_recognition_required? && defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip)
+  #faceCheckInModal.modal.fade{tabindex: '-1', :role => 'dialog', 'aria-labelledby' => 'faceCheckInModalLabel'}
+    .modal-dialog.modal-lg{:role => 'document'}
+      .modal-content
+        .modal-header
+          %button.close{type: 'button', 'data-dismiss' => 'modal', 'aria-label' => 'Close'}
+            %span{'aria-hidden' => 'true'} &times;
+          %h4.modal-title#faceCheckInModalLabel Face Check-In
+        .modal-body
+          .row
+            .col-xs-12
+              / Centered container for camera and status messages
+              .camera-container.text-center
+                .video-container{style: 'width: 100%; max-width: 200px; margin: 0 auto;'}
+                  %video#face-video{autoplay: true, muted: true, playsinline: true, style: 'width: 100%; height: auto; border-radius: 50%; aspect-ratio: 1 / 1; object-fit: cover; background: #222; box-shadow: 0 0 0 4px #fff, 0 0 8px 0 #888; transform: scaleX(-1);'}
+                .canvas-container.text-center{style: 'display: none; width: 100%; max-width: 200px; margin: 0 auto;'}
+                  %canvas#face-canvas{width: '200', height: '200', style: 'width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; background: #222; box-shadow: 0 0 0 4px #fff, 0 0 8px 0 #888;'}
+                / Status messages centered below camera
+                #auto-face-status-message.alert{style: 'display: none; margin-top: 10px;'}
+                #pose-feedback.alert{style: 'display: none; margin-top: 10px;'}
+                #countdown-feedback.alert{style: 'display: none; margin-top: 10px; font-size: 1.2em; font-weight: bold;'}
+          
+          .row
+            .col-xs-12.col-md-8.col-md-offset-2
+              .instructions
+                %h5 Instructions:
+                %ol
+                  %li Click "Start Camera" to begin
+                  %li Bring your face close so it fills the circle
+                  %li Ensure good lighting and look straight at the camera
+                  %li After 2 seconds countdown photos will be captured automatically
+                  %li For better accuracy, please use your phone instead of a PC
+                  %li#face-glasses-instruction(style='display:none;') Please take off your glasses
+              .status-messages
+                #face-status-message.alert{style: 'display: none;'}
+        .modal-footer
+          %button.btn.btn-default{type: 'button', 'data-dismiss' => 'modal'} Close
+          %button#face-start-camera-btn.btn.btn-primary.btn-block{type: 'button', style: 'font-size: 1.2em; padding: 10px;'} Start Camera
 
 .row
   .col-md-8
@@ -58,8 +116,60 @@
     });
   });
 
-
-
   $(document).on('click', '#rules', function() {
     $("#rulesModal").modal('show');
+  });
+
+  $(document).ready(function() {
+    var countdownTimer;
+    // Set action type on the modal before showing it
+    $('#face-checkin-dashboard-btn').on('click', function() {
+      $.ajax({
+        url: "/attendances/store_check_in_time",
+        type: "POST",
+        success: function(msg) {
+          $('#faceCheckInModal')
+            .data('action-type', 'checkin')
+            .modal('show');
+        }
+      });
+    });
+
+    $('#face-checkout-dashboard-btn').on('click', function() {
+      $('#faceCheckInModal')
+        .data('action-type', 'checkout')
+        .modal('show');
+    });
+
+    $('#faceCheckInModal').on('shown.bs.modal', function (e) {
+      if ($('#faceCheckInModal').data('action-type') == 'checkin') {
+        var twoMinutes = 60 * 2,
+            display = $('#countdown-feedback');
+        display.show();
+        startTimer(twoMinutes, display);
+      }
+    });
+
+    function startTimer(duration, display) {
+      var timer = duration, minutes, seconds;
+      countdownTimer = setInterval(function () {
+        minutes = parseInt(timer / 60, 10)
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.text("Time left: " + minutes + ":" + seconds);
+
+        if (--timer < 0) {
+          clearInterval(countdownTimer);
+          $('#faceCheckInModal').modal('hide');
+        }
+      }, 1000);
+    }
+
+    $('#faceCheckInModal').on('hidden.bs.modal', function () {
+      clearInterval(countdownTimer);
+      $('#countdown-feedback').hide();
+    });
   });

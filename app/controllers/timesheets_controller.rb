@@ -1,5 +1,6 @@
 # :nodoc:
 class TimesheetsController < ApplicationController
+  include AttendanceApiUpdatable
   layout 'time_tracker'
   def show
     @is_editable = 0
@@ -124,6 +125,9 @@ class TimesheetsController < ApplicationController
                   total_hours = ((@attendance.out_time.to_time - @attendance.in_time.to_time) / 1.hour).round(2)
                   @attendance.total_hours = total_hours
                   @attendance.save!
+                  call_update_attendance_api(session[:log_id], session[:attendence_id])
+                  session[:log_id] = nil
+                  session[:attendence_id] = nil
                   flash[:notice] = 'Successfully checked out.'
                 else
                   flash[:notice] = 'You did not log in today.'

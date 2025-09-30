@@ -1,12 +1,7 @@
 $(document).on('click', '#register-face-btn', function() {
   // Only initialize once per modal open
   var initialized = false;
-  var video, canvas, ctx, stream, userId, photoTaken, capturedPhoto, faceLandmarker, lastCaptureData, deviceType;
-
-  function isMobileDevice() {
-    var mobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    return mobile;
-  }
+  var video, canvas, ctx, stream, userId, photoTaken, capturedPhoto, lastCaptureData;
 
   function showAutoFaceStatus(message, type) {
     $('#auto-face-status-message')
@@ -40,13 +35,6 @@ $(document).on('click', '#register-face-btn', function() {
     $('#register-face-btn-modal').show();
     photoTaken = true;
   }
-  function showGlassesInstruction() {
-    if (!isMobileDevice()) {
-      $('#glasses-instruction').show();
-    } else {
-      $('#glasses-instruction').hide();
-    }
-  }
 
   // Modal open event
   $('#faceRegistrationModal').one('shown.bs.modal', function() {
@@ -61,7 +49,6 @@ $(document).on('click', '#register-face-btn', function() {
     capturedPhoto = null;
     faceLandmarker = null;
     lastCaptureData = null;
-    deviceType = isMobileDevice() ? 'mb' : 'pc';
     showGlassesInstruction();
     hideAutoFaceStatus();
     showVideo();
@@ -177,7 +164,6 @@ $(document).on('click', '#register-face-btn', function() {
     var formData = new FormData();
     formData.append('image', photoBlob, 'capture.jpg');
     formData.append('user_id', userId);
-    formData.append('device_type', deviceType);
     fetch('/api/face/register_face', {
       method: 'POST',
       body: formData

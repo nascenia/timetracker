@@ -43,17 +43,36 @@ class Attendance < ActiveRecord::Base
     self.children.size > 0
   end
 
-  def self.create_attendance user_id, attendance
+  def self.create_attendance user_id, attendance, in_time_override = nil
 
     parent_id = nil
     unless attendance.nil?
       parent_id = attendance.parent_id.present? ? attendance.parent_id : attendance.id
     end
 
+    # Determine in_time: either override (from initial button click) or current time
+    calculated_in_time =
+      begin
+        if in_time_override.present?
+          # Accept Time object or string; store time-of-day based on server timezone
+          time_obj =
+            if in_time_override.is_a?(Time)
+              in_time_override
+            else
+              Time.zone.parse(in_time_override.to_s)
+            end
+          (time_obj || Time.zone.now).to_s(:time)
+        else
+          Time.zone.now.to_s(:time)
+        end
+      rescue
+        Time.zone.now.to_s(:time)
+      end
+
     self.create(
         :user_id => user_id,
         :checkin_date => Date.today,
-        :in_time => Time.now.to_s(:time),
+        :in_time => calculated_in_time,
         :parent_id => parent_id
     )
   end
