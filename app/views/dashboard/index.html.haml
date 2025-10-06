@@ -20,24 +20,24 @@
           - if defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip)
             = button_tag 'Check In', type: 'button', id: 'face-checkin-dashboard-btn', class: "btn btn-block btn-bottom-margin btn-success", style: 'margin: 0;'
           - else
-            = link_to 'Check In', '#', :class => "btn btn-block btn-bottom-margin btn-success disabled", :title => "Face recognition check-in only available from office network on a mobile device.", :disabled => true
+            = link_to 'Check In', '', :class => "btn btn-block btn-bottom-margin btn-success show-network-alert"
         - else
           - if defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip)
             = link_to 'Check In', attendances_path, :method => :post, :class => "btn btn-block btn-bottom-margin #{is_checked_in? @attendance}"
           - else
-            = link_to 'Check In', '#', :class => "btn btn-block btn-bottom-margin btn-success disabled", :title => "Check-in only available from office network.", :disabled => true
+            = link_to 'Check In', '', :class => "btn btn-block btn-bottom-margin btn-success show-network-alert"
     - unless @attendance.nil?
       .col-sm-3
         - if current_user.face_recognition_required?
           - if defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip)
             = button_tag 'Check Out', type: 'button', id: 'face-checkout-dashboard-btn', class: "btn btn-block #{is_checked_out? @attendance}", style: 'margin: 0;'
           - else
-            = link_to 'Check Out', '#', :class => "btn btn-block #{is_checked_out? @attendance} disabled", :title => "Face recognition check-out only available from office network on a mobile device.", :disabled => true
+            = link_to 'Check Out', '', :class => "btn btn-block #{is_checked_out? @attendance} show-network-alert"
         - else
           - if defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip)
             = link_to 'Check Out', attendance_path(@attendance), :method => :put, :class => "btn btn-block #{is_checked_out? @attendance}"
           - else
-            = link_to 'Check Out', '#', :class => "btn btn-block #{is_checked_out? @attendance} disabled", :title => "Check-out only available from office network.", :disabled => true
+            = link_to 'Check Out', '', :class => "btn btn-block #{is_checked_out? @attendance} show-network-alert"
 
 / Face Check-In Modal (copied from devise/sessions/new.html.haml)
 - if current_user.face_recognition_required? && defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip)
@@ -171,5 +171,15 @@
     $('#faceCheckInModal').on('hidden.bs.modal', function () {
       clearInterval(countdownTimer);
       $('#countdown-feedback').hide();
+    });
+
+    $(document).on('click', '.show-network-alert', function(e) {
+      e.preventDefault();
+      $('.network-restriction-alert').remove();
+      var alertHtml = '<div class="alert alert-danger alert-dismissible network-restriction-alert" role="alert">' +
+                      '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+                      'Check-in/Check-out outside the office network is restricted.' +
+                      '</div>';
+      $('.log-status').prepend(alertHtml);
     });
   });
