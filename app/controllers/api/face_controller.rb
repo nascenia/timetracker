@@ -17,19 +17,19 @@ class Api::FaceController < ApplicationController
       if action_type == 'checkin'
         check_in_time = session[:check_in_time]
         if check_in_time.nil? || (Time.zone.now - Time.parse(check_in_time.to_s) > 2.minutes)
-          return render json: { success: false, error: 'Check-in time expired. Please try again.' }, status: :bad_request
+          return render json: { success: false, error: 'Check-in time expired. Please try again.' }
         end
       end
       # IP Whitelist Check
       unless Attendance::IP_WHITELIST.include?(request.remote_ip)
-        return render json: { success: false, error: 'Check-in or out is restricted from outside office.' }, status: :forbidden
+        return render json: { success: false, error: 'Check-in or out is restricted from outside office.' }
       end
 
       # Extract frames and action
       frames = Array.wrap(params[:frames])
 
       unless frames.present? && frames.size == 3 && ['checkin', 'checkout'].include?(action_type)
-        return render json: { success: false, error: 'Missing or invalid parameters' }, status: :bad_request
+        return render json: { success: false, error: 'Missing or invalid parameters' }
       end
 
       # Call FastAPI service for liveness and recognition
@@ -83,15 +83,15 @@ class Api::FaceController < ApplicationController
           render json: { success: true, message: message, user_name: current_user.name }
         rescue => e
           Rails.logger.error "Attendance action failed after face verification: #{e.message}"
-          render json: { success: false, error: 'Could not record attendance. Please try again.' }, status: :internal_server_error
+          render json: { success: false, error: 'Could not record attendance. Please try again.' }
         end
       else
         Rails.logger.error "Recognition or liveness failed. Result: #{result.inspect}"
-        render json: result || { success: false, error: 'Recognition or liveness failed' }, status: :unprocessable_entity
+        render json: result || { success: false, error: 'Recognition or liveness failed' }
       end
     rescue => e
       Rails.logger.error "internal server Error: #{e.message}"
-      render json: { success: false, error: 'Internal server error' }, status: :internal_server_error
+      render json: { success: false, error: 'Internal server error' }
     end
   end
   
@@ -99,7 +99,7 @@ class Api::FaceController < ApplicationController
     begin
       # Validate input
       unless params[:image].present? && params[:user_id].present?
-        return render json: { success: false, error: 'Missing required parameters' }, status: :bad_request
+        return render json: { success: false, error: 'Missing required parameters' }
       end
 
       # Prepare data for FastAPI
@@ -108,11 +108,11 @@ class Api::FaceController < ApplicationController
       if result && result['success']
         render json: { success: true }
       else
-        render json: result || { success: false, error: 'Face registration failed' }, status: :unprocessable_entity
+        render json: result || { success: false, error: 'Face registration failed' }
       end
     rescue => e
       Rails.logger.error "Face registration error: #{e.message}"
-      render json: { success: false, error: 'Internal server error' }, status: :internal_server_error
+      render json: { success: false, error: 'Internal server error' }
     end
   end
 
