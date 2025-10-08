@@ -106,6 +106,11 @@ class Api::FaceController < ApplicationController
       result = call_fastapi_register_face(params[:image], params[:user_id])
 
       if result && result['success']
+        user = User.find_by(id: params[:user_id])
+        if user
+          user.registered_face = params[:image]
+          user.save
+        end
         render json: { success: true }
       else
         render json: result || { success: false, error: 'Face registration failed' }

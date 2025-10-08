@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20221004063619) do
+ActiveRecord::Schema.define(version: 20251008131012) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -357,6 +357,7 @@ ActiveRecord::Schema.define(version: 20221004063619) do
     t.string   "employee_id",                       limit: 16
     t.integer  "kpi_template_id"
     t.boolean  "face_recognition_required",                    default: true,  null: false
+    t.string   "registered_face"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
