@@ -149,12 +149,11 @@
       .col-sm-2
         %h5 Face Registration
       .col-sm-10
-        - if defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip)
-          %div#text_abcd 
-          = button_tag 'Register/Update Face', type: 'button', class: 'btn btn-primary', id: 'register-face-btn', data: { toggle: 'modal', target: '#faceRegistrationModal', user_id: current_user.id }
-          %br
-          %small.text-muted
-            This will capture your face for check-in/out using facial recognition.
+        %div#text_abcd
+        = button_tag 'Register/Update Face', type: 'button', class: 'btn btn-primary', id: 'register-face-btn', data: { toggle: 'modal', target: '#faceRegistrationModal', user_id: current_user.id }
+        %br
+        %small.text-muted
+          This will capture your face for check-in/out using facial recognition.
   %br
   .form-group
     .col-sm-2.col-sm-10
