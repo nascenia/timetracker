@@ -18,7 +18,7 @@
       - else
         - if current_user.face_recognition_required?
           - if defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip)
-            = button_tag 'Check In', type: 'button', id: 'face-checkin-dashboard-btn', class: "btn btn-block btn-bottom-margin btn-success", style: 'margin: 0;'
+            = button_tag 'Check In', type: 'button', id: 'face-checkin-dashboard-btn', class: "btn btn-block btn-bottom-margin btn-success m-zero-x"
           - else
             = link_to 'Check In', '', :class => "btn btn-block btn-bottom-margin btn-success show-network-alert"
         - else
@@ -30,14 +30,14 @@
       .col-sm-3
         - if current_user.face_recognition_required?
           - if defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip)
-            = button_tag 'Check Out', type: 'button', id: 'face-checkout-dashboard-btn', class: "btn btn-block #{is_checked_out? @attendance}", style: 'margin: 0;'
+            = button_tag 'Check Out', type: 'button', id: 'face-checkout-dashboard-btn', class: "btn btn-block btn-bottom-margin #{is_checked_out? @attendance} m-zero-x"
           - else
-            = link_to 'Check Out', '', :class => "btn btn-block #{is_checked_out? @attendance} show-network-alert"
+            = link_to 'Check Out', '', :class => "btn btn-block #{is_checked_out? @attendance} show-network-alert btn-bottom-margin"
         - else
           - if defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip)
-            = link_to 'Check Out', attendance_path(@attendance), :method => :put, :class => "btn btn-block #{is_checked_out? @attendance}"
+            = link_to 'Check Out', attendance_path(@attendance), :method => :put, :class => "btn btn-block #{is_checked_out? @attendance} btn-bottom-margin"
           - else
-            = link_to 'Check Out', '', :class => "btn btn-block #{is_checked_out? @attendance} show-network-alert"
+            = link_to 'Check Out', '', :class => "btn btn-block #{is_checked_out? @attendance} show-network-alert btn-bottom-margin"
 
 / Face Check-In Modal (copied from devise/sessions/new.html.haml)
 - if current_user.face_recognition_required? && defined?(request) && Attendance::IP_WHITELIST.include?(request.remote_ip)
