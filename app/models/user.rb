@@ -8,6 +8,7 @@ class User < ActiveRecord::Base
   #
   
   mount_uploader :avatar, AvatarUploader
+  mount_uploader :registered_face, AvatarUploader
   mount_uploader :resume, FileUploader
   mount_uploader :national_id, FileUploader
   mount_uploader :passport, FileUploader
