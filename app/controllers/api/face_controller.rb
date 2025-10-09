@@ -109,7 +109,7 @@ class Api::FaceController < ApplicationController
         user = User.find_by(id: params[:user_id])
         if user
           user.registered_face = params[:image]
-          user.save
+          user.save!
         end
         render json: { success: true }
       else
