@@ -149,11 +149,17 @@
       .col-sm-2
         %h5 Face Registration
       .col-sm-10
-        %div#text_abcd
-        = button_tag 'Register/Update Face', type: 'button', class: 'btn btn-primary', id: 'register-face-btn', data: { toggle: 'modal', target: '#faceRegistrationModal', user_id: current_user.id }
-        %br
-        %small.text-muted
-          This will capture your face for check-in/out using facial recognition.
+        .row
+          .col-md-8
+            %div#text_abcd
+            = button_tag 'Register/Update Face', type: 'button', class: 'btn btn-primary', id: 'register-face-btn', data: { toggle: 'modal', target: '#faceRegistrationModal', user_id: current_user.id }
+            %br
+            %small.text-muted
+              This will capture your face for check-in/out using facial recognition.
+          - if f.object.registered_face.present?
+            .col-md-4
+              .img-responsive.profile_image
+                = image_tag f.object.registered_face.url
   %br
   .form-group
     .col-sm-2.col-sm-10
