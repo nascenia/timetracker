@@ -2,8 +2,8 @@ ActiveAdmin.register_page "Dashboard" do
 
   menu priority: 1, label: proc{ I18n.t("active_admin.dashboard") }
 
-  page_action :toggle_face_recognition, :method => :post do
-    enable = params[:enable] == 'true'
+  page_action :toggle_face_recognition, method: :post do
+    enable = User.where(face_recognition_required: false).exists?
     User.update_all(face_recognition_required: enable)
     redirect_to admin_dashboard_path, notice: "Face recognition has been #{enable ? 'enabled' : 'disabled'} for all users."
   end
@@ -11,13 +11,11 @@ ActiveAdmin.register_page "Dashboard" do
   content title: proc{ I18n.t("active_admin.dashboard") } do
     panel "Face Recognition" do
       div do
-        para "Enable or disable face recognition for all users."
+        all_enabled = !User.where(face_recognition_required: false).exists?
+        para "Face recognition is currently #{all_enabled ? 'enabled' : 'disabled'} for all users."
         div style: "margin-top: 10px;" do
-          a :href => toggle_face_recognition_admin_dashboard_path(:enable => true), "data-method" => :post, :class => "button" do
-            "Enable Face Recognition for All"
-          end
-          a :href => toggle_face_recognition_admin_dashboard_path(:enable => false), "data-method" => :post, :class => "button", :style => "margin-left: 10px;" do
-            "Disable Face Recognition for All"
+          a :href => toggle_face_recognition_admin_dashboard_path, "data-method" => :post, :class => "button" do
+            all_enabled ? "Disable Face Recognition for All" : "Enable Face Recognition for All"
           end
         end
       end
