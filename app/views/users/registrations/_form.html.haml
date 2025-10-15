@@ -151,8 +151,12 @@
       .col-sm-10
         .row
           .col-md-8
-            %div#text_abcd
-            = button_tag 'Register/Update Face', type: 'button', class: 'btn btn-primary', id: 'register-face-btn', data: { toggle: 'modal', target: '#faceRegistrationModal', user_id: current_user.id }
+            - if f.object.registered_face.present?
+              %p.text-success You have already registered your face.
+              = button_tag 'Update Face Data', type: 'button', class: 'btn btn-primary', id: 'register-face-btn', data: { toggle: 'modal', target: '#faceRegistrationModal', user_id: current_user.id }
+            - else
+              %p.text-danger You have not registered your face yet.
+              = button_tag 'Register Face Data', type: 'button', class: 'btn btn-primary', id: 'register-face-btn', data: { toggle: 'modal', target: '#faceRegistrationModal', user_id: current_user.id }
             %br
             %small.text-muted
               This will capture your face for check-in/out using facial recognition.
