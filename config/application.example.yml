@@ -22,9 +22,9 @@ default: &default
     domain: 'gmail.com'
     email: ''
     password: ''
-  face_check_in_api: 'http://127.0.0.1:8000/liveness_and_recognition'
-  face_registration_api: 'http://127.0.0.1:8000/register_face'
-  face_score_api: 'http://127.0.0.1:8000/all_checkins'
-  update_attendance_api: 'http://127.0.0.1:8000/update_attendance'
+  face_check_in_api: 'http://127.0.0.1:8100/liveness_and_recognition'
+  face_registration_api: 'http://127.0.0.1:8100/register_face'
+  face_score_api: 'http://127.0.0.1:8100/all_checkins'
+  update_attendance_api: 'http://127.0.0.1:8100/update_attendance'
 development:
   <<: *default
