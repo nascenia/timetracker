@@ -51,13 +51,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
     hash[:joining_date]                       = params[:joining_date].to_date unless params[:joining_date].blank?
     hash[:bank_account_no]                    = params[:bank_account_no] unless params[:bank_account_no].blank?
 
-    file_data = {
-      avatar: params[:avatar],
-      resume: params[:resume],
-      national_id: params[:national_id],
-      passport: params[:passport]
-    }
-    resource.update_without_password(file_data) unless params[:name].blank?
+    file_data = {}
+    file_data[:avatar] = params[:avatar] if params[:avatar].present?
+    file_data[:resume] = params[:resume] if params[:resume].present?
+    file_data[:national_id] = params[:national_id] if params[:national_id].present?
+    file_data[:passport] = params[:passport] if params[:passport].present?
+    resource.update_without_password(file_data) if file_data.present?
+
     resource.update_attributes(profile_update_json: hash.to_json, registration_status: User::REGISTRATION_STATUS[:not_approved])
 
     UserMailer.send_approval_or_rejection_notification_of_employee_registration_to_hr(resource).deliver
