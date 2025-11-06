@@ -31,6 +31,19 @@ ActiveAdmin.register Timesheet do
     actions
   end
 
+  csv do
+    column :id
+    column :date
+    column :task
+    column :description
+    column :hours
+    column :minutes
+    column('Project') { |timesheet| timesheet.project.present? ? timesheet.project.project_name : 'n/a' }
+    column('User') { |timesheet| timesheet.user.present? ? timesheet.user.name : 'n/a' }
+    column :created_at
+    column :updated_at
+  end
+
 #
 #   ActiveAdmin’s filter DSL builds form fields in the sidebar and then hands the submitted values to Ransack, 
 #   which translates them into ActiveRecord queries. The as: and the particular filter name control:
