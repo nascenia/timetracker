@@ -9,9 +9,15 @@ ActiveAdmin.register Project do
 #
 # permit_params do
 #   permitted = [:permitted, :attributes]
-#   permitted << :other if params[:action] == 'create' && current_user.admin?
-#   permitted
-# end
+permit_params :project_name, :description, :is_active
 
+form do |f|
+  f.inputs 'Project Details' do
+    f.input :project_name
+    f.input :description
+    f.input :is_active
+  end
+  f.actions
+end
 
 end
