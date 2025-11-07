@@ -13,6 +13,8 @@ ActiveAdmin.register Timesheet do
 #   permitted
 # end
 
+permit_params :user_id, :project_id, :date, :description, :task, :ticket_number, :ticket_link, :hours, :minutes
+
   index do
     column :id
     column :task
