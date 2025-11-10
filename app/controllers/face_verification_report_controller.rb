@@ -4,20 +4,28 @@ class FaceVerificationReportController < ApplicationController
 
   def index
     @page = params[:page].to_i > 0 ? params[:page].to_i : 1
-    limit = 20
-    skip = (@page - 1) * limit
+    @limit = 20
+    skip = (@page - 1) * @limit
 
     begin
-      response = HTTParty.get("#{URI(CONFIG['face_score_api'])}/?skip=#{skip}&limit=#{limit}")
+      response = HTTParty.get("#{URI(CONFIG['face_score_api'])}/?skip=#{skip}&limit=#{@limit}")
       if response.success?
-        @checkins = JSON.parse(response.body)
-        user_ids = @checkins.map { |c| c['user_id'] }.uniq
+        parsed_response = JSON.parse(response.body)
+        Rails.logger.info("Parsed response: #{parsed_response.inspect}")
+        
+        checkins_data = parsed_response['checkins'] || []
+        total_count = parsed_response['total'] || 0
+
+        @entries = Kaminari.paginate_array(checkins_data, total_count: total_count).page(@page).per(@limit)
+
+        user_ids = @entries.map { |c| c['user_id'] }.uniq
         @users = User.where(id: user_ids).index_by(&:id)
-        @has_next_page = @checkins.length == limit
       else
+        @entries = Kaminari.paginate_array([], total_count: 0).page(@page).per(@limit)
         @error = "Failed to fetch data from API. Status code: #{response.code}"
       end
     rescue HTTParty::Error, Errno::ECONNREFUSED => e
+      @entries = Kaminari.paginate_array([], total_count: 0).page(@page).per(@limit)
       @error = "Failed to connect to API: #{e.message}"
     end
   end

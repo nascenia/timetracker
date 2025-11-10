@@ -13,7 +13,7 @@
           %th Status
           %th Reference
       %tbody
-        - @checkins.each do |checkin|
+        - @entries.each do |checkin|
           - user = @users[checkin['user_id']]
           %tr
             %td= Time.parse(checkin['created_at']).strftime('%Y-%m-%d %I:%M:%S %p') if checkin['created_at']
@@ -34,22 +34,11 @@
                   = link_to 'View Attendance', attendance_path(checkin['attendance_id'])
 
     .row
-      .col-md-4
-        - if @checkins.present?
-          - limit = 20
-          - start_entry = (@page - 1) * limit + 1
-          - end_entry = (@page - 1) * limit + @checkins.length
-          .page_entries_info
-            Showing entries
-            %b= start_entry
-            to
-            %b= end_entry
-      .col-md-4.text-center
-        - if @page > 1
-          = link_to 'Previous', face_verification_report_index_path(page: @page - 1), class: 'btn btn-default'
-        - if @has_next_page
-          = link_to 'Next', face_verification_report_index_path(page: @page + 1), class: 'btn btn-default'
-      .col-md-4
+      .col-sm-6
+        .page_entries_info
+          = page_entries_info @entries, entry_name: 'entries'
+      .col-sm-6.text-right
+        = paginate @entries
 
 :javascript
   $(document).ready(function() {

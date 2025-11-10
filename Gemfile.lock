@@ -472,6 +472,7 @@ DEPENDENCIES
   httparty
   jbuilder (~> 1.2)
   jquery-rails
+  kaminari
   letter_opener
   mini_magick
   mysql2
