@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20251008131012) do
+ActiveRecord::Schema.define(version: 20251113093302) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -61,6 +61,8 @@ ActiveRecord::Schema.define(version: 20251008131012) do
     t.datetime "updated_at"
     t.float    "total_hours"
     t.integer  "parent_id"
+    t.string   "checkin_device"
+    t.string   "checkout_device"
   end
 
   add_index "attendances", ["user_id"], name: "index_attendances_on_user_id", using: :btree
@@ -292,6 +294,12 @@ ActiveRecord::Schema.define(version: 20251008131012) do
   end
 
   add_index "promotions", ["user_id"], name: "index_promotions_on_user_id", using: :btree
+
+  create_table "system_settings", force: true do |t|
+    t.boolean  "face_recognition_enabled"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "timesheets", force: true do |t|
     t.date     "date"

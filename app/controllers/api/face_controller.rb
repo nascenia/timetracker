@@ -1,9 +1,9 @@
 class Api::FaceController < ApplicationController
+  require 'device_detector'
   require 'net/http/post/multipart'
   require 'net/http'
   require 'uri'
   require 'json'
-  require 'yaml'
   include AttendanceApiUpdatable
   
   before_action :authenticate_user!
@@ -13,6 +13,20 @@ class Api::FaceController < ApplicationController
   # POST /api/face/liveness_and_recognition
   def liveness_and_recognition
     begin
+      user_agent_string = request.user_agent
+      #Rails.logger.info "User Agent String: #{user_agent_string}"
+      detector = DeviceDetector.new(user_agent_string)
+      #Rails.logger.info "Parsed User Agent with device_detector: #{detector.inspect}"
+
+      device_type = detector.device_type
+      brand = detector.device_brand
+      model = detector.device_name
+      os_info = "#{detector.os_name} #{detector.os_full_version}"
+      
+      device_model = [brand, model, os_info].compact.reject(&:empty?).join(' ')
+
+      Rails.logger.info "Device Type: #{device_type}, Device Model: #{device_model}"
+
       action_type = params[:action_type] # 'checkin' or 'checkout'
       if action_type == 'checkin'
         check_in_time = session[:check_in_time]
@@ -47,6 +61,9 @@ class Api::FaceController < ApplicationController
               message = 'You are already checked in.'
             else
               attendance = Attendance.create_attendance(current_user.id, existing_attendance, check_in_time)
+              if attendance
+                attendance.update(checkin_device: device_model)
+              end
               session.delete(:check_in_time)
               message = 'Successfully checked in.'
             end
@@ -56,7 +73,7 @@ class Api::FaceController < ApplicationController
             if attendance
               # Ensure timesheet is filled if required (simplified check)
               if Timesheet.where(user_id: current_user.id, date: Date.today).exists?
-                attendance.update(out_time: Time.zone.now.to_s(:time))
+                attendance.update(out_time: Time.zone.now.to_s(:time), checkout_device: device_model)
                 total_hours = ((attendance.out_time.to_time - attendance.in_time.to_time) / 1.hour).round(2)
                 attendance.update(total_hours: total_hours)
                 message = nil # No message on successful checkout
@@ -76,7 +93,7 @@ class Api::FaceController < ApplicationController
           # If an attendance record was created or updated, notify the FastAPI service
           if attendance && attendance.id.present?
             log_id = result['log_id']
-            Rails.logger.info "log id: #{log_id}  attendance_id: #{attendance.id}"
+            #Rails.logger.info "log id: #{log_id}  attendance_id: #{attendance.id}"
             call_update_attendance_api(log_id, attendance.id)
           end
 

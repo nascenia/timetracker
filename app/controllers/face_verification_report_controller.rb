@@ -12,14 +12,22 @@ class FaceVerificationReportController < ApplicationController
       if response.success?
         parsed_response = JSON.parse(response.body)
         Rails.logger.info("Parsed response: #{parsed_response.inspect}")
-        
-        checkins_data = parsed_response['checkins'] || []
-        total_count = parsed_response['total'] || 0
+
+        if parsed_response.is_a?(Array)
+          checkins_data = parsed_response
+          total_count = parsed_response.length
+        else
+          checkins_data = parsed_response['checkins'] || []
+          total_count = parsed_response['total'] || 0
+        end
 
         @entries = Kaminari.paginate_array(checkins_data, total_count: total_count).page(@page).per(@limit)
 
         user_ids = @entries.map { |c| c['user_id'] }.uniq
         @users = User.where(id: user_ids).index_by(&:id)
+
+        attendance_ids = @entries.map { |c| c['attendance_id'] }.compact.uniq
+        @attendances = Attendance.where(id: attendance_ids).index_by(&:id)
       else
         @entries = Kaminari.paginate_array([], total_count: 0).page(@page).per(@limit)
         @error = "Failed to fetch data from API. Status code: #{response.code}"
