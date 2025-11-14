@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20251113093302) do
+ActiveRecord::Schema.define(version: 20251114063455) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -63,6 +63,8 @@ ActiveRecord::Schema.define(version: 20251113093302) do
     t.integer  "parent_id"
     t.string   "checkin_device"
     t.string   "checkout_device"
+    t.string   "checkin_image"
+    t.string   "checkout_image"
   end
 
   add_index "attendances", ["user_id"], name: "index_attendances_on_user_id", using: :btree

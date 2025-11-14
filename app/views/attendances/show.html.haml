@@ -16,24 +16,32 @@
           %tr
             %th Check in time
             %th Check-in device
+            %th Check-in Image
             %th Check out time
             %th Check-out device
+            %th Check-out Image
             %th Hours
         %tbody
           %tr
             %td= get_formatted_time(@attendance.in_time)
             %td= @attendance.checkin_device
+            %td= image_tag(@attendance.checkin_image, width: 100) if @attendance.checkin_image.present?
             %td= get_formatted_time(@attendance.out_time)
             %td= @attendance.checkout_device
+            %td= image_tag(@attendance.checkout_image, width: 100) if @attendance.checkout_image.present?
             %td= get_attendance_total_hour(@attendance)
           - @attendance.children.each do |attendance|
             %tr
               %td= get_formatted_time(attendance.in_time)
               %td= attendance.checkin_device
+              %td= image_tag(attendance.checkin_image, width: 100) if attendance.checkin_image.present?
               %td= get_formatted_time(attendance.out_time)
               %td= attendance.checkout_device
+              %td= image_tag(attendance.checkout_image, width: 100) if attendance.checkout_image.present?
               %td= get_attendance_total_hour(attendance)
           %tr
+            %td &nbsp;
+            %td &nbsp;
             %td &nbsp;
             %td &nbsp;
             %td &nbsp;
