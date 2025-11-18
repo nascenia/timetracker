@@ -165,16 +165,23 @@ class Attendance < ActiveRecord::Base
   # Average checkin time of a user.
   #
   def self.monthly_average_check_in_time monthly_attendance
-    if monthly_attendance.size == 0
-      return 0.0
+    if monthly_attendance.nil? || monthly_attendance.empty?
+      return 'N/A'
     end
 
-    total_days = monthly_attendance.size
+    total_minutes_arr = monthly_attendance.map do |attendence|
+      if attendence.in_time.present?
+        hour, minutes = attendence.in_time.strftime('%H:%M:%S').split(':')
+        hour.to_i * 60 + minutes.to_i
+      end
+    end.compact
 
-    average_minutes = monthly_attendance.map do |attendence|
-      hour, minutes = attendence.in_time.strftime('%H:%M:%S').split(':')
-      total_minutes = hour.to_i * 60 + minutes.to_i
-    end.inject(:+) / total_days
+    if total_minutes_arr.empty?
+      return 'N/A'
+    end
+
+    total_days = total_minutes_arr.size
+    average_minutes = total_minutes_arr.inject(:+) / total_days
 
     average_time = '%s:%s' % average_minutes.divmod(60).map(&:to_i)
     Time.parse(average_time).strftime('%I:%M %p')

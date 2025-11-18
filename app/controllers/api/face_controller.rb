@@ -66,6 +66,7 @@ class Api::FaceController < ApplicationController
               end
               session.delete(:check_in_time)
               message = 'Successfully checked in.'
+              Attendance.add_missing_checkout_hours(current_user)
             end
           elsif action_type == 'checkout'
             # Logic adapted from AttendancesController#update
