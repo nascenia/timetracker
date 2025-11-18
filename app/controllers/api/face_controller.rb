@@ -96,6 +96,14 @@ class Api::FaceController < ApplicationController
             log_id = result['log_id']
             #Rails.logger.info "log id: #{log_id}  attendance_id: #{attendance.id}"
             call_update_attendance_api(log_id, attendance.id)
+            file_path = save_facial_capture(frames[1], current_user, attendance, action_type)
+            if file_path
+              if action_type == 'checkin'
+                attendance.update(checkin_image: file_path)
+              elsif action_type == 'checkout'
+                attendance.update(checkout_image: file_path)
+              end
+            end
           end
 
           render json: { success: true, message: message, user_name: current_user.name }
@@ -140,6 +148,35 @@ class Api::FaceController < ApplicationController
   end
 
   private
+
+  def save_facial_capture(frame, user, attendance, action_type)
+    return nil unless frame.present?
+  
+    begin
+      user_name = user.name.parameterize
+      timestamp = Time.current.strftime('%Y%m%d%H%M%S')
+      attendance_id = attendance.id
+  
+      dir_path = Rails.root.join('public', 'attendance_facials', user_name, action_type)
+      FileUtils.mkdir_p(dir_path) unless File.directory?(dir_path)
+  
+      file_name = "#{user.id}_#{timestamp}_#{attendance_id}.jpg"
+      file_path = File.join(dir_path, file_name)
+  
+      # Rewind the frame's tempfile to ensure we can read it from the beginning
+      frame.rewind
+  
+      File.open(file_path, 'wb') do |file|
+        file.write(frame.read)
+      end
+  
+      Rails.logger.info "Saved facial capture to #{file_path}"
+      return file_path.to_s.gsub(Rails.root.join('public').to_s, '')
+    rescue => e
+      Rails.logger.error "Failed to save facial capture: #{e.message}"
+      return nil
+    end
+  end
 
   def call_fastapi_liveness_and_recognition(frames, user_id = nil)
     face_check_in_api = CONFIG['face_check_in_api']
