@@ -5,49 +5,56 @@
 
   .col-sm-12
     .panel.panel-default
-      .panel-heading
-        %span
+      .panel-heading.clearfix
+        .pull-left
           %b= get_humanize_date(@attendance.checkin_date)
-        %span.pull-right
+        .pull-right
           %b= "Total entries: #{1 + @attendance.children.size}"
-
-      %table.table.table-bordered.table-hover
-        %thead
-          %tr
-            %th Check in time
-            %th Check-in device
-            %th Check-in Image
-            %th Check out time
-            %th Check-out device
-            %th Check-out Image
-            %th Hours
-        %tbody
-          %tr
-            %td= get_formatted_time(@attendance.in_time)
-            %td= @attendance.checkin_device
-            %td= image_tag(@attendance.checkin_image, width: 100) if @attendance.checkin_image.present?
-            %td= get_formatted_time(@attendance.out_time)
-            %td= @attendance.checkout_device
-            %td= image_tag(@attendance.checkout_image, width: 100) if @attendance.checkout_image.present?
-            %td= get_attendance_total_hour(@attendance)
-          - @attendance.children.each do |attendance|
+      .table-responsive
+        %table.table.table-bordered.table-hover
+          %thead
             %tr
-              %td= get_formatted_time(attendance.in_time)
-              %td= attendance.checkin_device
-              %td= image_tag(attendance.checkin_image, width: 100) if attendance.checkin_image.present?
-              %td= get_formatted_time(attendance.out_time)
-              %td= attendance.checkout_device
-              %td= image_tag(attendance.checkout_image, width: 100) if attendance.checkout_image.present?
-              %td= get_attendance_total_hour(attendance)
-          %tr
-            %td &nbsp;
-            %td &nbsp;
-            %td &nbsp;
-            %td &nbsp;
-            %td &nbsp;
-            %td
-              %b Total
-            %td
-              %b= get_daily_total_hours(@attendance)
-
+              %th Check in time
+              %th Check-in device
+              %th Check-in Image
+              %th Check out time
+              %th Check-out device
+              %th Check-out Image
+              %th Hours
+          %tbody
+            %tr
+              %td= get_formatted_time(@attendance.in_time)
+              %td= @attendance.checkin_device
+              %td
+                - if @attendance.checkin_image.present?
+                  %img{src: "#{@attendance.checkin_image}", width: 100}
+              %td= get_formatted_time(@attendance.out_time)
+              %td= @attendance.checkout_device
+              %td
+                - if @attendance.checkout_image.present?
+                  %img{src: "#{@attendance.checkout_image}", width: 100}
+              %td= get_attendance_total_hour(@attendance)
+            - @attendance.children.each do |attendance|
+              %tr
+                %td= get_formatted_time(attendance.in_time)
+                %td= attendance.checkin_device
+                %td
+                  - if attendance.checkin_image.present?
+                    %img{src: "#{attendance.checkin_image}", width: 100}
+                %td= get_formatted_time(attendance.out_time)
+                %td= attendance.checkout_device
+                %td
+                  - if attendance.checkout_image.present?
+                    %img{src: "#{attendance.checkout_image}", width: 100}
+                %td= get_attendance_total_hour(attendance)
+            %tr
+              %td &nbsp;
+              %td &nbsp;
+              %td &nbsp;
+              %td &nbsp;
+              %td &nbsp;
+              %td
+                %b Total
+              %td
+                %b= get_daily_total_hours(@attendance)
 = link_to 'Back', root_path
