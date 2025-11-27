@@ -62,6 +62,12 @@ class AttendancesController < ApplicationController
       else
         flash[:notice] = 'Please fill up all your details before checking in.'
       end
+      # After creation, find the record and set the device info
+      latest_attendance = @user.attendances.where(checkin_date: Time.now.strftime('%y-%m-%d')).last
+      if latest_attendance && latest_attendance.checkin_device.blank? && latest_attendance.in_time.present?
+        device_string = get_device_string_from_headers
+        latest_attendance.update(checkin_device: device_string) if device_string.present?
+      end
     end
 
     respond_to do |format|
@@ -97,6 +103,7 @@ class AttendancesController < ApplicationController
         if @attendance.user_id == current_user.id
           if @today_entry
             @attendance.out_time = Time.now.to_s(:time)
+            @attendance.checkout_device = get_device_string_from_headers
             @attendance.save!
             total_hours = ((@attendance.out_time.to_time - @attendance.in_time.to_time) / 1.hour).round(2)
             @attendance.total_hours = total_hours

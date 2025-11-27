@@ -1,5 +1,4 @@
 class Api::FaceController < ApplicationController
-  require 'device_detector'
   require 'net/http/post/multipart'
   require 'net/http'
   require 'uri'
@@ -13,19 +12,9 @@ class Api::FaceController < ApplicationController
   # POST /api/face/liveness_and_recognition
   def liveness_and_recognition
     begin
-      user_agent_string = request.user_agent
-      #Rails.logger.info "User Agent String: #{user_agent_string}"
-      detector = DeviceDetector.new(user_agent_string)
-      #Rails.logger.info "Parsed User Agent with device_detector: #{detector.inspect}"
+      device_model = get_device_string_from_headers
 
-      device_type = detector.device_type
-      brand = detector.device_brand
-      model = detector.device_name
-      os_info = "#{detector.os_name} #{detector.os_full_version}"
-      
-      device_model = [brand, model, os_info].compact.reject(&:empty?).join(' ')
-
-      Rails.logger.info "Device Type: #{device_type}, Device Model: #{device_model}"
+      #Rails.logger.info "Device String from Headers: #{device_model}"
 
       action_type = params[:action_type] # 'checkin' or 'checkout'
       if action_type == 'checkin'
@@ -83,6 +72,9 @@ class Api::FaceController < ApplicationController
                 session[:is_from_checkout] = 1
                 session[:attendence_id] = attendance.id
                 session[:log_id] = result['log_id']
+                file_path = save_facial_capture(frames[1], current_user, attendance, action_type)
+                session[:checkout_image_path] = file_path
+                session[:checkout_device] = device_model
                 # Instruct the client to redirect to the timesheet page.
                 return render json: { success: true, action: 'redirect', url: new_timesheet_path }
               end

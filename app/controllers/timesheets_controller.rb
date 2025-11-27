@@ -121,6 +121,8 @@ class TimesheetsController < ApplicationController
               if @attendance.user_id == current_user.id
                 if @today_entry
                   @attendance.out_time = Time.now.to_s(:time)
+                  @attendance.checkout_device = session[:checkout_device]
+                  @attendance.checkout_image = session[:checkout_image_path]
                   @attendance.save!
                   total_hours = ((@attendance.out_time.to_time - @attendance.in_time.to_time) / 1.hour).round(2)
                   @attendance.total_hours = total_hours
@@ -128,6 +130,8 @@ class TimesheetsController < ApplicationController
                   call_update_attendance_api(session[:log_id], session[:attendence_id])
                   session[:log_id] = nil
                   session[:attendence_id] = nil
+                  session[:checkout_device] = nil
+                  session[:checkout_image_path] = nil
                   flash[:notice] = 'Successfully checked out.'
                 else
                   flash[:notice] = 'You did not log in today.'
