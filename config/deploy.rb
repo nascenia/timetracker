@@ -24,7 +24,8 @@ set :rake, 'bundle exec rake'
 set :bundle_cmd, "bundle"
 set :rake, 'bundle exec rake'
 
-after('deploy:update_code', 'deploy:symlink_shared', 'deploy:migrate')
+after 'deploy:update_code', 'deploy:symlink_shared'
+after 'deploy:update_code', 'deploy:migrate'
 
 # Broken and it's not working
 task :staging do
@@ -61,16 +62,21 @@ namespace :deploy do
 
   desc "Symlink shared configs and folders on each release."
   task :symlink_shared do
+    run "mkdir -p #{shared_path}/public/uploads"
+    run "mkdir -p #{shared_path}/public/attendance_facials"
+    run "mkdir -p #{shared_path}/system"
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
     run "ln -nfs #{shared_path}/config/application.yml #{release_path}/config/application.yml"
     run "ln -nfs #{shared_path}/config/mailer_conf.yml #{release_path}/config/mailer_conf.yml"
     run "ln -nfs #{shared_path}/system #{release_path}/public/system"
     run "ln -nfs #{shared_path}/public/uploads  #{release_path}/public/uploads"
+    run "ln -nfs #{shared_path}/public/attendance_facials #{release_path}/public/attendance_facials"
   end
 
   task :create_shared_files_and_directories, :role => :app do
     run "mkdir -p #{shared_path}/sockets"
     run "mkdir -p #{shared_path}/config/.bundle"
+    run "mkdir -p #{shared_path}/public/attendance_facials"
     #run "mkdir -p #{shared_path}/bundle"
     #run "touch #{shared_path}/config/.bundle/config"
 
