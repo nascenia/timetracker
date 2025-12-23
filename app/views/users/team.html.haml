@@ -115,17 +115,26 @@
               = link_to employee.name, leave_tracker_path(employee)
             %td
               - if employee.approval_path.present?
-                = link_to "#{employee.approval_path.name}", approval_chain_path(employee.approval_path)
+                - if current_user.has_admin_privilege?
+                  = link_to "#{employee.approval_path.name}", approval_chain_path(employee.approval_path)
+                - else
+                  = employee.approval_path.name
               - else
                 %p ---
             %td
               - if employee.weekend.present?
-                = link_to "#{employee.weekend.name}", detail_weekend_path(employee.weekend)
+                - if current_user.has_admin_privilege?
+                  = link_to "#{employee.weekend.name}", detail_weekend_path(employee.weekend)
+                - else
+                  = employee.weekend.name
               - else
                 %p ---
             %td
               - if employee.holiday_scheme.present?
-                = link_to "#{employee.holiday_scheme.name}", holiday_scheme_path(employee.holiday_scheme)
+                - if current_user.has_admin_privilege?
+                  = link_to "#{employee.holiday_scheme.name}", holiday_scheme_path(employee.holiday_scheme)
+                - else
+                  = employee.holiday_scheme.name
               - else
                 %p ---
             %td= employee.leave_tracker.present? ? employee.leave_tracker.accrued_vacation_balance : '---'

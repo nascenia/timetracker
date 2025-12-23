@@ -10,26 +10,21 @@
 #Salaat.create(waqt: 'Asor', time: '4:15')
 #Salaat.create(waqt: 'Magrib', time: '5:30')
 
-unless User.exists?(email: 'masud@nascenia.com')
-  User.create(name: 'Masud', email: "masud@nascenia.com", password: 'Admin@123', password_confirmation: 'Admin@123')
-end
-
 if HolidayScheme.count.zero?
   HolidayScheme.create([
     { name: 'Nascenia General', active: true, leave_year_id: 1 },
     { name: 'GJ and Biyeta', active: true, leave_year_id: 1 },
   ])
-end 
+end
 
 if Weekend.count.zero?
   Weekend.create([
-    { name: 'Nascenia Core: Sat & Sun', off_days: nil },
-    { name: 'Admin: Sat', off_days: nil },
-    { name: 'Biyeta: Thu & Fri', off_days: nil }
+    { name: 'Nascenia Core: Sat & Sun', off_days: [:saturday, :sunday] },
+    { name: 'Admin: Sat', off_days: [:saturday] },
+    { name: 'Biyeta: Thu & Fri', off_days: [:thursday, :friday] }
   ])
 end
 
-#Create present year and mark it as present
 if LeaveYear.count.zero?
   p 'Creating LeaveYear...'
   LeaveYear.find_or_create_by(year: Date.today.year.to_s, present: true)
@@ -55,41 +50,157 @@ if GoalCategory.count.zero?
   p 'Done'
 end
 
+# -------- create Admin --------
+AdminUser.find_or_create_by!(email: "reyanus_5@nascenia.com") do |admin|
+  admin.password = "r1124.S@nas.com"
+  admin.password_confirmation = "r1124.S@nas.com"
+end
 
-# unless PreRegistration.exists?(companyEmail: 'reazuddin@nascenia.com')
-#   PreRegistration.create!(
-#     name: 'Reaz Uddin',
-#     companyEmail: 'reazuddin@nascenia.com',
-#     employee_id: 'A9999',
-#     weekend_id: 1,
-#     holiday_scheme_id: 1,
-#     personalEmail: 'reazuddin2598@gmail.com',
-#     contactNumber: '0123456789',
-#     joiningDate: Date.today,
-#     ttf_id: 1,
-#     leave_approval_path_id: 1,
-#     designation: 1,
-#     step_no: 2
-#   )
-# end
+PreRegistration.find_or_create_by!(companyEmail: "reyanus_5@nascenia.com") do |pr|
+  pr.name = "Reyanus Salehin"
+  pr.employee_id = "A2300"
+  pr.joiningDate = Date.parse("2025-07-10")
+  pr.personalEmail = "salehin24.rs@gmail.com"
+  pr.contactNumber = "01608537383"
+  pr.designation = "Software Engineer"
+  pr.step_no = 1
+  pr.leave_approval_path_id = ApprovalPath.first ? ApprovalPath.first.id : 1
+  pr.weekend_id = Weekend.first ? Weekend.first.id : 1
+  pr.holiday_scheme_id = HolidayScheme.first ? HolidayScheme.first.id : 1
+  pr.ttf_id = "A2300"
+  pr.workstationReady = true
+  pr.packReady = true
+  pr.emailGroup = "admins@nascenia.com"
+  pr.ndaDoc = "nda_document.pdf"
+  pr.HR_email = "hr@nascenia.com"
+end
 
-# unless User.exists?(email: 'reazuddin@nascenia.com')
-#   pre_registration = PreRegistration.find_by(companyEmail: 'reazuddin@nascenia.com')
-#   user = User.create!(
-#     name: pre_registration.name,
-#     email: pre_registration.companyEmail,
-#     weekend_id: pre_registration.weekend_id,
-#     holiday_scheme_id: pre_registration.holiday_scheme_id,
-#     personal_email: pre_registration.personalEmail,
-#     mobile_number: pre_registration.contactNumber,
-#     joining_date: pre_registration.joiningDate,
-#     role:3,
-#     employee_id: pre_registration.employee_id,
-#     approval_path_id: pre_registration.leave_approval_path_id,
-#     password: 'Admin@123',
-#     password_confirmation: 'Admin@123',
-#     registration_status:2
+User.find_or_create_by!(email: "reyanus_5@nascenia.com") do |u|
+  u.name = "Reyanus Salehin"
+  u.email = "reyanus_5@nascenia.com"
+  u.password = "r1124.S@nas.com"
+  u.password_confirmation = "r1124.S@nas.com"
+  u.role = 3
+  u.is_active = true
+  u.is_published = true
+  u.approval_path_id = ApprovalPath.first ? ApprovalPath.first.id : 1
+  u.weekend_id = Weekend.first ? Weekend.first.id : 1
+  u.holiday_scheme_id = HolidayScheme.first ? HolidayScheme.first.id : 1
+  u.personal_email = "salehin24.rs@gmail.com"
+  u.present_address = "123, Some Street, Some City"
+  u.alternate_contact = "01608537383"
+  u.permanent_address = "456, Another Street, Another City"
+  u.mobile_number = "01608537383"
+  u.date_of_birth = "2001-11-24"
+  u.last_degree = "B.Sc. in Computer Science"
+  u.last_university = "Islamic University of Technology"
+  u.passing_year = "2023"
+  u.emergency_contact_person_name = "John Doe"
+  u.emergency_contact_person_relation = "Brother"
+  u.emergency_contact_person_number = "01723456789"
+  u.blood_group = "O+"
+  u.joining_date = Date.parse("2025-07-10")
+  u.registration_status = 2
+  u.national_id = "1514947595"
+  u.employee_id = "A2300"
+  u.kpi_template_id = nil
+end
 
-#   )
-#   pre_registration.update(user_id: user.id, step_no: 4)
-# end
+approval_path   = ApprovalPath.first || ApprovalPath.create!(name: 'Default Approval Path')
+weekend         = Weekend.first
+holiday_scheme  = HolidayScheme.first
+
+def generate_employee_id(counter)
+  "A#{(2000 + counter).to_s.rjust(4, '0')}"
+end
+
+employee_counter = 1
+
+# -------- create TTF --------
+ttf_employee_id = generate_employee_id(employee_counter)
+
+ttf_pr = PreRegistration.find_or_create_by!(companyEmail: "ttf1@nascenia.com") do |pr|
+  pr.name = "TTF 1"
+  pr.employee_id = ttf_employee_id
+  pr.joiningDate = Date.today
+  pr.personalEmail = "ttf1@personal.com"
+  pr.contactNumber = "0171000001"
+  pr.designation = "Team Technical Facilitator"
+  pr.step_no = 1
+  pr.leave_approval_path_id = approval_path.id
+  pr.weekend_id = weekend.id
+  pr.holiday_scheme_id = holiday_scheme.id
+  pr.ttf_id = ttf_employee_id
+  pr.workstationReady = true
+  pr.packReady = true
+  pr.emailGroup = "ttf1@nascenia.com"
+  pr.ndaDoc = "nda_document.pdf"
+  pr.HR_email = "hr@nascenia.com"
+end
+
+ttf_user = User.find_or_create_by!(email: "ttf1@nascenia.com") do |u|
+  u.name = "TTF 1"
+  u.password = "password123"
+  u.password_confirmation = "password123"
+  u.role = User::TTF
+  u.is_active = true
+  u.is_published = true
+  u.approval_path_id = approval_path.id
+  u.weekend_id = weekend.id
+  u.holiday_scheme_id = holiday_scheme.id
+  u.personal_email = "ttf1@personal.com"
+  u.mobile_number = "0171000001"
+  u.joining_date = Date.today
+  u.registration_status = User::REGISTRATION_STATUS[:registered]
+  u.employee_id = ttf_employee_id
+end
+
+puts "TTF User DB ID: #{ttf_user.id}"
+
+
+employee_counter += 1
+
+# -------- create Developer --------
+dev_employee_id = generate_employee_id(employee_counter)
+
+dev_pr = PreRegistration.find_or_create_by!(companyEmail: "dev1@nascenia.com") do |pr|
+  pr.name = "Developer 1"
+  pr.employee_id = dev_employee_id
+  pr.joiningDate = Date.today
+  pr.personalEmail = "dev1@personal.com"
+  pr.contactNumber = "0181000001"
+  pr.designation = "Software Engineer"
+  pr.step_no = 1
+  pr.leave_approval_path_id = approval_path.id
+  pr.weekend_id = weekend.id
+  pr.holiday_scheme_id = holiday_scheme.id
+  pr.ttf_id = ttf_employee_id
+  pr.workstationReady = true
+  pr.packReady = true
+  pr.emailGroup = "dev1@nascenia.com"
+  pr.ndaDoc = "nda_document.pdf"
+  pr.HR_email = "hr@nascenia.com"
+end
+
+dev_user = User.find_or_create_by!(email: "dev1@nascenia.com") do |dev|
+  dev.name = "Developer 1"
+  dev.password = "password123"
+  dev.password_confirmation = "password123"
+  dev.role = User::EMPLOYEE
+  dev.is_active = true
+  dev.is_published = true
+  dev.approval_path_id = approval_path.id
+  dev.weekend_id = weekend.id
+  dev.holiday_scheme_id = holiday_scheme.id
+  dev.personal_email = "dev1@personal.com"
+  dev.mobile_number = "0181000001"
+  dev.joining_date = Date.today
+  dev.registration_status = User::REGISTRATION_STATUS[:registered]
+  dev.employee_id = dev_employee_id
+  dev.ttf_id = ttf_user.id
+end
+
+dev_user.ttf_id = ttf_user.id
+dev_user.save!
+
+puts "Developer #{dev_user.name} has TTF ID: #{dev_user.ttf_id}"
