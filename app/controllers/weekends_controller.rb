@@ -1,5 +1,5 @@
 class WeekendsController < ApplicationController
-
+  before_action :authenticate_admin_user!
   before_action :find_weekend, only: [:show, :assign, :destroy, :edit, :update, :remove, :detail]
   before_action :find_weekend_days, only: [:show, :detail]
   before_action :find_assigned_users, only: [:show, :detail]
