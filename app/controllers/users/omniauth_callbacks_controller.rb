@@ -13,8 +13,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           redirect_to new_user_registration_url and return
         end
       else
-        flash[:notice] = "Contact with admin please "
-        redirect_to root_path and return
+        email = request.env["omniauth.auth"][:extra][:id_info][:email].to_s
+        @oauth_error_message = "There is no user with this #{email}."
+        render 'users/omniauth_callbacks/google_oauth2' and return
       end
     else
       outside_email = request.env["omniauth.auth"][:extra][:id_info][:email].to_s
@@ -30,9 +31,12 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
             redirect_to new_user_registration_url and return
           end
         else
-          flash[:notice] = "Email domain must be either 'nascenia.com' or 'bdipo.com'."
-          redirect_to root_path
+          @oauth_error_message = "There is no user with this #{outside_email}."
+          render 'users/omniauth_callbacks/google_oauth2' and return
         end
+      else
+        @oauth_error_message = "This #{outside_email} is not whitelisted."
+        render 'users/omniauth_callbacks/google_oauth2' and return
       end
     end
   end

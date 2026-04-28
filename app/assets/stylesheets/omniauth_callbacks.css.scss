@@ -1,0 +1,43 @@
+.oauth-error-page {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.oauth-error-card {
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  max-width: 520px;
+  padding: 24px 28px;
+  text-align: center;
+  width: 100%;
+}
+
+.oauth-error-card h1 {
+  font-size: 20px;
+  margin: 0 0 10px 0;
+}
+
+.oauth-error-card p {
+  font-size: 15px;
+  margin: 0 0 16px 0;
+}
+
+.oauth-error-link {
+  background: #2563eb;
+  border-radius: 6px;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-block;
+  padding: 10px 16px;
+  text-decoration: none;
+}
+
+.oauth-error-link:hover,
+.oauth-error-link:focus {
+  background: #1d4ed8;
+  color: #ffffff;
+  text-decoration: none;
+}
