@@ -36,6 +36,9 @@
           %h4#forgotPasswordModalLabel.modal-title Forgot Password?
         .modal-body
           #forgot-password-message
+          #forgot-password-loader.text-center{style: 'display: none; padding: 20px 0;'}
+            %i.fa.fa-spinner.fa-spin.fa-3x
+            %p{style: 'margin-top: 10px; color: #888;'} Sending reset instructions...
           .form-group
             = f.label :email
             = f.email_field :email, class: 'form-control', placeholder: 'Enter your email address', autofocus: true
@@ -59,9 +62,41 @@
     }
   });
 
+  var forgotPasswordSubmitting = false;
+
+  $('#forgot-password-form').on('submit', function () {
+    forgotPasswordSubmitting = true;
+    $('#forgot-password-form .form-group').hide();
+    $('#forgot-password-submit').hide();
+    $('#forgot-password-message').empty();
+    $('#forgot-password-loader').show();
+  });
+
+  $('#forgot-password-form').on('ajax:error', function () {
+    forgotPasswordSubmitting = false;
+    $('#forgot-password-loader').hide();
+    $('#forgot-password-form .form-group').show();
+    $('#forgot-password-submit').show();
+    $('#forgot-password-message').html(
+      '<div class="alert alert-danger">Something went wrong. Please try again.</div>'
+    );
+  });
+
+  $('#forgotPasswordModal').on('hide.bs.modal', function () {
+    if (forgotPasswordSubmitting) {
+      return false;
+    }
+  });
+
   $('#forgotPasswordModal').on('hidden.bs.modal', function () {
+    // Preserve modal state until re-opened
+  });
+
+  $('a[data-target="#forgotPasswordModal"]').on('click', function () {
+    forgotPasswordSubmitting = false;
     $('#forgot-password-form')[0].reset();
     $('#forgot-password-message').empty();
+    $('#forgot-password-loader').hide();
     $('#forgot-password-form .form-group').show();
     $('#forgot-password-submit').show();
   });
