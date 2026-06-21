@@ -29,7 +29,7 @@ after 'deploy:update_code', 'deploy:migrate'
 
 # Broken and it's not working
 task :staging do
-  set :branch, "development" # ca be used feature branches for temporary testing as well
+  set :branch, "deployed-in-production" # ca be used feature branches for temporary testing as well
   web_server = "timetracker.test.nascenia.com"
   role :web, web_server # Your HTTP server, Apache/etc
   role :app, web_server # This may be the same as your `Web` server
@@ -41,7 +41,7 @@ task :staging do
 end
 
 task :prod do
-  set :branch, "master"
+  set :branch, "deployed-in-production"
   web_server = "timetracker.nascenia.com"
   role :web, web_server # Your HTTP server, Apache/etc
   role :app, web_server # This may be the same as your `Web` server
