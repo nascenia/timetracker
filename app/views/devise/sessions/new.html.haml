@@ -31,7 +31,7 @@
     .modal-content
       = form_for(resource, as: resource_name, url: password_path(resource_name), remote: true, html: { method: :post, id: 'forgot-password-form' }) do |f|
         .modal-header
-          %button.close{type: 'button', data: { dismiss: 'modal' }, aria: { label: 'Close' }}
+          %button#forgot-password-close.close{type: 'button', data: { dismiss: 'modal' }, aria: { label: 'Close' }}
             %span{aria: { hidden: true }} &times;
           %h4#forgotPasswordModalLabel.modal-title Forgot Password?
         .modal-body
@@ -44,7 +44,7 @@
             = f.email_field :email, class: 'form-control', placeholder: 'Enter your email address', autofocus: true
         .modal-footer
           = f.submit 'Send Reset Instructions', class: 'btn btn-primary', id: 'forgot-password-submit'
-          %button.btn.btn-default{type: 'button', data: { dismiss: 'modal' }} Cancel
+          %button#forgot-password-cancel.btn.btn-default{type: 'button', data: { dismiss: 'modal' }} Cancel
 
 .text-center.custom-font
   %p Start timers and easily manage your existing time entries in just one tap.
@@ -62,10 +62,16 @@
     }
   });
 
+  function toggleForgotPasswordButtons(disable) {
+    $('#forgot-password-close').prop('disabled', disable);
+    $('#forgot-password-cancel').prop('disabled', disable);
+  }
+
   var forgotPasswordSubmitting = false;
 
   $('#forgot-password-form').on('submit', function () {
     forgotPasswordSubmitting = true;
+    toggleForgotPasswordButtons(true);
     $('#forgot-password-form .form-group').hide();
     $('#forgot-password-submit').hide();
     $('#forgot-password-message').empty();
@@ -74,6 +80,7 @@
 
   $('#forgot-password-form').on('ajax:error', function () {
     forgotPasswordSubmitting = false;
+    toggleForgotPasswordButtons(false);
     $('#forgot-password-loader').hide();
     $('#forgot-password-form .form-group').show();
     $('#forgot-password-submit').show();
@@ -94,6 +101,7 @@
 
   $('a[data-target="#forgotPasswordModal"]').on('click', function () {
     forgotPasswordSubmitting = false;
+    toggleForgotPasswordButtons(false);
     $('#forgot-password-form')[0].reset();
     $('#forgot-password-message').empty();
     $('#forgot-password-loader').hide();
