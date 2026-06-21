@@ -66,8 +66,41 @@ legend
   font-weight: bold;
 }
 
+#forgot-password-close[disabled],
+#forgot-password-cancel[disabled] {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+#forgot-password-close[disabled] {
+  -webkit-appearance: none;
+  appearance: none;
+  pointer-events: auto;
+}
+
 .modal-header{
   padding-bottom: 7px;
+}
+
+.reset-token-error {
+  margin-top: 20px;
+}
+
+.reset-form-row {
+  text-align: left;
+}
+
+.error-message {
+  margin-bottom: 5px;
+}
+
+.reset-password-label {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+}
+
+.reset-password-page {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .badge {

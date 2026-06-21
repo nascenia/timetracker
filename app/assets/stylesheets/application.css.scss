@@ -118,3 +118,27 @@ p.designation-history {
 #register-face-btn {
   margin: 10px 0px
 }
+
+.flex-space-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.password-toggle-wrapper {
+  position: relative;
+}
+
+.password-toggle-wrapper .form-control {
+  padding-right: 40px;
+}
+
+.password-toggle-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #999;
+  z-index: 5;
+}
