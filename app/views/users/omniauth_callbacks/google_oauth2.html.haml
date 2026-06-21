@@ -1,0 +1,5 @@
+.oauth-error-page
+  .oauth-error-card
+    %h1 Sign in issue
+    %p= @oauth_error_message || 'Sign in could not be completed.'
+    = link_to 'Back to sign in', new_user_session_path, class: 'oauth-error-link'
