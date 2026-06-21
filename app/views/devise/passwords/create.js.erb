@@ -1,0 +1,21 @@
+$('#forgot-password-form .form-group').hide();
+$('#forgot-password-submit').hide();
+
+<% if success %>
+  $('#forgot-password-message').html(
+    '<div class="alert alert-success">Reset password instructions have been sent to your email.</div>'
+  );
+<% else %>
+  $('#forgot-password-form .form-group').show();
+  $('#forgot-password-submit').show();
+
+  <% if resource.errors[:email].any? %>
+    $('#forgot-password-message').html(
+      '<div class="alert alert-danger"><%= j resource.errors.full_messages_for(:email).join(', ') %></div>'
+    );
+  <% else %>
+    $('#forgot-password-message').html(
+      '<div class="alert alert-danger">Email not found.</div>'
+    );
+  <% end %>
+<% end %>

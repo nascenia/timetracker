@@ -1,9 +1,16 @@
-%h2 Forgot your password?
-= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f|
-  = devise_error_messages!
-  %div
-    = f.label :email
-    %br/
-    = f.email_field :email, autofocus: true
-  %div= f.submit "Send me reset password instructions"
-= render "devise/shared/links"
+.text-center.custom-font
+  %h1 Nascenia Time & Leave Tracker
+  %p Enter your email to receive reset instructions.
+  %hr
+
+.row
+  .col-md-4.col-md-offset-4
+    = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f|
+      = devise_error_messages!
+      .form-group
+        = f.label :email
+        = f.email_field :email, autofocus: true, class: 'form-control', placeholder: 'Enter your email address'
+      .form-group
+        = f.submit 'Send reset instructions', class: 'btn btn-primary btn-block'
+    .text-center
+      = link_to 'Back to sign in', new_user_session_path
