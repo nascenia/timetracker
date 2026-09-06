@@ -87,3 +87,14 @@ function validateEmails() {
   }
 }
 
+$(document).on('change', '#zoho_email_account', function() {
+  if ($(this).is(':checked')) {
+    $('#gmail_email_account').prop('checked', false);
+  }
+});
+
+$(document).on('change', '#gmail_email_account', function() {
+  if ($(this).is(':checked')) {
+    $('#zoho_email_account').prop('checked', false);
+  }
+});

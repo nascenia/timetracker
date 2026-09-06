@@ -88,7 +88,7 @@ class PreRegistrationsController < ApplicationController
     end
     if pre_registration.update(pre_registration_params)
       if params[:selected] == '23'
-        UserMailer.send_mail_to_new_employee_about_tt(pre_registration, params[:pre_registration][:zoho_email_account]).deliver
+        UserMailer.send_mail_to_new_employee_about_tt(pre_registration, params[:pre_registration][:zoho_email_account], params[:pre_registration][:gmail_email_account]).deliver
         UserMailer.send_mail_to_hr_about_new_employee(pre_registration).deliver
         redirect_to root_path
       elsif params[:hidden_flag] == 'true'

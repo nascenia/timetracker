@@ -175,9 +175,13 @@
                 <% end %>
             </div>
             <div class="col-md-12">
-                <%= f.label :zoho_email_account do %>
-                    <%= f.check_box :zoho_email_account %>
+                <%= f.label :zoho_email_account, style: 'margin-right: 20px; font-weight: normal; cursor: pointer;' do %>
+                    <%= f.check_box :zoho_email_account, id: 'zoho_email_account' %>
                     Zoho email account
+                <% end %>
+                <%= f.label :gmail_email_account, style: 'font-weight: normal; cursor: pointer;' do %>
+                    <%= f.check_box :gmail_email_account, id: 'gmail_email_account' %>
+                    Gmail
                 <% end %>
             </div>
         <% end %>    
