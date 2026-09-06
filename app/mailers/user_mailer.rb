@@ -190,19 +190,23 @@ class UserMailer < ActionMailer::Base
     true
   end
 
-  def send_mail_to_new_employee_about_tt(pre_registration, zoho_email_account)
+  def send_mail_to_new_employee_about_tt(pre_registration, zoho_email_account = nil, gmail_email_account = nil)
     @pre_registration = pre_registration
     @zoho_email_account = zoho_email_account
+    @gmail_email_account = gmail_email_account
     subject = 'Invitation to Time tracker with new email ID'
     subject = PRE_FIX + subject
 
-    mail to: @pre_registration.companyEmail,
+    recipients = [@pre_registration.companyEmail]
+    recipients << @pre_registration.personalEmail if @pre_registration.personalEmail.present?
+    recipients.uniq!
+
+    mail to: recipients,
          subject: subject
     true
-    rescue => e
-      logger.error e.message
+  rescue => e
+    logger.error e.message
     false
-    true
   end
   
   def send_mail_to_hr_about_new_employee(pre_registration)

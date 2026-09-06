@@ -297,12 +297,6 @@ ActiveRecord::Schema.define(version: 20251114063455) do
 
   add_index "promotions", ["user_id"], name: "index_promotions_on_user_id", using: :btree
 
-  create_table "system_settings", force: true do |t|
-    t.boolean  "face_recognition_enabled"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "timesheets", force: true do |t|
     t.date     "date"
     t.text     "description"

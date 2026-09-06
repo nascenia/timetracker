@@ -8,7 +8,7 @@
     .col-md-4
       = f.label :email
       %br/
-      = f.email_field :email, autofocus: true, value: params[:email], class: 'form-control'
+      = f.email_field :email, autofocus: true, value: params[:email], class: 'form-control', placeholder: 'Email', required: true
   .row
     .col-md-4
       = f.label :password
@@ -16,14 +16,35 @@
         %i
           (#{@minimum_password_length} characters minimum)
       %br/
-      = f.password_field :password, autocomplete: "off", class: 'form-control'
+      = f.password_field :password, autocomplete: "off", class: 'form-control', placeholder: 'Min. 8 characters', required: true, minlength: 8, title: 'Minimum 8 characters'
   .row
     .col-md-4
       = f.label :password_confirmation
       %br/
-      = f.password_field :password_confirmation, autocomplete: "off", class: 'form-control'
+      = f.password_field :password_confirmation, autocomplete: "off", class: 'form-control', placeholder: 'Min. 8 characters', required: true, minlength: 8, title: 'Minimum 8 characters'
   .row
     .col-md-4
       = f.submit "Sign up", class: 'btn btn-primary'
 
-= render "devise/shared/links" unless params[:email].present?
+= render "devise/shared/links" unless (resource.email.present? || params[:email].present?)
+
+:javascript
+  $(document).ready(function() {
+    var password = document.getElementById('user_password');
+    var confirmPassword = document.getElementById('user_password_confirmation');
+
+    function validatePassword() {
+      if (password && confirmPassword) {
+        if (password.value !== confirmPassword.value) {
+          confirmPassword.setCustomValidity("Passwords do not match");
+        } else {
+          confirmPassword.setCustomValidity('');
+        }
+      }
+    }
+
+    if (password && confirmPassword) {
+      password.onchange = validatePassword;
+      confirmPassword.onkeyup = validatePassword;
+    }
+  });

@@ -2,7 +2,7 @@ class PreRegistration < ActiveRecord::Base
   mount_uploader :ndaDoc, FileUploader
   belongs_to :user
 
-  attr_accessor :zoho_email_account
+  attr_accessor :zoho_email_account, :gmail_email_account
 
   validates_uniqueness_of :companyEmail, allow_blank: true, allow_nil: true
   

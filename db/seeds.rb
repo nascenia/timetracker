@@ -1,206 +1,213 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
+# Default seeds for development environment
 
-#Salaat.create(waqt: 'Zohr', time: '1:30')
-#Salaat.create(waqt: 'Asor', time: '4:15')
-#Salaat.create(waqt: 'Magrib', time: '5:30')
+puts "== Seeding Master Data =="
 
-# if HolidayScheme.count.zero?
-#   HolidayScheme.create([
-#     { name: 'Nascenia General', active: true, leave_year_id: 1 },
-#     { name: 'GJ and Biyeta', active: true, leave_year_id: 1 },
-#   ])
-# end
+leave_year = LeaveYear.find_or_create_by(year: Date.today.year.to_s) do |ly|
+  ly.present = true
+end
 
-# if Weekend.count.zero?
-#   Weekend.create([
-#     { name: 'Nascenia Core: Sat & Sun', off_days: [:saturday, :sunday] },
-#     { name: 'Admin: Sat', off_days: [:saturday] },
-#     { name: 'Biyeta: Thu & Fri', off_days: [:thursday, :friday] }
-#   ])
-# end
+if HolidayScheme.count.zero?
+  HolidayScheme.create([
+    { name: 'Nascenia General', active: true, leave_year_id: leave_year.id },
+    { name: 'GJ and Biyeta', active: true, leave_year_id: leave_year.id }
+  ])
+end
+holiday_scheme = HolidayScheme.first
 
-# if LeaveYear.count.zero?
-#   p 'Creating LeaveYear...'
-#   LeaveYear.find_or_create_by(year: Date.today.year.to_s, present: true)
-# end
+if Weekend.count.zero?
+  Weekend.create([
+    { name: 'Nascenia Core: Sat & Sun', off_days: [:saturday, :sunday] },
+    { name: 'Admin: Sat', off_days: [:saturday] },
+    { name: 'Biyeta: Thu & Fri', off_days: [:thursday, :friday] }
+  ])
+end
+weekend = Weekend.first
 
-# if Designation.count.zero?
-#   p 'Creating employee designations...'
-#   Designation.create([
-#     { team: 'Developer', title: 'Intern', description: 'Internship', published: true },
-#     { team: 'Developer', title: 'Junior Software Engineer', description: 'Junior software engineer', published: true },
-#     { team: 'Developer', title: 'Software Engineer', description: 'Software engineer', published: true },
-#     { team: 'Developer', title: 'Senior Software Engineer', description: 'Senior software engineer', published: true }
-#   ])
-# end
+if Designation.count.zero?
+  Designation.create([
+    { team: 'Developer', title: 'Intern', description: 'Internship', published: true },
+    { team: 'Developer', title: 'Junior Software Engineer', description: 'Junior software engineer', published: true },
+    { team: 'Developer', title: 'Software Engineer', description: 'Software engineer', published: true },
+    { team: 'Developer', title: 'Senior Software Engineer', description: 'Senior software engineer', published: true }
+  ])
+end
+designation = Designation.published.first
 
-# if GoalCategory.count.zero?
-#   p 'Creating goal categories...'
-#   GoalCategory.create([
-#     { title: 'Technical asset development', description: '', published: true },
-#     { title: 'Develop skills',              description: '', published: true },
-#     { title: 'Technical session',           description: '', published: true }
-#   ])
-#   p 'Done'
-# end
+if GoalCategory.count.zero?
+  GoalCategory.create([
+    { title: 'Technical asset development', description: '', published: true },
+    { title: 'Develop skills',              description: '', published: true },
+    { title: 'Technical session',           description: '', published: true }
+  ])
+end
 
-# -------- create Admin --------
-# AdminUser.find_or_create_by!(email: "reyanus_5@nascenia.com") do |admin|
-#   admin.password = "r1124.S@nas.com"
-#   admin.password_confirmation = "r1124.S@nas.com"
-# end
+approval_path = ApprovalPath.find_or_create_by(name: 'Default Approval Path')
 
-# PreRegistration.find_or_create_by!(companyEmail: "reyanus_5@nascenia.com") do |pr|
-#   pr.name = "Reyanus Salehin"
-#   pr.employee_id = "A2300"
-#   pr.joiningDate = Date.parse("2025-07-10")
-#   pr.personalEmail = "salehin24.rs@gmail.com"
-#   pr.contactNumber = "01608537383"
-#   pr.designation = "Software Engineer"
-#   pr.step_no = 1
-#   pr.leave_approval_path_id = ApprovalPath.first ? ApprovalPath.first.id : 1
-#   pr.weekend_id = Weekend.first ? Weekend.first.id : 1
-#   pr.holiday_scheme_id = HolidayScheme.first ? HolidayScheme.first.id : 1
-#   pr.ttf_id = "A2300"
-#   pr.workstationReady = true
-#   pr.packReady = true
-#   pr.emailGroup = "admins@nascenia.com"
-#   pr.ndaDoc = "nda_document.pdf"
-#   pr.HR_email = "hr@nascenia.com"
-# end
+puts "== Seeding Admin Users =="
 
-# User.find_or_create_by!(email: "reyanus_5@nascenia.com") do |u|
-#   u.name = "Reyanus Salehin"
-#   u.email = "reyanus_5@nascenia.com"
-#   u.password = "r1124.S@nas.com"
-#   u.password_confirmation = "r1124.S@nas.com"
-#   u.role = 3
-#   u.is_active = true
-#   u.is_published = true
-#   u.approval_path_id = ApprovalPath.first ? ApprovalPath.first.id : 1
-#   u.weekend_id = Weekend.first ? Weekend.first.id : 1
-#   u.holiday_scheme_id = HolidayScheme.first ? HolidayScheme.first.id : 1
-#   u.personal_email = "salehin24.rs@gmail.com"
-#   u.present_address = "123, Some Street, Some City"
-#   u.alternate_contact = "01608537383"
-#   u.permanent_address = "456, Another Street, Another City"
-#   u.mobile_number = "01608537383"
-#   u.date_of_birth = "2001-11-24"
-#   u.last_degree = "B.Sc. in Computer Science"
-#   u.last_university = "Islamic University of Technology"
-#   u.passing_year = "2023"
-#   u.emergency_contact_person_name = "John Doe"
-#   u.emergency_contact_person_relation = "Brother"
-#   u.emergency_contact_person_number = "01723456789"
-#   u.blood_group = "O+"
-#   u.joining_date = Date.parse("2025-07-10")
-#   u.registration_status = 2
-#   u.national_id = "1514947595"
-#   u.employee_id = "A2300"
-#   u.kpi_template_id = nil
-# end
+# 1. ActiveAdmin user (admin@example.com)
+admin_au = AdminUser.find_or_initialize_by(email: 'admin@example.com')
+admin_au.password = 'password123'
+admin_au.password_confirmation = 'password123'
+admin_au.save!
 
-# approval_path   = ApprovalPath.first || ApprovalPath.create!(name: 'Default Approval Path')
-# weekend         = Weekend.first
-# holiday_scheme  = HolidayScheme.first
+# 2. Main Application Admin User (admin@example.com)
+app_admin = User.find_or_initialize_by(email: 'admin@example.com')
+app_admin.assign_attributes(
+  name: 'System Admin',
+  password: 'password123',
+  password_confirmation: 'password123',
+  role: User::SUPER_TTF,
+  is_active: true,
+  is_published: true,
+  approval_path_id: approval_path.id,
+  weekend_id: weekend.id,
+  holiday_scheme_id: holiday_scheme.id,
+  personal_email: 'admin@example.com',
+  mobile_number: '01700000000',
+  joining_date: Date.today,
+  registration_status: User::REGISTRATION_STATUS[:registered],
+  employee_id: 'A1000'
+)
+app_admin.save!
 
-# def generate_employee_id(counter)
-#   "A#{(2000 + counter).to_s.rjust(4, '0')}"
-# end
+# 3. Super Admin User (reyanus@nascenia.com)
+super_admin_au = AdminUser.find_or_initialize_by(email: 'reyanus@nascenia.com')
+super_admin_au.password = 'password123'
+super_admin_au.password_confirmation = 'password123'
+super_admin_au.save!
 
-# employee_counter = 1
+super_admin = User.find_or_initialize_by(email: 'reyanus@nascenia.com')
+super_admin.name ||= 'Reyanus Salehin'
+super_admin.role = User::SUPER_TTF
+super_admin.is_active = true
+super_admin.is_published = true
+if super_admin.new_record?
+  super_admin.password = 'password123'
+  super_admin.password_confirmation = 'password123'
+  super_admin.approval_path_id = approval_path.id
+  super_admin.weekend_id = weekend.id
+  super_admin.holiday_scheme_id = holiday_scheme.id
+  super_admin.personal_email = 'salehin24.rs@gmail.com'
+  super_admin.mobile_number = '01608537383'
+  super_admin.joining_date = Date.today
+  super_admin.registration_status = User::REGISTRATION_STATUS[:registered]
+  super_admin.employee_id = 'A2300'
+end
+super_admin.save!
 
-# # -------- create TTF --------
-# ttf_employee_id = generate_employee_id(employee_counter)
+puts "== Seeding TTF Facilitator =="
 
-# ttf_pr = PreRegistration.find_or_create_by!(companyEmail: "ttf1@nascenia.com") do |pr|
-#   pr.name = "TTF 1"
-#   pr.employee_id = ttf_employee_id
-#   pr.joiningDate = Date.today
-#   pr.personalEmail = "ttf1@personal.com"
-#   pr.contactNumber = "0171000001"
-#   pr.designation = "Team Technical Facilitator"
-#   pr.step_no = 1
-#   pr.leave_approval_path_id = approval_path.id
-#   pr.weekend_id = weekend.id
-#   pr.holiday_scheme_id = holiday_scheme.id
-#   pr.ttf_id = ttf_employee_id
-#   pr.workstationReady = true
-#   pr.packReady = true
-#   pr.emailGroup = "ttf1@nascenia.com"
-#   pr.ndaDoc = "nda_document.pdf"
-#   pr.HR_email = "hr@nascenia.com"
-# end
+ttf_user = User.find_or_initialize_by(email: 'ttf1@nascenia.com')
+ttf_user.assign_attributes(
+  name: 'TTF Facilitator',
+  password: 'password123',
+  password_confirmation: 'password123',
+  role: User::TTF,
+  is_active: true,
+  is_published: true,
+  approval_path_id: approval_path.id,
+  weekend_id: weekend.id,
+  holiday_scheme_id: holiday_scheme.id,
+  personal_email: 'ttf1@personal.com',
+  mobile_number: '01710000001',
+  joining_date: Date.today,
+  registration_status: User::REGISTRATION_STATUS[:registered],
+  employee_id: 'A2001'
+)
+ttf_user.save!
 
-# ttf_user = User.find_or_create_by!(email: "ttf1@nascenia.com") do |u|
-#   u.name = "TTF 1"
-#   u.password = "password123"
-#   u.password_confirmation = "password123"
-#   u.role = User::TTF
-#   u.is_active = true
-#   u.is_published = true
-#   u.approval_path_id = approval_path.id
-#   u.weekend_id = weekend.id
-#   u.holiday_scheme_id = holiday_scheme.id
-#   u.personal_email = "ttf1@personal.com"
-#   u.mobile_number = "0171000001"
-#   u.joining_date = Date.today
-#   u.registration_status = User::REGISTRATION_STATUS[:registered]
-#   u.employee_id = ttf_employee_id
-# end
+puts "== Seeding Whitelisted Emails for Google OAuth =="
 
-# puts "TTF User DB ID: #{ttf_user.id}"
+['reyanus.nascenia@gmail.com', 'a2i.chatbot.2023@gmail.com', 'salehin24.rs@gmail.com'].each do |gmail|
+  we = WhitelistEmail.find_or_initialize_by(email: gmail)
+  we.published = true
+  we.save!
+  puts "Whitelisted Google email: #{gmail}"
+end
 
+puts "== Cleaning Up Any Existing Test Users =="
 
-# employee_counter += 1
+test_emails = [
+  'reyanus.nascenia@gmail.com',
+  'reyanus.nascenia@gmil.com',
+  'salehin24.rs@gmail.com',
+  'a2i.chatbot.2023@gmail.com',
+  'reyanus.nascenia+5@nascenia.com',
+  'reyanus.nascenia+5@gmail.com',
+  'reyanus@nasceia.com'
+]
+test_emp_ids = ['Z1001', 'G1001', 'N1001']
+protected_emails = ['admin@example.com', 'reyanus@nascenia.com', 'ttf1@nascenia.com']
 
-# # -------- create Developer --------
-# dev_employee_id = generate_employee_id(employee_counter)
+# Find and delete test users by email or employee_id (never delete super admin or protected accounts)
+test_users = User.where("email IN (?) OR employee_id IN (?)", test_emails, test_emp_ids)
+                 .where.not(email: protected_emails)
+test_users = test_users.reject { |u| u.super_admin? || u.admin? }
 
-# dev_pr = PreRegistration.find_or_create_by!(companyEmail: "dev1@nascenia.com") do |pr|
-#   pr.name = "Developer 1"
-#   pr.employee_id = dev_employee_id
-#   pr.joiningDate = Date.today
-#   pr.personalEmail = "dev1@personal.com"
-#   pr.contactNumber = "0181000001"
-#   pr.designation = "Software Engineer"
-#   pr.step_no = 1
-#   pr.leave_approval_path_id = approval_path.id
-#   pr.weekend_id = weekend.id
-#   pr.holiday_scheme_id = holiday_scheme.id
-#   pr.ttf_id = ttf_employee_id
-#   pr.workstationReady = true
-#   pr.packReady = true
-#   pr.emailGroup = "dev1@nascenia.com"
-#   pr.ndaDoc = "nda_document.pdf"
-#   pr.HR_email = "hr@nascenia.com"
-# end
+test_users.each do |user|
+  puts "Deleting existing test user: #{user.email} (ID: #{user.id}, employee_id: #{user.employee_id})"
+  Promotion.where(user_id: user.id).destroy_all
+  LeaveTracker.where(user_id: user.id).destroy_all
+  PreRegistration.where(user_id: user.id).destroy_all
+  user.destroy
+end
 
-# dev_user = User.find_or_create_by!(email: "dev1@nascenia.com") do |dev|
-#   dev.name = "Developer 1"
-#   dev.password = "password123"
-#   dev.password_confirmation = "password123"
-#   dev.role = User::EMPLOYEE
-#   dev.is_active = true
-#   dev.is_published = true
-#   dev.approval_path_id = approval_path.id
-#   dev.weekend_id = weekend.id
-#   dev.holiday_scheme_id = holiday_scheme.id
-#   dev.personal_email = "dev1@personal.com"
-#   dev.mobile_number = "0181000001"
-#   dev.joining_date = Date.today
-#   dev.registration_status = User::REGISTRATION_STATUS[:registered]
-#   dev.employee_id = dev_employee_id
-#   dev.ttf_id = ttf_user.id
-# end
+# Clean up old test pre-registrations to avoid uniqueness collisions
+PreRegistration.where("employee_id IN (?) OR companyEmail IN (?)", test_emp_ids, test_emails).destroy_all
 
-# dev_user.ttf_id = ttf_user.id
-# dev_user.save!
+puts "== Seeding 3 Pre-registrations for Testing Onboarding (step_no: 2) =="
 
-# puts "Developer #{dev_user.name} has TTF ID: #{dev_user.ttf_id}"
+test_onboarding_candidates = [
+  {
+    employee_id: 'Z1001',
+    name: 'Reyanus Zoho',
+    companyEmail: 'reyanus.nascenia@gmail.com',
+    personalEmail: 'reyanus.nascenia@gmail.com',
+    contactNumber: '01711111111',
+    scenario: 'Zoho Email Account'
+  },
+  {
+    employee_id: 'G1001',
+    name: 'Salehin Gmail',
+    companyEmail: 'salehin24.rs@gmail.com',
+    personalEmail: 'salehin24.rs@gmail.com',
+    contactNumber: '01722222222',
+    scenario: 'Gmail Account'
+  },
+  {
+    employee_id: 'N1001',
+    name: 'A2I Chatbot Neither',
+    companyEmail: 'a2i.chatbot.2023@gmail.com',
+    personalEmail: 'a2i.chatbot.2023@gmail.com',
+    contactNumber: '01733333333',
+    scenario: 'Neither Zoho nor Gmail'
+  }
+]
+
+test_onboarding_candidates.each do |cand|
+  pr = PreRegistration.find_or_initialize_by(employee_id: cand[:employee_id])
+  pr.assign_attributes(
+    name: cand[:name],
+    joiningDate: Date.today.strftime('%Y/%m/%d'),
+    designation: designation ? designation.title : 'Software Engineer',
+    personalEmail: cand[:personalEmail],
+    companyEmail: cand[:companyEmail],
+    contactNumber: cand[:contactNumber],
+    emailGroup: 'dev@nascenia.com',
+    HR_email: 'hr@nascenia.com',
+    holiday_scheme_id: holiday_scheme.id.to_s,
+    weekend_id: weekend.id.to_s,
+    ttf_id: ttf_user.id,
+    leave_approval_path_id: approval_path.id,
+    NdaSigned: true,
+    workstationReady: true,
+    packReady: true,
+    user_id: nil,
+    step_no: 2
+  )
+  pr.save!
+  puts "Seeded PreRegistration [#{cand[:scenario]}]: #{pr.employee_id} - #{pr.companyEmail} (ID: #{pr.id}, step: #{pr.step_no})"
+end
+
+puts "== Seeding Complete! =="

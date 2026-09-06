@@ -29,7 +29,7 @@ after 'deploy:update_code', 'deploy:migrate'
 
 # Broken and it's not working
 task :staging do
-  set :branch, "deployed-in-production" # ca be used feature branches for temporary testing as well
+  set :branch, "reyan/bugfix/proper-url-generation-for-user-onboarding" # ca be used feature branches for temporary testing as well
   web_server = "timetracker.test.nascenia.com"
   role :web, web_server # Your HTTP server, Apache/etc
   role :app, web_server # This may be the same as your `Web` server
@@ -58,6 +58,11 @@ namespace :deploy do
   desc "Tell Passenger to restart the app."
   task :restart, :roles => :app, :except => {:no_release => true} do
     run "touch #{File.join(current_path, 'tmp', 'restart.txt')}"
+  end
+
+  desc "Run rake db:seed on the server."
+  task :seed, :roles => :db, :only => { :primary => true } do
+    run "cd #{current_path} && #{rake} RAILS_ENV=#{fetch(:rails_env, 'production')} db:seed"
   end
 
   desc "Symlink shared configs and folders on each release."
