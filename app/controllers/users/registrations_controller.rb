@@ -77,7 +77,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
   private
 
   def signup_invitation_validation
-    user = User.find_by(email: params[:email])
+    email = params[:email].presence || (params[:user] && params[:user][:email])
+    user = User.find_by(email: email)
 
     if user.present?
       flash[:notice] = 'You are already a registered user.'
@@ -85,7 +86,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       redirect_to new_user_session_path && return
     end
     
-    pr = PreRegistration.find_by(companyEmail: params[:email]) # TODO: Add invitation token
+    pr = PreRegistration.find_by(companyEmail: email) # TODO: Add invitation token
 
     if pr.blank?
       flash[:alert] = 'Sorry, you are not invited to register.'
