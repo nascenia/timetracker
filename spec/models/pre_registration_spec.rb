@@ -28,8 +28,8 @@ RSpec.describe PreRegistration, type: :model do
       mail = UserMailer.send_mail_to_new_employee_about_tt(pre_registration, '0', '1')
       mail.deliver
       sent = ActionMailer::Base.deliveries.last
-      expect(sent.body.raw_source).to include('http://localhost:3000/users/sign_in')
-      expect(sent.body.raw_source).not_to include('http://localhost:3000/users/sign_up')
+      expect(sent.body.raw_source).to include('https://localhost:3000/users/sign_in')
+      expect(sent.body.raw_source).not_to include('/users/sign_up')
       expect(sent.body.raw_source).to include('Please go to the link below and log in with your new email address:')
       expect(sent.body.raw_source).not_to include('sign up with your new email address:')
     end
@@ -38,8 +38,8 @@ RSpec.describe PreRegistration, type: :model do
       mail = UserMailer.send_mail_to_new_employee_about_tt(pre_registration, '1', '0')
       mail.deliver
       sent = ActionMailer::Base.deliveries.last
-      expect(sent.body.raw_source).to include('http://localhost:3000/users/sign_up?email=john.doe%40nascenia.com')
-      expect(sent.body.raw_source).not_to include('http://localhost:3000/users/sign_in')
+      expect(sent.body.raw_source).to include('https://localhost:3000/users/sign_up?email=john.doe%40nascenia.com')
+      expect(sent.body.raw_source).not_to include('/users/sign_in')
       expect(sent.body.raw_source).to include('Please go to the link below and sign up with your new email address:')
       expect(sent.body.raw_source).not_to include('log in with your new email address:')
     end
@@ -48,8 +48,8 @@ RSpec.describe PreRegistration, type: :model do
       mail = UserMailer.send_mail_to_new_employee_about_tt(pre_registration, '0', '0')
       mail.deliver
       sent = ActionMailer::Base.deliveries.last
-      expect(sent.body.raw_source).to include('http://localhost:3000/users/sign_up?email=john.doe%40nascenia.com')
-      expect(sent.body.raw_source).not_to include('http://localhost:3000/users/sign_in')
+      expect(sent.body.raw_source).to include('https://localhost:3000/users/sign_up?email=john.doe%40nascenia.com')
+      expect(sent.body.raw_source).not_to include('/users/sign_in')
       expect(sent.body.raw_source).to include('Please go to the link below and sign up with your new email address:')
       expect(sent.body.raw_source).not_to include('log in with your new email address:')
     end
@@ -68,7 +68,7 @@ RSpec.describe PreRegistration, type: :model do
       mail.deliver
       sent = ActionMailer::Base.deliveries.last
       expect(sent.body.raw_source).not_to match(/href="\/users\//)
-      expect(sent.body.raw_source).to match(/href="http:\/\/localhost:3000\/users\//)
+      expect(sent.body.raw_source).to match(/href="https:\/\/localhost:3000\/users\//)
     end
   end
 
