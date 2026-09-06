@@ -129,24 +129,32 @@ end
 puts "== Cleaning Up Any Existing Test Users =="
 
 test_emails = [
-  'reyanus.nascenia+5@nascenia.com',
-  'reyanus@nasceia.com',
   'reyanus.nascenia@gmail.com',
+  'reyanus.nascenia@gmil.com',
   'salehin24.rs@gmail.com',
-  'a2i.chatbot.2023@gmail.com'
+  'a2i.chatbot.2023@gmail.com',
+  'reyanus.nascenia+5@nascenia.com',
+  'reyanus.nascenia+5@gmail.com',
+  'reyanus@nasceia.com'
 ]
+test_emp_ids = ['Z1001', 'G1001', 'N1001']
+protected_emails = ['admin@example.com', 'reyanus@nascenia.com', 'ttf1@nascenia.com']
 
-test_emails.each do |email|
-  existing_user = User.find_by(email: email)
-  if existing_user
-    puts "Deleting existing test user: #{email}"
-    existing_user.destroy
-  end
+# Find and delete test users by email or employee_id (never delete super admin or protected accounts)
+test_users = User.where("email IN (?) OR employee_id IN (?)", test_emails, test_emp_ids)
+                 .where.not(email: protected_emails)
+test_users = test_users.reject { |u| u.super_admin? || u.admin? }
+
+test_users.each do |user|
+  puts "Deleting existing test user: #{user.email} (ID: #{user.id}, employee_id: #{user.employee_id})"
+  Promotion.where(user_id: user.id).destroy_all
+  LeaveTracker.where(user_id: user.id).destroy_all
+  PreRegistration.where(user_id: user.id).destroy_all
+  user.destroy
 end
 
 # Clean up old test pre-registrations to avoid uniqueness collisions
-PreRegistration.where(employee_id: ['Z1001', 'G1001', 'N1001']).destroy_all
-PreRegistration.where(companyEmail: test_emails).destroy_all
+PreRegistration.where("employee_id IN (?) OR companyEmail IN (?)", test_emp_ids, test_emails).destroy_all
 
 puts "== Seeding 3 Pre-registrations for Testing Onboarding (step_no: 2) =="
 
