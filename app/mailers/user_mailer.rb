@@ -197,13 +197,16 @@ class UserMailer < ActionMailer::Base
     subject = 'Invitation to Time tracker with new email ID'
     subject = PRE_FIX + subject
 
-    mail to: @pre_registration.companyEmail,
+    recipients = [@pre_registration.companyEmail]
+    recipients << @pre_registration.personalEmail if @pre_registration.personalEmail.present?
+    recipients.uniq!
+
+    mail to: recipients,
          subject: subject
     true
-    rescue => e
-      logger.error e.message
+  rescue => e
+    logger.error e.message
     false
-    true
   end
   
   def send_mail_to_hr_about_new_employee(pre_registration)

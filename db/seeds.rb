@@ -119,7 +119,7 @@ ttf_user.save!
 
 puts "== Seeding Whitelisted Emails for Google OAuth =="
 
-['reyanus.nascenia@gmail.com', 'a2i.chatbot.2023@gmail.com'].each do |gmail|
+['reyanus.nascenia@gmail.com', 'a2i.chatbot.2023@gmail.com', 'salehin24.rs@gmail.com'].each do |gmail|
   we = WhitelistEmail.find_or_initialize_by(email: gmail)
   we.published = true
   we.save!
@@ -132,6 +132,7 @@ test_emails = [
   'reyanus.nascenia+5@nascenia.com',
   'reyanus@nasceia.com',
   'reyanus.nascenia@gmail.com',
+  'salehin24.rs@gmail.com',
   'a2i.chatbot.2023@gmail.com'
 ]
 
@@ -143,8 +144,9 @@ test_emails.each do |email|
   end
 end
 
-# Clean up old pre-registration with reyanus@nasceia.com if present
-PreRegistration.where(companyEmail: 'reyanus@nasceia.com').destroy_all
+# Clean up old test pre-registrations to avoid uniqueness collisions
+PreRegistration.where(employee_id: ['Z1001', 'G1001', 'N1001']).destroy_all
+PreRegistration.where(companyEmail: test_emails).destroy_all
 
 puts "== Seeding 3 Pre-registrations for Testing Onboarding (step_no: 2) =="
 
@@ -152,16 +154,16 @@ test_onboarding_candidates = [
   {
     employee_id: 'Z1001',
     name: 'Reyanus Zoho',
-    companyEmail: 'reyanus.nascenia+5@nascenia.com',
+    companyEmail: 'reyanus.nascenia@gmail.com',
     personalEmail: 'reyanus.nascenia@gmail.com',
     contactNumber: '01711111111',
     scenario: 'Zoho Email Account'
   },
   {
     employee_id: 'G1001',
-    name: 'Reyanus Gmail',
-    companyEmail: 'reyanus.nascenia@gmail.com',
-    personalEmail: 'reyanus.nascenia@gmail.com',
+    name: 'Salehin Gmail',
+    companyEmail: 'salehin24.rs@gmail.com',
+    personalEmail: 'salehin24.rs@gmail.com',
     contactNumber: '01722222222',
     scenario: 'Gmail Account'
   },

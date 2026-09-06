@@ -54,6 +54,15 @@ RSpec.describe PreRegistration, type: :model do
       expect(sent.body.raw_source).not_to include('log in with your new email address:')
     end
 
+    it 'delivers to both companyEmail and personalEmail when personalEmail is present' do
+      pre_registration.personalEmail = 'john.doe@personal.com'
+      mail = UserMailer.send_mail_to_new_employee_about_tt(pre_registration, '1', '0')
+      mail.deliver
+      sent = ActionMailer::Base.deliveries.last
+      expect(sent.to).to include('john.doe@nascenia.com')
+      expect(sent.to).to include('john.doe@personal.com')
+    end
+
     it 'ensures generated urls are absolute and do not contain relative-only paths' do
       mail = UserMailer.send_mail_to_new_employee_about_tt(pre_registration, '1', '0')
       mail.deliver

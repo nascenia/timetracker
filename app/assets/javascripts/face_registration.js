@@ -36,6 +36,18 @@ $(document).on('click', '#register-face-btn', function() {
     photoTaken = true;
   }
 
+  function isMobileDevice() {
+    return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  }
+
+  function showGlassesInstruction() {
+    if (!isMobileDevice()) {
+      $('#glasses-instruction').show();
+    } else {
+      $('#glasses-instruction').hide();
+    }
+  }
+
   // Modal open event
   $('#faceRegistrationModal').one('shown.bs.modal', function() {
     if (initialized) return;
@@ -59,26 +71,37 @@ $(document).on('click', '#register-face-btn', function() {
 
   // Start camera
   $(document).off('click.faceRegStart').on('click.faceRegStart', '#start-camera-btn', function() {
+    var constraints = { 
+      video: { 
+        width: { ideal: 640 },
+        height: { ideal: 480 },
+        facingMode: 'user'
+      } 
+    };
+
+    function onStreamSuccess(mediaStream) {
+      stream = mediaStream;
+      video.srcObject = mediaStream;
+      video.play();
+      $('#start-camera-btn').hide();
+      showVideo();
+      hideAutoFaceStatus();
+      $('#capture-photo-btn').show();
+    }
+
+    function onStreamError(err) {
+      showAutoFaceStatus('Error accessing camera: ' + (err.message || 'Please check camera permissions in your browser.'), 'danger');
+    }
+
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices.getUserMedia({ 
-        video: { 
-          width: { ideal: 640 },
-          height: { ideal: 480 },
-          facingMode: 'user'
-        } 
-      })
-      .then(function(mediaStream) {
-        stream = mediaStream;
-        video.srcObject = mediaStream;
-        video.play();
-        $('#start-camera-btn').hide();
-        showVideo();
-        hideAutoFaceStatus();
-        $('#capture-photo-btn').show();
-      })
-      .catch(function(err) {
-        showAutoFaceStatus('Error accessing camera. Please check permissions.', 'danger');
-      });
+      navigator.mediaDevices.getUserMedia(constraints)
+        .then(onStreamSuccess)
+        .catch(onStreamError);
+    } else if (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia) {
+      var legacyGetUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+      legacyGetUserMedia.call(navigator, constraints, onStreamSuccess, onStreamError);
+    } else if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+      showAutoFaceStatus('Camera access requires HTTPS. Please access Time Tracker using https:// instead of http://', 'danger');
     } else {
       showAutoFaceStatus('Camera not supported in this browser.', 'danger');
     }
